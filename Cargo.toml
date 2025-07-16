@@ -1,0 +1,21 @@
+[package]
+name = "obol"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+charon = { path = "../charon/charon", default-features = true }
+dot-writer = "0.1.4"
+anyhow = "1"
+log = "0.4.17"
+home = "0.5"
+clap = "4.5.41"
+
+[[bin]]
+name = "obol"
+path = "src/main.rs"
+
+[package.metadata.rust-analyzer]
+# This package uses rustc crates.
+rustc_private = true
