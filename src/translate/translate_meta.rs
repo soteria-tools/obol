@@ -104,88 +104,6 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
 // Names
 impl<'tcx, 'ctx> TranslateCtx<'tcx> {
-    fn path_elem_for_def(
-        &mut self,
-        _span: Span,
-        def_id: &stable_mir::DefId,
-    ) -> Result<Option<PathElem>, Error> {
-        let name = def_id.name();
-        Ok(Some(PathElem::Ident(name, Disambiguator::ZERO)))
-        // Disambiguator disambiguates identically-named (but distinct) identifiers. This happens
-        // notably with macros and inherent impl blocks.
-        // let disambiguator = Disambiguator::new(path_elem.disambiguator as usize);
-        // // Match over the key data
-        // let path_elem = match path_elem.data {
-        //     DefPathItem::CrateRoot { name, .. } => {
-        //         // Sanity check
-        //         error_assert!(self, span, path_elem.disambiguator == 0);
-        //         Some(PathElem::Ident(name.clone(), disambiguator))
-        //     }
-        //     // We map the three namespaces onto a single one. We can always disambiguate by looking
-        //     // at the definition.
-        //     DefPathItem::TypeNs(symbol)
-        //     | DefPathItem::ValueNs(symbol)
-        //     | DefPathItem::MacroNs(symbol) => Some(PathElem::Ident(symbol, disambiguator)),
-        //     DefPathItem::Impl => {
-        //         // let full_def = self.hax_def(def_id)?;
-        //         // // Two cases, depending on whether the impl block is
-        //         // // a "regular" impl block (`impl Foo { ... }`) or a trait
-        //         // // implementation (`impl Bar for Foo { ... }`).
-        //         // let impl_elem = match full_def.kind() {
-        //         //     // Inherent impl ("regular" impl)
-        //         //     mir::DefKind::InherentImpl { ty, .. } => {
-        //         //         // We need to convert the type, which may contain quantified
-        //         //         // substs and bounds. In order to properly do so, we introduce
-        //         //         // a body translation context.
-        //         //         let mut bt_ctx = ItemTransCtx::new(def_id.clone(), None, self);
-        //         //         bt_ctx.translate_def_generics(span, &full_def)?;
-        //         //         let ty = bt_ctx.translate_ty(span, &ty)?;
-        //         //         ImplElem::Ty(Binder {
-        //         //             kind: BinderKind::InherentImplBlock,
-        //         //             params: bt_ctx.into_generics(),
-        //         //             skip_binder: ty,
-        //         //         })
-        //         //     }
-        //         //     // Trait implementation
-        //         //     mir::DefKind::TraitImpl { .. } => {
-        //         //         let impl_id = self.register_trait_impl_id(&None, def_id);
-        //         //         ImplElem::Trait(impl_id)
-        //         //     }
-        //         //     _ => unreachable!(),
-        //         // };
-
-        //         // Some(PathElem::Impl(impl_elem))
-        //         None
-        //     }
-        //     // TODO: do nothing for now
-        //     DefPathItem::OpaqueTy => None,
-        //     // TODO: this is not very satisfactory, but on the other hand
-        //     // we should be able to extract closures in local let-bindings
-        //     // (i.e., we shouldn't have to introduce top-level let-bindings).
-        //     DefPathItem::Closure => Some(PathElem::Ident("closure".to_string(), disambiguator)),
-        //     // Do nothing, functions in `extern` blocks are in the same namespace as the
-        //     // block.
-        //     DefPathItem::ForeignMod => None,
-        //     // Do nothing, the constructor of a struct/variant has the same name as the
-        //     // struct/variant.
-        //     DefPathItem::Ctor => None,
-        //     DefPathItem::Use => Some(PathElem::Ident("{use}".to_string(), disambiguator)),
-        //     DefPathItem::AnonConst => Some(PathElem::Ident("{const}".to_string(), disambiguator)),
-        //     DefPathItem::PromotedConst => Some(PathElem::Ident(
-        //         "{promoted_const}".to_string(),
-        //         disambiguator,
-        //     )),
-        //     _ => {
-        //         raise_error!(
-        //             self,
-        //             span,
-        //             "Unexpected DefPathItem for `{def_id:?}`: {path_elem:?}"
-        //         );
-        //     }
-        // };
-        // Ok(path_elem)
-    }
-
     /// Retrieve the name for this [`mir::DefId`]. Because a given `DefId` may give rise to several
     /// charon items, prefer to use `translate_name` when possible.
     ///
@@ -240,10 +158,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         // } else {
         //     Name { name: Vec::new() }
         // };
-        let span = Span::dummy();
         let mut name = Name { name: Vec::new() };
-        if let Some(path_elem) = self.path_elem_for_def(span, &def_id)? {
-            name.name.push(path_elem);
+        let name_str = def_id.name();
+        for elem in name_str.split("::") {
+            // We use `Ident` for all names, even if they are not identifiers.
+            // This is because we don't have a `PathElem` for these.
+            name.name
+                .push(PathElem::Ident(elem.to_string(), Disambiguator::ZERO));
         }
 
         trace!("Computed name for `{def_id:?}`: `{name:?}`");
