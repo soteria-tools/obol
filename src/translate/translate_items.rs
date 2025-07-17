@@ -79,6 +79,14 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 // let global_decl = bt_ctx.translate_global(id, item_meta, &def)?;
                 // self.translated.global_decls.set_slot(id, global_decl);
             }
+            TransItemSource::Closure(def, genargs) => {
+                let Some(AnyTransId::Type(id)) = trans_id else {
+                    unreachable!()
+                };
+                let genargs: ty::GenericArgs = genargs.clone().into();
+                let ty = bt_ctx.translate_closure_adt(id, item_meta, &def, &genargs)?;
+                self.translated.type_decls.set_slot(id, ty);
+            }
         }
         Ok(())
     }
@@ -273,4 +281,41 @@ impl ItemTransCtx<'_, '_> {
     //         init: initializer,
     //     })
     // }
+
+    pub fn translate_closure_adt(
+        mut self,
+        trans_id: TypeDeclId,
+        item_meta: ItemMeta,
+        def: &ty::ClosureDef,
+        genargs: &ty::GenericArgs,
+    ) -> Result<TypeDecl, Error> {
+        let span = item_meta.span;
+
+        // Translate generics and predicates
+        // self.translate_def_generics(span, def)?;
+
+        // Get the kind of the type decl -- is it a closure?
+        let src = self.get_item_kind(span, &def.0)?;
+
+        // Translate type body
+        let kind = self.translate_closure_as_adt_def(trans_id, span, &item_meta, def, genargs);
+
+        let kind = match kind {
+            Ok(kind) => kind,
+            Err(err) => TypeDeclKind::Error(err.msg),
+        };
+        let layout = self.translate_layout(&kind);
+        let ptr_metadata = self.translate_ptr_metadata();
+        let type_def = TypeDecl {
+            def_id: trans_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            kind,
+            src,
+            layout,
+            ptr_metadata,
+        };
+
+        Ok(type_def)
+    }
 }

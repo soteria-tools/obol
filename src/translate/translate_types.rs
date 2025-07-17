@@ -190,10 +190,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 });
                 TyKind::FnDef(fnref)
             }
-            ty::RigidTy::Closure(..) => {
-                // let tref = self.translate_closure_type_ref(span, args)?;
-                // TyKind::Adt(tref)
-                raise_error!(self, span, "Closure types are not supported yet")
+            ty::RigidTy::Closure(def, gargs) => {
+                let id = self.register_closure_type_decl_id(span, def, gargs);
+                let tref = TypeDeclRef {
+                    id: TypeId::Adt(id),
+                    generics: Box::new(GenericArgs::empty()),
+                };
+
+                // Return the instantiated ADT
+                TyKind::Adt(tref)
             }
 
             ty::RigidTy::Dynamic(_existential_preds, _region, _) => {
@@ -635,6 +640,53 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             AdtKind::Enum => TypeDeclKind::Enum(variants),
             AdtKind::Union => TypeDeclKind::Union(variants[0].fields.clone()),
         };
+
+        Ok(type_def_kind)
+    }
+
+    /// Translate a closure as a struct
+    pub(crate) fn translate_closure_as_adt_def(
+        &mut self,
+        trans_id: TypeDeclId,
+        def_span: Span,
+        item_meta: &ItemMeta,
+        _closure: &ty::ClosureDef,
+        args: &ty::GenericArgs,
+    ) -> Result<TypeDeclKind, Error> {
+        if item_meta.opacity.is_opaque() {
+            return Ok(TypeDeclKind::Opaque);
+        }
+
+        trace!("{}", trans_id);
+
+        // Closures have a fun time with generics:
+        // https://doc.rust-lang.org/beta/nightly-rustc/src/rustc_type_ir/ty_kind/closure.rs.html#12-29
+        let tupled_upvars = args.0.last().unwrap().expect_ty().kind();
+        let Some(ty::RigidTy::Tuple(state_tys)) = tupled_upvars.rigid() else {
+            raise_error!(self, def_span, "Closure state argument is not a tuple?");
+        };
+
+        // let upvars =
+        let mut fields: Vector<FieldId, Field> = Default::default();
+        for (j, state_ty) in state_tys.iter().enumerate() {
+            // Translate the field type
+            let ty = self.translate_ty(def_span, *state_ty)?;
+
+            // Retrieve the field name.
+            let field_name = format!("upvar_{j}");
+
+            // Store the field
+            let field = Field {
+                span: def_span,
+                attr_info: AttrInfo::default(),
+                name: Some(field_name),
+                ty,
+            };
+            fields.push(field);
+        }
+
+        // Register the type
+        let type_def_kind = TypeDeclKind::Struct(fields);
 
         Ok(type_def_kind)
     }

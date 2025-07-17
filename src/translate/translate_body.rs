@@ -494,16 +494,44 @@ impl BodyTransCtx<'_, '_, '_> {
                             operand,
                         ))
                     }
-                    mir::CastKind::PtrToPtr
-                    | mir::CastKind::PointerCoercion(mir::PointerCoercion::MutToConstPointer, ..)
-                    | mir::CastKind::PointerCoercion(mir::PointerCoercion::ArrayToPointer, ..)
-                    | mir::CastKind::PointerCoercion(
+                    mir::CastKind::PointerCoercion(
                         mir::PointerCoercion::ClosureFnPointer(_),
                         ..,
-                    )
+                    ) => {
+                        let op_ty = lift_err(hax_operand.ty(self.local_decls))?;
+                        let op_ty_kind = op_ty.kind();
+                        let Some(ty::RigidTy::Closure(def, args)) = op_ty_kind.rigid() else {
+                            raise_error!(self, span, "ClosureFnPointer without closure?");
+                        };
+                        let closure = lift_err(mir::mono::Instance::resolve_closure(
+                            def.clone(),
+                            args,
+                            ty::ClosureKind::FnOnce,
+                        ))?;
+                        let fn_id = self.register_fun_decl_id(span, &closure);
+                        let fn_ptr = FnPtr {
+                            func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
+                            generics: Box::new(GenericArgs::empty()),
+                        };
+                        let src_ty = TyKind::FnDef(RegionBinder::empty(fn_ptr.clone())).into_ty();
+
+                        Ok(Rvalue::UnaryOp(
+                            UnOp::Cast(CastKind::RawPtr(src_ty.clone(), tgt_ty)),
+                            Operand::Const(Box::new(ConstantExpr {
+                                value: RawConstantExpr::FnPtr(fn_ptr),
+                                ty: src_ty,
+                            })),
+                        ))
+                    }
+                    mir::CastKind::PtrToPtr
                     | mir::CastKind::FnPtrToPtr
                     | mir::CastKind::PointerExposeAddress
-                    | mir::CastKind::PointerWithExposedProvenance => Ok(Rvalue::UnaryOp(
+                    | mir::CastKind::PointerWithExposedProvenance
+                    | mir::CastKind::PointerCoercion(
+                        mir::PointerCoercion::MutToConstPointer
+                        | mir::PointerCoercion::ArrayToPointer,
+                        ..,
+                    ) => Ok(Rvalue::UnaryOp(
                         UnOp::Cast(CastKind::RawPtr(src_ty, tgt_ty)),
                         operand,
                     )),
@@ -645,8 +673,14 @@ impl BodyTransCtx<'_, '_, '_> {
                         let akind = AggregateKind::Adt(tref, variant_id, field_id);
                         Ok(Rvalue::Aggregate(akind, operands_t))
                     }
-                    mir::AggregateKind::Closure(..) => {
-                        raise_error!(self, span, "can't translate closure aggregates")
+                    mir::AggregateKind::Closure(def, args) => {
+                        let id = self.register_closure_type_decl_id(span, def, args);
+                        let tref = TypeDeclRef {
+                            id: TypeId::Adt(id),
+                            generics: Box::new(GenericArgs::empty()),
+                        };
+                        let akind = AggregateKind::Adt(tref, None, None);
+                        Ok(Rvalue::Aggregate(akind, operands_t))
                     }
                     mir::AggregateKind::RawPtr(ty, is_mut) => {
                         // TODO: replace with a call to `ptr::from_raw_parts`.

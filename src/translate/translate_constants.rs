@@ -10,11 +10,44 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         _span: Span,
         alloc: &ty::Allocation,
-        _ty: ty::Ty,
+        ty: ty::Ty,
     ) -> Result<RawConstantExpr, Error> {
-        Ok(RawConstantExpr::RawMemory(
-            alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect(),
-        ))
+        let constant = match ty.kind() {
+            ty::TyKind::RigidTy(ty::RigidTy::Int(it)) => {
+                let value = alloc.read_int().unwrap();
+                let scalar_value = match it {
+                    ty::IntTy::I8 => ScalarValue::I8(value as i8),
+                    ty::IntTy::I16 => ScalarValue::I16(value as i16),
+                    ty::IntTy::I32 => ScalarValue::I32(value as i32),
+                    ty::IntTy::I64 => ScalarValue::I64(value as i64),
+                    ty::IntTy::I128 => ScalarValue::I128(value),
+                    ty::IntTy::Isize => ScalarValue::Isize(value as i64),
+                };
+                RawConstantExpr::Literal(Literal::Scalar(scalar_value))
+            }
+            ty::TyKind::RigidTy(ty::RigidTy::Uint(uit)) => {
+                let value = alloc.read_uint().unwrap();
+                let scalar_value = match uit {
+                    ty::UintTy::U8 => ScalarValue::U8(value as u8),
+                    ty::UintTy::U16 => ScalarValue::U16(value as u16),
+                    ty::UintTy::U32 => ScalarValue::U32(value as u32),
+                    ty::UintTy::U64 => ScalarValue::U64(value as u64),
+                    ty::UintTy::U128 => ScalarValue::U128(value),
+                    ty::UintTy::Usize => ScalarValue::Usize(value as u64),
+                };
+                RawConstantExpr::Literal(Literal::Scalar(scalar_value))
+            }
+            ty::TyKind::RigidTy(ty::RigidTy::Bool) => {
+                let value = alloc.read_bool().unwrap();
+                RawConstantExpr::Literal(Literal::Bool(value))
+            }
+            ty::TyKind::RigidTy(ty::RigidTy::Char) => {
+                let value = char::from_u32(alloc.read_uint().unwrap() as u32);
+                RawConstantExpr::Literal(Literal::Char(value.unwrap()))
+            }
+            _ => RawConstantExpr::RawMemory(alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect()),
+        };
+        Ok(constant)
     }
 
     pub(crate) fn translate_constant_expr_to_const_generic(

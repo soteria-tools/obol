@@ -1084,10 +1084,22 @@ use crate::translate::translate_crate::translate;
 
 pub fn emit_smir(opts: &crate::args::CliOpts, tcx: TyCtxt<'_>) {
     let mut ctx = translate(&charon_lib::options::CliOpts::default(), tcx);
-    use charon_lib::transform;
+    use Pass::*;
+    use charon_lib::transform::*;
     let transforms: &[Pass] = &[
-        Pass::NonBody(&transform::insert_storage_lives::Transform),
-        Pass::NonBody(&transform::reorder_decls::Transform),
+        UnstructuredBody(&merge_goto_chains::Transform),
+        UnstructuredBody(&remove_dynamic_checks::Transform),
+        UnstructuredBody(&simplify_constants::Transform),
+        UnstructuredBody(&reconstruct_asserts::Transform),
+        UnstructuredBody(&filter_unreachable_blocks::Transform),
+        UnstructuredBody(&inline_local_panic_functions::Transform),
+        UnstructuredBody(&insert_assign_return_unit::Transform),
+        UnstructuredBody(&remove_unit_locals::Transform),
+        UnstructuredBody(&remove_drop_never::Transform),
+        NonBody(&remove_unused_locals::Transform),
+        NonBody(&insert_storage_lives::Transform),
+        NonBody(&remove_nops::Transform),
+        NonBody(&reorder_decls::Transform),
     ];
     for pass in transforms {
         pass.run(&mut ctx);

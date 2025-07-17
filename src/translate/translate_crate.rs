@@ -3,6 +3,8 @@ extern crate rustc_middle;
 extern crate rustc_smir;
 extern crate stable_mir;
 
+use crate::translate::my_gen_args::MyGenericArgs;
+
 use super::translate_ctx::*;
 
 use charon_lib::ast::*;
@@ -26,6 +28,7 @@ pub enum TransItemSource {
     Global(DefId),
     Fun(mir::mono::Instance),
     Type(ty::AdtDef),
+    Closure(ty::ClosureDef, MyGenericArgs),
 }
 
 impl TransItemSource {
@@ -34,6 +37,7 @@ impl TransItemSource {
             TransItemSource::Global(id) => id.clone(),
             TransItemSource::Fun(instance) => instance.def.def_id(),
             TransItemSource::Type(id) => id.0,
+            TransItemSource::Closure(def, _) => def.def_id(),
         }
     }
 }
@@ -45,6 +49,7 @@ impl TransItemSource {
             TransItemSource::Global(id) => (0, id.to_index()),
             TransItemSource::Fun(instance) => (1, instance.def.def_id().to_index()),
             TransItemSource::Type(id) => (2, id.0.to_index()),
+            TransItemSource::Closure(def, _) => (3, def.def_id().to_index()),
         }
     }
 }
@@ -71,7 +76,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             Some(tid) => *tid,
             None => {
                 let trans_id = match id {
-                    TransItemSource::Type(_) => {
+                    TransItemSource::Type(_) | TransItemSource::Closure(..) => {
                         AnyTransId::Type(self.translated.type_decls.reserve_slot())
                     }
                     TransItemSource::Global(_) => {
@@ -125,6 +130,21 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .unwrap()
     }
 
+    pub(crate) fn register_closure_type_decl_id(
+        &mut self,
+        src: &Option<DepSource>,
+        closure: &ty::ClosureDef,
+        args: &ty::GenericArgs,
+    ) -> TypeDeclId {
+        *self
+            .register_and_enqueue_id(
+                src,
+                TransItemSource::Closure(closure.clone(), args.clone().into()),
+            )
+            .as_type()
+            .unwrap()
+    }
+
     // pub(crate) fn register_global_decl_id(
     //     &mut self,
     //     src: &Option<DepSource>,
@@ -172,6 +192,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> FunDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_fun_decl_id(&src, id)
+    }
+
+    pub(crate) fn register_closure_type_decl_id(
+        &mut self,
+        span: Span,
+        closure: &ty::ClosureDef,
+        args: &ty::GenericArgs,
+    ) -> TypeDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx
+            .register_closure_type_decl_id(&src, closure, args)
     }
 
     // pub(crate) fn register_fun_decl_id_no_enqueue(

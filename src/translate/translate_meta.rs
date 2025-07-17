@@ -175,7 +175,16 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     /// Retrieve the name for an item.
     pub fn translate_name(&mut self, src: &TransItemSource) -> Result<Name, Error> {
         let def_id = src.as_def_id();
-        self.def_id_to_name(def_id)
+        let mut name = self.def_id_to_name(def_id)?;
+
+        match src {
+            TransItemSource::Closure(..) => name
+                .name
+                .push(PathElem::Ident("closure".into(), Disambiguator::ZERO)),
+            _ => {}
+        }
+
+        Ok(name)
     }
 
     // pub(crate) fn opacity_for_name(&self, name: &Name) -> ItemOpacity {

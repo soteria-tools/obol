@@ -1,3 +1,4 @@
+pub mod my_gen_args;
 pub mod translate_body;
 pub mod translate_constants;
 pub mod translate_crate;
