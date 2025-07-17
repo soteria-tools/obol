@@ -894,13 +894,13 @@ impl BodyTransCtx<'_, '_, '_> {
         let switch_ty = *switch_ty.kind().as_literal().unwrap();
         match switch_ty {
             LiteralTy::Bool => {
-                assert_eq!(targets.len(), 1);
+                assert_eq!(targets.len(), 2);
                 let (val, target) = targets.branches().next().unwrap();
                 // It seems the block targets are inverted
                 assert_eq!(val, 0u128);
                 let if_block = self.translate_basic_block_id(targets.otherwise());
-                let then_block = self.translate_basic_block_id(target);
-                Ok(SwitchTargets::If(if_block, then_block))
+                let else_block = self.translate_basic_block_id(target);
+                Ok(SwitchTargets::If(if_block, else_block))
             }
             LiteralTy::Integer(int_ty) => {
                 let targets_ullbc: Vec<(ScalarValue, BlockId)> = targets
