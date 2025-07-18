@@ -58,11 +58,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
         let bt_ctx = ItemTransCtx::new(trans_id, self);
         match item_src {
-            TransItemSource::Type(adt) => {
+            TransItemSource::Type(adt, generics) => {
                 let Some(AnyTransId::Type(id)) = trans_id else {
                     unreachable!()
                 };
-                let ty = bt_ctx.translate_type_decl(id, item_meta, &adt)?;
+                let generics = generics.clone().into();
+                let ty = bt_ctx.translate_type_decl(id, item_meta, &adt, &generics)?;
                 self.translated.type_decls.set_slot(id, ty);
             }
             TransItemSource::Fun(instance) => {
@@ -111,6 +112,7 @@ impl ItemTransCtx<'_, '_> {
         trans_id: TypeDeclId,
         item_meta: ItemMeta,
         def: &ty::AdtDef,
+        genargs: &ty::GenericArgs,
     ) -> Result<TypeDecl, Error> {
         let span = item_meta.span;
 
@@ -124,7 +126,7 @@ impl ItemTransCtx<'_, '_> {
         let kind = match &def.kind() {
             _ if item_meta.opacity.is_opaque() => Ok(TypeDeclKind::Opaque),
             ty::AdtKind::Struct | ty::AdtKind::Enum | ty::AdtKind::Union => {
-                self.translate_adt_def(trans_id, span, &item_meta, def)
+                self.translate_adt_def(trans_id, span, &item_meta, def, genargs)
             }
         };
 
@@ -203,7 +205,7 @@ impl ItemTransCtx<'_, '_> {
             // Translate the body. This doesn't store anything if we can't/decide not to translate
             // this body.
             let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals());
-            match bt_ctx.translate_body(item_meta.span, &body) {
+            match bt_ctx.translate_body(item_meta.span, def, &body) {
                 Ok(Ok(body)) => Ok(body),
                 // Opaque declaration
                 Ok(Err(Opaque)) => Err(Opaque),

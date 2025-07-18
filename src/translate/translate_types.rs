@@ -52,7 +52,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 
         let kind = mir_ty.kind();
         let Some(ty) = kind.rigid() else {
-            raise_error!(self, span, "Expected a rigid type, got: {:?}", kind);
+            raise_error!(
+                self,
+                span,
+                "Expected a rigid type, got: {:?}\nTrace: {}",
+                kind,
+                std::backtrace::Backtrace::force_capture()
+            );
         };
 
         let kind = match ty {
@@ -91,10 +97,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }
             ty::RigidTy::Never => TyKind::Never,
 
-            ty::RigidTy::Adt(item, ..) => {
+            ty::RigidTy::Adt(item, generics) => {
                 // FIXME: generics?
                 trace!("Adt: {:?}", item.0);
-                let id = self.register_type_decl_id(span, &item);
+                let id = self.register_type_decl_id(span, &item, &generics);
                 let tref = TypeDeclRef {
                     id: TypeId::Adt(id),
                     generics: Box::new(GenericArgs::empty()),
@@ -532,6 +538,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         def_span: Span,
         item_meta: &ItemMeta,
         adt: &ty::AdtDef,
+        generics: &ty::GenericArgs,
     ) -> Result<TypeDeclKind, Error> {
         use ty::AdtKind;
 
@@ -575,7 +582,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             for (j, field_def) in var_def.fields().iter().enumerate() {
                 trace!("variant {i}: field {j}: {field_def:?}");
                 // Translate the field type
-                let ty = self.translate_ty(def_span, field_def.ty())?;
+                let ty = field_def.ty_with_args(&generics);
+                let ty = self.translate_ty(def_span, ty)?;
                 // let field_full_def = self.hax_def(&field_def.did)?;
                 // let field_attrs = self.t_ctx.translate_attr_info(&field_full_def);
 
@@ -670,6 +678,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let mut fields: Vector<FieldId, Field> = Default::default();
         for (j, state_ty) in state_tys.iter().enumerate() {
             // Translate the field type
+            println!("Closure ty: {state_ty:?}");
             let ty = self.translate_ty(def_span, *state_ty)?;
 
             // Retrieve the field name.

@@ -27,7 +27,7 @@ use std::hash::Hash;
 pub enum TransItemSource {
     Global(DefId),
     Fun(mir::mono::Instance),
-    Type(ty::AdtDef),
+    Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
 }
 
@@ -36,20 +36,18 @@ impl TransItemSource {
         match self {
             TransItemSource::Global(id) => id.clone(),
             TransItemSource::Fun(instance) => instance.def.def_id(),
-            TransItemSource::Type(id) => id.0,
+            TransItemSource::Type(id, _) => id.0,
             TransItemSource::Closure(def, _) => def.def_id(),
         }
     }
-}
 
-impl TransItemSource {
     /// Value with which we order values.
     fn sort_key(&self) -> impl Ord {
         match self {
-            TransItemSource::Global(id) => (0, id.to_index()),
-            TransItemSource::Fun(instance) => (1, instance.def.def_id().to_index()),
-            TransItemSource::Type(id) => (2, id.0.to_index()),
-            TransItemSource::Closure(def, _) => (3, def.def_id().to_index()),
+            TransItemSource::Global(id) => (0, id.to_index(), 0),
+            TransItemSource::Fun(instance) => (1, instance.def.def_id().to_index(), 0),
+            TransItemSource::Type(id, gargs) => (2, id.0.to_index(), gargs.sort_key()),
+            TransItemSource::Closure(def, gargs) => (3, def.def_id().to_index(), gargs.sort_key()),
         }
     }
 }
@@ -76,7 +74,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             Some(tid) => *tid,
             None => {
                 let trans_id = match id {
-                    TransItemSource::Type(_) | TransItemSource::Closure(..) => {
+                    TransItemSource::Type(..) | TransItemSource::Closure(..) => {
                         AnyTransId::Type(self.translated.type_decls.reserve_slot())
                     }
                     TransItemSource::Global(_) => {
@@ -112,9 +110,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         &mut self,
         src: &Option<DepSource>,
         id: &ty::AdtDef,
+        genargs: &ty::GenericArgs,
     ) -> TypeDeclId {
         *self
-            .register_and_enqueue_id(src, TransItemSource::Type(id.clone()))
+            .register_and_enqueue_id(
+                src,
+                TransItemSource::Type(id.clone(), genargs.clone().into()),
+            )
             .as_type()
             .unwrap()
     }
@@ -171,9 +173,14 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     //     self.t_ctx.register_id_no_enqueue(&src, id)
     // }
 
-    pub(crate) fn register_type_decl_id(&mut self, span: Span, id: &ty::AdtDef) -> TypeDeclId {
+    pub(crate) fn register_type_decl_id(
+        &mut self,
+        span: Span,
+        id: &ty::AdtDef,
+        genargs: &ty::GenericArgs,
+    ) -> TypeDeclId {
         let src = self.make_dep_source(span);
-        self.t_ctx.register_type_decl_id(&src, id)
+        self.t_ctx.register_type_decl_id(&src, id, genargs)
     }
 
     /// Translate a type def id

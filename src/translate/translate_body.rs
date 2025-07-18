@@ -649,14 +649,14 @@ impl BodyTransCtx<'_, '_, '_> {
                     mir::AggregateKind::Adt(
                         item,
                         variant_idx,
-                        _generics,
+                        generics,
                         _user_annotation,
                         field_index,
                     ) => {
                         use stable_mir::ty::AdtKind;
                         trace!("{:?}", rvalue);
 
-                        let id = self.register_type_decl_id(span, &item);
+                        let id = self.register_type_decl_id(span, &item, &generics);
                         let tref = TypeDeclRef {
                             id: TypeId::Adt(id),
                             generics: Box::new(GenericArgs::empty()),
@@ -1038,11 +1038,12 @@ impl BodyTransCtx<'_, '_, '_> {
     pub fn translate_body(
         &mut self,
         span: Span,
+        instance: &mir::mono::Instance,
         body: &mir::Body,
     ) -> Result<Result<Body, Opaque>, Error> {
         // Stopgap measure because there are still many panics in charon and hax.
         let mut this = panic::AssertUnwindSafe(&mut *self);
-        let res = panic::catch_unwind(move || this.translate_body_aux(body));
+        let res = panic::catch_unwind(move || this.translate_body_aux(instance, body));
         match res {
             Ok(Ok(body)) => Ok(body),
             // Translation error
@@ -1053,13 +1054,17 @@ impl BodyTransCtx<'_, '_, '_> {
         }
     }
 
-    fn translate_body_aux(&mut self, body: &mir::Body) -> Result<Result<Body, Opaque>, Error> {
+    fn translate_body_aux(
+        &mut self,
+        instance: &mir::mono::Instance,
+        body: &mir::Body,
+    ) -> Result<Result<Body, Opaque>, Error> {
         // Compute the span information
         let span = self.translate_span_from_smir(&body.span);
 
         // Initialize the local variables
         trace!("Translating the body locals");
-        self.locals.arg_count = body.arg_locals().len();
+        self.locals.arg_count = instance.fn_abi().unwrap().args.len();
         self.translate_body_locals(&body)?;
 
         // Translate the expression body
