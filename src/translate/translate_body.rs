@@ -600,13 +600,7 @@ impl BodyTransCtx<'_, '_, '_> {
             }
             mir::Rvalue::Discriminant(place) => {
                 let place = self.translate_place(span, place)?;
-                if let TyKind::Adt(tref) = place.ty().kind()
-                    && let TypeId::Adt(adt_id) = tref.id
-                {
-                    Ok(Rvalue::Discriminant(place, adt_id))
-                } else {
-                    raise_error!(self, span, "Unexpected scrutinee type for ReadDiscriminant")
-                }
+                Ok(Rvalue::Discriminant(place))
             }
             mir::Rvalue::Aggregate(aggregate_kind, operands) => {
                 // It seems this instruction is not present in certain passes:
@@ -631,8 +625,9 @@ impl BodyTransCtx<'_, '_, '_> {
                 match aggregate_kind {
                     mir::AggregateKind::Array(ty) => {
                         let t_ty = self.translate_ty(span, *ty)?;
-                        let cg = ConstGeneric::Value(Literal::Scalar(ScalarValue::Usize(
-                            operands_t.len() as u64,
+                        let cg = ConstGeneric::Value(Literal::Scalar(ScalarValue::Unsigned(
+                            UIntTy::Usize,
+                            operands_t.len() as u128,
                         )));
                         Ok(Rvalue::Aggregate(
                             AggregateKind::Array(t_ty, cg),
@@ -902,17 +897,41 @@ impl BodyTransCtx<'_, '_, '_> {
                 let else_block = self.translate_basic_block_id(target);
                 Ok(SwitchTargets::If(if_block, else_block))
             }
-            LiteralTy::Integer(int_ty) => {
+            LiteralTy::Int(int_ty) => {
                 let targets_ullbc: Vec<(ScalarValue, BlockId)> = targets
                     .branches()
                     .map(|(v, tgt)| {
-                        let v = ScalarValue::from_le_bytes(int_ty, v.to_le_bytes());
+                        let v =
+                            ScalarValue::from_le_bytes(IntegerTy::Signed(int_ty), v.to_le_bytes());
                         let tgt = self.translate_basic_block_id(tgt);
                         (v, tgt)
                     })
                     .collect();
                 let otherwise = self.translate_basic_block_id(targets.otherwise());
-                Ok(SwitchTargets::SwitchInt(int_ty, targets_ullbc, otherwise))
+                Ok(SwitchTargets::SwitchInt(
+                    IntegerTy::Signed(int_ty),
+                    targets_ullbc,
+                    otherwise,
+                ))
+            }
+            LiteralTy::UInt(uint_ty) => {
+                let targets_ullbc: Vec<(ScalarValue, BlockId)> = targets
+                    .branches()
+                    .map(|(v, tgt)| {
+                        let v = ScalarValue::from_le_bytes(
+                            IntegerTy::Unsigned(uint_ty),
+                            v.to_le_bytes(),
+                        );
+                        let tgt = self.translate_basic_block_id(tgt);
+                        (v, tgt)
+                    })
+                    .collect();
+                let otherwise = self.translate_basic_block_id(targets.otherwise());
+                Ok(SwitchTargets::SwitchInt(
+                    IntegerTy::Unsigned(uint_ty),
+                    targets_ullbc,
+                    otherwise,
+                ))
             }
             _ => raise_error!(self, span, "Can't match on type {switch_ty}"),
         }

@@ -36,6 +36,28 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         }
     }
 
+    pub(crate) fn translate_int_ty(&mut self, it: &ty::IntTy) -> IntTy {
+        match it {
+            ty::IntTy::I8 => IntTy::I8,
+            ty::IntTy::I16 => IntTy::I16,
+            ty::IntTy::I32 => IntTy::I32,
+            ty::IntTy::I64 => IntTy::I64,
+            ty::IntTy::I128 => IntTy::I128,
+            ty::IntTy::Isize => IntTy::Isize,
+        }
+    }
+
+    pub(crate) fn translate_uint_ty(&mut self, it: &ty::UintTy) -> UIntTy {
+        match it {
+            ty::UintTy::U8 => UIntTy::U8,
+            ty::UintTy::U16 => UIntTy::U16,
+            ty::UintTy::U32 => UIntTy::U32,
+            ty::UintTy::U64 => UIntTy::U64,
+            ty::UintTy::U128 => UIntTy::U128,
+            ty::UintTy::Usize => UIntTy::Usize,
+        }
+    }
+
     /// Translate a Ty.
     ///
     /// Typically used in this module to translate the fields of a structure/
@@ -65,26 +87,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             ty::RigidTy::Bool => TyKind::Literal(LiteralTy::Bool),
             ty::RigidTy::Char => TyKind::Literal(LiteralTy::Char),
             ty::RigidTy::Int(int_ty) => {
-                use ty::IntTy;
-                TyKind::Literal(LiteralTy::Integer(match int_ty {
-                    IntTy::Isize => IntegerTy::Isize,
-                    IntTy::I8 => IntegerTy::I8,
-                    IntTy::I16 => IntegerTy::I16,
-                    IntTy::I32 => IntegerTy::I32,
-                    IntTy::I64 => IntegerTy::I64,
-                    IntTy::I128 => IntegerTy::I128,
-                }))
+                TyKind::Literal(LiteralTy::Int(self.translate_int_ty(int_ty)))
             }
             ty::RigidTy::Uint(int_ty) => {
-                use ty::UintTy;
-                TyKind::Literal(LiteralTy::Integer(match int_ty {
-                    UintTy::Usize => IntegerTy::Usize,
-                    UintTy::U8 => IntegerTy::U8,
-                    UintTy::U16 => IntegerTy::U16,
-                    UintTy::U32 => IntegerTy::U32,
-                    UintTy::U64 => IntegerTy::U64,
-                    UintTy::U128 => IntegerTy::U128,
-                }))
+                TyKind::Literal(LiteralTy::UInt(self.translate_uint_ty(int_ty)))
             }
             ty::RigidTy::Float(float_ty) => {
                 use ty::FloatTy;
@@ -606,7 +612,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let variant_name = var_def.name().clone();
                 (discriminant, variant_name)
             } else {
-                (ScalarValue::U8(0), String::new())
+                (ScalarValue::Unsigned(UIntTy::U8, 0), String::new())
             };
 
             let mut variant = Variant {
@@ -678,7 +684,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let mut fields: Vector<FieldId, Field> = Default::default();
         for (j, state_ty) in state_tys.iter().enumerate() {
             // Translate the field type
-            println!("Closure ty: {state_ty:?}");
             let ty = self.translate_ty(def_span, *state_ty)?;
 
             // Retrieve the field name.
@@ -706,7 +711,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         discr: &ty::Discr,
     ) -> Result<ScalarValue, Error> {
         let ty = self.translate_ty(def_span, discr.ty)?;
-        let int_ty = *ty.kind().as_literal().unwrap().as_integer().unwrap();
+        let int_ty = ty.kind().as_literal().unwrap().to_integer_ty().unwrap();
         Ok(ScalarValue::from_bits(int_ty, discr.val))
     }
 }
