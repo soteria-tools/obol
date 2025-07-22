@@ -208,16 +208,84 @@ impl BodyTransCtx<'_, '_, '_> {
         span: Span,
         of_place: Place,
         place_ty: stable_mir::ty::Ty,
+        variant_id: Option<VariantId>,
         proj: &mir::ProjectionElem,
-    ) -> Result<(Place, stable_mir::ty::Ty), Error> {
+    ) -> Result<(Place, stable_mir::ty::Ty, Option<VariantId>), Error> {
         let proj_ty = lift_err(proj.ty(place_ty))?;
         let ty = self.translate_ty(span, proj_ty)?;
 
-        let place = match proj {
-            mir::ProjectionElem::Deref => of_place.project(ProjectionElem::Deref, ty),
-            _ => raise_error!(self, span, "Unknown projection"),
+        let proj_elem = match proj {
+            mir::ProjectionElem::Deref => ProjectionElem::Deref,
+            mir::ProjectionElem::Index(local) => {
+                let var_id = self.translate_local(local).unwrap();
+                let local = self.locals.place_for_var(var_id);
+                ProjectionElem::Index {
+                    offset: Box::new(Operand::Copy(local)),
+                    from_end: false,
+                }
+            }
+            mir::ProjectionElem::ConstantIndex {
+                offset, from_end, ..
+            } => {
+                let idx = ConstantExpr {
+                    value: RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                        UIntTy::Usize,
+                        *offset as u128,
+                    ))),
+                    ty: TyKind::Literal(LiteralTy::UInt(UIntTy::Usize)).into_ty(),
+                };
+                ProjectionElem::Index {
+                    offset: Box::new(Operand::Const(Box::new(idx))),
+                    from_end: *from_end,
+                }
+            }
+            mir::ProjectionElem::Subslice { from, to, from_end } => {
+                let from = ConstantExpr {
+                    value: RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                        UIntTy::Usize,
+                        *from as u128,
+                    ))),
+                    ty: TyKind::Literal(LiteralTy::UInt(UIntTy::Usize)).into_ty(),
+                };
+                let to = ConstantExpr {
+                    value: RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                        UIntTy::Usize,
+                        *to as u128,
+                    ))),
+                    ty: TyKind::Literal(LiteralTy::UInt(UIntTy::Usize)).into_ty(),
+                };
+                ProjectionElem::Subslice {
+                    from: Box::new(Operand::Const(Box::new(from))),
+                    to: Box::new(Operand::Const(Box::new(to))),
+                    from_end: *from_end,
+                }
+            }
+            mir::ProjectionElem::Downcast(variant) => {
+                return Ok((of_place, proj_ty, Some(self.translate_variant_id(*variant))));
+            }
+            mir::ProjectionElem::Field(field_idx, _) => {
+                let kind = match of_place.ty().kind() {
+                    TyKind::Adt(TypeDeclRef {
+                        id: TypeId::Tuple,
+                        generics,
+                    }) => FieldProjKind::Tuple(generics.types.elem_count()),
+                    TyKind::Adt(TypeDeclRef {
+                        id: TypeId::Adt(id),
+                        ..
+                    }) => FieldProjKind::Adt(*id, variant_id),
+                    kind => unreachable!("Unexpected type in field projection: {kind:?}"),
+                };
+                ProjectionElem::Field(kind, FieldId::from_usize(*field_idx))
+            }
+            mir::ProjectionElem::OpaqueCast(..) => {
+                raise_error!(self, span, "Unexpected ProjectionElem::OpaqueCast");
+            }
+            mir::ProjectionElem::Subtype(..) => {
+                raise_error!(self, span, "Unexpected ProjectionElem::Subtype");
+            }
         };
-        Ok((place, proj_ty))
+        let place = of_place.project(proj_elem, ty);
+        Ok((place, proj_ty, None))
     }
 
     /// Translate a place
@@ -227,13 +295,14 @@ impl BodyTransCtx<'_, '_, '_> {
         let var_id = self.translate_local(&place.local).unwrap();
         let local = self.locals.place_for_var(var_id);
         let local_ty = self.local_decls[place.local].ty;
-        let (place, _) = place
-            .projection
-            .iter()
-            .fold(Ok((local, local_ty)), |res, proj| {
-                let (place, place_ty) = res?;
-                self.translate_projection(span, place, place_ty, proj)
-            })?;
+        let (place, _, _) =
+            place
+                .projection
+                .iter()
+                .fold(Ok((local, local_ty, None)), |res, proj| {
+                    let (place, place_ty, variant) = res?;
+                    self.translate_projection(span, place, place_ty, variant, proj)
+                })?;
         Ok(place)
         // match &place.kind {
         //     mir::PlaceKind::Local(local) => {
