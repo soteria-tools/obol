@@ -921,7 +921,14 @@ impl BodyTransCtx<'_, '_, '_> {
                 destination,
                 target,
                 unwind,
-            } => self.translate_function_call(span, func, args, destination, target, unwind)?,
+            } => {
+                let (term, stt) =
+                    self.translate_function_call(span, func, args, destination, target, unwind)?;
+                if let Some(stt) = stt {
+                    statements.push(Statement::new(span, stt));
+                };
+                term
+            }
             TerminatorKind::Assert {
                 cond,
                 expected,
@@ -1019,13 +1026,14 @@ impl BodyTransCtx<'_, '_, '_> {
         destination: &mir::Place,
         target: &Option<usize>,
         unwind: &mir::UnwindAction,
-    ) -> Result<RawTerminator, Error> {
+    ) -> Result<(RawTerminator, Option<RawStatement>), Error> {
         // There are two cases, depending on whether this is a "regular"
         // call to a top-level function identified by its id, or if we
         // are using a local function pointer (i.e., the operand is a "move").
         let lval = self.translate_place(span, destination)?;
         // Translate the function operand.
         let fn_ty = lift_err(fun.ty(self.local_decls))?;
+        let mut extra_stt = None;
         let fn_operand = match fn_ty.kind() {
             ty::TyKind::RigidTy(ty::RigidTy::FnDef(fn_def, args)) => {
                 // trace!("func: {:?}", item.def_id);
@@ -1057,19 +1065,33 @@ impl BodyTransCtx<'_, '_, '_> {
                 // }
             }
             _ => {
-                let mir::Operand::Move(place) = fun else {
-                    raise_error!(self, span, "Expected a function pointer operand");
+                let (mir::Operand::Move(place) | mir::Operand::Copy(place)) = fun else {
+                    raise_error!(
+                        self,
+                        span,
+                        "Expected a move/copy function pointer operand, got constant {fun:?}"
+                    );
                 };
                 // Call to a local function pointer
                 let p = self.translate_place(span, place)?;
 
-                // TODO: we may have a problem here because as we don't
-                // know which function is being called, we may not be
-                // able to filter the arguments properly... But maybe
-                // this is rather an issue for the statement which creates
-                // the function pointer, by refering to a top-level function
-                // for instance.
-                FnOperand::Move(p)
+                if matches!(fun, mir::Operand::Copy(_)) {
+                    // Charon doesn't allow copy as a fn operand, so we create a temporary
+                    // variable that copies the value, and then move that
+                    let local_id = self.locals.locals.push_with(|index| Local {
+                        index,
+                        name: None,
+                        ty: p.ty.clone(),
+                    });
+                    let new_place = Place::new(local_id, p.ty.clone());
+                    extra_stt = Some(RawStatement::Assign(
+                        new_place.clone(),
+                        Rvalue::Use(Operand::Copy(p)),
+                    ));
+                    FnOperand::Move(new_place)
+                } else {
+                    FnOperand::Move(p)
+                }
             }
         };
         let args = self.translate_arguments(span, args)?;
@@ -1103,11 +1125,14 @@ impl BodyTransCtx<'_, '_, '_> {
             }
             mir::UnwindAction::Cleanup(bb) => self.translate_basic_block_id(*bb),
         };
-        Ok(RawTerminator::Call {
-            call,
-            target,
-            on_unwind,
-        })
+        Ok((
+            RawTerminator::Call {
+                call,
+                target,
+                on_unwind,
+            },
+            extra_stt,
+        ))
     }
 
     /// Evaluate function arguments in a context, and return the list of computed
