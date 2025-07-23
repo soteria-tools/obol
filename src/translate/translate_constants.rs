@@ -1,4 +1,7 @@
+extern crate rustc_apfloat;
 extern crate stable_mir;
+
+use rustc_apfloat::{Float, ieee};
 
 use charon_lib::{ast::*, error_assert, raise_error, register_error};
 use stable_mir::ty;
@@ -10,30 +13,60 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         _span: Span,
         alloc: &ty::Allocation,
-        ty: ty::Ty,
+        ty: &TyKind,
     ) -> Result<RawConstantExpr, Error> {
-        let constant = match ty.kind() {
-            ty::TyKind::RigidTy(ty::RigidTy::Int(it)) => {
-                let value = alloc.read_int().unwrap();
-                let int_ty = self.translate_int_ty(&it);
-                RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Signed(int_ty, value)))
+        let constant = match ty {
+            TyKind::Literal(lit) => match lit {
+                LiteralTy::Int(it) => RawConstantExpr::Literal(Literal::Scalar(
+                    ScalarValue::Signed(it.clone(), alloc.read_int().unwrap()),
+                )),
+                LiteralTy::UInt(uit) => RawConstantExpr::Literal(Literal::Scalar(
+                    ScalarValue::Unsigned(uit.clone(), alloc.read_uint().unwrap()),
+                )),
+                LiteralTy::Bool => {
+                    RawConstantExpr::Literal(Literal::Bool(alloc.read_bool().unwrap()))
+                }
+                LiteralTy::Char => RawConstantExpr::Literal(Literal::Char(
+                    char::from_u32(alloc.read_uint().unwrap() as u32).unwrap(),
+                )),
+                LiteralTy::Float(f) => {
+                    let bits = alloc.read_uint().unwrap();
+                    let value = match f {
+                        FloatTy::F16 => ieee::Half::from_bits(bits).to_string(),
+                        FloatTy::F32 => ieee::Single::from_bits(bits).to_string(),
+                        FloatTy::F64 => ieee::Double::from_bits(bits).to_string(),
+                        FloatTy::F128 => ieee::Quad::from_bits(bits).to_string(),
+                    };
+                    RawConstantExpr::Literal(Literal::Float(FloatValue {
+                        value,
+                        ty: f.clone(),
+                    }))
+                }
+            },
+            _ => {
+                println!("Gave up for raw memory of type {ty:?}");
+                RawConstantExpr::RawMemory(alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect())
             }
-            ty::TyKind::RigidTy(ty::RigidTy::Uint(uit)) => {
-                let value = alloc.read_uint().unwrap();
-                let uint_ty = self.translate_uint_ty(&uit);
-                RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(uint_ty, value)))
-            }
-            ty::TyKind::RigidTy(ty::RigidTy::Bool) => {
-                let value = alloc.read_bool().unwrap();
-                RawConstantExpr::Literal(Literal::Bool(value))
-            }
-            ty::TyKind::RigidTy(ty::RigidTy::Char) => {
-                let value = char::from_u32(alloc.read_uint().unwrap() as u32);
-                RawConstantExpr::Literal(Literal::Char(value.unwrap()))
-            }
-            _ => RawConstantExpr::RawMemory(alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect()),
         };
         Ok(constant)
+    }
+
+    pub fn translate_zst_constant(
+        &mut self,
+        _span: Span,
+        ty: &TyKind,
+    ) -> Result<RawConstantExpr, Error> {
+        match ty {
+            TyKind::FnDef(fnptr) => Ok(RawConstantExpr::FnPtr(fnptr.skip_binder.clone())),
+            TyKind::Adt(TypeDeclRef {
+                id: TypeId::Tuple,
+                generics,
+            }) if generics.is_empty() => Ok(RawConstantExpr::Adt(None, vec![])),
+            _ => {
+                println!("Gave up on const for ZST type: {:?}", ty);
+                Ok(RawConstantExpr::RawMemory(vec![]))
+            }
+        }
     }
 
     pub(crate) fn translate_constant_expr_to_const_generic(
@@ -70,7 +103,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> Result<ConstGeneric, Error> {
         match v.kind() {
             ty::TyConstKind::Value(ty, alloc) => {
-                let alloc = self.translate_allocation(span, alloc, *ty)?;
+                let ty = self.translate_ty(span, *ty)?;
+                let alloc = self.translate_allocation(span, alloc, ty.kind())?;
                 self.translate_constant_expr_to_const_generic(span, alloc)
             }
             _ => {

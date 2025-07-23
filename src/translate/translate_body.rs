@@ -456,7 +456,7 @@ impl BodyTransCtx<'_, '_, '_> {
                 let ty = self.translate_ty(span, const_op.ty())?;
                 let cexpr = match &const_op.const_.kind() {
                     stable_mir::ty::ConstantKind::Allocated(alloc) => {
-                        self.translate_allocation(span, alloc, const_op.ty())?
+                        self.translate_allocation(span, alloc, ty.kind())?
                     }
                     stable_mir::ty::ConstantKind::Param(_) => {
                         RawConstantExpr::Opaque("Unhandled: Param".into())
@@ -467,7 +467,9 @@ impl BodyTransCtx<'_, '_, '_> {
                     stable_mir::ty::ConstantKind::Unevaluated(_) => {
                         RawConstantExpr::Opaque("Unhandled: Unevaluated".into())
                     }
-                    stable_mir::ty::ConstantKind::ZeroSized => RawConstantExpr::RawMemory(vec![]),
+                    stable_mir::ty::ConstantKind::ZeroSized => {
+                        self.translate_zst_constant(span, ty.kind())?
+                    }
                 };
                 Ok((
                     Operand::Const(Box::new(ConstantExpr {
