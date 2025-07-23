@@ -714,4 +714,30 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let int_ty = ty.kind().as_literal().unwrap().to_integer_ty().unwrap();
         Ok(ScalarValue::from_bits(int_ty, discr.val))
     }
+
+    pub fn translate_generic_args(
+        &mut self,
+        span: Span,
+        mir_generics: &ty::GenericArgs,
+    ) -> Result<GenericArgs, Error> {
+        let mut generics = GenericArgs::empty();
+        mir_generics.0.iter().try_for_each(|kind| match kind {
+            ty::GenericArgKind::Type(ty) => {
+                let ty = self.translate_ty(span, *ty)?;
+                generics.types.push(ty);
+                Ok(())
+            }
+            ty::GenericArgKind::Const(c) => {
+                let c = self.translate_tyconst_to_const_generic(span, c)?;
+                generics.const_generics.push(c);
+                Ok(())
+            }
+            ty::GenericArgKind::Lifetime(region) => {
+                let r = self.translate_region(span, region)?;
+                generics.regions.push(r);
+                Ok(())
+            }
+        })?;
+        Ok(generics)
+    }
 }

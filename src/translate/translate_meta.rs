@@ -7,7 +7,7 @@ use super::translate_crate::TransItemSource;
 use super::translate_ctx::{ItemTransCtx, TranslateCtx};
 use charon_lib::ast::*;
 use log::trace;
-use stable_mir::ty;
+use stable_mir::{CrateDef, ty};
 use std::cmp::Ord;
 use std::path::Component;
 
@@ -181,6 +181,20 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             TransItemSource::Closure(..) => name
                 .name
                 .push(PathElem::Ident("closure".into(), Disambiguator::ZERO)),
+            TransItemSource::Fun(_) | TransItemSource::Type(..) => 'add_generics: {
+                let (gargs, span) = match src {
+                    TransItemSource::Fun(instance) => (instance.args(), instance.def.span()),
+                    TransItemSource::Type(adt, gargs) => (gargs.clone().into(), adt.span()),
+                    _ => unreachable!(),
+                };
+                if gargs.0.is_empty() {
+                    break 'add_generics;
+                }
+                let span = self.translate_span_from_smir(&span);
+                let mut item_ctx = ItemTransCtx::new(None, self);
+                let generics = item_ctx.translate_generic_args(span, &gargs)?;
+                name.name.push(PathElem::Monomorphized(Box::new(generics)));
+            }
             _ => {}
         }
 
