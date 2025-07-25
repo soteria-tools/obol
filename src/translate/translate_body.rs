@@ -1168,7 +1168,12 @@ impl BodyTransCtx<'_, '_, '_> {
 
         // Initialize the local variables
         trace!("Translating the body locals");
-        self.locals.arg_count = instance.fn_abi().unwrap().args.len();
+        let arg_count_with_opt_caller = instance.fn_abi().unwrap().args.len();
+        self.locals.arg_count = if self.requires_caller_location(instance) {
+            arg_count_with_opt_caller - 1
+        } else {
+            arg_count_with_opt_caller
+        };
         self.translate_body_locals(&body)?;
 
         // Translate the expression body
