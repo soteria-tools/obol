@@ -183,7 +183,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     unreachable!("Unexpected rigid type for adt: {rty:?}");
                 };
                 let layout = rty.layout()?.shape();
-                let (variant, rfields) = match adt.kind() {
+                let (variant, rfields, offsets) = match adt.kind() {
                     ty::AdtKind::Struct => {
                         let variant = adt.variants()[0];
                         let rfields = variant
@@ -191,7 +191,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             .iter()
                             .map(|f| f.ty_with_args(generics))
                             .collect::<Vec<ty::Ty>>();
-                        (None, rfields)
+                        let abi::FieldsShape::Arbitrary { offsets } = &layout.fields else {
+                            unreachable!("Unexpected layout for struct: {layout:?}");
+                        };
+                        (None, rfields, offsets.clone())
                     }
                     ty::AdtKind::Enum => 'enum_case: {
                         if let abi::VariantsShape::Single { index } = layout.variants {
@@ -202,13 +205,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                 .iter()
                                 .map(|f| f.ty_with_args(generics))
                                 .collect::<Vec<ty::Ty>>();
-                            break 'enum_case (Some(variant), rfields);
+                            let abi::FieldsShape::Arbitrary { offsets } = &layout.fields else {
+                                unreachable!("Unexpected layout for struct: {layout:?}");
+                            };
+                            break 'enum_case (Some(variant), rfields, offsets.clone());
                         };
                         let abi::VariantsShape::Multiple {
                             tag,
                             tag_encoding,
                             tag_field,
-                            ..
+                            variants,
                         } = &layout.variants
                         else {
                             unreachable!("Unexpected layout for enum: {layout:?}");
@@ -217,20 +223,25 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         let abi::FieldsShape::Arbitrary { offsets } = &layout.fields else {
                             unreachable!("Unexpected layout for enum: {layout:?}");
                         };
-                        let abi::Scalar::Initialized {
-                            value: abi::Primitive::Int { length, signed },
-                            ..
-                        } = &tag
-                        else {
-                            unreachable!("Unexpected tag encoding for enum: {tag_encoding:?}");
+                        let abi::Scalar::Initialized { value: tag_ty, .. } = &tag else {
+                            unreachable!("Unexpected tag encoding for enum: {tag:?}");
                         };
-                        assert!(!signed, "Discriminant is signed?");
+                        let length_bytes = match tag_ty {
+                            abi::Primitive::Int { length, signed } => {
+                                assert!(!signed, "Discriminant is signed?");
+                                length.bits() / 8
+                            }
+                            abi::Primitive::Pointer(_) => {
+                                self.t_ctx.tcx.data_layout.pointer_size().bytes() as usize
+                            }
+                            abi::Primitive::Float { .. } => unreachable!("Float tag?"),
+                        };
                         let tag_offset = offsets[*tag_field].bytes();
-                        let tag_bytes = &bytes[tag_offset..tag_offset + length.bits() / 8];
+                        let tag_bytes = &bytes[tag_offset..tag_offset + length_bytes];
                         let tag_value =
                             self.read_target_uint(Self::as_init(tag_bytes)?.as_slice())?;
 
-                        match tag_encoding {
+                        let variant_idx = match tag_encoding {
                             abi::TagEncoding::Direct => adt
                                 .variants_iter()
                                 .find_map(|v| {
@@ -238,13 +249,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                     if discr.val != tag_value {
                                         return None;
                                     };
-                                    let fields = v
-                                        .fields()
-                                        .iter()
-                                        .map(|f| f.ty_with_args(generics))
-                                        .collect::<Vec<ty::Ty>>();
-                                    let variant = self.translate_variant_id(v.idx);
-                                    Some((Some(variant), fields))
+                                    Some(v.idx)
                                 })
                                 .unwrap(),
                             abi::TagEncoding::Niche {
@@ -257,30 +262,34 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                     let discr = adt.discriminant_for_variant(v.idx);
                                     let niche_variants_start =
                                         niche_variants.start().to_index() as u128;
-                                    let tag = (discr.val - niche_variants_start)
-                                        .wrapping_add(*niche_start);
-                                    if tag != tag_value {
-                                        return None;
+
+                                    if matches!(tag_ty, abi::Primitive::Int { .. }) {
+                                        let tag = (discr.val - niche_variants_start)
+                                            .wrapping_add(*niche_start);
+                                        (tag_value == tag).then_some(v.idx)
+                                    } else {
+                                        // pointer niche: if 0, then niche variant, otherwise untagged variant
+                                        assert!(
+                                            niche_variants.start() == niche_variants.end(),
+                                            ">1 niche in ptr niche?"
+                                        );
+                                        (tag_value == 0).then_some(*niche_variants.start())
                                     }
-                                    let fields = v
-                                        .fields()
-                                        .iter()
-                                        .map(|f| f.ty_with_args(generics))
-                                        .collect::<Vec<ty::Ty>>();
-                                    let variant = self.translate_variant_id(v.idx);
-                                    Some((Some(variant), fields))
                                 })
-                                .unwrap_or_else(|| {
-                                    let variant = adt.variant(*untagged_variant).unwrap();
-                                    let fields = variant
-                                        .fields()
-                                        .iter()
-                                        .map(|f| f.ty_with_args(generics))
-                                        .collect::<Vec<ty::Ty>>();
-                                    let variant = self.translate_variant_id(*untagged_variant);
-                                    (Some(variant), fields)
-                                }),
-                        }
+                                .unwrap_or_else(|| *untagged_variant),
+                        };
+                        let variant = adt.variant(variant_idx).unwrap();
+                        let fields = variant
+                            .fields()
+                            .iter()
+                            .map(|f| f.ty_with_args(generics))
+                            .collect::<Vec<ty::Ty>>();
+                        let variant_idx_charon = self.translate_variant_id(variant_idx);
+                        let variant_layout = variants.get(variant_idx.to_index()).unwrap();
+                        let abi::FieldsShape::Arbitrary { offsets } = &variant_layout.fields else {
+                            unreachable!("Unexpected layout for enum: {layout:?}");
+                        };
+                        (Some(variant_idx_charon), fields, offsets.clone())
                     }
                     _ => {
                         trace!(
@@ -292,28 +301,22 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         });
                     }
                 };
-                if let abi::FieldsShape::Arbitrary { offsets } = &layout.fields {
-                    let consts = layout
-                        .fields
-                        .fields_by_offset_order()
-                        .iter()
-                        .map(|field| {
-                            let field_offset = offsets[*field].bytes();
-                            let field_rty = rfields[*field];
-                            let field_ty = self.translate_ty(span, field_rty)?;
-                            self.translate_allocation_at(
-                                span,
-                                alloc,
-                                field_ty.kind(),
-                                &field_rty,
-                                field_offset + offset,
-                            )
-                        })
-                        .try_collect()?;
-                    RawConstantExpr::Adt(variant.clone(), consts)
-                } else {
-                    unreachable!("??/")
-                }
+
+                let consts = (0..offsets.len())
+                    .map(|field| {
+                        let field_offset = offsets[field].bytes();
+                        let field_rty = rfields[field];
+                        let field_ty = self.translate_ty(span, field_rty)?;
+                        self.translate_allocation_at(
+                            span,
+                            alloc,
+                            field_ty.kind(),
+                            &field_rty,
+                            field_offset + offset,
+                        )
+                    })
+                    .try_collect()?;
+                RawConstantExpr::Adt(variant.clone(), consts)
             }
             _ => {
                 // println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
@@ -349,14 +352,19 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     ty::RigidTy::Tuple(rtys) => (None, rtys.clone()),
                     ty::RigidTy::Adt(adt, generics) => {
                         let layout = rty.layout()?.shape();
-                        let variant_r = if rty.kind().is_enum() {
-                            assert!(layout.is_1zst(), "ZST but not a 1ZST?");
-                            let abi::VariantsShape::Single { index } = layout.variants else {
-                                unreachable!("Unexpected layout for enum: {layout:?}");
-                            };
-                            Some(index)
-                        } else {
-                            None
+                        let variant_r = match adt.kind() {
+                            ty::AdtKind::Struct => None,
+                            ty::AdtKind::Enum => {
+                                let abi::VariantsShape::Single { index } = layout.variants else {
+                                    unreachable!(
+                                        "Unexpected layout for ZST enum\n- Layout: {layout:?}\n- Ty: {rty:?}"
+                                    );
+                                };
+                                Some(index)
+                            }
+                            ty::AdtKind::Union => {
+                                raise_error!(self, span, "Unhandled: ZST union type {rty:?}");
+                            }
                         };
                         let variant = variant_r.map(|v| self.translate_variant_id(v));
                         let variant_r = variant_r.unwrap_or(ty::VariantIdx::to_val(0));
