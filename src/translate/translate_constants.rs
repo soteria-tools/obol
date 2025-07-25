@@ -347,6 +347,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     // FIXME: temporary safeguard for large arrays; ideally we should have some
                     // sort of RawConstantExpr::ArrayRepeat...
                     RawConstantExpr::RawMemory(vec![])
+                } else if len == 0 {
+                    RawConstantExpr::Array(vec![])
                 } else {
                     let cexpr = self.translate_zst_constant(span, ty, rty)?;
                     RawConstantExpr::Array(vec![cexpr; len as usize])

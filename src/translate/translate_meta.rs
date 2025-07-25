@@ -270,7 +270,19 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             return item_meta.clone();
         }
         let span = Span::dummy();
-        let attr_info = AttrInfo::default();
+        let mut attr_info = AttrInfo::default();
+
+        match item_src {
+            TransItemSource::Fun(instance) => {
+                if instance.intrinsic_name().is_some() {
+                    attr_info.attributes.push(Attribute::Unknown(RawAttribute {
+                        path: "rustc_intrinsic".to_string(),
+                        args: None,
+                    }));
+                }
+            }
+            _ => {}
+        };
         // let lang_item = item_src.as_def_id()
         //     .lang_item
         //     .clone()
