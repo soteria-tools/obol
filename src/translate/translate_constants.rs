@@ -342,9 +342,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let ty::RigidTy::Array(rty, len) = rtyk.rigid().unwrap() else {
                     unreachable!();
                 };
-                let cexpr = self.translate_zst_constant(span, ty, rty)?;
                 let len = len.eval_target_usize()?;
-                RawConstantExpr::Array(vec![cexpr; len as usize])
+                if len > 32 {
+                    // FIXME: temporary safeguard for large arrays; ideally we should have some
+                    // sort of RawConstantExpr::ArrayRepeat...
+                    RawConstantExpr::RawMemory(vec![])
+                } else {
+                    let cexpr = self.translate_zst_constant(span, ty, rty)?;
+                    RawConstantExpr::Array(vec![cexpr; len as usize])
+                }
             }
             TyKind::Adt(_) => {
                 let rtyk = rty.kind();
@@ -356,9 +362,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             ty::AdtKind::Struct => None,
                             ty::AdtKind::Enum => {
                                 let abi::VariantsShape::Single { index } = layout.variants else {
-                                    unreachable!(
+                                    println!(
                                         "Unexpected layout for ZST enum\n- Layout: {layout:?}\n- Ty: {rty:?}"
                                     );
+                                    return Ok(ConstantExpr {
+                                        value: RawConstantExpr::RawMemory(vec![]),
+                                        ty: ty.clone().into_ty(),
+                                    });
                                 };
                                 Some(index)
                             }

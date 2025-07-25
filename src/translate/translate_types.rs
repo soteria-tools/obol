@@ -315,7 +315,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     /// Translates the layout as queried from rustc into
     /// the more restricted [`Layout`].
     pub fn translate_layout(
-        &self,
+        &mut self,
         def: &ty::AdtDef,
         genargs: &ty::GenericArgs,
         kind: &TypeDeclKind,
@@ -513,11 +513,29 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 }
             }
             r_abi::VariantsShape::Single { index } => {
-                assert!(index.to_index() == 0);
                 // For structs we add a single variant that has the field offsets. Unions don't
                 // have field offsets.
+                let tag = if kind.is_enum() {
+                    let discr = def.discriminant_for_variant(index);
+                    match &discr.ty.kind().rigid() {
+                        Some(ty::RigidTy::Int(intty)) => {
+                            let intty = self.translate_int_ty(intty);
+                            Some(ScalarValue::Signed(intty, discr.val as i128))
+                        }
+                        Some(ty::RigidTy::Uint(intty)) => {
+                            let intty = self.translate_uint_ty(intty);
+                            Some(ScalarValue::Unsigned(intty, discr.val as u128))
+                        }
+                        _ => {
+                            println!("Expected an integer literal for the discriminant");
+                            None
+                        }
+                    }
+                } else {
+                    None
+                };
                 if let r_abi::FieldsShape::Arbitrary { .. } = &layout.fields {
-                    variant_layouts.push(translate_variant_layout(&layout, None));
+                    variant_layouts.push(translate_variant_layout(&layout, tag));
                 }
             }
             r_abi::VariantsShape::Empty => {}
