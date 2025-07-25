@@ -246,14 +246,18 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> Result<ConstantExpr, Error> {
         let value = match ty {
             TyKind::FnDef(fnptr) => RawConstantExpr::FnPtr(fnptr.skip_binder.clone()),
+            TyKind::Adt(_) if rty.kind().is_array() => {
+                let rtyk = rty.kind();
+                let ty::RigidTy::Array(rty, len) = rtyk.rigid().unwrap() else {
+                    unreachable!();
+                };
+                let cexpr = self.translate_zst_constant(span, ty, rty)?;
+                let len = len.eval_target_usize()?;
+                RawConstantExpr::Array(vec![cexpr; len as usize])
+            }
             TyKind::Adt(_) => {
                 let rtyk = rty.kind();
                 let (variant, rtys) = match rtyk.rigid().unwrap() {
-                    ty::RigidTy::Array(rty, len) => {
-                        let len = len.eval_target_usize()?;
-                        let rtys = vec![rty.clone(); len as usize];
-                        (None, rtys)
-                    }
                     ty::RigidTy::Tuple(rtys) => (None, rtys.clone()),
                     ty::RigidTy::Adt(adt, generics) => {
                         let layout = rty.layout()?.shape();
