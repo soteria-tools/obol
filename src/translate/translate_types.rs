@@ -3,8 +3,6 @@ extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate stable_mir;
 
-use crate::translate::translate_body::lift_err;
-
 use super::translate_ctx::*;
 use charon_lib::ast::*;
 use charon_lib::ids::Vector;
@@ -194,7 +192,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 TyKind::FnPtr(RegionBinder::empty((inputs, output)))
             }
             ty::RigidTy::FnDef(item, args) => {
-                let instance = lift_err(stable_mir::mir::mono::Instance::resolve(*item, args))?;
+                let instance = stable_mir::mir::mono::Instance::resolve(*item, args)?;
                 let fn_id = self.register_fun_decl_id(span, &instance);
                 let fnref = RegionBinder::empty(FnPtr {
                     func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
@@ -721,23 +719,28 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         mir_generics: &ty::GenericArgs,
     ) -> Result<GenericArgs, Error> {
         let mut generics = GenericArgs::empty();
-        mir_generics.0.iter().try_for_each(|kind| match kind {
-            ty::GenericArgKind::Type(ty) => {
-                let ty = self.translate_ty(span, *ty)?;
-                generics.types.push(ty);
-                Ok(())
-            }
-            ty::GenericArgKind::Const(c) => {
-                let c = self.translate_tyconst_to_const_generic(span, c)?;
-                generics.const_generics.push(c);
-                Ok(())
-            }
-            ty::GenericArgKind::Lifetime(region) => {
-                let r = self.translate_region(span, region)?;
-                generics.regions.push(r);
-                Ok(())
-            }
-        })?;
+        mir_generics
+            .0
+            .iter()
+            .try_for_each(|kind| -> Result<(), Error> {
+                match kind {
+                    ty::GenericArgKind::Type(ty) => {
+                        let ty = self.translate_ty(span, *ty)?;
+                        generics.types.push(ty);
+                        Ok(())
+                    }
+                    ty::GenericArgKind::Const(c) => {
+                        let c = self.translate_tyconst_to_const_generic(span, c)?;
+                        generics.const_generics.push(c);
+                        Ok(())
+                    }
+                    ty::GenericArgKind::Lifetime(region) => {
+                        let r = self.translate_region(span, region)?;
+                        generics.regions.push(r);
+                        Ok(())
+                    }
+                }
+            })?;
         Ok(generics)
     }
 }

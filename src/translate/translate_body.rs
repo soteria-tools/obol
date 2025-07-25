@@ -56,16 +56,6 @@ impl<'tcx, 'tctx, 'ictx> DerefMut for BodyTransCtx<'tcx, 'tctx, 'ictx> {
     }
 }
 
-pub fn lift_err<T>(res: Result<T, stable_mir::Error>) -> Result<T, charon_lib::errors::Error> {
-    match res {
-        Ok(val) => Ok(val),
-        Err(err) => Err(Error {
-            span: Span::dummy(),
-            msg: err.to_string(),
-        }),
-    }
-}
-
 impl<'tcx, 'tctx, 'ictx> BodyTransCtx<'tcx, 'tctx, 'ictx> {
     pub(crate) fn new(
         i_ctx: &'ictx mut ItemTransCtx<'tcx, 'tctx>,
@@ -88,7 +78,7 @@ impl BodyTransCtx<'_, '_, '_> {
         self.locals_map.get(local).copied()
     }
 
-    fn translate_variant_id(&self, id: stable_mir::ty::VariantIdx) -> VariantId {
+    pub fn translate_variant_id(&self, id: stable_mir::ty::VariantIdx) -> VariantId {
         VariantId::new(id.to_index())
     }
 
@@ -211,7 +201,7 @@ impl BodyTransCtx<'_, '_, '_> {
         variant_id: Option<VariantId>,
         proj: &mir::ProjectionElem,
     ) -> Result<(Place, stable_mir::ty::Ty, Option<VariantId>), Error> {
-        let proj_ty = lift_err(proj.ty(place_ty))?;
+        let proj_ty = proj.ty(place_ty)?;
         let ty = self.translate_ty(span, proj_ty)?;
 
         let proj_elem = match proj {
@@ -456,28 +446,25 @@ impl BodyTransCtx<'_, '_, '_> {
                 let ty = self.translate_ty(span, const_op.ty())?;
                 let cexpr = match &const_op.const_.kind() {
                     stable_mir::ty::ConstantKind::Allocated(alloc) => {
-                        self.translate_allocation(span, alloc, ty.kind())?
-                    }
-                    stable_mir::ty::ConstantKind::Param(_) => {
-                        RawConstantExpr::Opaque("Unhandled: Param".into())
-                    }
-                    stable_mir::ty::ConstantKind::Ty(_) => {
-                        RawConstantExpr::Opaque("Unhandled: Ty".into())
-                    }
-                    stable_mir::ty::ConstantKind::Unevaluated(_) => {
-                        RawConstantExpr::Opaque("Unhandled: Unevaluated".into())
+                        self.translate_allocation(span, alloc, ty.kind(), &const_op.ty())?
                     }
                     stable_mir::ty::ConstantKind::ZeroSized => {
-                        self.translate_zst_constant(span, ty.kind())?
+                        self.translate_zst_constant(span, ty.kind(), &const_op.ty())?
                     }
-                };
-                Ok((
-                    Operand::Const(Box::new(ConstantExpr {
+                    stable_mir::ty::ConstantKind::Param(_) => ConstantExpr {
+                        value: RawConstantExpr::Opaque("Unhandled: Param".into()),
                         ty: ty.clone(),
-                        value: cexpr,
-                    })),
-                    ty,
-                ))
+                    },
+                    stable_mir::ty::ConstantKind::Ty(_) => ConstantExpr {
+                        value: RawConstantExpr::Opaque("Unhandled: ty".into()),
+                        ty: ty.clone(),
+                    },
+                    stable_mir::ty::ConstantKind::Unevaluated(_) => ConstantExpr {
+                        value: RawConstantExpr::Opaque("Unhandled: uneval".into()),
+                        ty: ty.clone(),
+                    },
+                };
+                Ok((Operand::Const(Box::new(cexpr)), ty))
             }
         }
     }
@@ -569,16 +556,16 @@ impl BodyTransCtx<'_, '_, '_> {
                         mir::PointerCoercion::ClosureFnPointer(_),
                         ..,
                     ) => {
-                        let op_ty = lift_err(hax_operand.ty(self.local_decls))?;
+                        let op_ty = hax_operand.ty(self.local_decls)?;
                         let op_ty_kind = op_ty.kind();
                         let Some(ty::RigidTy::Closure(def, args)) = op_ty_kind.rigid() else {
                             raise_error!(self, span, "ClosureFnPointer without closure?");
                         };
-                        let closure = lift_err(mir::mono::Instance::resolve_closure(
+                        let closure = mir::mono::Instance::resolve_closure(
                             def.clone(),
                             args,
                             ty::ClosureKind::FnOnce,
-                        ))?;
+                        )?;
                         let fn_id = self.register_fun_decl_id(span, &closure);
                         let fn_ptr = FnPtr {
                             func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
@@ -1034,7 +1021,7 @@ impl BodyTransCtx<'_, '_, '_> {
         // are using a local function pointer (i.e., the operand is a "move").
         let lval = self.translate_place(span, destination)?;
         // Translate the function operand.
-        let fn_ty = lift_err(fun.ty(self.local_decls))?;
+        let fn_ty = fun.ty(self.local_decls)?;
         let mut extra_stt = None;
         let fn_operand = match fn_ty.kind() {
             ty::TyKind::RigidTy(ty::RigidTy::FnDef(fn_def, args)) => {
@@ -1057,7 +1044,7 @@ impl BodyTransCtx<'_, '_, '_> {
                 //     // We ignore the arguments
                 //     return Ok(RawTerminator::Abort(AbortKind::Panic(Some(name))));
                 // } else {
-                let instance = lift_err(stable_mir::mir::mono::Instance::resolve(fn_def, &args))?;
+                let instance = stable_mir::mir::mono::Instance::resolve(fn_def, &args)?;
                 let fn_id = self.register_fun_decl_id(span, &instance);
                 let fn_ptr = FnPtr {
                     func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),

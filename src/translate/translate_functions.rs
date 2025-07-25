@@ -5,8 +5,6 @@
 
 extern crate stable_mir;
 
-use crate::translate::translate_body::lift_err;
-
 use super::translate_ctx::*;
 use charon_lib::ast::*;
 use stable_mir::mir;
@@ -22,7 +20,7 @@ impl ItemTransCtx<'_, '_> {
     ) -> Result<FunSig, Error> {
         let span = item_meta.span;
 
-        let instance_abi = lift_err(def.fn_abi())?;
+        let instance_abi = def.fn_abi()?;
 
         // Translate the signature
 

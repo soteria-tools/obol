@@ -1087,6 +1087,7 @@ pub fn emit_smir(opts: &crate::args::CliOpts, tcx: TyCtxt<'_>) {
     use Pass::*;
     use charon_lib::transform::*;
     let transforms: &[Pass] = &[
+        NonBody(&compute_short_names::Transform),
         UnstructuredBody(&merge_goto_chains::Transform),
         UnstructuredBody(&remove_dynamic_checks::Transform),
         UnstructuredBody(&simplify_constants::Transform),

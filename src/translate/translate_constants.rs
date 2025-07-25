@@ -1,36 +1,101 @@
+extern crate rustc_abi;
 extern crate rustc_apfloat;
+extern crate rustc_smir;
 extern crate stable_mir;
 
-use rustc_apfloat::{Float, ieee};
-
 use charon_lib::{ast::*, error_assert, raise_error, register_error};
-use stable_mir::ty;
+use rustc_apfloat::{Float, ieee};
+use rustc_smir::IndexedVal;
+use stable_mir::{abi, mir, ty};
+use std::io::Read;
 
 use crate::translate::translate_ctx::ItemTransCtx;
 
 impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
+    /// Utility function used to read an allocation data into a unassigned integer.
+    fn read_target_uint(&mut self, mut bytes: &[u8]) -> Result<u128, Error> {
+        let mut buf = [0u8; size_of::<u128>()];
+        match self.t_ctx.tcx.data_layout.endian {
+            rustc_abi::Endian::Little => {
+                bytes.read_exact(&mut buf[..bytes.len()])?;
+                Ok(u128::from_le_bytes(buf))
+            }
+            rustc_abi::Endian::Big => {
+                bytes.read_exact(&mut buf[16 - bytes.len()..])?;
+                Ok(u128::from_be_bytes(buf))
+            }
+        }
+    }
+
+    /// Utility function used to read an allocation data into an assigned integer.
+    fn read_target_int(&mut self, mut bytes: &[u8]) -> Result<i128, Error> {
+        let mut buf = [0u8; size_of::<i128>()];
+        match self.t_ctx.tcx.data_layout.endian {
+            rustc_abi::Endian::Little => {
+                bytes.read_exact(&mut buf[..bytes.len()])?;
+                Ok(i128::from_le_bytes(buf))
+            }
+            rustc_abi::Endian::Big => {
+                bytes.read_exact(&mut buf[16 - bytes.len()..])?;
+                Ok(i128::from_be_bytes(buf))
+            }
+        }
+    }
+
+    pub fn as_init(bytes: &[Option<u8>]) -> Result<Vec<u8>, Error> {
+        bytes
+            .iter()
+            .copied()
+            .collect::<Option<Vec<_>>>()
+            .ok_or_else(|| "Found uninitialized bytes".into())
+    }
+
     pub fn translate_allocation(
         &mut self,
-        _span: Span,
+        span: Span,
         alloc: &ty::Allocation,
         ty: &TyKind,
-    ) -> Result<RawConstantExpr, Error> {
-        let constant = match ty {
+        rty: &ty::Ty,
+    ) -> Result<ConstantExpr, Error> {
+        self.translate_allocation_at(span, alloc, ty, rty, 0)
+    }
+
+    pub fn translate_allocation_at(
+        &mut self,
+        span: Span,
+        alloc: &ty::Allocation,
+        ty: &TyKind,
+        rty: &ty::Ty,
+        offset: usize,
+    ) -> Result<ConstantExpr, Error> {
+        let size = rty.layout()?.shape().size.bytes();
+        if size == 0 {
+            return self.translate_zst_constant(span, ty, rty);
+        }
+        let bytes = &alloc.bytes.as_slice()[offset..offset + size];
+        let value = match ty {
             TyKind::Literal(lit) => match lit {
-                LiteralTy::Int(it) => RawConstantExpr::Literal(Literal::Scalar(
-                    ScalarValue::Signed(it.clone(), alloc.read_int().unwrap()),
-                )),
-                LiteralTy::UInt(uit) => RawConstantExpr::Literal(Literal::Scalar(
-                    ScalarValue::Unsigned(uit.clone(), alloc.read_uint().unwrap()),
-                )),
+                LiteralTy::Int(it) => {
+                    RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Signed(
+                        it.clone(),
+                        self.read_target_int(Self::as_init(bytes)?.as_slice())?,
+                    )))
+                }
+                LiteralTy::UInt(uit) => {
+                    RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                        uit.clone(),
+                        self.read_target_uint(Self::as_init(bytes)?.as_slice())?,
+                    )))
+                }
                 LiteralTy::Bool => {
                     RawConstantExpr::Literal(Literal::Bool(alloc.read_bool().unwrap()))
                 }
                 LiteralTy::Char => RawConstantExpr::Literal(Literal::Char(
-                    char::from_u32(alloc.read_uint().unwrap() as u32).unwrap(),
+                    char::from_u32(self.read_target_uint(Self::as_init(bytes)?.as_slice())? as u32)
+                        .unwrap(),
                 )),
                 LiteralTy::Float(f) => {
-                    let bits = alloc.read_uint().unwrap();
+                    let bits = self.read_target_uint(Self::as_init(bytes)?.as_slice())?;
                     let value = match f {
                         FloatTy::F16 => ieee::Half::from_bits(bits).to_string(),
                         FloatTy::F32 => ieee::Single::from_bits(bits).to_string(),
@@ -43,38 +108,200 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     }))
                 }
             },
+            TyKind::Ref(_, subty, _) | TyKind::RawPtr(subty, _) => {
+                let Some((0, alloc)) = alloc.provenance.ptrs.first() else {
+                    unreachable!("ref/ptr constant without provenance?");
+                };
+                use mir::alloc::GlobalAlloc;
+                let glob_alloc: GlobalAlloc = alloc.0.into();
+                match glob_alloc {
+                    GlobalAlloc::Memory(suballoc)
+                        if matches!(
+                            subty.kind(),
+                            TyKind::Adt(TypeDeclRef {
+                                id: TypeId::Builtin(BuiltinTy::Str),
+                                ..
+                            })
+                        ) =>
+                    {
+                        let as_str =
+                            unsafe { String::from_utf8_unchecked(suballoc.raw_bytes().unwrap()) };
+                        RawConstantExpr::Literal(Literal::Str(as_str))
+                    }
+                    GlobalAlloc::Memory(suballoc) => {
+                        let rtyk = rty.kind();
+                        let rsubty = match rtyk.rigid().unwrap() {
+                            ty::RigidTy::RawPtr(rsubty, _) => rsubty,
+                            ty::RigidTy::Ref(_, rsubty, _) => rsubty,
+                            _ => unreachable!(
+                                "Unexpected rigid type for raw pointer/reference: {rty:?}"
+                            ),
+                        };
+                        let sub_constant =
+                            self.translate_allocation(span, &suballoc, subty, rsubty)?;
+                        if let TyKind::RawPtr(_, rk) = ty {
+                            RawConstantExpr::Ptr(*rk, Box::new(sub_constant))
+                        } else {
+                            RawConstantExpr::Ref(Box::new(sub_constant))
+                        }
+                    }
+                    _ => unreachable!(),
+                }
+            }
+            TyKind::Adt(TypeDeclRef {
+                id: TypeId::Tuple,
+                generics,
+            }) => {
+                let rtyk = rty.kind();
+                let ty::RigidTy::Tuple(rtys) = rtyk.rigid().unwrap() else {
+                    unreachable!("Unexpected rigid type for tuple: {rty:?}");
+                };
+                let layout = rty.layout()?.shape();
+                let abi::FieldsShape::Arbitrary { offsets } = &layout.fields else {
+                    unreachable!("Unexpected layout for tuple: {layout:?}");
+                };
+                let fields = (0..generics.types.elem_count())
+                    .map(|i| {
+                        let field_offset = offsets[i].bytes();
+                        let field_rty = rtys[i];
+                        let field_ty = generics.types.get(TypeVarId::from_usize(i)).unwrap();
+                        self.translate_allocation_at(
+                            span,
+                            alloc,
+                            field_ty.kind(),
+                            &field_rty,
+                            field_offset + offset,
+                        )
+                    })
+                    .try_collect()?;
+                RawConstantExpr::Adt(None, fields)
+            }
+            TyKind::Adt(_) if rty.kind().is_adt() => {
+                let rtyk = rty.kind();
+                let ty::RigidTy::Adt(adt, generics) = rtyk.rigid().unwrap() else {
+                    unreachable!("Unexpected rigid type for adt: {rty:?}");
+                };
+                let layout = rty.layout()?.shape();
+                let (variant, rfields) = match adt.kind() {
+                    ty::AdtKind::Struct => {
+                        let variant = adt.variants()[0];
+                        let rfields = variant
+                            .fields()
+                            .iter()
+                            .map(|f| f.ty_with_args(generics))
+                            .collect::<Vec<ty::Ty>>();
+                        (None, rfields)
+                    }
+                    _ => {
+                        // println!(
+                        //     "Gave up for non-struct raw memory of type {ty:?} with alloc {alloc:?}"
+                        // );
+                        return Ok(ConstantExpr {
+                            value: RawConstantExpr::RawMemory(
+                                alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect(),
+                            ),
+                            ty: ty.clone().into_ty(),
+                        });
+                    }
+                };
+                if let abi::FieldsShape::Arbitrary { offsets } = &layout.fields {
+                    let consts = layout
+                        .fields
+                        .fields_by_offset_order()
+                        .iter()
+                        .map(|field| {
+                            let field_offset = offsets[*field].bytes();
+                            let field_rty = rfields[*field];
+                            let field_ty = self.translate_ty(span, field_rty)?;
+                            self.translate_allocation_at(
+                                span,
+                                alloc,
+                                field_ty.kind(),
+                                &field_rty,
+                                field_offset + offset,
+                            )
+                        })
+                        .try_collect()?;
+                    RawConstantExpr::Adt(variant.clone(), consts)
+                } else {
+                    unreachable!("??/")
+                }
+            }
             _ => {
-                println!("Gave up for raw memory of type {ty:?}");
+                // println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
                 RawConstantExpr::RawMemory(alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect())
             }
         };
-        Ok(constant)
+        Ok(ConstantExpr {
+            value,
+            ty: ty.clone().into_ty(),
+        })
     }
 
     pub fn translate_zst_constant(
         &mut self,
-        _span: Span,
+        span: Span,
         ty: &TyKind,
-    ) -> Result<RawConstantExpr, Error> {
-        match ty {
-            TyKind::FnDef(fnptr) => Ok(RawConstantExpr::FnPtr(fnptr.skip_binder.clone())),
-            TyKind::Adt(TypeDeclRef {
-                id: TypeId::Tuple,
-                generics,
-            }) if generics.is_empty() => Ok(RawConstantExpr::Adt(None, vec![])),
+        rty: &ty::Ty,
+    ) -> Result<ConstantExpr, Error> {
+        let value = match ty {
+            TyKind::FnDef(fnptr) => RawConstantExpr::FnPtr(fnptr.skip_binder.clone()),
+            TyKind::Adt(_) => {
+                let rtyk = rty.kind();
+                let (variant, rtys) = match rtyk.rigid().unwrap() {
+                    ty::RigidTy::Array(rty, len) => {
+                        let len = len.eval_target_usize()?;
+                        let rtys = vec![rty.clone(); len as usize];
+                        (None, rtys)
+                    }
+                    ty::RigidTy::Tuple(rtys) => (None, rtys.clone()),
+                    ty::RigidTy::Adt(adt, generics) => {
+                        let layout = rty.layout()?.shape();
+                        let variant = if rty.kind().is_enum() {
+                            assert!(layout.is_1zst(), "ZST but not a 1ZST?");
+                            let abi::VariantsShape::Single { index } = layout.variants else {
+                                unreachable!("Unexpected layout for enum: {layout:?}");
+                            };
+                            Some(VariantId::new(index.to_index()))
+                        } else {
+                            None
+                        };
+                        let variant_idx = variant.map(VariantId::index).unwrap_or(0);
+                        let fields = adt.variants()[variant_idx]
+                            .fields()
+                            .iter()
+                            .map(|f| f.ty_with_args(generics))
+                            .collect();
+                        (variant, fields)
+                    }
+                    _ => unreachable!("Unexpected rigid type for adt: {rty:?} with kind {rtyk:?}"),
+                };
+                let fields = rtys
+                    .into_iter()
+                    .map(|field_rty| {
+                        let field_ty = self.translate_ty(span, field_rty)?;
+                        self.translate_zst_constant(span, field_ty.kind(), &field_rty)
+                    })
+                    .try_collect()?;
+                RawConstantExpr::Adt(variant, fields)
+            }
             _ => {
                 println!("Gave up on const for ZST type: {:?}", ty);
-                Ok(RawConstantExpr::RawMemory(vec![]))
+                RawConstantExpr::RawMemory(vec![])
             }
-        }
+        };
+        Ok(ConstantExpr {
+            value,
+            ty: ty.clone().into_ty(),
+        })
     }
 
     pub(crate) fn translate_constant_expr_to_const_generic(
         &mut self,
         span: Span,
-        value: RawConstantExpr,
+        value: ConstantExpr,
     ) -> Result<ConstGeneric, Error> {
-        match value {
+        match value.value {
             RawConstantExpr::Var(v) => Ok(ConstGeneric::Var(v)),
             RawConstantExpr::Literal(v) => Ok(ConstGeneric::Value(v)),
             RawConstantExpr::Global(global_ref) => {
@@ -102,9 +329,9 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         v: &ty::TyConst,
     ) -> Result<ConstGeneric, Error> {
         match v.kind() {
-            ty::TyConstKind::Value(ty, alloc) => {
-                let ty = self.translate_ty(span, *ty)?;
-                let alloc = self.translate_allocation(span, alloc, ty.kind())?;
+            ty::TyConstKind::Value(rty, alloc) => {
+                let ty = self.translate_ty(span, *rty)?;
+                let alloc = self.translate_allocation(span, alloc, ty.kind(), rty)?;
                 self.translate_constant_expr_to_const_generic(span, alloc)
             }
             _ => {
