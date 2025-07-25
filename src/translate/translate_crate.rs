@@ -18,6 +18,7 @@ use stable_mir::rustc_internal::{self};
 use stable_mir::{CrateDef, DefId};
 use stable_mir::{mir, ty};
 use std::cell::RefCell;
+use std::fmt::Debug;
 use std::hash::Hash;
 
 /// The id of an untranslated item. Note that a given `DefId` may show up as multiple different
@@ -42,10 +43,19 @@ impl TransItemSource {
     }
 
     /// Value with which we order values.
-    fn sort_key(&self) -> impl Ord {
+    fn sort_key(&self) -> impl Ord + Debug {
+        fn key(k: &mir::mono::InstanceKind) -> isize {
+            match k {
+                mir::mono::InstanceKind::Intrinsic => 0,
+                mir::mono::InstanceKind::Item => 1,
+                mir::mono::InstanceKind::Shim => 2,
+                mir::mono::InstanceKind::Virtual { idx } => 3 + (*idx as isize),
+            }
+        }
+
         match self {
             TransItemSource::Global(id) => (0, id.to_index(), 0),
-            TransItemSource::Fun(instance) => (1, instance.def.def_id().to_index(), 0),
+            TransItemSource::Fun(instance) => (1, instance.def.to_index(), key(&instance.kind)),
             TransItemSource::Type(id, gargs) => (2, id.0.to_index(), gargs.sort_key()),
             TransItemSource::Closure(def, gargs) => (3, def.def_id().to_index(), gargs.sort_key()),
         }
