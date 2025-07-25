@@ -4,6 +4,7 @@ extern crate rustc_smir;
 extern crate stable_mir;
 
 use charon_lib::{ast::*, error_assert, raise_error, register_error};
+use log::trace;
 use rustc_apfloat::{Float, ieee};
 use rustc_smir::IndexedVal;
 use stable_mir::{abi, mir, ty};
@@ -192,14 +193,101 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             .collect::<Vec<ty::Ty>>();
                         (None, rfields)
                     }
+                    ty::AdtKind::Enum => 'enum_case: {
+                        if let abi::VariantsShape::Single { index } = layout.variants {
+                            let variant = VariantId::new(index.to_index());
+                            let variant_data = adt.variant(index).unwrap();
+                            let rfields = variant_data
+                                .fields()
+                                .iter()
+                                .map(|f| f.ty_with_args(generics))
+                                .collect::<Vec<ty::Ty>>();
+                            break 'enum_case (Some(variant), rfields);
+                        };
+                        let abi::VariantsShape::Multiple {
+                            tag,
+                            tag_encoding,
+                            tag_field,
+                            ..
+                        } = &layout.variants
+                        else {
+                            unreachable!("Unexpected layout for enum: {layout:?}");
+                        };
+                        assert!(layout.fields.count() == 1, "Enum with non-1 shared field?");
+                        let abi::FieldsShape::Arbitrary { offsets } = &layout.fields else {
+                            unreachable!("Unexpected layout for enum: {layout:?}");
+                        };
+                        let abi::Scalar::Initialized {
+                            value: abi::Primitive::Int { length, signed },
+                            ..
+                        } = &tag
+                        else {
+                            unreachable!("Unexpected tag encoding for enum: {tag_encoding:?}");
+                        };
+                        assert!(!signed, "Discriminant is signed?");
+                        let tag_offset = offsets[*tag_field].bytes();
+                        let tag_bytes = &bytes[tag_offset..tag_offset + length.bits() / 8];
+                        let tag_value =
+                            self.read_target_uint(Self::as_init(tag_bytes)?.as_slice())?;
+
+                        match tag_encoding {
+                            abi::TagEncoding::Direct => adt
+                                .variants_iter()
+                                .find_map(|v| {
+                                    let discr = adt.discriminant_for_variant(v.idx);
+                                    if discr.val != tag_value {
+                                        return None;
+                                    };
+                                    let fields = v
+                                        .fields()
+                                        .iter()
+                                        .map(|f| f.ty_with_args(generics))
+                                        .collect::<Vec<ty::Ty>>();
+                                    let variant = self.translate_variant_id(v.idx);
+                                    Some((Some(variant), fields))
+                                })
+                                .unwrap(),
+                            abi::TagEncoding::Niche {
+                                untagged_variant,
+                                niche_variants,
+                                niche_start,
+                            } => adt
+                                .variants_iter()
+                                .find_map(|v| {
+                                    let discr = adt.discriminant_for_variant(v.idx);
+                                    let niche_variants_start =
+                                        niche_variants.start().to_index() as u128;
+                                    let tag = (discr.val - niche_variants_start)
+                                        .wrapping_add(*niche_start);
+                                    if tag != tag_value {
+                                        return None;
+                                    }
+                                    let fields = v
+                                        .fields()
+                                        .iter()
+                                        .map(|f| f.ty_with_args(generics))
+                                        .collect::<Vec<ty::Ty>>();
+                                    let variant = self.translate_variant_id(v.idx);
+                                    Some((Some(variant), fields))
+                                })
+                                .unwrap_or_else(|| {
+                                    let variant = adt.variant(*untagged_variant).unwrap();
+                                    let fields = variant
+                                        .fields()
+                                        .iter()
+                                        .map(|f| f.ty_with_args(generics))
+                                        .collect::<Vec<ty::Ty>>();
+                                    let variant = self.translate_variant_id(*untagged_variant);
+                                    (Some(variant), fields)
+                                }),
+                        }
+                    }
                     _ => {
-                        // println!(
-                        //     "Gave up for non-struct raw memory of type {ty:?} with alloc {alloc:?}"
-                        // );
+                        trace!(
+                            "Gave up for non-struct raw memory of type {ty:?} with alloc {alloc:?}"
+                        );
                         return Ok(ConstantExpr {
-                            value: RawConstantExpr::RawMemory(
-                                alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect(),
-                            ),
+                            value: RawConstantExpr::RawMemory(Self::as_init(bytes)?),
                             ty: ty.clone().into_ty(),
                         });
                     }
@@ -229,7 +317,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }
             _ => {
                 // println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
-                RawConstantExpr::RawMemory(alloc.bytes.iter().map(|b| b.unwrap_or(0u8)).collect())
+                RawConstantExpr::RawMemory(Self::as_init(bytes)?)
             }
         };
         Ok(ConstantExpr {
@@ -261,17 +349,20 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     ty::RigidTy::Tuple(rtys) => (None, rtys.clone()),
                     ty::RigidTy::Adt(adt, generics) => {
                         let layout = rty.layout()?.shape();
-                        let variant = if rty.kind().is_enum() {
+                        let variant_r = if rty.kind().is_enum() {
                             assert!(layout.is_1zst(), "ZST but not a 1ZST?");
                             let abi::VariantsShape::Single { index } = layout.variants else {
                                 unreachable!("Unexpected layout for enum: {layout:?}");
                             };
-                            Some(VariantId::new(index.to_index()))
+                            Some(index)
                         } else {
                             None
                         };
-                        let variant_idx = variant.map(VariantId::index).unwrap_or(0);
-                        let fields = adt.variants()[variant_idx]
+                        let variant = variant_r.map(|v| self.translate_variant_id(v));
+                        let variant_r = variant_r.unwrap_or(ty::VariantIdx::to_val(0));
+                        let fields = adt
+                            .variant(variant_r)
+                            .unwrap()
                             .fields()
                             .iter()
                             .map(|f| f.ty_with_args(generics))

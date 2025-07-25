@@ -73,17 +73,19 @@ impl<'tcx, 'tctx, 'ictx> BodyTransCtx<'tcx, 'tctx, 'ictx> {
     }
 }
 
-impl BodyTransCtx<'_, '_, '_> {
-    pub(crate) fn translate_local(&self, local: &mir::Local) -> Option<LocalId> {
-        self.locals_map.get(local).copied()
-    }
-
+impl ItemTransCtx<'_, '_> {
     pub fn translate_variant_id(&self, id: stable_mir::ty::VariantIdx) -> VariantId {
         VariantId::new(id.to_index())
     }
 
     fn translate_field_id(&self, id: mir::FieldIdx) -> FieldId {
         FieldId::new(id)
+    }
+}
+
+impl BodyTransCtx<'_, '_, '_> {
+    pub(crate) fn translate_local(&self, local: &mir::Local) -> Option<LocalId> {
+        self.locals_map.get(local).copied()
     }
 
     pub(crate) fn push_var(&mut self, rid: usize, ty: Ty, name: Option<String>) {
