@@ -30,13 +30,19 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 
     /// Utility function used to read an allocation data into an assigned integer.
     fn read_target_int(&mut self, mut bytes: &[u8]) -> Result<i128, Error> {
-        let mut buf = [0u8; size_of::<i128>()];
+        // we do sign extension manually because why not i guess.
         match self.t_ctx.tcx.data_layout.endian {
             rustc_abi::Endian::Little => {
+                let sign = bytes.last().copied().unwrap_or(0) & 0x80 != 0;
+                let default = if sign { 0xff } else { 0x00 };
+                let mut buf = [default; size_of::<i128>()];
                 bytes.read_exact(&mut buf[..bytes.len()])?;
                 Ok(i128::from_le_bytes(buf))
             }
             rustc_abi::Endian::Big => {
+                let sign = bytes.first().copied().unwrap_or(0) & 0x80 != 0;
+                let default = if sign { 0xff } else { 0x00 };
+                let mut buf = [default; size_of::<i128>()];
                 bytes.read_exact(&mut buf[16 - bytes.len()..])?;
                 Ok(i128::from_be_bytes(buf))
             }
@@ -344,8 +350,27 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .try_collect()?;
                 RawConstantExpr::Adt(variant.clone(), consts)
             }
+            TyKind::Adt(TypeDeclRef { generics, .. }) if rty.kind().is_array() => {
+                let subty = generics.types.get(TypeVarId::ZERO).unwrap();
+                let rtyk = rty.kind();
+                let ty::RigidTy::Array(subrty, _) = rtyk.rigid().unwrap() else {
+                    unreachable!();
+                };
+                let layout = rty.layout()?.shape();
+                let abi::FieldsShape::Array { stride, count } = layout.fields else {
+                    unreachable!("Unexpected layout for array: {layout:?}");
+                };
+                let stride = stride.bytes();
+                let elems = (0..count as usize)
+                    .map(|i| {
+                        let elem_off = stride * i + offset;
+                        self.translate_allocation_at(span, alloc, subty, subrty, elem_off)
+                    })
+                    .try_collect()?;
+                RawConstantExpr::Array(elems)
+            }
             _ => {
-                trace!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
+                println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
                 RawConstantExpr::RawMemory(Self::as_init(bytes)?)
             }
         };
