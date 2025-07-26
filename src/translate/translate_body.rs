@@ -6,10 +6,7 @@ extern crate stable_mir;
 
 use log::trace;
 use rustc_smir::IndexedVal;
-use stable_mir::{
-    mir,
-    ty::{self},
-};
+use stable_mir::{mir, rustc_internal, ty};
 use std::{
     collections::{HashMap, VecDeque},
     mem,
@@ -193,6 +190,61 @@ impl BodyTransCtx<'_, '_, '_> {
             statements,
             terminator,
         })
+    }
+
+    fn translate_unsizing_metadata(
+        &mut self,
+        span: Span,
+        src_ty: ty::Ty,
+        tgt_ty: ty::Ty,
+    ) -> Result<UnsizingMetadata, Error> {
+        let tcx = self.t_ctx.tcx;
+        let src_ty = rustc_internal::internal(tcx, src_ty);
+        let tgt_ty = rustc_internal::internal(tcx, tgt_ty);
+        match (src_ty.builtin_deref(true), tgt_ty.builtin_deref(true)) {
+            (Some(src_ty), Some(tgt_ty)) => {
+                use rustc_middle::ty;
+                let typing_env = ty::TypingEnv::fully_monomorphized();
+                let (src_ty, tgt_ty) =
+                    tcx.struct_lockstep_tails_for_codegen(src_ty, tgt_ty, typing_env);
+                match tgt_ty.kind() {
+                    ty::Slice(_) | ty::Str => match src_ty.kind() {
+                        ty::Array(_, len) => {
+                            let len = rustc_internal::stable(len);
+                            let len = self.translate_tyconst_to_const_generic(span, &len)?;
+                            Ok(UnsizingMetadata::Length(len))
+                        }
+                        _ => {
+                            trace!("Unknown unsize for {src_ty:?} => {tgt_ty:?}");
+                            Ok(UnsizingMetadata::Unknown)
+                        }
+                    },
+                    ty::Dynamic(..) => {
+                        // let pred = preds[0].with_self_ty(tcx, src_ty);
+                        // let clause = pred.as_trait_clause().expect(
+                        //     "the first `ExistentialPredicate` of `TyKind::Dynamic` \
+                        //         should be a trait clause",
+                        // );
+                        // let tref = clause.rebind(clause.skip_binder().trait_ref);
+                        Ok(UnsizingMetadata::VTablePtr(TraitRef {
+                            kind: TraitRefKind::Unknown("dyn not supported".into()),
+                            trait_decl_ref: RegionBinder::empty(TraitDeclRef {
+                                id: TraitDeclId::ZERO,
+                                generics: Box::new(GenericArgs::empty()),
+                            }),
+                        }))
+                    }
+                    _ => {
+                        trace!("Unknown unsize for {src_ty:?} => {tgt_ty:?}");
+                        Ok(UnsizingMetadata::Unknown)
+                    }
+                }
+            }
+            _ => {
+                trace!("Unknown unsize for {src_ty:?} => {tgt_ty:?}");
+                Ok(UnsizingMetadata::Unknown)
+            }
+        }
     }
 
     fn translate_projection(
@@ -534,13 +586,13 @@ impl BodyTransCtx<'_, '_, '_> {
                 };
                 Ok(Rvalue::Len(place, ty, cg))
             }
-            mir::Rvalue::Cast(cast_kind, hax_operand, tgt_ty) => {
+            mir::Rvalue::Cast(cast_kind, mir_operand, mir_tgt_ty) => {
                 trace!("Rvalue::Cast: {:?}", rvalue);
                 // Translate the target type
-                let tgt_ty = self.translate_ty(span, *tgt_ty)?;
+                let tgt_ty = self.translate_ty(span, *mir_tgt_ty)?;
 
                 // Translate the operand
-                let (operand, src_ty) = self.translate_operand_with_type(span, hax_operand)?;
+                let (operand, src_ty) = self.translate_operand_with_type(span, mir_operand)?;
 
                 match cast_kind {
                     mir::CastKind::IntToInt
@@ -558,7 +610,7 @@ impl BodyTransCtx<'_, '_, '_> {
                         mir::PointerCoercion::ClosureFnPointer(_),
                         ..,
                     ) => {
-                        let op_ty = hax_operand.ty(self.local_decls)?;
+                        let op_ty = mir_operand.ty(self.local_decls)?;
                         let op_ty_kind = op_ty.kind();
                         let Some(ty::RigidTy::Closure(def, args)) = op_ty_kind.rigid() else {
                             raise_error!(self, span, "ClosureFnPointer without closure?");
@@ -608,10 +660,13 @@ impl BodyTransCtx<'_, '_, '_> {
                         operand,
                     )),
                     mir::CastKind::PointerCoercion(mir::PointerCoercion::Unsize) => {
+                        let mir_src_ty = mir_operand.ty(self.local_decls)?;
+                        let unsizing_meta =
+                            self.translate_unsizing_metadata(span, mir_src_ty, *mir_tgt_ty)?;
                         let unop = UnOp::Cast(CastKind::Unsize(
                             src_ty.clone(),
                             tgt_ty.clone(),
-                            UnsizingMetadata::Unknown,
+                            unsizing_meta,
                         ));
                         Ok(Rvalue::UnaryOp(unop, operand))
                     }
