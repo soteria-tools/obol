@@ -89,7 +89,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     )))
                 }
                 LiteralTy::Bool => {
-                    RawConstantExpr::Literal(Literal::Bool(alloc.read_bool().unwrap()))
+                    let bool = self.read_target_int(Self::as_init(bytes)?.as_slice())?;
+                    let res = match bool {
+                        0 => false,
+                        1 => true,
+                        _ => {
+                            raise_error!(self, span, "Invalid boolean value in constant: {bool}")
+                        }
+                    };
+                    RawConstantExpr::Literal(Literal::Bool(res))
                 }
                 LiteralTy::Char => RawConstantExpr::Literal(Literal::Char(
                     char::from_u32(self.read_target_uint(Self::as_init(bytes)?.as_slice())? as u32)
@@ -291,10 +299,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         };
                         (Some(variant_idx_charon), fields, offsets.clone())
                     }
-                    _ => {
-                        trace!(
-                            "Gave up for non-struct raw memory of type {ty:?} with alloc {alloc:?}"
-                        );
+                    ty::AdtKind::Union => {
+                        trace!("Gave up for union raw memory of type {ty:?} with alloc {alloc:?}");
                         return Ok(ConstantExpr {
                             value: RawConstantExpr::RawMemory(Self::as_init(bytes)?),
                             ty: ty.clone().into_ty(),
@@ -319,7 +325,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 RawConstantExpr::Adt(variant.clone(), consts)
             }
             _ => {
-                // println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
+                trace!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
                 RawConstantExpr::RawMemory(Self::as_init(bytes)?)
             }
         };
