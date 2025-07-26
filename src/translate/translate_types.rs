@@ -106,7 +106,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             ty::RigidTy::Adt(item, generics) => {
                 // FIXME: generics?
                 trace!("Adt: {:?}", item.0);
-                let id = self.register_type_decl_id(span, &item, &generics);
+                let id = self.register_type_decl_id(span, *item, generics.clone());
                 let tref = TypeDeclRef {
                     id: TypeId::Adt(id),
                     generics: Box::new(GenericArgs::empty()),
@@ -195,7 +195,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }
             ty::RigidTy::FnDef(item, args) => {
                 let instance = stable_mir::mir::mono::Instance::resolve(*item, args)?;
-                let fn_id = self.register_fun_decl_id(span, &instance);
+                let fn_id = self.register_fun_decl_id(span, instance);
                 let fnref = RegionBinder::empty(FnPtr {
                     func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
                     generics: Box::new(GenericArgs::empty()),
@@ -203,7 +203,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 TyKind::FnDef(fnref)
             }
             ty::RigidTy::Closure(def, gargs) => {
-                let id = self.register_closure_type_decl_id(span, def, gargs);
+                let id = self.register_closure_type_decl_id(span, *def, gargs.clone());
                 let tref = TypeDeclRef {
                     id: TypeId::Adt(id),
                     generics: Box::new(GenericArgs::empty()),

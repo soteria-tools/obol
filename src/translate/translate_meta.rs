@@ -7,7 +7,7 @@ use super::translate_crate::TransItemSource;
 use super::translate_ctx::{ItemTransCtx, TranslateCtx};
 use charon_lib::ast::*;
 use log::trace;
-use stable_mir::{CrateDef, ty};
+use stable_mir::{CrateDef, mir, ty};
 use std::cmp::Ord;
 use std::path::Component;
 
@@ -274,7 +274,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
         match item_src {
             TransItemSource::Fun(instance) => {
-                if instance.intrinsic_name().is_some() {
+                if instance.kind == mir::mono::InstanceKind::Intrinsic {
                     attr_info.attributes.push(Attribute::Unknown(RawAttribute {
                         path: "rustc_intrinsic".to_string(),
                         args: None,

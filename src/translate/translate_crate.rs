@@ -26,7 +26,7 @@ use std::hash::Hash;
 /// `FunDecl` one (for its initializer function).
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum TransItemSource {
-    Global(DefId),
+    Global(mir::mono::StaticDef),
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -35,7 +35,7 @@ pub enum TransItemSource {
 impl TransItemSource {
     pub(crate) fn as_def_id(&self) -> DefId {
         match self {
-            TransItemSource::Global(id) => id.clone(),
+            TransItemSource::Global(id) => id.0.clone(),
             TransItemSource::Fun(instance) => instance.def.def_id(),
             TransItemSource::Type(id, _) => id.0,
             TransItemSource::Closure(def, _) => def.def_id(),
@@ -54,7 +54,7 @@ impl TransItemSource {
         }
 
         match self {
-            TransItemSource::Global(id) => (0, id.to_index(), 0),
+            TransItemSource::Global(id) => (0, id.0.to_index(), 0),
             TransItemSource::Fun(instance) => (1, instance.def.to_index(), key(&instance.kind)),
             TransItemSource::Type(id, gargs) => (2, id.0.to_index(), gargs.sort_key()),
             TransItemSource::Closure(def, gargs) => (3, def.def_id().to_index(), gargs.sort_key()),
@@ -119,14 +119,11 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub(crate) fn register_type_decl_id(
         &mut self,
         src: &Option<DepSource>,
-        id: &ty::AdtDef,
-        genargs: &ty::GenericArgs,
+        id: ty::AdtDef,
+        genargs: ty::GenericArgs,
     ) -> TypeDeclId {
         *self
-            .register_and_enqueue_id(
-                src,
-                TransItemSource::Type(id.clone(), genargs.clone().into()),
-            )
+            .register_and_enqueue_id(src, TransItemSource::Type(id, genargs.into()))
             .as_type()
             .unwrap()
     }
@@ -134,10 +131,10 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub(crate) fn register_fun_decl_id(
         &mut self,
         src: &Option<DepSource>,
-        id: &mir::mono::Instance,
+        id: mir::mono::Instance,
     ) -> FunDeclId {
         *self
-            .register_and_enqueue_id(src, TransItemSource::Fun(id.clone()))
+            .register_and_enqueue_id(src, TransItemSource::Fun(id))
             .as_fun()
             .unwrap()
     }
@@ -145,28 +142,25 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub(crate) fn register_closure_type_decl_id(
         &mut self,
         src: &Option<DepSource>,
-        closure: &ty::ClosureDef,
-        args: &ty::GenericArgs,
+        closure: ty::ClosureDef,
+        args: ty::GenericArgs,
     ) -> TypeDeclId {
         *self
-            .register_and_enqueue_id(
-                src,
-                TransItemSource::Closure(closure.clone(), args.clone().into()),
-            )
+            .register_and_enqueue_id(src, TransItemSource::Closure(closure, args.into()))
             .as_type()
             .unwrap()
     }
 
-    // pub(crate) fn register_global_decl_id(
-    //     &mut self,
-    //     src: &Option<DepSource>,
-    //     id: &stable_mir::DefId,
-    // ) -> GlobalDeclId {
-    //     *self
-    //         .register_and_enqueue_id(src, TransItemSource::Global(id.clone()))
-    //         .as_global()
-    //         .unwrap()
-    // }
+    pub(crate) fn register_global_decl_id(
+        &mut self,
+        src: &Option<DepSource>,
+        stt: mir::mono::StaticDef,
+    ) -> GlobalDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::Global(stt))
+            .as_global()
+            .unwrap()
+    }
 }
 
 // Id and item reference registration.
@@ -186,8 +180,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     pub(crate) fn register_type_decl_id(
         &mut self,
         span: Span,
-        id: &ty::AdtDef,
-        genargs: &ty::GenericArgs,
+        id: ty::AdtDef,
+        genargs: ty::GenericArgs,
     ) -> TypeDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_type_decl_id(&src, id, genargs)
@@ -205,7 +199,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     pub(crate) fn register_fun_decl_id(
         &mut self,
         span: Span,
-        id: &mir::mono::Instance,
+        id: mir::mono::Instance,
     ) -> FunDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_fun_decl_id(&src, id)
@@ -214,42 +208,22 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     pub(crate) fn register_closure_type_decl_id(
         &mut self,
         span: Span,
-        closure: &ty::ClosureDef,
-        args: &ty::GenericArgs,
+        closure: ty::ClosureDef,
+        args: ty::GenericArgs,
     ) -> TypeDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx
             .register_closure_type_decl_id(&src, closure, args)
     }
 
-    // pub(crate) fn register_fun_decl_id_no_enqueue(
-    //     &mut self,
-    //     span: Span,
-    //     id: &mir::mono::Instance,
-    // ) -> FunDeclId {
-    //     self.register_id_no_enqueue(span, TransItemSource::Fun(id.clone()))
-    //         .as_fun()
-    //         .copied()
-    //         .unwrap()
-    // }
-
-    // /// Translate a function def id
-    // pub(crate) fn translate_fun_id(
-    //     &mut self,
-    //     span: Span,
-    //     instance: &mir::mono::Instance,
-    // ) -> Result<FunId, Error> {
-    //     Ok(FunId::Regular(self.register_fun_decl_id(span, instance)))
-    // }
-
-    // pub(crate) fn register_global_decl_id(
-    //     &mut self,
-    //     span: Span,
-    //     id: &stable_mir::DefId,
-    // ) -> GlobalDeclId {
-    //     let src = self.make_dep_source(span);
-    //     self.t_ctx.register_global_decl_id(&src, id)
-    // }
+    pub(crate) fn register_global_decl_id(
+        &mut self,
+        span: Span,
+        stt: mir::mono::StaticDef,
+    ) -> GlobalDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx.register_global_decl_id(&src, stt)
+    }
 }
 
 pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformCtx {
@@ -290,10 +264,12 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
                 let item = rustc_internal::stable(internal_item);
                 match item {
                     mir::mono::MonoItem::Fn(instance) => {
-                        ctx.register_fun_decl_id(&None, &instance);
+                        ctx.register_fun_decl_id(&None, instance);
+                    }
+                    mir::mono::MonoItem::Static(stt) => {
+                        ctx.register_global_decl_id(&None, stt);
                     }
                     mir::mono::MonoItem::GlobalAsm(_) => {}
-                    mir::mono::MonoItem::Static(_) => {}
                 }
             })
     });

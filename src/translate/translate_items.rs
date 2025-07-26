@@ -73,12 +73,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let fun_decl = bt_ctx.translate_function(id, item_meta, &instance)?;
                 self.translated.fun_decls.set_slot(id, fun_decl);
             }
-            TransItemSource::Global(_) => {
-                let Some(AnyTransId::Global(_)) = trans_id else {
+            TransItemSource::Global(def) => {
+                let Some(AnyTransId::Global(id)) = trans_id else {
                     unreachable!()
                 };
-                // let global_decl = bt_ctx.translate_global(id, item_meta, &def)?;
-                // self.translated.global_decls.set_slot(id, global_decl);
+                let global_decl = bt_ctx.translate_global(id, item_meta, &def)?;
+                self.translated.global_decls.set_slot(id, global_decl);
             }
             TransItemSource::Closure(def, genargs) => {
                 let Some(AnyTransId::Type(id)) = trans_id else {
@@ -227,62 +227,64 @@ impl ItemTransCtx<'_, '_> {
     }
 
     // Translate one global.
-    // pub fn translate_global(
-    //     mut self,
-    //     def_id: GlobalDeclId,
-    //     item_meta: ItemMeta,
-    //     def: &stable_mir::DefId,
-    // ) -> Result<GlobalDecl, Error> {
-    //     trace!("About to translate global:\n{:?}", def.def_id);
-    //     let span = item_meta.span;
+    pub fn translate_global(
+        mut self,
+        def_id: GlobalDeclId,
+        item_meta: ItemMeta,
+        def: &mir::mono::StaticDef,
+    ) -> Result<GlobalDecl, Error> {
+        trace!("About to translate global:\n{:?}", def.0);
+        let span = item_meta.span;
 
-    //     // Translate the generics and predicates - globals *can* have generics
-    //     // Ex.:
-    //     // ```
-    //     // impl<const N : usize> Foo<N> {
-    //     //   const LEN : usize = N;
-    //     // }
-    //     // ```
-    //     // self.translate_def_generics(span, def)?;
+        // Translate the generics and predicates - globals *can* have generics
+        // Ex.:
+        // ```
+        // impl<const N : usize> Foo<N> {
+        //   const LEN : usize = N;
+        // }
+        // ```
+        // self.translate_def_generics(span, def)?;
 
-    //     // Retrieve the kind
-    //     let item_kind = self.get_item_kind(span, def)?;
+        // Retrieve the kind
+        let item_kind = self.get_item_kind(span, &def.0)?;
 
-    //     trace!("Translating global type");
-    //     // let ty = match &def.kind {
-    //     //     rustc_hir::def::DefKind::Const { ty, .. }
-    //     //     | rustc_hir::def::DefKind::AssocConst { ty, .. }
-    //     //     | rustc_hir::def::DefKind::AnonConst { ty, .. }
-    //     //     | rustc_hir::def::DefKind::InlineConst { ty, .. }
-    //     //     | rustc_hir::def::DefKind::PromotedConst { ty, .. }
-    //     //     | rustc_hir::def::DefKind::Static { ty, .. } => ty,
-    //     //     _ => panic!("Unexpected def for constant: {def:?}"),
-    //     // };
-    //     let ty = self.translate_ty(span, ty)?;
+        trace!("Translating global type");
+        // let ty = match &def.kind {
+        //     rustc_hir::def::DefKind::Const { ty, .. }
+        //     | rustc_hir::def::DefKind::AssocConst { ty, .. }
+        //     | rustc_hir::def::DefKind::AnonConst { ty, .. }
+        //     | rustc_hir::def::DefKind::InlineConst { ty, .. }
+        //     | rustc_hir::def::DefKind::PromotedConst { ty, .. }
+        //     | rustc_hir::def::DefKind::Static { ty, .. } => ty,
+        //     _ => panic!("Unexpected def for constant: {def:?}"),
+        // };
+        let ty = self.translate_ty(span, def.ty())?;
 
-    //     let global_kind = match &def.kind {
-    //         rustc_hir::def::DefKind::Static { .. } => GlobalKind::Static,
-    //         rustc_hir::def::DefKind::Const { .. } | rustc_hir::def::DefKind::AssocConst { .. } => {
-    //             GlobalKind::NamedConst
-    //         }
-    //         rustc_hir::def::DefKind::AnonConst { .. }
-    //         | rustc_hir::def::DefKind::InlineConst { .. }
-    //         | rustc_hir::def::DefKind::PromotedConst { .. } => GlobalKind::AnonConst,
-    //         _ => panic!("Unexpected def for constant: {def:?}"),
-    //     };
+        // let global_kind = match &def. {
+        //     rustc_hir::def::DefKind::Static { .. } => GlobalKind::Static,
+        //     rustc_hir::def::DefKind::Const { .. } | rustc_hir::def::DefKind::AssocConst { .. } => {
+        //         GlobalKind::NamedConst
+        //     }
+        //     rustc_hir::def::DefKind::AnonConst { .. }
+        //     | rustc_hir::def::DefKind::InlineConst { .. }
+        //     | rustc_hir::def::DefKind::PromotedConst { .. } => GlobalKind::AnonConst,
+        //     _ => panic!("Unexpected def for constant: {def:?}"),
+        // };
+        let global_kind = GlobalKind::Static; // For now, we only support statics.
 
-    //     let initializer = self.register_fun_decl_id(span, &def.def_id);
+        let instance: mir::mono::Instance = (*def).into();
+        let initializer = self.register_fun_decl_id(span, instance);
 
-    //     Ok(GlobalDecl {
-    //         def_id,
-    //         item_meta,
-    //         generics: GenericParams::empty(),
-    //         ty,
-    //         kind: item_kind,
-    //         global_kind,
-    //         init: initializer,
-    //     })
-    // }
+        Ok(GlobalDecl {
+            def_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            ty,
+            kind: item_kind,
+            global_kind,
+            init: initializer,
+        })
+    }
 
     pub fn translate_closure_adt(
         mut self,

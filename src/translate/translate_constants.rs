@@ -118,20 +118,21 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 }
             },
             TyKind::Ref(_, subty, _) | TyKind::RawPtr(subty, _) => {
-                let Some((0, alloc)) = alloc.provenance.ptrs.first() else {
-                    unreachable!("ref/ptr constant without provenance?");
+                let Some((_, alloc)) = alloc.provenance.ptrs.iter().find(|(o, _)| *o == offset)
+                else {
+                    unreachable!(
+                        "ref/ptr constant at {} without provenance? in {:?}",
+                        offset, alloc.provenance.ptrs
+                    );
                 };
                 use mir::alloc::GlobalAlloc;
                 let glob_alloc: GlobalAlloc = alloc.0.into();
                 match glob_alloc {
                     GlobalAlloc::Memory(suballoc)
-                        if matches!(
-                            subty.kind(),
-                            TyKind::Adt(TypeDeclRef {
-                                id: TypeId::Builtin(BuiltinTy::Str),
-                                ..
-                            })
-                        ) =>
+                        if subty
+                            .kind()
+                            .as_adt()
+                            .is_some_and(|a| a.id == TypeId::Builtin(BuiltinTy::Str)) =>
                     {
                         let as_str =
                             unsafe { String::from_utf8_unchecked(suballoc.raw_bytes().unwrap()) };
@@ -154,7 +155,26 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             RawConstantExpr::Ref(Box::new(sub_constant))
                         }
                     }
-                    _ => unreachable!(),
+                    GlobalAlloc::Static(stt) => {
+                        let id = self.register_global_decl_id(span, stt);
+                        let instance: mir::mono::Instance = stt.into();
+                        let generics = self.translate_generic_args(span, &instance.args())?;
+                        let sub_constant = RawConstantExpr::Global(GlobalDeclRef {
+                            id,
+                            generics: Box::new(generics),
+                        });
+                        let sub_constant = ConstantExpr {
+                            value: sub_constant,
+                            ty: subty.clone(),
+                        };
+
+                        if let TyKind::RawPtr(_, rk) = ty {
+                            RawConstantExpr::Ptr(*rk, Box::new(sub_constant))
+                        } else {
+                            RawConstantExpr::Ref(Box::new(sub_constant))
+                        }
+                    }
+                    _ => unreachable!("Unhandled global: {glob_alloc:?} for type {ty:?}"),
                 }
             }
             TyKind::Adt(TypeDeclRef {

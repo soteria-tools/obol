@@ -620,7 +620,7 @@ impl BodyTransCtx<'_, '_, '_> {
                             args,
                             ty::ClosureKind::FnOnce,
                         )?;
-                        let fn_id = self.register_fun_decl_id(span, &closure);
+                        let fn_id = self.register_fun_decl_id(span, closure);
                         let fn_ptr = FnPtr {
                             func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
                             generics: Box::new(GenericArgs::empty()),
@@ -766,7 +766,7 @@ impl BodyTransCtx<'_, '_, '_> {
                         use stable_mir::ty::AdtKind;
                         trace!("{:?}", rvalue);
 
-                        let id = self.register_type_decl_id(span, &item, &generics);
+                        let id = self.register_type_decl_id(span, *item, generics.clone());
                         let tref = TypeDeclRef {
                             id: TypeId::Adt(id),
                             generics: Box::new(GenericArgs::empty()),
@@ -784,7 +784,7 @@ impl BodyTransCtx<'_, '_, '_> {
                         Ok(Rvalue::Aggregate(akind, operands_t))
                     }
                     mir::AggregateKind::Closure(def, args) => {
-                        let id = self.register_closure_type_decl_id(span, def, args);
+                        let id = self.register_closure_type_decl_id(span, *def, args.clone());
                         let tref = TypeDeclRef {
                             id: TypeId::Adt(id),
                             generics: Box::new(GenericArgs::empty()),
@@ -1082,27 +1082,8 @@ impl BodyTransCtx<'_, '_, '_> {
         let mut extra_stt = None;
         let fn_operand = match fn_ty.kind() {
             ty::TyKind::RigidTy(ty::RigidTy::FnDef(fn_def, args)) => {
-                // trace!("func: {:?}", item.def_id);
-                // let fun_def = self.hax_def(&item.def_id)?;
-                // let fun_src = TransItemSource::Fun(item.def_id.clone());
-                // let name = self.t_ctx.translate_name(&fun_src)?;
-                // let panic_lang_items = &["panic", "panic_fmt", "begin_panic"];
-                // let panic_names = &[&["core", "panicking", "assert_failed"], EXPLICIT_PANIC_NAME];
-
-                // if fun_def
-                //     .lang_item
-                //     .as_deref()
-                //     .is_some_and(|lang_it| panic_lang_items.iter().contains(&lang_it))
-                //     || panic_names.iter().any(|panic| name.equals_ref_name(panic))
-                // {
-                //     // If the call is `panic!`, then the target is `None`.
-                //     // I don't know in which other cases it can be `None`.
-                //     assert!(target.is_none());
-                //     // We ignore the arguments
-                //     return Ok(RawTerminator::Abort(AbortKind::Panic(Some(name))));
-                // } else {
                 let instance = stable_mir::mir::mono::Instance::resolve(fn_def, &args)?;
-                let fn_id = self.register_fun_decl_id(span, &instance);
+                let fn_id = self.register_fun_decl_id(span, instance);
                 let fn_ptr = FnPtr {
                     func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
                     generics: Box::new(GenericArgs::empty()),
@@ -1223,12 +1204,8 @@ impl BodyTransCtx<'_, '_, '_> {
 
         // Initialize the local variables
         trace!("Translating the body locals");
-        let arg_count_with_opt_caller = instance.fn_abi().unwrap().args.len();
-        self.locals.arg_count = if self.requires_caller_location(instance) {
-            arg_count_with_opt_caller - 1
-        } else {
-            arg_count_with_opt_caller
-        };
+        let (inputs, _) = self.get_function_ins_outs(span, instance)?;
+        self.locals.arg_count = inputs.len();
         self.translate_body_locals(&body)?;
 
         // Translate the expression body
