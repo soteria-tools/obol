@@ -364,6 +364,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let rtyk = rty.kind();
                 let (variant, rtys) = match rtyk.rigid().unwrap() {
                     ty::RigidTy::Tuple(rtys) => (None, rtys.clone()),
+                    ty::RigidTy::Closure(_, generics) => {
+                        let tupled_upvars = generics.0.last().unwrap().expect_ty().kind();
+                        let Some(ty::RigidTy::Tuple(state_tys)) = tupled_upvars.rigid() else {
+                            raise_error!(self, span, "Closure state argument is not a tuple?");
+                        };
+                        (None, state_tys.clone())
+                    }
                     ty::RigidTy::Adt(adt, generics) => {
                         let layout = rty.layout()?.shape();
                         let variant_r = match adt.kind() {
