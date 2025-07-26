@@ -70,7 +70,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let Some(AnyTransId::Fun(id)) = trans_id else {
                     unreachable!()
                 };
-                let fun_decl = bt_ctx.translate_function(id, item_meta, &instance)?;
+                let fun_decl = bt_ctx.translate_function(id, item_meta, *instance)?;
                 self.translated.fun_decls.set_slot(id, fun_decl);
             }
             TransItemSource::Global(def) => {
@@ -154,7 +154,7 @@ impl ItemTransCtx<'_, '_> {
         mut self,
         def_id: FunDeclId,
         item_meta: ItemMeta,
-        def: &mir::mono::Instance,
+        def: mir::mono::Instance,
     ) -> Result<FunDecl, Error> {
         trace!("About to translate function:\n{:?}", def);
         // let span = item_meta.span;
@@ -178,29 +178,8 @@ impl ItemTransCtx<'_, '_> {
         // let is_global_initializer =
         //     is_global_initializer.then(|| self.register_global_decl_id(span, &def.def_id));
 
-        let body = if item_meta.opacity.with_private_contents().is_opaque()
-        // || is_trait_method_decl_without_default
-        {
+        let body = if item_meta.opacity.with_private_contents().is_opaque() {
             Err(Opaque)
-        // } else if let rustc_hir::def::DefKind::Ctor {
-        //     adt_def_id,
-        //     ctor_of,
-        //     variant_id,
-        //     fields,
-        //     output_ty,
-        //     ..
-        // } = def.kind.
-        // {
-        //     let body = self.build_ctor_body(
-        //         span,
-        //         &signature,
-        //         adt_def_id,
-        //         ctor_of,
-        //         *variant_id,
-        //         fields,
-        //         output_ty,
-        //     )?;
-        //     Ok(body)
         } else if let Some(body) = def.body() {
             // Translate the body. This doesn't store anything if we can't/decide not to translate
             // this body.

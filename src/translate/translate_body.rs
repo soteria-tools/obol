@@ -1178,7 +1178,7 @@ impl BodyTransCtx<'_, '_, '_> {
     pub fn translate_body(
         &mut self,
         span: Span,
-        instance: &mir::mono::Instance,
+        instance: mir::mono::Instance,
         body: &mir::Body,
     ) -> Result<Result<Body, Opaque>, Error> {
         // Stopgap measure because there are still many panics in charon and hax.
@@ -1196,7 +1196,7 @@ impl BodyTransCtx<'_, '_, '_> {
 
     fn translate_body_aux(
         &mut self,
-        instance: &mir::mono::Instance,
+        instance: mir::mono::Instance,
         body: &mir::Body,
     ) -> Result<Result<Body, Opaque>, Error> {
         // Compute the span information
