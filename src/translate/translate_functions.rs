@@ -20,6 +20,7 @@ impl ItemTransCtx<'_, '_> {
 
     fn get_function_ins_outs_sure_function(
         &mut self,
+        span: Span,
         def: mir::mono::Instance,
     ) -> Result<(Vec<ty::Ty>, ty::Ty), Error> {
         // Translate the signature
@@ -35,10 +36,27 @@ impl ItemTransCtx<'_, '_> {
             instance_abi.args.len()
         };
 
-        let inputs = instance_abi.args[0..arg_count]
+        let mut inputs: Vec<_> = instance_abi.args[0..arg_count]
             .iter()
             .map(|arg| arg.ty)
             .collect();
+
+        // If the first argument is a closure, we need to tuple up the remaining arguments
+        if let Some(fst) = inputs.first() {
+            let fst_kind = fst.kind();
+            let is_closure = match fst_kind.rigid() {
+                Some(ty::RigidTy::Closure(_, _)) => true,
+                Some(ty::RigidTy::Ref(_, subty, _)) => subty.kind().is_closure(),
+                _ => false,
+            };
+            if is_closure {
+                let [closure_state, rest @ ..] = &*inputs.into_boxed_slice() else {
+                    raise_error!(self, span, "Unexpected closure signature");
+                };
+                let tupled_args = ty::Ty::new_tuple(rest);
+                inputs = vec![*closure_state, tupled_args];
+            };
+        }
         Ok((inputs, instance_abi.ret.ty))
     }
 
@@ -49,11 +67,11 @@ impl ItemTransCtx<'_, '_> {
     ) -> Result<(Vec<ty::Ty>, ty::Ty), Error> {
         let Ok(crate_item) = stable_mir::CrateItem::try_from(def) else {
             // worth a shot
-            return self.get_function_ins_outs_sure_function(def);
+            return self.get_function_ins_outs_sure_function(span, def);
         };
         match crate_item.kind() {
             stable_mir::ItemKind::Fn | stable_mir::ItemKind::Ctor(_) => {
-                self.get_function_ins_outs_sure_function(def)
+                self.get_function_ins_outs_sure_function(span, def)
             }
             stable_mir::ItemKind::Static => {
                 let stt: mir::mono::StaticDef = crate_item.try_into()?;

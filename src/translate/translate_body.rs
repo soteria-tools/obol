@@ -6,7 +6,7 @@ extern crate stable_mir;
 
 use log::trace;
 use rustc_smir::IndexedVal;
-use stable_mir::{mir, rustc_internal, ty};
+use stable_mir::{abi, mir, rustc_internal, ty};
 use std::{
     collections::{HashMap, VecDeque},
     mem,
@@ -1174,6 +1174,90 @@ impl BodyTransCtx<'_, '_, '_> {
             .try_collect()
     }
 
+    // The body is translated as if the locals are: ret value, state, arg-1,
+    // ..., arg-N, rest...
+    // However, there is only one argument with the tupled closure arguments;
+    // we must thus shift all locals with index >=2 by 1, and add a new local
+    // for the tupled arg, giving us: ret value, state, args, arg-1, ...,
+    // arg-N, rest...
+    // We then add N statements of the form `locals[N+3] := move locals[2].N`,
+    // to destructure the arguments.
+    fn untuple_closure_arguments(&mut self, instance: mir::mono::Instance) -> Result<(), Error> {
+        // We need to figure out if this is a closure;
+        let Ok(abi) = instance.fn_abi() else {
+            return Ok(());
+        };
+        // 1. There is a first argument
+        let Some(abi::ArgAbi { ty, .. }) = abi.args.get(0) else {
+            return Ok(());
+        };
+        // 2. This argument is a closure !
+        let ty_kind = ty.kind();
+        let (_, generics) = match ty_kind.rigid() {
+            Some(ty::RigidTy::Closure(def, generics)) => (def.clone(), generics.clone()),
+            Some(ty::RigidTy::Ref(_, subty, _)) => {
+                let ty_kind = subty.kind();
+                match ty_kind.rigid() {
+                    Some(ty::RigidTy::Closure(def, generics)) => (def.clone(), generics.clone()),
+                    _ => return Ok(()),
+                }
+            }
+            _ => return Ok(()),
+        };
+        // 3. Fetch the closure's signature from its generics -- see:
+        // https://doc.rust-lang.org/beta/nightly-rustc/src/rustc_type_ir/ty_kind/closure.rs.html#12-29
+        let [.., ty::GenericArgKind::Type(fnptr_ty), _] = generics.0.as_slice() else {
+            return Ok(());
+        };
+        let fn_ptr_ty_kind = fnptr_ty.kind();
+        let Some(ty::RigidTy::FnPtr(fn_sig)) = fn_ptr_ty_kind.rigid() else {
+            return Ok(());
+        };
+
+        let [inputs_tupled] = fn_sig.value.inputs() else {
+            return Ok(());
+        };
+
+        let tupled_inputs_ty = self.translate_ty(Span::dummy(), *inputs_tupled)?;
+
+        self.blocks.dyn_visit_mut(|local: &mut LocalId| {
+            let idx = local.index();
+            if idx >= 2 {
+                *local = LocalId::new(idx + 1)
+            }
+        });
+
+        let mut old_locals = mem::take(&mut self.locals.locals).into_iter();
+        self.locals.arg_count = 2;
+        self.locals.locals.push(old_locals.next().unwrap()); // ret
+        self.locals.locals.push(old_locals.next().unwrap()); // state
+        let tupled_arg = self
+            .locals
+            .new_var(Some("tupled_args".to_string()), tupled_inputs_ty.clone());
+        self.locals.locals.extend(old_locals.map(|mut l| {
+            l.index += 1;
+            l
+        }));
+
+        let untupled_args = tupled_inputs_ty.as_tuple().unwrap();
+        let closure_arg_count = untupled_args.elem_count();
+        let new_stts = untupled_args.iter().cloned().enumerate().map(|(i, ty)| {
+            let nth_field = tupled_arg.clone().project(
+                ProjectionElem::Field(FieldProjKind::Tuple(closure_arg_count), FieldId::new(i)),
+                ty,
+            );
+            Statement::new(
+                Span::dummy(),
+                RawStatement::Assign(
+                    self.locals.place_for_var(LocalId::new(i + 3)),
+                    Rvalue::Use(Operand::Move(nth_field)),
+                ),
+            )
+        });
+        self.blocks[BlockId::ZERO].statements.splice(0..0, new_stts);
+        Ok(())
+    }
+
     /// Translate a function body.
     pub fn translate_body(
         &mut self,
@@ -1222,6 +1306,9 @@ impl BodyTransCtx<'_, '_, '_> {
             let block = self.translate_basic_block(mir_block)?;
             self.blocks.set_slot(block_id, block);
         }
+
+        // If we're translating a closure, we need to tuple up the arguments!
+        self.untuple_closure_arguments(instance)?;
 
         // Create the body
         Ok(Ok(Body::Unstructured(ExprBody {
