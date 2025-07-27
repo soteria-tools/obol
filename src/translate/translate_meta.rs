@@ -7,7 +7,7 @@ use super::translate_crate::TransItemSource;
 use super::translate_ctx::{ItemTransCtx, TranslateCtx};
 use charon_lib::ast::*;
 use log::trace;
-use stable_mir::{CrateDef, mir, ty};
+use stable_mir::{CrateDef, mir, rustc_internal, ty};
 use std::cmp::Ord;
 use std::path::Component;
 
@@ -283,10 +283,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             }
             _ => {}
         };
-        // let lang_item = item_src.as_def_id()
-        //     .lang_item
-        //     .clone()
-        //     .or_else(|| def.diagnostic_item.clone());
+
+        let internal_id = rustc_internal::internal(self.tcx, item_src.as_def_id());
+        let lang_item = self
+            .tcx
+            .as_lang_item(internal_id)
+            .map(|l| l.name().to_ident_string());
 
         let name_opacity = ItemOpacity::Transparent;
         let opacity = if attr_info.attributes.iter().any(|attr| attr.is_opaque()) {
@@ -303,7 +305,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             attr_info,
             is_local: true,
             opacity,
-            lang_item: None,
+            lang_item,
         };
         self.cached_item_metas
             .insert(item_src.clone(), item_meta.clone());
