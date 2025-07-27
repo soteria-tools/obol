@@ -3,12 +3,13 @@
 //! us to handle, and easier to maintain - rustc's representation can evolve
 //! independently.
 
+extern crate rustc_middle;
 extern crate stable_mir;
 
 use super::translate_ctx::*;
 use charon_lib::ast::*;
 use charon_lib::{raise_error, register_error};
-use stable_mir::{mir, rustc_internal, ty};
+use stable_mir::{CrateDef, mir, rustc_internal, ty};
 
 impl ItemTransCtx<'_, '_> {
     pub fn requires_caller_location(&self, instance: mir::mono::Instance) -> bool {
@@ -16,6 +17,32 @@ impl ItemTransCtx<'_, '_> {
         instance_internal
             .def
             .requires_caller_location(self.t_ctx.tcx)
+    }
+
+    /// If this instance is a closure, meaning in MIR it has untupled arguments both in the
+    /// signature and the body.
+    pub fn instance_is_closure(&self, def: mir::mono::Instance) -> bool {
+        let def = rustc_internal::internal(self.t_ctx.tcx, def.def.def_id());
+        self.t_ctx.tcx.is_closure_like(def)
+    }
+
+    /// If this instance is a closure or a call shim, meaning in MIR it has untupled arguments but
+    /// only in the signature!
+    pub fn instance_is_closure_or_call_shim(&self, def: mir::mono::Instance) -> bool {
+        let def_ty = def.ty().kind();
+        let name_opt = match def_ty.rigid() {
+            Some(ty::RigidTy::FnDef(fndef, _)) => Some(fndef.def_id().name()),
+            _ => None,
+        };
+        self.instance_is_closure(def)
+            || name_opt.is_some_and(|name| {
+                matches!(
+                    name.as_str(),
+                    "std::ops::Fn::call"
+                        | "std::ops::FnMut::call_mut"
+                        | "std::ops::FnOnce::call_once"
+                )
+            })
     }
 
     fn get_function_ins_outs_sure_function(
@@ -42,20 +69,12 @@ impl ItemTransCtx<'_, '_> {
             .collect();
 
         // If the first argument is a closure, we need to tuple up the remaining arguments
-        if let Some(fst) = inputs.first() {
-            let fst_kind = fst.kind();
-            let is_closure = match fst_kind.rigid() {
-                Some(ty::RigidTy::Closure(_, _)) => true,
-                Some(ty::RigidTy::Ref(_, subty, _)) => subty.kind().is_closure(),
-                _ => false,
+        if self.instance_is_closure_or_call_shim(def) {
+            let [closure_state, rest @ ..] = &*inputs.into_boxed_slice() else {
+                raise_error!(self, span, "Unexpected closure signature");
             };
-            if is_closure {
-                let [closure_state, rest @ ..] = &*inputs.into_boxed_slice() else {
-                    raise_error!(self, span, "Unexpected closure signature");
-                };
-                let tupled_args = ty::Ty::new_tuple(rest);
-                inputs = vec![*closure_state, tupled_args];
-            };
+            let tupled_args = ty::Ty::new_tuple(rest);
+            inputs = vec![*closure_state, tupled_args];
         }
         Ok((inputs, instance_abi.ret.ty))
     }

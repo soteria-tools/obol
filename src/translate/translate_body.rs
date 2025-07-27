@@ -1184,14 +1184,21 @@ impl BodyTransCtx<'_, '_, '_> {
     // to destructure the arguments.
     fn untuple_closure_arguments(&mut self, instance: mir::mono::Instance) -> Result<(), Error> {
         // We need to figure out if this is a closure;
+
+        // 1. Only closures
+        if !self.instance_is_closure(instance) {
+            return Ok(());
+        }
+
+        // 2. There is a first argument
         let Ok(abi) = instance.fn_abi() else {
             return Ok(());
         };
-        // 1. There is a first argument
         let Some(abi::ArgAbi { ty, .. }) = abi.args.get(0) else {
             return Ok(());
         };
-        // 2. This argument is a closure !
+
+        // 3. This argument is a closure !
         let ty_kind = ty.kind();
         let (_, generics) = match ty_kind.rigid() {
             Some(ty::RigidTy::Closure(def, generics)) => (def.clone(), generics.clone()),
@@ -1204,7 +1211,8 @@ impl BodyTransCtx<'_, '_, '_> {
             }
             _ => return Ok(()),
         };
-        // 3. Fetch the closure's signature from its generics -- see:
+
+        // 4. Fetch the closure's signature from its generics -- see:
         // https://doc.rust-lang.org/beta/nightly-rustc/src/rustc_type_ir/ty_kind/closure.rs.html#12-29
         let [.., ty::GenericArgKind::Type(fnptr_ty), _] = generics.0.as_slice() else {
             return Ok(());
@@ -1213,10 +1221,11 @@ impl BodyTransCtx<'_, '_, '_> {
         let Some(ty::RigidTy::FnPtr(fn_sig)) = fn_ptr_ty_kind.rigid() else {
             return Ok(());
         };
-
         let [inputs_tupled] = fn_sig.value.inputs() else {
             return Ok(());
         };
+
+        // Let's get to work...
 
         let tupled_inputs_ty = self.translate_ty(Span::dummy(), *inputs_tupled)?;
 
