@@ -123,13 +123,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     }))
                 }
             },
-            TyKind::Ref(_, subty, _) | TyKind::RawPtr(subty, _) => {
+            TyKind::Ref(_, subty, _) | TyKind::RawPtr(subty, _) => 'ptr_case: {
                 let Some((_, alloc)) = alloc.provenance.ptrs.iter().find(|(o, _)| *o == offset)
                 else {
-                    unreachable!(
-                        "ref/ptr constant at {} without provenance? in {:?}",
-                        offset, alloc.provenance.ptrs
-                    );
+                    let value = self.read_target_int(Self::as_init(bytes)?.as_slice())?;
+                    break 'ptr_case RawConstantExpr::Literal(Literal::Scalar(
+                        ScalarValue::Signed(IntTy::Isize, value),
+                    ));
                 };
                 use mir::alloc::GlobalAlloc;
                 let glob_alloc: GlobalAlloc = alloc.0.into();
