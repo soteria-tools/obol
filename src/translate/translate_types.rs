@@ -392,6 +392,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 } => {
                     if variant == *untagged_variant {
                         None // This variant does not have a tag.
+                    } else if variant.to_index() < niche_variants.start().to_index() {
+                        // The variant is before the niche variants, so it is not tagged.
+                        // Could e.g. be the case if it is uninhabited.
+                        None
                     } else {
                         let discr_rel = variant.to_index() - niche_variants.start().to_index();
                         // In theory we need to do a wrapping_add in the tag type,
