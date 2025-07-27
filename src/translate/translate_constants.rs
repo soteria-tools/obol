@@ -369,6 +369,38 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .try_collect()?;
                 RawConstantExpr::Array(elems)
             }
+            TyKind::FnPtr(_) => 'fnptr_case: {
+                let Some((_, alloc)) = alloc.provenance.ptrs.iter().find(|(o, _)| *o == offset)
+                else {
+                    let value = self.read_target_int(Self::as_init(bytes)?.as_slice())?;
+                    break 'fnptr_case RawConstantExpr::Literal(Literal::Scalar(
+                        ScalarValue::Signed(IntTy::Isize, value),
+                    ));
+                };
+                use mir::alloc::GlobalAlloc;
+                let glob_alloc: GlobalAlloc = alloc.0.into();
+                match glob_alloc {
+                    GlobalAlloc::Function(instance) => {
+                        // This may be wrong... I think we need a new ConstantExpr::FnPtr;
+                        // a FnPtr is not a pointer to a FnDef :p
+                        let id = self.register_fun_decl_id(span, instance);
+                        let generics = self.translate_generic_args(span, &instance.args())?;
+                        let fn_ptr = FnPtr {
+                            generics: Box::new(generics),
+                            func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(id))),
+                        };
+                        let sub_const = ConstantExpr {
+                            value: RawConstantExpr::FnPtr(fn_ptr.clone()),
+                            ty: TyKind::FnDef(RegionBinder::empty(fn_ptr)).into_ty(),
+                        };
+                        RawConstantExpr::Ptr(RefKind::Shared, Box::new(sub_const))
+                    }
+                    _ => {
+                        println!("Gave up for raw memory of fndef with alloc {glob_alloc:?}");
+                        RawConstantExpr::RawMemory(Self::as_init(bytes)?)
+                    }
+                }
+            }
             _ => {
                 println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
                 RawConstantExpr::RawMemory(Self::as_init(bytes)?)
