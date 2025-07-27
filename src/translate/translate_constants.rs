@@ -260,14 +260,12 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         let abi::Scalar::Initialized { value: tag_ty, .. } = &tag else {
                             unreachable!("Unexpected tag encoding for enum: {tag:?}");
                         };
-                        let length_bytes = match tag_ty {
-                            abi::Primitive::Int { length, signed } => {
-                                assert!(!signed, "Discriminant is signed?");
-                                length.bits() / 8
-                            }
-                            abi::Primitive::Pointer(_) => {
-                                self.t_ctx.tcx.data_layout.pointer_size().bytes() as usize
-                            }
+                        let (length_bytes, _) = match tag_ty {
+                            abi::Primitive::Int { length, signed } => (length.bits() / 8, *signed),
+                            abi::Primitive::Pointer(_) => (
+                                self.t_ctx.tcx.data_layout.pointer_size().bytes() as usize,
+                                false,
+                            ),
                             abi::Primitive::Float { .. } => unreachable!("Float tag?"),
                         };
                         let tag_offset = offsets[*tag_field].bytes();
