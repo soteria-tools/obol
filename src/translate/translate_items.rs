@@ -80,13 +80,22 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let global_decl = bt_ctx.translate_global(id, item_meta, &def)?;
                 self.translated.global_decls.set_slot(id, global_decl);
             }
-            TransItemSource::Closure(def, genargs) => {
+            TransItemSource::Closure(def, generics) => {
                 let Some(AnyTransId::Type(id)) = trans_id else {
                     unreachable!()
                 };
-                let genargs: ty::GenericArgs = genargs.clone().into();
-                let ty = bt_ctx.translate_closure_adt(id, item_meta, &def, &genargs)?;
+                let generics: ty::GenericArgs = generics.clone().into();
+                let ty = bt_ctx.translate_closure_adt(id, item_meta, &def, &generics)?;
                 self.translated.type_decls.set_slot(id, ty);
+            }
+            TransItemSource::ClosureAsFn(def, generics) => {
+                let Some(AnyTransId::Fun(id)) = trans_id else {
+                    unreachable!()
+                };
+                let generics: ty::GenericArgs = generics.clone().into();
+                let fun_decl =
+                    bt_ctx.translate_stateless_closure_as_fn(id, item_meta, &def, &generics)?;
+                self.translated.fun_decls.set_slot(id, fun_decl);
             }
         }
         Ok(())

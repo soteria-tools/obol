@@ -1,5 +1,6 @@
 pub mod my_gen_args;
 pub mod translate_body;
+pub mod translate_closures;
 pub mod translate_constants;
 pub mod translate_crate;
 pub mod translate_ctx;

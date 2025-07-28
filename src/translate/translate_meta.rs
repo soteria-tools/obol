@@ -181,6 +181,10 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             TransItemSource::Closure(..) => name
                 .name
                 .push(PathElem::Ident("closure".into(), Disambiguator::ZERO)),
+            TransItemSource::ClosureAsFn(..) => {
+                name.name
+                    .push(PathElem::Ident("closure_as_fn".into(), Disambiguator::ZERO));
+            }
             TransItemSource::Fun(_) | TransItemSource::Type(..) => 'add_generics: {
                 let (gargs, span) = match src {
                     TransItemSource::Fun(instance) => (instance.args(), instance.def.span()),

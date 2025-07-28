@@ -592,19 +592,16 @@ impl BodyTransCtx<'_, '_, '_> {
                 let tgt_ty = self.translate_ty(span, *mir_tgt_ty)?;
 
                 // Translate the operand
-                let (operand, src_ty) = self.translate_operand_with_type(span, mir_operand)?;
+                let (mut operand, src_ty) = self.translate_operand_with_type(span, mir_operand)?;
 
-                match cast_kind {
+                let cast_kind = match cast_kind {
                     mir::CastKind::IntToInt
                     | mir::CastKind::IntToFloat
                     | mir::CastKind::FloatToInt
                     | mir::CastKind::FloatToFloat => {
                         let tgt_ty = *tgt_ty.kind().as_literal().unwrap();
                         let src_ty = *src_ty.kind().as_literal().unwrap();
-                        Ok(Rvalue::UnaryOp(
-                            UnOp::Cast(CastKind::Scalar(src_ty, tgt_ty)),
-                            operand,
-                        ))
+                        CastKind::Scalar(src_ty, tgt_ty)
                     }
                     mir::CastKind::PointerCoercion(
                         mir::PointerCoercion::ClosureFnPointer(_),
@@ -615,25 +612,17 @@ impl BodyTransCtx<'_, '_, '_> {
                         let Some(ty::RigidTy::Closure(def, args)) = op_ty_kind.rigid() else {
                             raise_error!(self, span, "ClosureFnPointer without closure?");
                         };
-                        let closure = mir::mono::Instance::resolve_closure(
-                            def.clone(),
-                            args,
-                            ty::ClosureKind::FnOnce,
-                        )?;
-                        let fn_id = self.register_fun_decl_id(span, closure);
+                        let fn_id = self.register_closure_as_fn_id(span, *def, args.clone());
                         let fn_ptr = FnPtr {
                             func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
                             generics: Box::new(GenericArgs::empty()),
                         };
                         let src_ty = TyKind::FnDef(RegionBinder::empty(fn_ptr.clone())).into_ty();
-
-                        Ok(Rvalue::UnaryOp(
-                            UnOp::Cast(CastKind::RawPtr(src_ty.clone(), tgt_ty)),
-                            Operand::Const(Box::new(ConstantExpr {
-                                value: RawConstantExpr::FnPtr(fn_ptr),
-                                ty: src_ty,
-                            })),
-                        ))
+                        operand = Operand::Const(Box::new(ConstantExpr {
+                            value: RawConstantExpr::FnPtr(fn_ptr),
+                            ty: src_ty.clone(),
+                        }));
+                        CastKind::FnPtr(src_ty, tgt_ty)
                     }
                     mir::CastKind::PtrToPtr
                     | mir::CastKind::FnPtrToPtr
@@ -643,34 +632,21 @@ impl BodyTransCtx<'_, '_, '_> {
                         mir::PointerCoercion::MutToConstPointer
                         | mir::PointerCoercion::ArrayToPointer,
                         ..,
-                    ) => Ok(Rvalue::UnaryOp(
-                        UnOp::Cast(CastKind::RawPtr(src_ty, tgt_ty)),
-                        operand,
-                    )),
+                    ) => CastKind::RawPtr(src_ty, tgt_ty),
                     mir::CastKind::PointerCoercion(
                         mir::PointerCoercion::UnsafeFnPointer
                         | mir::PointerCoercion::ReifyFnPointer,
                         ..,
-                    ) => Ok(Rvalue::UnaryOp(
-                        UnOp::Cast(CastKind::FnPtr(src_ty, tgt_ty)),
-                        operand,
-                    )),
-                    mir::CastKind::Transmute => Ok(Rvalue::UnaryOp(
-                        UnOp::Cast(CastKind::Transmute(src_ty, tgt_ty)),
-                        operand,
-                    )),
+                    ) => CastKind::FnPtr(src_ty, tgt_ty),
+                    mir::CastKind::Transmute => CastKind::Transmute(src_ty, tgt_ty),
                     mir::CastKind::PointerCoercion(mir::PointerCoercion::Unsize) => {
                         let mir_src_ty = mir_operand.ty(self.local_decls)?;
                         let unsizing_meta =
                             self.translate_unsizing_metadata(span, mir_src_ty, *mir_tgt_ty)?;
-                        let unop = UnOp::Cast(CastKind::Unsize(
-                            src_ty.clone(),
-                            tgt_ty.clone(),
-                            unsizing_meta,
-                        ));
-                        Ok(Rvalue::UnaryOp(unop, operand))
+                        CastKind::Unsize(src_ty.clone(), tgt_ty.clone(), unsizing_meta)
                     }
-                }
+                };
+                Ok(Rvalue::UnaryOp(UnOp::Cast(cast_kind), operand))
             }
             mir::Rvalue::BinaryOp(binop, left, right) => Ok(Rvalue::BinaryOp(
                 self.translate_binaryop_kind(span, *binop)?,

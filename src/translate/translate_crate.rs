@@ -30,6 +30,7 @@ pub enum TransItemSource {
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
+    ClosureAsFn(ty::ClosureDef, MyGenericArgs),
 }
 
 impl TransItemSource {
@@ -39,6 +40,7 @@ impl TransItemSource {
             TransItemSource::Fun(instance) => instance.def.def_id(),
             TransItemSource::Type(id, _) => id.0,
             TransItemSource::Closure(def, _) => def.def_id(),
+            TransItemSource::ClosureAsFn(def, _) => def.def_id(),
         }
     }
 
@@ -58,6 +60,9 @@ impl TransItemSource {
             TransItemSource::Fun(instance) => (1, instance.def.to_index(), key(&instance.kind)),
             TransItemSource::Type(id, gargs) => (2, id.0.to_index(), gargs.sort_key()),
             TransItemSource::Closure(def, gargs) => (3, def.def_id().to_index(), gargs.sort_key()),
+            TransItemSource::ClosureAsFn(def, gargs) => {
+                (4, def.def_id().to_index(), gargs.sort_key())
+            }
         }
     }
 }
@@ -90,7 +95,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     TransItemSource::Global(_) => {
                         AnyTransId::Global(self.translated.global_decls.reserve_slot())
                     }
-                    TransItemSource::Fun(..) => {
+                    TransItemSource::Fun(..) | TransItemSource::ClosureAsFn(..) => {
                         AnyTransId::Fun(self.translated.fun_decls.reserve_slot())
                     }
                 };
@@ -151,6 +156,18 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .unwrap()
     }
 
+    pub(crate) fn register_closure_as_fn_id(
+        &mut self,
+        src: &Option<DepSource>,
+        closure: ty::ClosureDef,
+        args: ty::GenericArgs,
+    ) -> FunDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::ClosureAsFn(closure, args.into()))
+            .as_fun()
+            .unwrap()
+    }
+
     pub(crate) fn register_global_decl_id(
         &mut self,
         src: &Option<DepSource>,
@@ -172,11 +189,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         })
     }
 
-    // pub(crate) fn register_id_no_enqueue(&mut self, span: Span, id: TransItemSource) -> AnyTransId {
-    //     let src = self.make_dep_source(span);
-    //     self.t_ctx.register_id_no_enqueue(&src, id)
-    // }
-
     pub(crate) fn register_type_decl_id(
         &mut self,
         span: Span,
@@ -186,15 +198,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let src = self.make_dep_source(span);
         self.t_ctx.register_type_decl_id(&src, id, genargs)
     }
-
-    /// Translate a type def id
-    // pub(crate) fn translate_type_id(
-    //     &mut self,
-    //     span: Span,
-    //     def_id: &ty::AdtDef,
-    // ) -> Result<TypeId, Error> {
-    //     Ok(TypeId::Adt(self.register_type_decl_id(span, def_id)))
-    // }
 
     pub(crate) fn register_fun_decl_id(
         &mut self,
@@ -214,6 +217,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let src = self.make_dep_source(span);
         self.t_ctx
             .register_closure_type_decl_id(&src, closure, args)
+    }
+
+    pub(crate) fn register_closure_as_fn_id(
+        &mut self,
+        span: Span,
+        closure: ty::ClosureDef,
+        args: ty::GenericArgs,
+    ) -> FunDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx.register_closure_as_fn_id(&src, closure, args)
     }
 
     pub(crate) fn register_global_decl_id(
