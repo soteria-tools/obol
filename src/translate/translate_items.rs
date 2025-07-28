@@ -202,6 +202,7 @@ impl ItemTransCtx<'_, '_> {
                 Err(_) => Err(Opaque),
             }
         } else {
+            trace!("Instance {} has no body -- left opaque", def.name());
             Err(Opaque)
         };
         Ok(FunDecl {

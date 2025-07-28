@@ -917,25 +917,40 @@ impl BodyTransCtx<'_, '_, '_> {
             TerminatorKind::Drop {
                 place,
                 target,
-                unwind: _, // We consider that panic is an error, and don't model unwinding
-                ..
+                unwind, // We consider that panic is an error, and don't model unwinding
             } => {
+                let place_ty = place.ty(self.local_decls)?;
                 let place = self.translate_place(span, place)?;
+
+                // need to make a pointer to the local we're dropping
+                let ptr_place = self.locals.new_var(
+                    None,
+                    TyKind::RawPtr(place.ty.clone(), RefKind::Mut).into_ty(),
+                );
+                let unit_place = self.locals.new_var(None, Ty::mk_unit());
                 statements.push(Statement::new(
                     span,
-                    RawStatement::Drop(
-                        place,
-                        TraitRef {
-                            kind: TraitRefKind::Unknown("Idk how to do this".to_string()),
-                            trait_decl_ref: RegionBinder::empty(TraitDeclRef {
-                                id: TraitDeclId::ZERO,
-                                generics: Box::new(GenericArgs::empty()),
-                            }),
-                        },
-                    ),
+                    RawStatement::Assign(ptr_place.clone(), Rvalue::RawPtr(place, RefKind::Mut)),
                 ));
+                let operand = Operand::Move(ptr_place);
+
+                let drop_shim = mir::mono::Instance::resolve_drop_in_place(place_ty);
+                let drop_fn_id = self.register_fun_decl_id(span, drop_shim);
+                let on_unwind = self.translate_unwind(span, unwind);
                 let target = self.translate_basic_block_id(*target);
-                RawTerminator::Goto { target }
+
+                RawTerminator::Call {
+                    call: Call {
+                        func: FnOperand::Regular(FnPtr {
+                            func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(drop_fn_id))),
+                            generics: Box::new(GenericArgs::empty()),
+                        }),
+                        args: vec![operand],
+                        dest: unit_place,
+                    },
+                    target,
+                    on_unwind,
+                }
             }
             TerminatorKind::Call {
                 func,
@@ -1035,6 +1050,25 @@ impl BodyTransCtx<'_, '_, '_> {
         }
     }
 
+    fn translate_unwind(&mut self, span: Span, unwind: &mir::UnwindAction) -> BlockId {
+        match unwind {
+            mir::UnwindAction::Continue => {
+                let unwind_continue = Terminator::new(span, RawTerminator::UnwindResume);
+                self.blocks.push(unwind_continue.into_block())
+            }
+            mir::UnwindAction::Unreachable => {
+                let abort =
+                    Terminator::new(span, RawTerminator::Abort(AbortKind::UndefinedBehavior));
+                self.blocks.push(abort.into_block())
+            }
+            mir::UnwindAction::Terminate => {
+                let abort = Terminator::new(span, RawTerminator::Abort(AbortKind::UnwindTerminate));
+                self.blocks.push(abort.into_block())
+            }
+            mir::UnwindAction::Cleanup(bb) => self.translate_basic_block_id(*bb),
+        }
+    }
+
     /// Translate a function call statement.
     /// Note that `body` is the body of the function being translated, not of the
     /// function referenced in the function call: we need it in order to translate
@@ -1112,22 +1146,7 @@ impl BodyTransCtx<'_, '_, '_> {
                 self.blocks.push(abort.into_block())
             }
         };
-        let on_unwind = match unwind {
-            mir::UnwindAction::Continue => {
-                let unwind_continue = Terminator::new(span, RawTerminator::UnwindResume);
-                self.blocks.push(unwind_continue.into_block())
-            }
-            mir::UnwindAction::Unreachable => {
-                let abort =
-                    Terminator::new(span, RawTerminator::Abort(AbortKind::UndefinedBehavior));
-                self.blocks.push(abort.into_block())
-            }
-            mir::UnwindAction::Terminate => {
-                let abort = Terminator::new(span, RawTerminator::Abort(AbortKind::UnwindTerminate));
-                self.blocks.push(abort.into_block())
-            }
-            mir::UnwindAction::Cleanup(bb) => self.translate_basic_block_id(*bb),
-        };
+        let on_unwind = self.translate_unwind(span, unwind);
         Ok((
             RawTerminator::Call {
                 call,
