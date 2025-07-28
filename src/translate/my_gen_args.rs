@@ -16,8 +16,8 @@ pub struct MyGenericArgs(pub Vec<MyGenericArgKind>);
 impl MyGenericArgKind {
     pub fn sort(&self) -> isize {
         match &self.0 {
-            ty::GenericArgKind::Const(tyconst) => (tyconst.id.to_index() as isize) * 4,
-            ty::GenericArgKind::Type(ty) => (ty.to_index() as isize) * 4 + 1,
+            ty::GenericArgKind::Const(tyconst) => tyconst.id.to_index() as isize,
+            ty::GenericArgKind::Type(ty) => (ty.to_index() as isize) ^ 0xAAAA_AAAA,
             ty::GenericArgKind::Lifetime(reg) => {
                 let v = match &reg.kind {
                     ty::RegionKind::ReErased => 0,
@@ -26,7 +26,7 @@ impl MyGenericArgKind {
                     ty::RegionKind::ReBound(idx, reg) => (idx + reg.var) as isize,
                     ty::RegionKind::ReEarlyParam(eb) => eb.index as isize,
                 };
-                v * 4 + 2
+                v ^ 0x5555_5555
             }
         }
     }
@@ -58,11 +58,11 @@ impl MyGenericArgs {
             .map(MyGenericArgKind::sort)
             .collect::<Vec<_>>();
         // hash the sorts
-        let mut hash: isize = 0;
-        for (i, v) in vec.iter().enumerate() {
-            hash = hash.wrapping_add(v.wrapping_mul(31).wrapping_add(i as isize));
-        }
-        hash
+        use std::collections::hash_map::DefaultHasher;
+        use std::hash::Hasher;
+        let mut hasher = DefaultHasher::new();
+        vec.hash(&mut hasher);
+        hasher.finish() as isize
     }
 
     pub fn empty() -> Self {
