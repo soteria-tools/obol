@@ -296,6 +296,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                         niche_variants.start().to_index() as u128;
 
                                     if matches!(tag_ty, abi::Primitive::Int { .. }) {
+                                        if discr.val < niche_variants_start {
+                                            // The variant is before the niche variants, so it is not tagged.
+                                            // Could e.g. be the case if it is uninhabited.
+                                            return None;
+                                        }
                                         let tag = (discr.val - niche_variants_start)
                                             .wrapping_add(*niche_start);
                                         (tag_value == tag).then_some(v.idx)
