@@ -36,6 +36,25 @@ struct StableMirCallbacks {
 }
 
 impl rustc_driver::Callbacks for StableMirCallbacks {
+    fn config(&mut self, config: &mut rustc_interface::interface::Config) {
+        config.opts.unstable_opts.always_encode_mir = true;
+        config.opts.unstable_opts.mir_opt_level = Some(0);
+        config.opts.unstable_opts.mir_emit_retag = true;
+        let disabled_mir_passes = [
+            "RemoveStorageMarkers",
+            "CheckAlignment",
+            "CheckNull",
+            "CheckEnums",
+        ];
+        for pass in disabled_mir_passes {
+            config
+                .opts
+                .unstable_opts
+                .mir_enable_passes
+                .push((pass.to_owned(), false));
+        }
+    }
+
     fn after_analysis(&mut self, _compiler: &Compiler, tcx: TyCtxt) -> Compilation {
         let _ = rustc_internal::run(tcx, || (self.callback_fn)(&self.cli_opts, tcx));
 
