@@ -107,6 +107,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 // FIXME: generics?
                 trace!("Adt: {:?}", item.0);
                 let id = self.register_type_decl_id(span, *item, generics.clone());
+                // no generics since it's monomorphic
                 let tref = TypeDeclRef {
                     id: TypeId::Adt(id),
                     generics: Box::new(GenericArgs::empty()),
@@ -159,14 +160,12 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 TyKind::Adt(tref)
             }
 
-            ty::RigidTy::Foreign(..) => {
-                // let id = self.register_type_decl_id(span, &item);
-                // let tref = TypeDeclRef {
-                //     id: TypeId::Adt(id),
-                //     generics: Box::new(GenericArgs::empty()),
-                // };
-                // TyKind::Adt(tref)
-                raise_error!(self, span, "Foreign types are not supported yet")
+            ty::RigidTy::Foreign(fdef) => {
+                let type_id = self.register_foreign_type_decl_id(span, *fdef);
+                TyKind::Adt(TypeDeclRef {
+                    id: TypeId::Adt(type_id),
+                    generics: Box::new(GenericArgs::empty()),
+                })
             }
 
             ty::RigidTy::FnPtr(bsig) => {

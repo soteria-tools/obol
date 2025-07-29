@@ -97,6 +97,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     bt_ctx.translate_stateless_closure_as_fn(id, item_meta, &def, &generics)?;
                 self.translated.fun_decls.set_slot(id, fun_decl);
             }
+            TransItemSource::ForeignType(def) => {
+                let Some(AnyTransId::Type(id)) = trans_id else {
+                    unreachable!()
+                };
+                let ty = bt_ctx.translate_foreign_type_decl(id, item_meta, &def)?;
+                self.translated.type_decls.set_slot(id, ty);
+            }
         }
         Ok(())
     }
@@ -153,6 +160,35 @@ impl ItemTransCtx<'_, '_> {
             src,
             layout,
             ptr_metadata,
+        };
+
+        Ok(type_def)
+    }
+
+    pub fn translate_foreign_type_decl(
+        mut self,
+        trans_id: TypeDeclId,
+        item_meta: ItemMeta,
+        def: &ty::ForeignDef,
+    ) -> Result<TypeDecl, Error> {
+        let span = item_meta.span;
+
+        // Translate generics and predicates
+        // self.translate_def_generics(span, def)?;
+
+        // Get the kind of the type decl -- is it a closure?
+        let src = self.get_item_kind(span, &def.0)?;
+
+        // Translate type body
+        let kind = TypeDeclKind::Opaque;
+        let type_def = TypeDecl {
+            def_id: trans_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            kind,
+            src,
+            layout: None,
+            ptr_metadata: None,
         };
 
         Ok(type_def)

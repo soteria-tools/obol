@@ -31,6 +31,7 @@ pub enum TransItemSource {
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
     ClosureAsFn(ty::ClosureDef, MyGenericArgs),
+    ForeignType(ty::ForeignDef),
 }
 
 impl TransItemSource {
@@ -41,6 +42,7 @@ impl TransItemSource {
             TransItemSource::Type(id, _) => id.0,
             TransItemSource::Closure(def, _) => def.def_id(),
             TransItemSource::ClosureAsFn(def, _) => def.def_id(),
+            TransItemSource::ForeignType(def) => def.def_id(),
         }
     }
 
@@ -63,6 +65,7 @@ impl TransItemSource {
             TransItemSource::ClosureAsFn(def, gargs) => {
                 (4, def.def_id().to_index(), gargs.sort_key())
             }
+            TransItemSource::ForeignType(def) => (5, def.def_id().to_index(), 0),
         }
     }
 }
@@ -89,7 +92,9 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             Some(tid) => *tid,
             None => {
                 let trans_id = match id {
-                    TransItemSource::Type(..) | TransItemSource::Closure(..) => {
+                    TransItemSource::Type(..)
+                    | TransItemSource::Closure(..)
+                    | TransItemSource::ForeignType(..) => {
                         AnyTransId::Type(self.translated.type_decls.reserve_slot())
                     }
                     TransItemSource::Global(_) => {
@@ -178,6 +183,17 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .as_global()
             .unwrap()
     }
+
+    pub(crate) fn register_foreign_type_decl_id(
+        &mut self,
+        src: &Option<DepSource>,
+        def: ty::ForeignDef,
+    ) -> TypeDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::ForeignType(def))
+            .as_type()
+            .unwrap()
+    }
 }
 
 // Id and item reference registration.
@@ -236,6 +252,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> GlobalDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_global_decl_id(&src, stt)
+    }
+
+    pub(crate) fn register_foreign_type_decl_id(
+        &mut self,
+        span: Span,
+        def: ty::ForeignDef,
+    ) -> TypeDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx.register_foreign_type_decl_id(&src, def)
     }
 }
 
