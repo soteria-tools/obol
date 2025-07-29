@@ -1,13 +1,18 @@
 //! Translate information about items: name, attributes, etc.
 
+extern crate rustc_ast_pretty;
+extern crate rustc_attr_data_structures;
+extern crate rustc_attr_parsing;
+extern crate rustc_hir;
 extern crate rustc_span;
 extern crate stable_mir;
 
 use super::translate_crate::TransItemSource;
 use super::translate_ctx::{ItemTransCtx, TranslateCtx};
-use charon_lib::ast::*;
+use charon_lib::{ast::*, register_error};
+use itertools::Itertools;
 use log::trace;
-use stable_mir::{CrateDef, mir, rustc_internal, ty};
+use stable_mir::{CrateDef, rustc_internal, ty};
 use std::cmp::Ord;
 use std::path::Component;
 
@@ -227,39 +232,68 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     //     }
     // }
 
-    // pub(crate) fn translate_attr_info(&mut self, def: &mir::FullDef) -> AttrInfo {
-    //     // Default to `false` for impl blocks and closures.
-    //     let public = def.visibility.unwrap_or(false);
-    //     let inline = self.translate_inline(def);
-    //     let attributes: Vec<Attribute> = vec![];
-    //     // def
-    //     // .attributes
-    //     // .iter()
-    //     // .filter_map(|attr| self.translate_attribute(&attr))
-    //     // .collect_vec();
+    fn translate_attribute(&mut self, attrib: &rustc_hir::Attribute) -> Option<Attribute> {
+        match attrib {
+            rustc_hir::Attribute::Unparsed(attr) => {
+                let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
+                let args = match &attr.args {
+                    rustc_hir::AttrArgs::Empty => None,
+                    rustc_hir::AttrArgs::Eq { expr, .. } => Some(expr.symbol.to_string()),
+                    rustc_hir::AttrArgs::Delimited(args) => {
+                        Some(rustc_ast_pretty::pprust::tts_to_string(&args.tokens))
+                    }
+                };
+                Some(Attribute::Unknown(RawAttribute { path, args }))
+            }
+            rustc_hir::Attribute::Parsed(kind) => {
+                use rustc_attr_data_structures::AttributeKind;
+                match kind {
+                    AttributeKind::DocComment { comment, .. } => {
+                        Some(Attribute::DocComment(comment.to_string()))
+                    }
+                    _ => None,
+                }
+            }
+        }
+    }
 
-    //     let rename = {
-    //         let mut renames = attributes.iter().filter_map(|a| a.as_rename()).cloned();
-    //         let rename = renames.next();
-    //         if renames.next().is_some() {
-    //             let span = self.translate_span_from_smir(&def.span);
-    //             register_error!(
-    //                 self,
-    //                 span,
-    //                 "There should be at most one `charon::rename(\"...\")` \
-    //                 or `aeneas::rename(\"...\")` attribute per declaration",
-    //             );
-    //         }
-    //         rename
-    //     };
+    pub(crate) fn translate_attr_info(&mut self, span: Span, def: &dyn CrateDef) -> AttrInfo {
+        // Default to `false` for impl blocks and closures.
+        // let public = def.visibility.unwrap_or(false);
+        // let inline = self.translate_inline(def);
 
-    //     AttrInfo {
-    //         attributes,
-    //         inline,
-    //         public,
-    //         rename,
-    //     }
-    // }
+        let internal = stable_mir::rustc_internal::internal(self.tcx, def.def_id());
+        let attributes = self.tcx.get_all_attrs(internal);
+
+        let attributes: Vec<Attribute> = attributes
+            .filter_map(|attr| {
+                let a = self.translate_attribute(attr);
+                println!("Attrib: {:?}", a);
+                a
+            })
+            .collect();
+
+        let rename = {
+            let mut renames = attributes.iter().filter_map(|a| a.as_rename()).cloned();
+            let rename = renames.next();
+            if renames.next().is_some() {
+                register_error!(
+                    self,
+                    span,
+                    "There should be at most one `charon::rename(\"...\")` \
+                    or `aeneas::rename(\"...\")` attribute per declaration",
+                );
+            }
+            rename
+        };
+
+        AttrInfo {
+            attributes,
+            inline: None,
+            public: true,
+            rename,
+        }
+    }
 }
 
 // `ItemMeta`
@@ -273,20 +307,16 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         if let Some(item_meta) = self.cached_item_metas.get(&item_src) {
             return item_meta.clone();
         }
-        let span = Span::dummy();
-        let mut attr_info = AttrInfo::default();
-
-        match item_src {
-            TransItemSource::Fun(instance) => {
-                if instance.kind == mir::mono::InstanceKind::Intrinsic {
-                    attr_info.attributes.push(Attribute::Unknown(RawAttribute {
-                        path: "rustc_intrinsic".to_string(),
-                        args: None,
-                    }));
-                }
-            }
-            _ => {}
+        let crate_def: &dyn CrateDef = match item_src {
+            TransItemSource::Closure(def, _) | TransItemSource::ClosureAsFn(def, _) => def,
+            TransItemSource::ForeignType(def) => def,
+            TransItemSource::Fun(instance) => &instance.def,
+            TransItemSource::Global(def) => def,
+            TransItemSource::Type(def, _) => def,
         };
+        let span = crate_def.span();
+        let span = self.translate_span_from_smir(&span);
+        let attr_info = self.translate_attr_info(span, crate_def);
 
         let internal_id = rustc_internal::internal(self.tcx, item_src.as_def_id());
         let lang_item = self
