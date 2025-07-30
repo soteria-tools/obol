@@ -266,11 +266,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         let attributes = self.tcx.get_all_attrs(internal);
 
         let attributes: Vec<Attribute> = attributes
-            .filter_map(|attr| {
-                let a = self.translate_attribute(attr);
-                println!("Attrib: {:?}", a);
-                a
-            })
+            .filter_map(|attr| self.translate_attribute(attr))
             .collect();
 
         let rename = {

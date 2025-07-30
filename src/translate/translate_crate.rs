@@ -1,19 +1,23 @@
 extern crate rustc_abi;
+extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate rustc_smir;
 extern crate stable_mir;
 
+use crate::args::CliOpts;
 use crate::translate::my_gen_args::MyGenericArgs;
 
 use super::translate_ctx::*;
 
 use charon_lib::ast::*;
 use charon_lib::errors::ErrorCtx;
-use charon_lib::options::{CliOpts, TranslateOptions};
+use charon_lib::options::{CliOpts as CharonCliOpts, TranslateOptions};
 use charon_lib::transform::TransformCtx;
+use itertools::Itertools;
 use log::trace;
 use rustc_middle::ty::TyCtxt;
 use rustc_smir::IndexedVal;
+use stable_mir::mir::mono::Instance;
 use stable_mir::rustc_internal::{self};
 use stable_mir::{CrateDef, DefId};
 use stable_mir::{mir, ty};
@@ -264,20 +268,57 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     }
 }
 
+fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instance> {
+    stable_mir::all_local_items()
+        .iter()
+        .filter_map(|item| {
+            let Ok(instance) = Instance::try_from(*item) else {
+                return None;
+            };
+            let int_def_id = rustc_internal::internal(tcx, instance.def.def_id());
+            if matches!(tcx.def_kind(int_def_id), rustc_hir::def::DefKind::GlobalAsm) {
+                return None;
+            }
+            // Only collect monomorphic items.
+            if !matches!(item.kind(), stable_mir::ItemKind::Fn) {
+                return None;
+            }
+
+            let instance_name = instance.name();
+            let name_split = instance_name.split("::").last().unwrap();
+            if options.entry_names.contains(&name_split.to_string()) {
+                return Some(instance);
+            }
+
+            let def_id = stable_mir::rustc_internal::internal(tcx, instance.def.def_id());
+            let attrib_match = tcx.get_all_attrs(def_id).any(|a| match a {
+                rustc_hir::Attribute::Parsed(..) => false,
+                rustc_hir::Attribute::Unparsed(attr) => {
+                    let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
+                    options.entry_attribs.contains(&path)
+                }
+            });
+
+            attrib_match.then_some(instance)
+        })
+        .collect()
+}
+
 pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformCtx {
     // Retrieve the crate name: if the user specified a custom name, use it, otherwise retrieve it
     // from hax.
     let krate = stable_mir::local_crate();
 
-    let mut error_ctx = ErrorCtx::new(!options.abort_on_error, options.error_on_warnings);
-    let translate_options = TranslateOptions::new(&mut error_ctx, options);
+    let charon_opts = CharonCliOpts::default();
+    let mut error_ctx = ErrorCtx::new(!charon_opts.abort_on_error, charon_opts.error_on_warnings);
+    let translate_options = TranslateOptions::new(&mut error_ctx, &charon_opts);
     let mut ctx = TranslateCtx {
         tcx,
         options: translate_options,
         errors: RefCell::new(error_ctx),
         translated: TranslatedCrate {
             crate_name: krate.name,
-            options: options.clone(),
+            options: charon_opts.clone(),
             target_information: TargetInfo {
                 target_pointer_size: tcx.data_layout.pointer_size().bytes(),
                 is_little_endian: matches!(tcx.data_layout.endian, rustc_abi::Endian::Little),
@@ -294,23 +335,13 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
         type_trans_cache: Default::default(),
     };
 
-    let units = tcx.collect_and_partition_mono_items(()).codegen_units;
-    units.iter().for_each(|unit| {
-        unit.items_in_deterministic_order(tcx)
-            .iter()
-            .for_each(|(internal_item, _)| {
-                let item = rustc_internal::stable(internal_item);
-                match item {
-                    mir::mono::MonoItem::Fn(instance) => {
-                        ctx.register_fun_decl_id(&None, instance);
-                    }
-                    mir::mono::MonoItem::Static(stt) => {
-                        ctx.register_global_decl_id(&None, stt);
-                    }
-                    mir::mono::MonoItem::GlobalAsm(_) => {}
-                }
-            })
-    });
+    let units = collect_entrypoints(options, tcx);
+    units
+        .into_iter()
+        .sorted_by_key(|i| i.def.def_id().to_index())
+        .for_each(|instance| {
+            ctx.register_fun_decl_id(&None, instance);
+        });
 
     // Translate.
     //

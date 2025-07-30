@@ -11,6 +11,9 @@ use driver::stable_mir_driver;
 use printer::emit_smir;
 
 fn main() {
-    let cli = args::CliOpts::parse();
+    let mut cli = args::CliOpts::parse();
+    if cli.entry_attribs.is_empty() && cli.entry_names.is_empty() {
+        cli.entry_names.push("main".to_string());
+    }
     stable_mir_driver(cli, emit_smir);
 }
