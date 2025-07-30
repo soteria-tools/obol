@@ -339,144 +339,16 @@ impl BodyTransCtx<'_, '_, '_> {
         let var_id = self.translate_local(&place.local).unwrap();
         let local = self.locals.place_for_var(var_id);
         let local_ty = self.local_decls[place.local].ty;
-        let (place, _, _) =
-            place
-                .projection
-                .iter()
-                .fold(Ok((local, local_ty, None)), |res, proj| {
-                    let (place, place_ty, variant) = res?;
+        place
+            .projection
+            .iter()
+            .try_fold(
+                (local, local_ty, None),
+                |(place, place_ty, variant), proj| {
                     self.translate_projection(span, place, place_ty, variant, proj)
-                })?;
-        Ok(place)
-        // match &place.kind {
-        //     mir::PlaceKind::Local(local) => {
-        //         let var_id = self.translate_local(local).unwrap();
-        //         Ok(self.locals.place_for_var(var_id))
-        //     }
-        //     mir::PlaceKind::Projection {
-        //         place: hax_subplace,
-        //         kind,
-        //     } => {
-        //         let ty = self.translate_ty(span, &place.ty)?;
-        //         // Compute the type of the value *before* projection - we use this
-        //         // to disambiguate
-        //         let subplace = self.translate_place(span, hax_subplace)?;
-        //         let place = match kind {
-        //             mir::ProjectionElem::Deref => subplace.project(ProjectionElem::Deref, ty),
-        //             mir::ProjectionElem::Field(field_kind) => {
-        //                 use mir::ProjectionElemFieldKind::*;
-        //                 let proj_elem = match field_kind {
-        //                     Tuple(id) => {
-        //                         let tref = subplace.ty().kind().as_adt().unwrap();
-        //                         let field_id = translate_field_id(*id);
-        //                         let proj_kind =
-        //                             FieldProjKind::Tuple(tref.generics.types.elem_count());
-        //                         ProjectionElem::Field(proj_kind, field_id)
-        //                     }
-        //                     Adt {
-        //                         typ: _,
-        //                         variant,
-        //                         index,
-        //                     } => {
-        //                         let field_id = translate_field_id(*index);
-        //                         let variant_id = variant.map(translate_variant_id);
-        //                         let tref = subplace.ty().kind().as_adt().unwrap();
-        //                         let generics = &tref.generics;
-        //                         match tref.id {
-        //                             TypeId::Adt(type_id) => {
-        //                                 let proj_kind = FieldProjKind::Adt(type_id, variant_id);
-        //                                 ProjectionElem::Field(proj_kind, field_id)
-        //                             }
-        //                             TypeId::Tuple => {
-        //                                 assert!(generics.regions.is_empty());
-        //                                 assert!(variant.is_none());
-        //                                 assert!(generics.const_generics.is_empty());
-        //                                 let proj_kind =
-        //                                     FieldProjKind::Tuple(generics.types.elem_count());
-        //                                 ProjectionElem::Field(proj_kind, field_id)
-        //                             }
-        //                             TypeId::Builtin(BuiltinTy::Box) => {
-        //                                 // Some more sanity checks
-        //                                 assert!(generics.regions.is_empty());
-        //                                 assert!(generics.types.elem_count() == 1);
-        //                                 assert!(generics.const_generics.is_empty());
-        //                                 assert!(variant_id.is_none());
-        //                                 assert!(field_id == FieldId::ZERO);
-        //                                 ProjectionElem::Deref
-        //                             }
-        //                             _ => raise_error!(self, span, "Unexpected field projection"),
-        //                         }
-        //                     }
-        //                     ClosureState(index) => {
-        //                         let field_id = translate_field_id(*index);
-        //                         let type_id = *subplace
-        //                             .ty
-        //                             .kind()
-        //                             .as_adt()
-        //                             .expect("ClosureState projection should apply to an Adt type")
-        //                             .id
-        //                             .as_adt()
-        //                             .unwrap();
-        //                         ProjectionElem::Field(FieldProjKind::Adt(type_id, None), field_id)
-        //                     }
-        //                 };
-        //                 subplace.project(proj_elem, ty)
-        //             }
-        //             mir::ProjectionElem::Index(local) => {
-        //                 let var_id = self.translate_local(local).unwrap();
-        //                 let local = self.locals.place_for_var(var_id);
-        //                 let offset = Operand::Copy(local);
-        //                 subplace.project(
-        //                     ProjectionElem::Index {
-        //                         offset: Box::new(offset),
-        //                         from_end: false,
-        //                     },
-        //                     ty,
-        //                 )
-        //             }
-        //             mir::ProjectionElem::Downcast(..) => {
-        //                 // We view it as a nop (the information from the
-        //                 // downcast has been propagated to the other
-        //                 // projection elements by Hax)
-        //                 subplace
-        //             }
-        //             &mir::ProjectionElem::ConstantIndex {
-        //                 offset,
-        //                 from_end,
-        //                 min_length: _,
-        //             } => {
-        //                 let offset =
-        //                     Operand::Const(Box::new(ScalarValue::Usize(offset).to_constant()));
-        //                 subplace.project(
-        //                     ProjectionElem::Index {
-        //                         offset: Box::new(offset),
-        //                         from_end,
-        //                     },
-        //                     ty,
-        //                 )
-        //             }
-        //             &mir::ProjectionElem::Subslice { from, to, from_end } => {
-        //                 let from = Operand::Const(Box::new(ScalarValue::Usize(from).to_constant()));
-        //                 let to = Operand::Const(Box::new(ScalarValue::Usize(to).to_constant()));
-        //                 subplace.project(
-        //                     ProjectionElem::Subslice {
-        //                         from: Box::new(from),
-        //                         to: Box::new(to),
-        //                         from_end,
-        //                     },
-        //                     ty,
-        //                 )
-        //             }
-        //             mir::ProjectionElem::OpaqueCast => {
-        //                 // Don't know what that is
-        //                 raise_error!(self, span, "Unexpected ProjectionElem::OpaqueCast");
-        //             }
-        //         };
-
-        //         // Return
-        //         Ok(place)
-        //     }
-        // }
+                },
+            )
+            .map(|(place, _, _)| place)
     }
 
     /// Translate an operand with its type

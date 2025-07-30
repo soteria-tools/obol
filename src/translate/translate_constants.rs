@@ -305,12 +305,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                             .wrapping_add(*niche_start);
                                         (tag_value == tag).then_some(v.idx)
                                     } else {
-                                        // pointer niche: if 0, then niche variant, otherwise untagged variant
+                                        // pointer niche: if no provenance, then niche variant,
+                                        // otherwise untagged variant
                                         assert!(
                                             niche_variants.start() == niche_variants.end(),
                                             ">1 niche in ptr niche?"
                                         );
-                                        (tag_value == 0).then_some(*niche_variants.start())
+                                        let has_prov =
+                                            alloc.provenance.ptrs.iter().any(|(o, _)| *o == offset);
+                                        (!has_prov).then_some(*niche_variants.start())
                                     }
                                 })
                                 .unwrap_or_else(|| *untagged_variant),
