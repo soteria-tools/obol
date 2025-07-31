@@ -1,7 +1,7 @@
 <p><div style="text-align: center">
 <img src="static/obol.png"
      alt="Athenian silver obol" title="Athenian silver obol"
-     style=""/>
+     style="max-height: 200px; margin: 0 auto; display: block;"/>
 <figcaption>
     Athenian silver obol ca. 450 BC
 <a href="https://commons.wikimedia.org/wiki/File:Athens_465-454_BC_Obol.jpg">Source</a>
