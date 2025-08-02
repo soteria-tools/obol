@@ -57,6 +57,19 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             .ok_or_else(|| "Found uninitialized bytes".into())
     }
 
+    fn provenance_at<'a>(
+        &mut self,
+        alloc: &'a ty::Allocation,
+        offset: usize,
+    ) -> Option<&'a ty::Prov> {
+        alloc
+            .provenance
+            .ptrs
+            .iter()
+            .find(|(o, _)| *o == offset)
+            .map(|(_, p)| p)
+    }
+
     pub fn translate_allocation(
         &mut self,
         span: Span,
@@ -124,12 +137,9 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 }
             },
             TyKind::Ref(_, subty, _) | TyKind::RawPtr(subty, _) => 'ptr_case: {
-                let Some((_, alloc)) = alloc.provenance.ptrs.iter().find(|(o, _)| *o == offset)
-                else {
-                    let value = self.read_target_int(Self::as_init(bytes)?.as_slice())?;
-                    break 'ptr_case RawConstantExpr::Literal(Literal::Scalar(
-                        ScalarValue::Signed(IntTy::Isize, value),
-                    ));
+                let Some(alloc) = self.provenance_at(alloc, offset) else {
+                    let value = self.read_target_uint(Self::as_init(bytes)?.as_slice())?;
+                    break 'ptr_case RawConstantExpr::PtrNoProvenance(value);
                 };
                 use mir::alloc::GlobalAlloc;
                 let glob_alloc: GlobalAlloc = alloc.0.into();
@@ -311,9 +321,9 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                             niche_variants.start() == niche_variants.end(),
                                             ">1 niche in ptr niche?"
                                         );
-                                        let has_prov =
-                                            alloc.provenance.ptrs.iter().any(|(o, _)| *o == offset);
-                                        (!has_prov).then_some(*niche_variants.start())
+                                        self.provenance_at(alloc, offset)
+                                            .is_none()
+                                            .then_some(*niche_variants.start())
                                     }
                                 })
                                 .unwrap_or_else(|| *untagged_variant),
@@ -528,7 +538,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             | RawConstantExpr::Ref(_)
             | RawConstantExpr::Ptr(..)
             | RawConstantExpr::FnPtr { .. }
-            | RawConstantExpr::Opaque(_) => {
+            | RawConstantExpr::Opaque(_)
+            | RawConstantExpr::PtrNoProvenance(..) => {
                 raise_error!(self, span, "Unexpected constant generic: {:?}", value)
             }
         }
