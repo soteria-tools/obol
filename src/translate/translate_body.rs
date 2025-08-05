@@ -790,8 +790,16 @@ impl BodyTransCtx<'_, '_, '_> {
                 place,
                 target,
                 unwind, // We consider that panic is an error, and don't model unwinding
-            } => {
+            } => 'drop_case: {
+                let target = self.translate_basic_block_id(*target);
                 let place_ty = place.ty(self.local_decls)?;
+                let drop_shim = mir::mono::Instance::resolve_drop_in_place(place_ty);
+
+                if drop_shim.is_empty_shim() {
+                    // If the drop shim is empty, we don't need to do anything.
+                    break 'drop_case RawTerminator::Goto { target };
+                }
+
                 let place = self.translate_place(span, place)?;
 
                 // need to make a pointer to the local we're dropping
@@ -806,10 +814,8 @@ impl BodyTransCtx<'_, '_, '_> {
                 ));
                 let operand = Operand::Move(ptr_place);
 
-                let drop_shim = mir::mono::Instance::resolve_drop_in_place(place_ty);
                 let drop_fn_id = self.register_fun_decl_id(span, drop_shim);
                 let on_unwind = self.translate_unwind(span, unwind);
-                let target = self.translate_basic_block_id(*target);
 
                 RawTerminator::Call {
                     call: Call {
