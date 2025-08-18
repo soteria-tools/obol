@@ -1,8 +1,18 @@
 use std::path::PathBuf;
 
-#[derive(Debug, Default, Clone, clap::Parser)]
+use serde::Deserialize;
+use serde_derive::Serialize;
+
+pub const OBOL_ARGS: &str = "OBOL_ARGS";
+
+#[derive(Debug, Default, Clone, clap::Parser, Serialize, Deserialize)]
 #[clap(name = "Obol")]
 pub struct CliOpts {
+    #[clap(
+        long = "cargo",
+        help = "If Obol should compile the crate using Cargo; otherwise, uses rustc to compile a single file."
+    )]
+    pub use_cargo: bool,
     /// The destination file. By default `<dest_dir>/<crate_name>.ullbc`.
     #[clap(long = "dest-file", value_parser)]
     pub dest_file: Option<PathBuf>,
@@ -12,16 +22,16 @@ pub struct CliOpts {
     )]
     pub print_ullbc: bool,
     #[clap(
-        long = "entry_names",
+        long = "entry-names",
         help = "List of function names that count as entry points to generate; if none are specified, main is used."
     )]
     pub entry_names: Vec<String>,
     #[clap(
-        long = "entry_attribs",
+        long = "entry-attribs",
         help = "List of attributes (e.g. `kani::proof`) that count as entry points to generate; empty by default."
     )]
     pub entry_attribs: Vec<String>,
-    /// Args that `rustc` accepts.
+    /// Args that are passed to the underlying tool (`rustc` or `cargo` depending on `--cargo`).
     #[arg(last = true)]
-    pub rustc: Vec<String>,
+    pub spread: Vec<String>,
 }

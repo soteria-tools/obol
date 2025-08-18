@@ -4,8 +4,8 @@ extern crate rustc_middle;
 extern crate rustc_smir;
 extern crate stable_mir;
 
-use crate::args::CliOpts;
 use crate::translate::my_gen_args::MyGenericArgs;
+use obol_lib::args::CliOpts;
 
 use super::translate_ctx::*;
 

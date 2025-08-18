@@ -18,7 +18,7 @@ use crate::translate::translate_crate::translate;
 // Serialization Entrypoint
 // ========================
 
-pub fn emit_smir(opts: &crate::args::CliOpts, tcx: TyCtxt<'_>) {
+pub fn emit_smir(opts: &obol_lib::args::CliOpts, tcx: TyCtxt<'_>) {
     let mut ctx = translate(&opts, tcx);
     use Pass::*;
     use charon_lib::transform::*;

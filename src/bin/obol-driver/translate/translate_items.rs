@@ -225,7 +225,9 @@ impl ItemTransCtx<'_, '_> {
 
         let body = if item_meta.opacity.with_private_contents().is_opaque() {
             Err(Opaque)
-        } else if let Some(body) = def.body() {
+        } else if !matches!(def.kind, mir::mono::InstanceKind::Virtual { .. })
+            && let Some(body) = def.body()
+        {
             // Translate the body. This doesn't store anything if we can't/decide not to translate
             // this body.
             let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals());

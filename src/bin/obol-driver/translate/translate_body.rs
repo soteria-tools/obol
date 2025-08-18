@@ -219,7 +219,17 @@ impl BodyTransCtx<'_, '_, '_> {
                             Ok(UnsizingMetadata::Unknown)
                         }
                     },
-                    ty::Dynamic(..) => {
+                    ty::Dynamic(_preds, ..) => {
+                        // let vtable = if let Some(pred) = preds.principal() {
+                        // } else {
+                        // };
+                        // let tgt_ty = rustc_internal::stable(tgt_ty);
+                        // let tgt_ty_kind = tgt_ty.kind();
+                        // use stable_mir::ty;
+                        // let Some(ty::RigidTy::Dynamic(preds, r, k)) = tgt_ty_kind.rigid() else {
+                        //     unreachable!();
+                        // };
+
                         // let pred = preds[0].with_self_ty(tcx, src_ty);
                         // let clause = pred.as_trait_clause().expect(
                         //     "the first `ExistentialPredicate` of `TyKind::Dynamic` \
@@ -970,14 +980,17 @@ impl BodyTransCtx<'_, '_, '_> {
         let mut extra_stt = None;
         let fn_operand = match fn_ty.kind() {
             ty::TyKind::RigidTy(ty::RigidTy::FnDef(fn_def, args)) => {
-                let instance = stable_mir::mir::mono::Instance::resolve(fn_def, &args)?;
+                let instance = mir::mono::Instance::resolve(fn_def, &args)?;
+
+                // If this is a VTable call, do something else
+                // if let mir::mono::InstanceKind::Virtual { .. } = instance.kind {};
+
                 let fn_id = self.register_fun_decl_id(span, instance);
                 let fn_ptr = FnPtr {
                     func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
                     generics: Box::new(GenericArgs::empty()),
                 };
                 FnOperand::Regular(fn_ptr)
-                // }
             }
             _ => {
                 let (mir::Operand::Move(place) | mir::Operand::Copy(place)) = fun else {
