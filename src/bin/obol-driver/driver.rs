@@ -128,8 +128,11 @@ impl<'a> Callbacks for ObolCallbacks<'a> {
         rustc_hir::def_id::DEF_ID_DEBUG
             .swap(&(def_id_debug as fn(_, &mut fmt::Formatter<'_>) -> _));
 
-        let transform_ctx = translate_crate::translate(&self.options, tcx);
-        self.transform_ctx = Some(transform_ctx);
+        let transform_ctx =
+            stable_mir::rustc_internal::run(tcx, || translate_crate::translate(&self.options, tcx));
+        if let Ok(transform_ctx) = transform_ctx {
+            self.transform_ctx = Some(transform_ctx);
+        }
         Compilation::Continue
     }
     fn after_analysis<'tcx>(&mut self, _: &Compiler, _: TyCtxt<'tcx>) -> Compilation {
