@@ -20,15 +20,18 @@ use std::path::Component;
 impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     /// Register a file if it is a "real" file and was not already registered
     /// `span` must be a span from which we obtained that filename.
-    fn register_file(&mut self, filename: FileName, _span: ty::Span) -> FileId {
+    fn register_file(&mut self, filename: FileName, span: ty::Span) -> FileId {
         // Lookup the file if it was already registered
         match self.file_to_id.get(&filename) {
             Some(id) => *id,
             None => {
+                let span = stable_mir::rustc_internal::internal(self.tcx, span);
+                let source_file = self.tcx.sess.source_map().lookup_source_file(span.lo());
+                let crate_name = self.tcx.crate_name(source_file.cnum).to_string();
                 let file = File {
                     name: filename.clone(),
-                    crate_name: "?".into(),
-                    contents: None,
+                    crate_name,
+                    contents: source_file.src.as_deref().cloned(),
                 };
                 let id = self.translated.files.push(file);
                 self.file_to_id.insert(filename, id);
