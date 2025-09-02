@@ -288,10 +288,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                 .variants_iter()
                                 .find_map(|v| {
                                     let discr = adt.discriminant_for_variant(v.idx);
-                                    if discr.val != tag_value {
-                                        return None;
-                                    };
-                                    Some(v.idx)
+                                    (discr.val == tag_value).then_some(v.idx)
                                 })
                                 .unwrap(),
                             abi::TagEncoding::Niche {
@@ -326,7 +323,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                             .then_some(*niche_variants.start())
                                     }
                                 })
-                                .unwrap_or_else(|| *untagged_variant),
+                                .unwrap_or(*untagged_variant),
                         };
                         let variant = adt.variant(variant_idx).unwrap();
                         let fields = variant
