@@ -141,14 +141,23 @@ impl BodyTransCtx<'_, '_, '_> {
             trace!("Translating local of index {} and type {:?}", index, var.ty);
 
             // Find the name of the variable
-            // let name: Option<String> = body.var.name.clone();
+            let name: Option<String> = body.var_debug_info.iter().find_map(|v| {
+                if let mir::VarDebugInfoContents::Place(place) = &v.value
+                    && place.projection.is_empty()
+                    && place.local == index
+                {
+                    Some(v.name.clone())
+                } else {
+                    None
+                }
+            });
 
             // Translate the type
             let span = self.translate_span_from_smir(&var.span);
             let ty = self.translate_ty(span, var.ty)?;
 
             // Add the variable to the environment
-            self.push_var(index, ty, None);
+            self.push_var(index, ty, name);
         }
 
         Ok(())
