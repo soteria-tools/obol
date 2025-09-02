@@ -333,7 +333,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     }
                     VariantLayout {
                         field_offsets: v,
-                        uninhabited: true,
+                        uninhabited: false,
                         tag,
                     }
                 }
@@ -484,65 +484,77 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }
         }
 
-        let type_decls = &self.t_ctx.translated.type_decls;
-        let mut variant_layouts = Vector::new();
-        match layout.variants {
+        let variant_layouts: Vector<VariantId, VariantLayout> = match layout.variants {
             r_abi::VariantsShape::Multiple {
                 tag_encoding,
                 variants,
                 ..
             } => {
-                let variants_from_kind = get_variants_from_kind(type_decls, kind);
                 let tag_ty = discriminant_layout
                     .as_ref()
                     .expect("No discriminant layout for enum?")
                     .tag_ty;
 
-                for (id, variant_layout) in variants.iter().enumerate() {
-                    let variant = ty::VariantIdx::to_val(id);
-                    let discr = variants_from_kind.map(|variants_from_kind| {
-                        variants_from_kind
-                            .get(translate_variant_id(&variant))
-                            .expect("Variant index out of bounds while getting discr")
-                            .discriminant
-                    });
+                variants
+                    .iter()
+                    .enumerate()
+                    .map(|(id, variant_layout)| {
+                        let variant = ty::VariantIdx::to_val(id);
+                        let type_decls = &self.t_ctx.translated.type_decls;
+                        let variants_from_kind = get_variants_from_kind(type_decls, kind);
+                        let discr = variants_from_kind.map(|variants_from_kind| {
+                            variants_from_kind
+                                .get(translate_variant_id(&variant))
+                                .expect("Variant index out of bounds while getting discr")
+                                .discriminant
+                        });
 
-                    let tag = {
-                        discr.and_then(|discr| {
+                        let tag = discr.and_then(|discr| {
                             translate_discr_to_tag(discr, variant, tag_ty, &tag_encoding)
-                        })
-                    };
-                    variant_layouts.push(translate_variant_layout(variant_layout, tag));
-                }
+                        });
+                        translate_variant_layout(variant_layout, tag)
+                    })
+                    .collect()
             }
             r_abi::VariantsShape::Single { index } => {
                 // For structs we add a single variant that has the field offsets. Unions don't
                 // have field offsets.
-                let tag = if kind.is_enum() {
+                let tag = kind.is_enum().then(|| {
                     let discr = def.discriminant_for_variant(index);
                     match &discr.ty.kind().rigid() {
                         Some(ty::RigidTy::Int(intty)) => {
                             let intty = self.translate_int_ty(intty);
-                            Some(ScalarValue::Signed(intty, discr.val as i128))
+                            ScalarValue::Signed(intty, discr.val as i128)
                         }
                         Some(ty::RigidTy::Uint(intty)) => {
                             let intty = self.translate_uint_ty(intty);
-                            Some(ScalarValue::Unsigned(intty, discr.val as u128))
+                            ScalarValue::Unsigned(intty, discr.val as u128)
                         }
                         _ => {
-                            println!("Expected an integer literal for the discriminant");
-                            None
+                            panic!("Expected an integer literal for the discriminant")
                         }
                     }
+                });
+
+                let type_decls = &self.t_ctx.translated.type_decls;
+                if let Some(variants) = get_variants_from_kind(type_decls, kind) {
+                    variants.map_ref_indexed(|i, _| {
+                        if i.index() == index.to_index() {
+                            translate_variant_layout(&layout, tag)
+                        } else {
+                            VariantLayout {
+                                uninhabited: true,
+                                field_offsets: Vector::new(),
+                                tag: None,
+                            }
+                        }
+                    })
                 } else {
-                    None
-                };
-                if let r_abi::FieldsShape::Arbitrary { .. } = &layout.fields {
-                    variant_layouts.push(translate_variant_layout(&layout, tag));
+                    vec![translate_variant_layout(&layout, tag)].into()
                 }
             }
-            r_abi::VariantsShape::Empty => {}
-        }
+            r_abi::VariantsShape::Empty => Vector::new(),
+        };
 
         Some(Layout {
             size,
