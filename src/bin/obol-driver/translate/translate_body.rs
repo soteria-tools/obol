@@ -1107,13 +1107,26 @@ impl BodyTransCtx<'_, '_, '_> {
         let Some(ty::RigidTy::FnPtr(fn_sig)) = fn_ptr_ty_kind.rigid() else {
             return Ok(());
         };
-        let [inputs_tupled] = fn_sig.value.inputs() else {
-            return Ok(());
-        };
+        assert!(
+            fn_sig
+                .bound_vars
+                .iter()
+                .all(|v| matches!(v, ty::BoundVariableKind::Region(..))),
+            "Non-region late bound variables in closure?"
+        );
+
+        let fn_ptr_abi = fn_sig.clone().fn_ptr_abi()?;
+        let inputs_untupled = fn_ptr_abi
+            .args
+            .iter()
+            .map(|v| v.ty)
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
 
         // Let's get to work...
 
-        let tupled_inputs_ty = self.translate_ty(Span::dummy(), *inputs_tupled)?;
+        let inputs_tupled = ty::Ty::new_tuple(&*inputs_untupled);
+        let tupled_inputs_ty = self.translate_ty(Span::dummy(), inputs_tupled)?;
 
         self.blocks.dyn_visit_mut(|local: &mut LocalId| {
             let idx = local.index();
