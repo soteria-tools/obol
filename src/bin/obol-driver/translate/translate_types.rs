@@ -337,9 +337,14 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         tag,
                     }
                 }
-                r_abi::FieldsShape::Primitive
-                | r_abi::FieldsShape::Union(_)
-                | r_abi::FieldsShape::Array { .. } => panic!("Unexpected layout shape"),
+                r_abi::FieldsShape::Union(fields) => VariantLayout {
+                    field_offsets: (0..fields.get()).map(|_| 0).collect::<Vec<_>>().into(),
+                    uninhabited: false,
+                    tag: None,
+                },
+                r_abi::FieldsShape::Primitive | r_abi::FieldsShape::Array { .. } => {
+                    panic!("Unexpected layout shape: {:?}", variant_layout.fields)
+                }
             }
         }
 
@@ -495,13 +500,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .expect("No discriminant layout for enum?")
                     .tag_ty;
 
+                let type_decls = &self.t_ctx.translated.type_decls;
+                let variants_from_kind = get_variants_from_kind(type_decls, kind);
                 variants
                     .iter()
                     .enumerate()
                     .map(|(id, variant_layout)| {
                         let variant = ty::VariantIdx::to_val(id);
-                        let type_decls = &self.t_ctx.translated.type_decls;
-                        let variants_from_kind = get_variants_from_kind(type_decls, kind);
                         let discr = variants_from_kind.map(|variants_from_kind| {
                             variants_from_kind
                                 .get(translate_variant_id(&variant))
@@ -530,8 +535,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             let intty = self.translate_uint_ty(intty);
                             ScalarValue::Unsigned(intty, discr.val as u128)
                         }
-                        _ => {
-                            panic!("Expected an integer literal for the discriminant")
+                        Some(ty::RigidTy::Ref(..) | ty::RigidTy::RawPtr(..)) => {
+                            // This is a niche optimization where the discriminant is stored in the
+                            // niche of a pointer. We represent it as an integer instead.
+                            ScalarValue::Unsigned(UIntTy::Usize, discr.val as u128)
+                        }
+                        Some(ty) => {
+                            panic!("Expected an integer literal for the discriminant, got {ty:?}")
+                        }
+                        None => {
+                            panic!("Expected a rigid type for the discriminant, got None")
                         }
                     }
                 });
