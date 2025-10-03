@@ -1,12 +1,12 @@
 extern crate rustc_hir;
 extern crate rustc_middle;
-extern crate rustc_smir;
+extern crate rustc_public;
+extern crate rustc_public_bridge;
 extern crate rustc_span;
-extern crate stable_mir;
 
 use log::trace;
-use rustc_smir::IndexedVal;
-use stable_mir::{abi, mir, rustc_internal, ty};
+use rustc_public::{abi, mir, rustc_internal, ty};
+use rustc_public_bridge::IndexedVal;
 use std::{
     collections::{HashMap, VecDeque},
     mem,
@@ -71,7 +71,7 @@ impl<'tcx, 'tctx, 'ictx> BodyTransCtx<'tcx, 'tctx, 'ictx> {
 }
 
 impl ItemTransCtx<'_, '_> {
-    pub fn translate_variant_id(&self, id: stable_mir::ty::VariantIdx) -> VariantId {
+    pub fn translate_variant_id(&self, id: ty::VariantIdx) -> VariantId {
         VariantId::new(id.to_index())
     }
 
@@ -234,7 +234,7 @@ impl BodyTransCtx<'_, '_, '_> {
                         // };
                         // let tgt_ty = rustc_internal::stable(tgt_ty);
                         // let tgt_ty_kind = tgt_ty.kind();
-                        // use stable_mir::ty;
+                        // use ty;
                         // let Some(ty::RigidTy::Dynamic(preds, r, k)) = tgt_ty_kind.rigid() else {
                         //     unreachable!();
                         // };
@@ -270,10 +270,10 @@ impl BodyTransCtx<'_, '_, '_> {
         &mut self,
         span: Span,
         of_place: Place,
-        place_ty: stable_mir::ty::Ty,
+        place_ty: ty::Ty,
         variant_id: Option<VariantId>,
         proj: &mir::ProjectionElem,
-    ) -> Result<(Place, stable_mir::ty::Ty, Option<VariantId>), Error> {
+    ) -> Result<(Place, ty::Ty, Option<VariantId>), Error> {
         let proj_ty = proj.ty(place_ty)?;
         let ty = self.translate_ty(span, proj_ty)?;
 
@@ -291,7 +291,7 @@ impl BodyTransCtx<'_, '_, '_> {
                 offset, from_end, ..
             } => {
                 let idx = ConstantExpr {
-                    value: RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                    kind: ConstantExprKind::Literal(Literal::Scalar(ScalarValue::Unsigned(
                         UIntTy::Usize,
                         *offset as u128,
                     ))),
@@ -304,14 +304,14 @@ impl BodyTransCtx<'_, '_, '_> {
             }
             mir::ProjectionElem::Subslice { from, to, from_end } => {
                 let from = ConstantExpr {
-                    value: RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                    kind: ConstantExprKind::Literal(Literal::Scalar(ScalarValue::Unsigned(
                         UIntTy::Usize,
                         *from as u128,
                     ))),
                     ty: TyKind::Literal(LiteralTy::UInt(UIntTy::Usize)).into_ty(),
                 };
                 let to = ConstantExpr {
-                    value: RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                    kind: ConstantExprKind::Literal(Literal::Scalar(ScalarValue::Unsigned(
                         UIntTy::Usize,
                         *to as u128,
                     ))),
@@ -390,22 +390,22 @@ impl BodyTransCtx<'_, '_, '_> {
             mir::Operand::Constant(const_op) => {
                 let ty = self.translate_ty(span, const_op.ty())?;
                 let cexpr = match &const_op.const_.kind() {
-                    stable_mir::ty::ConstantKind::Allocated(alloc) => {
+                    ty::ConstantKind::Allocated(alloc) => {
                         self.translate_allocation(span, alloc, ty.kind(), &const_op.ty())?
                     }
-                    stable_mir::ty::ConstantKind::ZeroSized => {
+                    ty::ConstantKind::ZeroSized => {
                         self.translate_zst_constant(span, ty.kind(), &const_op.ty())?
                     }
-                    stable_mir::ty::ConstantKind::Param(_) => ConstantExpr {
-                        value: RawConstantExpr::Opaque("Unhandled: Param".into()),
+                    ty::ConstantKind::Param(_) => ConstantExpr {
+                        kind: ConstantExprKind::Opaque("Unhandled: Param".into()),
                         ty: ty.clone(),
                     },
-                    stable_mir::ty::ConstantKind::Ty(_) => ConstantExpr {
-                        value: RawConstantExpr::Opaque("Unhandled: ty".into()),
+                    ty::ConstantKind::Ty(_) => ConstantExpr {
+                        kind: ConstantExprKind::Opaque("Unhandled: ty".into()),
                         ty: ty.clone(),
                     },
-                    stable_mir::ty::ConstantKind::Unevaluated(_) => ConstantExpr {
-                        value: RawConstantExpr::Opaque("Unhandled: uneval".into()),
+                    ty::ConstantKind::Unevaluated(_) => ConstantExpr {
+                        kind: ConstantExprKind::Opaque("Unhandled: uneval".into()),
                         ty: ty.clone(),
                     },
                 };
@@ -435,7 +435,12 @@ impl BodyTransCtx<'_, '_, '_> {
     }
 
     /// Translate an rvalue
-    fn translate_rvalue(&mut self, span: Span, rvalue: &mir::Rvalue) -> Result<Rvalue, Error> {
+    fn translate_rvalue(
+        &mut self,
+        span: Span,
+        rvalue: &mir::Rvalue,
+        tgt_ty: &Ty,
+    ) -> Result<Rvalue, Error> {
         match rvalue {
             mir::Rvalue::Use(operand) => Ok(Rvalue::Use(self.translate_operand(span, operand)?)),
             mir::Rvalue::CopyForDeref(place) => {
@@ -453,7 +458,11 @@ impl BodyTransCtx<'_, '_, '_> {
             mir::Rvalue::Ref(_region, borrow_kind, place) => {
                 let place = self.translate_place(span, place)?;
                 let borrow_kind = self.translate_borrow_kind(*borrow_kind);
-                Ok(Rvalue::Ref(place, borrow_kind))
+                Ok(Rvalue::Ref {
+                    place,
+                    kind: borrow_kind,
+                    ptr_metadata: Operand::mk_const_unit(),
+                })
             }
             mir::Rvalue::AddressOf(mtbl, place) => {
                 let mtbl = match mtbl {
@@ -462,7 +471,11 @@ impl BodyTransCtx<'_, '_, '_> {
                     mir::RawPtrKind::FakeForPtrMetadata => RefKind::Shared,
                 };
                 let place = self.translate_place(span, place)?;
-                Ok(Rvalue::RawPtr(place, mtbl))
+                Ok(Rvalue::RawPtr {
+                    place,
+                    kind: mtbl,
+                    ptr_metadata: Operand::mk_const_unit(),
+                })
             }
             mir::Rvalue::Len(place) => {
                 let place = self.translate_place(span, place)?;
@@ -505,12 +518,12 @@ impl BodyTransCtx<'_, '_, '_> {
                         };
                         let fn_id = self.register_closure_as_fn_id(span, *def, args.clone());
                         let fn_ptr = FnPtr {
-                            func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
+                            kind: Box::new(FnPtrKind::Fun(FunId::Regular(fn_id))),
                             generics: Box::new(GenericArgs::empty()),
                         };
                         let src_ty = TyKind::FnDef(RegionBinder::empty(fn_ptr.clone())).into_ty();
                         operand = Operand::Const(Box::new(ConstantExpr {
-                            value: RawConstantExpr::FnPtr(fn_ptr),
+                            kind: ConstantExprKind::FnPtr(fn_ptr),
                             ty: src_ty.clone(),
                         }));
                         CastKind::FnPtr(src_ty, tgt_ty)
@@ -570,15 +583,20 @@ impl BodyTransCtx<'_, '_, '_> {
                 Ok(Rvalue::NullaryOp(op, ty))
             }
             mir::Rvalue::UnaryOp(unop, operand) => {
+                let operand = self.translate_operand(span, operand)?;
                 let unop = match unop {
                     mir::UnOp::Not => UnOp::Not,
                     mir::UnOp::Neg => UnOp::Neg(OverflowMode::UB),
-                    mir::UnOp::PtrMetadata => UnOp::PtrMetadata,
+                    mir::UnOp::PtrMetadata => match operand {
+                        Operand::Copy(p) | Operand::Move(p) => {
+                            return Ok(Rvalue::Use(Operand::Copy(
+                                p.project(ProjectionElem::PtrMetadata, tgt_ty.clone()),
+                            )));
+                        }
+                        Operand::Const(_) => panic!("const metadata"),
+                    },
                 };
-                Ok(Rvalue::UnaryOp(
-                    unop,
-                    self.translate_operand(span, operand)?,
-                ))
+                Ok(Rvalue::UnaryOp(unop, operand))
             }
             mir::Rvalue::Discriminant(place) => {
                 let place = self.translate_place(span, place)?;
@@ -630,7 +648,7 @@ impl BodyTransCtx<'_, '_, '_> {
                         _user_annotation,
                         field_index,
                     ) => {
-                        use stable_mir::ty::AdtKind;
+                        use ty::AdtKind;
                         trace!("{:?}", rvalue);
 
                         let id = self.register_type_decl_id(span, *item, generics.clone());
@@ -703,68 +721,67 @@ impl BodyTransCtx<'_, '_, '_> {
         trace!("About to translate statement (MIR) {:?}", statement);
         let span = self.t_ctx.translate_span_from_smir(&statement.span);
 
-        use mir::StatementKind;
-        let t_statement: Option<RawStatement> = match &statement.kind {
-            StatementKind::Assign(place, rvalue) => {
+        let t_statement: Option<StatementKind> = match &statement.kind {
+            mir::StatementKind::Assign(place, rvalue) => {
                 let t_place = self.translate_place(span, &place)?;
-                let t_rvalue = self.translate_rvalue(span, &rvalue)?;
-                Some(RawStatement::Assign(t_place, t_rvalue))
+                let t_rvalue = self.translate_rvalue(span, &rvalue, &t_place.ty)?;
+                Some(StatementKind::Assign(t_place, t_rvalue))
             }
-            StatementKind::SetDiscriminant {
+            mir::StatementKind::SetDiscriminant {
                 place,
                 variant_index,
             } => {
                 let t_place = self.translate_place(span, &place)?;
                 let variant_id = self.translate_variant_id(*variant_index);
-                Some(RawStatement::SetDiscriminant(t_place, variant_id))
+                Some(StatementKind::SetDiscriminant(t_place, variant_id))
             }
-            StatementKind::StorageLive(local) => {
+            mir::StatementKind::StorageLive(local) => {
                 let var_id = self.translate_local(&local).unwrap();
-                Some(RawStatement::StorageLive(var_id))
+                Some(StatementKind::StorageLive(var_id))
             }
-            StatementKind::StorageDead(local) => {
+            mir::StatementKind::StorageDead(local) => {
                 let var_id = self.translate_local(&local).unwrap();
-                Some(RawStatement::StorageDead(var_id))
+                Some(StatementKind::StorageDead(var_id))
             }
-            StatementKind::Deinit(place) => {
+            mir::StatementKind::Deinit(place) => {
                 let t_place = self.translate_place(span, &place)?;
-                Some(RawStatement::Deinit(t_place))
+                Some(StatementKind::Deinit(t_place))
             }
             // This asserts the operand true on pain of UB. We treat it like a normal assertion.
-            StatementKind::Intrinsic(mir::NonDivergingIntrinsic::Assume(op)) => {
+            mir::StatementKind::Intrinsic(mir::NonDivergingIntrinsic::Assume(op)) => {
                 let op = self.translate_operand(span, &op)?;
-                Some(RawStatement::Assert(Assert {
+                Some(StatementKind::Assert(Assert {
                     cond: op,
                     expected: true,
                     on_failure: AbortKind::UndefinedBehavior,
                 }))
             }
-            StatementKind::Intrinsic(mir::NonDivergingIntrinsic::CopyNonOverlapping(
+            mir::StatementKind::Intrinsic(mir::NonDivergingIntrinsic::CopyNonOverlapping(
                 mir::CopyNonOverlapping { src, dst, count },
             )) => {
                 let src = self.translate_operand(span, &src)?;
                 let dst = self.translate_operand(span, &dst)?;
                 let count = self.translate_operand(span, &count)?;
-                Some(RawStatement::CopyNonOverlapping(Box::new(
+                Some(StatementKind::CopyNonOverlapping(Box::new(
                     CopyNonOverlapping { src, dst, count },
                 )))
             }
             // This is for the stacked borrows memory model.
-            StatementKind::Retag(_, _) => None,
+            mir::StatementKind::Retag(_, _) => None,
             // These two are only there to make borrow-checking accept less code, and are removed
             // in later MIRs.
-            StatementKind::FakeRead(..) | StatementKind::PlaceMention(..) => None,
+            mir::StatementKind::FakeRead(..) | mir::StatementKind::PlaceMention(..) => None,
             // There are user-provided type annotations with no semantic effect (since we get a
             // fully-typechecked MIR (TODO: this isn't quite true with opaque types, we should
             // really use promoted MIR)).
-            StatementKind::AscribeUserType { .. } => None,
+            mir::StatementKind::AscribeUserType { .. } => None,
             // Used for coverage instrumentation.
-            StatementKind::Coverage(_) => None,
+            mir::StatementKind::Coverage(_) => None,
             // Used in the interpreter to check that const code doesn't run for too long or even
             // indefinitely.
-            StatementKind::ConstEvalCounter => None,
+            mir::StatementKind::ConstEvalCounter => None,
             // Semantically equivalent to `Nop`, used only for rustc lints.
-            StatementKind::Nop => None,
+            mir::StatementKind::Nop => None,
         };
 
         // Add the span information
@@ -783,13 +800,12 @@ impl BodyTransCtx<'_, '_, '_> {
         let span = self.translate_span_from_smir(&terminator.span);
 
         // Translate the terminator
-        use mir::TerminatorKind;
-        let t_terminator: RawTerminator = match &terminator.kind {
-            TerminatorKind::Goto { target } => {
+        let t_terminator: TerminatorKind = match &terminator.kind {
+            mir::TerminatorKind::Goto { target } => {
                 let target = self.translate_basic_block_id(*target);
-                RawTerminator::Goto { target }
+                TerminatorKind::Goto { target }
             }
-            TerminatorKind::SwitchInt { discr, targets } => {
+            mir::TerminatorKind::SwitchInt { discr, targets } => {
                 // Translate the operand which gives the discriminant
                 let (discr, discr_ty) = self.translate_operand_with_type(span, discr)?;
 
@@ -797,15 +813,15 @@ impl BodyTransCtx<'_, '_, '_> {
                 // let targets = targets.
                 let targets = self.translate_switch_targets(span, &discr_ty, targets)?;
 
-                RawTerminator::Switch { discr, targets }
+                TerminatorKind::Switch { discr, targets }
             }
-            TerminatorKind::Resume => RawTerminator::UnwindResume,
-            TerminatorKind::Abort => RawTerminator::Abort(AbortKind::UnwindTerminate),
-            TerminatorKind::Return => RawTerminator::Return,
+            mir::TerminatorKind::Resume => TerminatorKind::UnwindResume,
+            mir::TerminatorKind::Abort => TerminatorKind::Abort(AbortKind::UnwindTerminate),
+            mir::TerminatorKind::Return => TerminatorKind::Return,
             // A MIR `Unreachable` terminator indicates undefined behavior of the rust abstract
             // machine.
-            TerminatorKind::Unreachable => RawTerminator::Abort(AbortKind::UndefinedBehavior),
-            TerminatorKind::Drop {
+            mir::TerminatorKind::Unreachable => TerminatorKind::Abort(AbortKind::UndefinedBehavior),
+            mir::TerminatorKind::Drop {
                 place,
                 target,
                 unwind, // We consider that panic is an error, and don't model unwinding
@@ -816,7 +832,7 @@ impl BodyTransCtx<'_, '_, '_> {
 
                 if drop_shim.is_empty_shim() {
                     // If the drop shim is empty, we don't need to do anything.
-                    break 'drop_case RawTerminator::Goto { target };
+                    break 'drop_case TerminatorKind::Goto { target };
                 }
 
                 let place = self.translate_place(span, place)?;
@@ -829,17 +845,24 @@ impl BodyTransCtx<'_, '_, '_> {
                 let unit_place = self.locals.new_var(None, Ty::mk_unit());
                 statements.push(Statement::new(
                     span,
-                    RawStatement::Assign(ptr_place.clone(), Rvalue::RawPtr(place, RefKind::Mut)),
+                    StatementKind::Assign(
+                        ptr_place.clone(),
+                        Rvalue::RawPtr {
+                            place,
+                            kind: RefKind::Mut,
+                            ptr_metadata: Operand::mk_const_unit(),
+                        },
+                    ),
                 ));
                 let operand = Operand::Move(ptr_place);
 
                 let drop_fn_id = self.register_fun_decl_id(span, drop_shim);
                 let on_unwind = self.translate_unwind(span, unwind);
 
-                RawTerminator::Call {
+                TerminatorKind::Call {
                     call: Call {
                         func: FnOperand::Regular(FnPtr {
-                            func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(drop_fn_id))),
+                            kind: Box::new(FnPtrKind::Fun(FunId::Regular(drop_fn_id))),
                             generics: Box::new(GenericArgs::empty()),
                         }),
                         args: vec![operand],
@@ -849,7 +872,7 @@ impl BodyTransCtx<'_, '_, '_> {
                     on_unwind,
                 }
             }
-            TerminatorKind::Call {
+            mir::TerminatorKind::Call {
                 func,
                 args,
                 destination,
@@ -863,7 +886,7 @@ impl BodyTransCtx<'_, '_, '_> {
                 };
                 term
             }
-            TerminatorKind::Assert {
+            mir::TerminatorKind::Assert {
                 cond,
                 expected,
                 msg: _,
@@ -875,11 +898,11 @@ impl BodyTransCtx<'_, '_, '_> {
                     expected: *expected,
                     on_failure: AbortKind::Panic(None),
                 };
-                statements.push(Statement::new(span, RawStatement::Assert(assert)));
+                statements.push(Statement::new(span, StatementKind::Assert(assert)));
                 let target = self.translate_basic_block_id(*target);
-                RawTerminator::Goto { target }
+                TerminatorKind::Goto { target }
             }
-            TerminatorKind::InlineAsm { .. } => {
+            mir::TerminatorKind::InlineAsm { .. } => {
                 raise_error!(self, span, "Inline assembly is not supported");
             }
         };
@@ -908,37 +931,56 @@ impl BodyTransCtx<'_, '_, '_> {
                 Ok(SwitchTargets::If(if_block, else_block))
             }
             LiteralTy::Int(int_ty) => {
-                let targets_ullbc: Vec<(ScalarValue, BlockId)> = targets
+                let targets_ullbc: Vec<(Literal, BlockId)> = targets
                     .branches()
                     .map(|(v, tgt)| {
-                        let v =
-                            ScalarValue::from_le_bytes(IntegerTy::Signed(int_ty), v.to_le_bytes());
+                        let v = Literal::Scalar(ScalarValue::from_le_bytes(
+                            IntegerTy::Signed(int_ty),
+                            v.to_le_bytes(),
+                        ));
                         let tgt = self.translate_basic_block_id(tgt);
                         (v, tgt)
                     })
                     .collect();
                 let otherwise = self.translate_basic_block_id(targets.otherwise());
                 Ok(SwitchTargets::SwitchInt(
-                    IntegerTy::Signed(int_ty),
+                    LiteralTy::Int(int_ty),
                     targets_ullbc,
                     otherwise,
                 ))
             }
             LiteralTy::UInt(uint_ty) => {
-                let targets_ullbc: Vec<(ScalarValue, BlockId)> = targets
+                let targets_ullbc: Vec<(Literal, BlockId)> = targets
                     .branches()
                     .map(|(v, tgt)| {
-                        let v = ScalarValue::from_le_bytes(
+                        let v = Literal::Scalar(ScalarValue::from_le_bytes(
                             IntegerTy::Unsigned(uint_ty),
                             v.to_le_bytes(),
-                        );
+                        ));
                         let tgt = self.translate_basic_block_id(tgt);
                         (v, tgt)
                     })
                     .collect();
                 let otherwise = self.translate_basic_block_id(targets.otherwise());
                 Ok(SwitchTargets::SwitchInt(
-                    IntegerTy::Unsigned(uint_ty),
+                    LiteralTy::UInt(uint_ty),
+                    targets_ullbc,
+                    otherwise,
+                ))
+            }
+            LiteralTy::Char => {
+                let targets_ullbc: Vec<(Literal, BlockId)> = targets
+                    .branches()
+                    .map(|(v, tgt)| {
+                        let b: u128 = u128::from_le_bytes(v.to_le_bytes());
+                        let v = Literal::char_from_le_bytes(b);
+                        let tgt = self.translate_basic_block_id(tgt);
+                        (v, tgt)
+                    })
+                    .collect();
+                let otherwise = self.translate_basic_block_id(targets.otherwise());
+                Ok(SwitchTargets::SwitchInt(
+                    LiteralTy::Char,
                     targets_ullbc,
                     otherwise,
                 ))
@@ -950,16 +992,17 @@ impl BodyTransCtx<'_, '_, '_> {
     fn translate_unwind(&mut self, span: Span, unwind: &mir::UnwindAction) -> BlockId {
         match unwind {
             mir::UnwindAction::Continue => {
-                let unwind_continue = Terminator::new(span, RawTerminator::UnwindResume);
+                let unwind_continue = Terminator::new(span, TerminatorKind::UnwindResume);
                 self.blocks.push(unwind_continue.into_block())
             }
             mir::UnwindAction::Unreachable => {
                 let abort =
-                    Terminator::new(span, RawTerminator::Abort(AbortKind::UndefinedBehavior));
+                    Terminator::new(span, TerminatorKind::Abort(AbortKind::UndefinedBehavior));
                 self.blocks.push(abort.into_block())
             }
             mir::UnwindAction::Terminate => {
-                let abort = Terminator::new(span, RawTerminator::Abort(AbortKind::UnwindTerminate));
+                let abort =
+                    Terminator::new(span, TerminatorKind::Abort(AbortKind::UnwindTerminate));
                 self.blocks.push(abort.into_block())
             }
             mir::UnwindAction::Cleanup(bb) => self.translate_basic_block_id(*bb),
@@ -979,7 +1022,7 @@ impl BodyTransCtx<'_, '_, '_> {
         destination: &mir::Place,
         target: &Option<usize>,
         unwind: &mir::UnwindAction,
-    ) -> Result<(RawTerminator, Option<RawStatement>), Error> {
+    ) -> Result<(TerminatorKind, Option<StatementKind>), Error> {
         // There are two cases, depending on whether this is a "regular"
         // call to a top-level function identified by its id, or if we
         // are using a local function pointer (i.e., the operand is a "move").
@@ -996,7 +1039,7 @@ impl BodyTransCtx<'_, '_, '_> {
 
                 let fn_id = self.register_fun_decl_id(span, instance);
                 let fn_ptr = FnPtr {
-                    func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
+                    kind: Box::new(FnPtrKind::Fun(FunId::Regular(fn_id))),
                     generics: Box::new(GenericArgs::empty()),
                 };
                 FnOperand::Regular(fn_ptr)
@@ -1021,7 +1064,7 @@ impl BodyTransCtx<'_, '_, '_> {
                         ty: p.ty.clone(),
                     });
                     let new_place = Place::new(local_id, p.ty.clone());
-                    extra_stt = Some(RawStatement::Assign(
+                    extra_stt = Some(StatementKind::Assign(
                         new_place.clone(),
                         Rvalue::Use(Operand::Copy(p)),
                     ));
@@ -1042,13 +1085,13 @@ impl BodyTransCtx<'_, '_, '_> {
             Some(target) => self.translate_basic_block_id(*target),
             None => {
                 let abort =
-                    Terminator::new(span, RawTerminator::Abort(AbortKind::UndefinedBehavior));
+                    Terminator::new(span, TerminatorKind::Abort(AbortKind::UndefinedBehavior));
                 self.blocks.push(abort.into_block())
             }
         };
         let on_unwind = self.translate_unwind(span, unwind);
         Ok((
-            RawTerminator::Call {
+            TerminatorKind::Call {
                 call,
                 target,
                 on_unwind,
@@ -1165,7 +1208,7 @@ impl BodyTransCtx<'_, '_, '_> {
             );
             Statement::new(
                 Span::dummy(),
-                RawStatement::Assign(
+                StatementKind::Assign(
                     self.locals.place_for_var(LocalId::new(i + 3)),
                     Rvalue::Use(Operand::Move(nth_field)),
                 ),

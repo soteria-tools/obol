@@ -1,11 +1,10 @@
 extern crate rustc_hir;
 extern crate rustc_middle;
-extern crate rustc_smir;
+extern crate rustc_public;
 extern crate rustc_span;
-extern crate stable_mir;
 
 use log::trace;
-use stable_mir::{mir, ty};
+use rustc_public::{mir, ty};
 
 use charon_lib::{ast::*, ids::Vector, raise_error, register_error, ullbc_ast::*};
 
@@ -107,7 +106,7 @@ impl ItemTransCtx<'_, '_> {
             };
             let fun_id: FunDeclId = self.register_fun_decl_id(span, instance);
             let fn_op = FnOperand::Regular(FnPtr {
-                func: Box::new(fun_id.into()),
+                kind: Box::new(fun_id.into()),
                 generics: Box::new(GenericArgs::empty()),
             });
 
@@ -128,7 +127,7 @@ impl ItemTransCtx<'_, '_> {
             let args_tupled = locals.new_var(Some("args".to_string()), args_tuple_ty.clone());
             let state = locals.new_var(Some("state".to_string()), state_ty.clone());
 
-            statements.push(mk_stt(RawStatement::Assign(
+            statements.push(mk_stt(StatementKind::Assign(
                 args_tupled.clone(),
                 Rvalue::Aggregate(
                     AggregateKind::Adt(args_tuple_ty.as_adt().unwrap().clone(), None, None),
@@ -137,15 +136,15 @@ impl ItemTransCtx<'_, '_> {
             )));
 
             let state_ty_adt = state_ty.as_adt().unwrap();
-            statements.push(mk_stt(RawStatement::Assign(
+            statements.push(mk_stt(StatementKind::Assign(
                 state.clone(),
                 Rvalue::Aggregate(AggregateKind::Adt(state_ty_adt.clone(), None, None), vec![]),
             )));
 
             let start_block = blocks.reserve_slot();
-            let ret_block = blocks.push(mk_block(vec![], RawTerminator::Return));
-            let unwind_block = blocks.push(mk_block(vec![], RawTerminator::UnwindResume));
-            let call = RawTerminator::Call {
+            let ret_block = blocks.push(mk_block(vec![], TerminatorKind::Return));
+            let unwind_block = blocks.push(mk_block(vec![], TerminatorKind::UnwindResume));
+            let call = TerminatorKind::Call {
                 target: ret_block,
                 call: Call {
                     func: fn_op,
@@ -169,7 +168,7 @@ impl ItemTransCtx<'_, '_> {
             def_id,
             item_meta,
             signature,
-            kind: ItemKind::TopLevel,
+            src: ItemSource::TopLevel,
             is_global_initializer: None,
             body,
         })

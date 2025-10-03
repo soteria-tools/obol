@@ -4,15 +4,15 @@ extern crate rustc_ast_pretty;
 extern crate rustc_attr_data_structures;
 extern crate rustc_attr_parsing;
 extern crate rustc_hir;
+extern crate rustc_public;
 extern crate rustc_span;
-extern crate stable_mir;
 
 use super::translate_crate::TransItemSource;
 use super::translate_ctx::{ItemTransCtx, TranslateCtx};
 use charon_lib::{ast::*, register_error};
 use itertools::Itertools;
 use log::trace;
-use stable_mir::{CrateDef, rustc_internal, ty};
+use rustc_public::{CrateDef, rustc_internal, ty};
 use std::cmp::Ord;
 use std::path::Component;
 
@@ -25,7 +25,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         match self.file_to_id.get(&filename) {
             Some(id) => *id,
             None => {
-                let span = stable_mir::rustc_internal::internal(self.tcx, span);
+                let span = rustc_public::rustc_internal::internal(self.tcx, span);
                 let source_file = self.tcx.sess.source_map().lookup_source_file(span.lo());
                 let crate_name = self.tcx.crate_name(source_file.cnum).to_string();
                 let file = File {
@@ -78,7 +78,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
     }
 
-    pub fn translate_raw_span(&mut self, rspan: &ty::Span) -> meta::RawSpan {
+    pub fn translate_raw_span(&mut self, rspan: &ty::Span) -> meta::SpanData {
         let filename = FileName::Local(rspan.get_filename().into());
         let file_id = match &filename {
             FileName::NotReal(_) => {
@@ -99,12 +99,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         };
 
         // Put together
-        meta::RawSpan { file_id, beg, end }
+        meta::SpanData { file_id, beg, end }
     }
 
     pub(crate) fn translate_span_from_smir(&mut self, span: &ty::Span) -> Span {
         Span {
-            span: self.translate_raw_span(span),
+            data: self.translate_raw_span(span),
             generated_from_span: None,
         }
     }
@@ -155,7 +155,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     /// The names we will generate for `foo` and `bar` are:
     /// `[Ident("test"), Ident("bla"), Ident("Foo"), Impl(impl<T> Ty<T>, Disambiguator(0)), Ident("foo")]`
     /// `[Ident("test"), Ident("bla"), Ident("Foo"), Impl(impl<T> Ty<T>, Disambiguator(1)), Ident("bar")]`
-    pub fn def_id_to_name(&mut self, def_id: stable_mir::DefId) -> Result<Name, Error> {
+    pub fn def_id_to_name(&mut self, def_id: rustc_public::DefId) -> Result<Name, Error> {
         if let Some(name) = self.cached_names.get(&def_id) {
             return Ok(name.clone());
         }
@@ -265,10 +265,11 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         // let public = def.visibility.unwrap_or(false);
         // let inline = self.translate_inline(def);
 
-        let internal = stable_mir::rustc_internal::internal(self.tcx, def.def_id());
+        let internal = rustc_public::rustc_internal::internal(self.tcx, def.def_id());
         let attributes = self.tcx.get_all_attrs(internal);
 
         let attributes: Vec<Attribute> = attributes
+            .iter()
             .filter_map(|attr| self.translate_attribute(attr))
             .collect();
 

@@ -1,8 +1,8 @@
 extern crate rustc_abi;
 extern crate rustc_hir;
 extern crate rustc_middle;
-extern crate rustc_smir;
-extern crate stable_mir;
+extern crate rustc_public;
+extern crate rustc_public_bridge;
 
 use crate::translate::my_gen_args::MyGenericArgs;
 use obol_lib::args::CliOpts;
@@ -16,11 +16,10 @@ use charon_lib::transform::TransformCtx;
 use itertools::Itertools;
 use log::trace;
 use rustc_middle::ty::TyCtxt;
-use rustc_smir::IndexedVal;
-use stable_mir::mir::mono::Instance;
-use stable_mir::rustc_internal::{self};
-use stable_mir::{CrateDef, DefId};
-use stable_mir::{mir, ty};
+use rustc_public::mir::mono::Instance;
+use rustc_public::rustc_internal::{self};
+use rustc_public::{CrateDef, DefId, mir, ty};
+use rustc_public_bridge::IndexedVal;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::hash::Hash;
@@ -91,7 +90,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         &mut self,
         src: &Option<DepSource>,
         id: TransItemSource,
-    ) -> AnyTransId {
+    ) -> ItemId {
         let item_id = match self.id_map.get(&id) {
             Some(tid) => *tid,
             None => {
@@ -99,13 +98,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     TransItemSource::Type(..)
                     | TransItemSource::Closure(..)
                     | TransItemSource::ForeignType(..) => {
-                        AnyTransId::Type(self.translated.type_decls.reserve_slot())
+                        ItemId::Type(self.translated.type_decls.reserve_slot())
                     }
                     TransItemSource::Global(_) => {
-                        AnyTransId::Global(self.translated.global_decls.reserve_slot())
+                        ItemId::Global(self.translated.global_decls.reserve_slot())
                     }
                     TransItemSource::Fun(..) | TransItemSource::ClosureAsFn(..) => {
-                        AnyTransId::Fun(self.translated.fun_decls.reserve_slot())
+                        ItemId::Fun(self.translated.fun_decls.reserve_slot())
                     }
                 };
                 // Add the id to the queue of declarations to translate
@@ -125,7 +124,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         &mut self,
         src: &Option<DepSource>,
         id: TransItemSource,
-    ) -> AnyTransId {
+    ) -> ItemId {
         self.items_to_translate.insert(id.clone());
         self.register_id_no_enqueue(src, id)
     }
@@ -269,7 +268,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 }
 
 fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instance> {
-    stable_mir::all_local_items()
+    rustc_public::all_local_items()
         .iter()
         .filter_map(|item| {
             let Ok(instance) = Instance::try_from(*item) else {
@@ -280,7 +279,7 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
                 return None;
             }
             // Only collect monomorphic items.
-            if !matches!(item.kind(), stable_mir::ItemKind::Fn) {
+            if !matches!(item.kind(), rustc_public::ItemKind::Fn) {
                 return None;
             }
 
@@ -290,8 +289,8 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
                 return Some(instance);
             }
 
-            let def_id = stable_mir::rustc_internal::internal(tcx, instance.def.def_id());
-            let attrib_match = tcx.get_all_attrs(def_id).any(|a| match a {
+            let def_id = rustc_public::rustc_internal::internal(tcx, instance.def.def_id());
+            let attrib_match = tcx.get_all_attrs(def_id).iter().any(|a| match a {
                 rustc_hir::Attribute::Parsed(..) => false,
                 rustc_hir::Attribute::Unparsed(attr) => {
                     let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
@@ -307,7 +306,7 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
 pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformCtx {
     // Retrieve the crate name: if the user specified a custom name, use it, otherwise retrieve it
     // from hax.
-    let krate = stable_mir::local_crate();
+    let krate = rustc_public::local_crate();
 
     let charon_opts = CharonCliOpts::default();
     let mut error_ctx = ErrorCtx::new(!charon_opts.abort_on_error, charon_opts.error_on_warnings);

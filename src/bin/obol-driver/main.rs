@@ -1,14 +1,14 @@
 #![feature(rustc_private)]
 #![feature(iterator_try_collect)]
 #![feature(iter_array_chunks)]
+#![feature(impl_trait_in_bindings)]
 
 extern crate rustc_driver;
 extern crate rustc_hir;
 extern crate rustc_interface;
 extern crate rustc_middle;
+extern crate rustc_public;
 extern crate rustc_session;
-extern crate rustc_smir;
-extern crate stable_mir;
 
 pub mod driver;
 pub mod translate;
@@ -44,20 +44,24 @@ fn transformation_passes(_opts: &CliOpts) -> Vec<Pass> {
     use Pass::*;
     use charon_lib::transform::*;
     vec![
-        NonBody(&compute_short_names::Transform),
-        UnstructuredBody(&merge_goto_chains::Transform),
-        UnstructuredBody(&remove_dynamic_checks::Transform),
-        UnstructuredBody(&simplify_constants::Transform),
-        UnstructuredBody(&reconstruct_asserts::Transform),
-        UnstructuredBody(&filter_unreachable_blocks::Transform),
-        UnstructuredBody(&inline_local_panic_functions::Transform),
-        UnstructuredBody(&insert_assign_return_unit::Transform),
-        UnstructuredBody(&remove_unit_locals::Transform),
-        UnstructuredBody(&remove_drop_never::Transform),
-        NonBody(&remove_unused_locals::Transform),
-        NonBody(&insert_storage_lives::Transform),
-        NonBody(&remove_nops::Transform),
-        NonBody(&reorder_decls::Transform),
+        // post-translation
+        NonBody(&add_missing_info::compute_short_names::Transform),
+        UnstructuredBody(&finish_translation::insert_ptr_metadata::Transform),
+        UnstructuredBody(&finish_translation::insert_assign_return_unit::Transform),
+        NonBody(&finish_translation::insert_storage_lives::Transform),
+        // ullbc
+        UnstructuredBody(&control_flow::merge_goto_chains::Transform),
+        UnstructuredBody(&resugar::reconstruct_fallible_operations::Transform),
+        UnstructuredBody(&resugar::reconstruct_asserts::Transform),
+        UnstructuredBody(&resugar::inline_local_panic_functions::Transform),
+        UnstructuredBody(&simplify_output::simplify_constants::Transform),
+        UnstructuredBody(&simplify_output::remove_unit_locals::Transform),
+        UnstructuredBody(&normalize::filter_unreachable_blocks::Transform),
+        UnstructuredBody(&simplify_output::update_block_indices::Transform),
+        // finalising
+        NonBody(&simplify_output::remove_unused_locals::Transform),
+        NonBody(&simplify_output::remove_nops::Transform),
+        NonBody(&add_missing_info::reorder_decls::Transform),
     ]
 }
 

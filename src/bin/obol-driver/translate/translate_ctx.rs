@@ -1,7 +1,7 @@
 //! The translation contexts.
 extern crate rustc_hir;
 extern crate rustc_middle;
-extern crate stable_mir;
+extern crate rustc_public;
 
 use super::translate_crate::TransItemSource;
 use charon_lib::ast::*;
@@ -25,14 +25,14 @@ pub struct TranslateCtx<'tcx> {
     pub translated: TranslatedCrate,
 
     /// The map from rustc id to translated id.
-    pub id_map: HashMap<TransItemSource, AnyTransId>,
+    pub id_map: HashMap<TransItemSource, ItemId>,
     /// The reverse map of ids.
-    pub reverse_id_map: HashMap<AnyTransId, TransItemSource>,
+    pub reverse_id_map: HashMap<ItemId, TransItemSource>,
     /// The reverse filename map.
     pub file_to_id: HashMap<FileName, FileId>,
 
     /// Cache of StableMir type IDs to our translated types.
-    pub type_trans_cache: HashMap<stable_mir::ty::Ty, Ty>,
+    pub type_trans_cache: HashMap<rustc_public::ty::Ty, Ty>,
 
     /// Context for tracking and reporting errors.
     pub errors: RefCell<ErrorCtx>,
@@ -42,7 +42,7 @@ pub struct TranslateCtx<'tcx> {
     /// The declaration we've already processed (successfully or not).
     pub processed: HashSet<TransItemSource>,
     /// Cache the names to compute them only once each.
-    pub cached_names: HashMap<stable_mir::DefId, Name>,
+    pub cached_names: HashMap<rustc_public::DefId, Name>,
     /// Cache the `ItemMeta`s to compute them only once each.
     pub cached_item_metas: HashMap<TransItemSource, ItemMeta>,
 }
@@ -51,7 +51,7 @@ pub struct TranslateCtx<'tcx> {
 /// Augments the [TranslateCtx] with type-level variables.
 pub(crate) struct ItemTransCtx<'tcx, 'ctx> {
     /// The id of the definition we are currently extracting, if there is one.
-    pub item_id: Option<AnyTransId>,
+    pub item_id: Option<ItemId>,
     /// The translation context containing the top-level definitions/ids.
     pub t_ctx: &'ctx mut TranslateCtx<'tcx>,
 }
@@ -66,8 +66,8 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
     pub(crate) fn with_def_id<F, T>(
         &mut self,
-        _def_id: &stable_mir::DefId,
-        item_id: Option<AnyTransId>,
+        _def_id: &rustc_public::DefId,
+        item_id: Option<ItemId>,
         f: F,
     ) -> T
     where
@@ -85,7 +85,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
 impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     /// Create a new `ExecContext`.
-    pub(crate) fn new(item_id: Option<AnyTransId>, t_ctx: &'ctx mut TranslateCtx<'tcx>) -> Self {
+    pub(crate) fn new(item_id: Option<ItemId>, t_ctx: &'ctx mut TranslateCtx<'tcx>) -> Self {
         ItemTransCtx { item_id, t_ctx }
     }
 

@@ -1,13 +1,13 @@
 extern crate rustc_abi;
 extern crate rustc_apfloat;
-extern crate rustc_smir;
-extern crate stable_mir;
+extern crate rustc_public;
+extern crate rustc_public_bridge;
 
 use charon_lib::{ast::*, error_assert, raise_error, register_error};
 use log::trace;
 use rustc_apfloat::{Float, ieee};
-use rustc_smir::IndexedVal;
-use stable_mir::{abi, mir, ty};
+use rustc_public::{abi, mir, ty};
+use rustc_public_bridge::IndexedVal;
 use std::io::Read;
 
 use crate::translate::translate_ctx::ItemTransCtx;
@@ -93,16 +93,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             return self.translate_zst_constant(span, ty, rty);
         }
         let bytes = &alloc.bytes.as_slice()[offset..offset + size];
-        let value = match ty {
+        let kind = match ty {
             TyKind::Literal(lit) => match lit {
                 LiteralTy::Int(it) => {
-                    RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Signed(
+                    ConstantExprKind::Literal(Literal::Scalar(ScalarValue::Signed(
                         it.clone(),
                         self.read_target_int(Self::as_init(bytes)?.as_slice())?,
                     )))
                 }
                 LiteralTy::UInt(uit) => {
-                    RawConstantExpr::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                    ConstantExprKind::Literal(Literal::Scalar(ScalarValue::Unsigned(
                         uit.clone(),
                         self.read_target_uint(Self::as_init(bytes)?.as_slice())?,
                     )))
@@ -116,9 +116,9 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             raise_error!(self, span, "Invalid boolean value in constant: {bool}")
                         }
                     };
-                    RawConstantExpr::Literal(Literal::Bool(res))
+                    ConstantExprKind::Literal(Literal::Bool(res))
                 }
-                LiteralTy::Char => RawConstantExpr::Literal(Literal::Char(
+                LiteralTy::Char => ConstantExprKind::Literal(Literal::Char(
                     char::from_u32(self.read_target_uint(Self::as_init(bytes)?.as_slice())? as u32)
                         .unwrap(),
                 )),
@@ -130,7 +130,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         FloatTy::F64 => ieee::Double::from_bits(bits).to_string(),
                         FloatTy::F128 => ieee::Quad::from_bits(bits).to_string(),
                     };
-                    RawConstantExpr::Literal(Literal::Float(FloatValue {
+                    ConstantExprKind::Literal(Literal::Float(FloatValue {
                         value,
                         ty: f.clone(),
                     }))
@@ -139,7 +139,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             TyKind::Ref(_, subty, _) | TyKind::RawPtr(subty, _) => 'ptr_case: {
                 let Some(alloc) = self.provenance_at(alloc, offset) else {
                     let value = self.read_target_uint(Self::as_init(bytes)?.as_slice())?;
-                    break 'ptr_case RawConstantExpr::PtrNoProvenance(value);
+                    break 'ptr_case ConstantExprKind::PtrNoProvenance(value);
                 };
                 use mir::alloc::GlobalAlloc;
                 let glob_alloc: GlobalAlloc = alloc.0.into();
@@ -152,7 +152,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     {
                         let as_str =
                             unsafe { String::from_utf8_unchecked(suballoc.raw_bytes().unwrap()) };
-                        RawConstantExpr::Literal(Literal::Str(as_str))
+                        ConstantExprKind::Literal(Literal::Str(as_str))
                     }
                     GlobalAlloc::Memory(suballoc) => {
                         let rtyk = rty.kind();
@@ -166,28 +166,28 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         let sub_constant =
                             self.translate_allocation(span, &suballoc, subty, rsubty)?;
                         if let TyKind::RawPtr(_, rk) = ty {
-                            RawConstantExpr::Ptr(*rk, Box::new(sub_constant))
+                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant))
                         } else {
-                            RawConstantExpr::Ref(Box::new(sub_constant))
+                            ConstantExprKind::Ref(Box::new(sub_constant))
                         }
                     }
                     GlobalAlloc::Static(stt) => {
                         let id = self.register_global_decl_id(span, stt);
                         let instance: mir::mono::Instance = stt.into();
                         let generics = self.translate_generic_args(span, &instance.args())?;
-                        let sub_constant = RawConstantExpr::Global(GlobalDeclRef {
+                        let sub_constant = ConstantExprKind::Global(GlobalDeclRef {
                             id,
                             generics: Box::new(generics),
                         });
                         let sub_constant = ConstantExpr {
-                            value: sub_constant,
+                            kind: sub_constant,
                             ty: subty.clone(),
                         };
 
                         if let TyKind::RawPtr(_, rk) = ty {
-                            RawConstantExpr::Ptr(*rk, Box::new(sub_constant))
+                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant))
                         } else {
-                            RawConstantExpr::Ref(Box::new(sub_constant))
+                            ConstantExprKind::Ref(Box::new(sub_constant))
                         }
                     }
                     _ => unreachable!("Unhandled global: {glob_alloc:?} for type {ty:?}"),
@@ -219,7 +219,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         )
                     })
                     .try_collect()?;
-                RawConstantExpr::Adt(None, fields)
+                ConstantExprKind::Adt(None, fields)
             }
             TyKind::Adt(_) if rty.kind().is_adt() => {
                 let rtyk = rty.kind();
@@ -341,7 +341,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     ty::AdtKind::Union => {
                         trace!("Gave up for union raw memory of type {ty:?} with alloc {alloc:?}");
                         return Ok(ConstantExpr {
-                            value: RawConstantExpr::RawMemory(Self::as_init(bytes)?),
+                            kind: ConstantExprKind::RawMemory(Self::as_init(bytes)?),
                             ty: ty.clone().into_ty(),
                         });
                     }
@@ -361,7 +361,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         )
                     })
                     .try_collect()?;
-                RawConstantExpr::Adt(variant.clone(), consts)
+                ConstantExprKind::Adt(variant.clone(), consts)
             }
             TyKind::Adt(TypeDeclRef { generics, .. }) if rty.kind().is_array() => {
                 let subty = generics.types.get(TypeVarId::ZERO).unwrap();
@@ -380,13 +380,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         self.translate_allocation_at(span, alloc, subty, subrty, elem_off)
                     })
                     .try_collect()?;
-                RawConstantExpr::Array(elems)
+                ConstantExprKind::Array(elems)
             }
             TyKind::FnPtr(_) => 'fnptr_case: {
                 let Some((_, alloc)) = alloc.provenance.ptrs.iter().find(|(o, _)| *o == offset)
                 else {
                     let value = self.read_target_int(Self::as_init(bytes)?.as_slice())?;
-                    break 'fnptr_case RawConstantExpr::Literal(Literal::Scalar(
+                    break 'fnptr_case ConstantExprKind::Literal(Literal::Scalar(
                         ScalarValue::Signed(IntTy::Isize, value),
                     ));
                 };
@@ -400,27 +400,27 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         let generics = self.translate_generic_args(span, &instance.args())?;
                         let fn_ptr = FnPtr {
                             generics: Box::new(generics),
-                            func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(id))),
+                            kind: Box::new(FnPtrKind::Fun(FunId::Regular(id))),
                         };
                         let sub_const = ConstantExpr {
-                            value: RawConstantExpr::FnPtr(fn_ptr.clone()),
+                            kind: ConstantExprKind::FnPtr(fn_ptr.clone()),
                             ty: TyKind::FnDef(RegionBinder::empty(fn_ptr)).into_ty(),
                         };
-                        RawConstantExpr::Ptr(RefKind::Shared, Box::new(sub_const))
+                        ConstantExprKind::Ptr(RefKind::Shared, Box::new(sub_const))
                     }
                     _ => {
                         println!("Gave up for raw memory of fndef with alloc {glob_alloc:?}");
-                        RawConstantExpr::RawMemory(Self::as_init(bytes)?)
+                        ConstantExprKind::RawMemory(Self::as_init(bytes)?)
                     }
                 }
             }
             _ => {
                 println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
-                RawConstantExpr::RawMemory(Self::as_init(bytes)?)
+                ConstantExprKind::RawMemory(Self::as_init(bytes)?)
             }
         };
         Ok(ConstantExpr {
-            value,
+            kind,
             ty: ty.clone().into_ty(),
         })
     }
@@ -431,8 +431,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         ty: &TyKind,
         rty: &ty::Ty,
     ) -> Result<ConstantExpr, Error> {
-        let value = match ty {
-            TyKind::FnDef(fnptr) => RawConstantExpr::FnPtr(fnptr.skip_binder.clone()),
+        let kind = match ty {
+            TyKind::FnDef(fnptr) => ConstantExprKind::FnPtr(fnptr.skip_binder.clone()),
             TyKind::Adt(_) if rty.kind().is_array() => {
                 let rtyk = rty.kind();
                 let ty::RigidTy::Array(rty, len) = rtyk.rigid().unwrap() else {
@@ -441,13 +441,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let len = len.eval_target_usize()?;
                 if len > 32 {
                     // FIXME: temporary safeguard for large arrays; ideally we should have some
-                    // sort of RawConstantExpr::ArrayRepeat...
-                    RawConstantExpr::RawMemory(vec![])
+                    // sort of ConstantExprKind::ArrayRepeat...
+                    ConstantExprKind::RawMemory(vec![])
                 } else if len == 0 {
-                    RawConstantExpr::Array(vec![])
+                    ConstantExprKind::Array(vec![])
                 } else {
                     let cexpr = self.translate_zst_constant(span, ty, rty)?;
-                    RawConstantExpr::Array(vec![cexpr; len as usize])
+                    ConstantExprKind::Array(vec![cexpr; len as usize])
                 }
             }
             TyKind::Adt(_) => {
@@ -471,7 +471,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                         "Unexpected layout for ZST enum\n- Layout: {layout:?}\n- Ty: {rty:?}"
                                     );
                                     return Ok(ConstantExpr {
-                                        value: RawConstantExpr::RawMemory(vec![]),
+                                        kind: ConstantExprKind::RawMemory(vec![]),
                                         ty: ty.clone().into_ty(),
                                     });
                                 };
@@ -501,15 +501,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         self.translate_zst_constant(span, field_ty.kind(), &field_rty)
                     })
                     .try_collect()?;
-                RawConstantExpr::Adt(variant, fields)
+                ConstantExprKind::Adt(variant, fields)
             }
             _ => {
                 println!("Gave up on const for ZST type: {:?}", ty);
-                RawConstantExpr::RawMemory(vec![])
+                ConstantExprKind::RawMemory(vec![])
             }
         };
         Ok(ConstantExpr {
-            value,
+            kind,
             ty: ty.clone().into_ty(),
         })
     }
@@ -519,24 +519,24 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         span: Span,
         value: ConstantExpr,
     ) -> Result<ConstGeneric, Error> {
-        match value.value {
-            RawConstantExpr::Var(v) => Ok(ConstGeneric::Var(v)),
-            RawConstantExpr::Literal(v) => Ok(ConstGeneric::Value(v)),
-            RawConstantExpr::Global(global_ref) => {
+        match value.kind {
+            ConstantExprKind::Var(v) => Ok(ConstGeneric::Var(v)),
+            ConstantExprKind::Literal(v) => Ok(ConstGeneric::Value(v)),
+            ConstantExprKind::Global(global_ref) => {
                 // TODO: handle constant arguments with generics (this can likely only happen with
                 // a feature gate).
                 error_assert!(self, span, global_ref.generics.is_empty());
                 Ok(ConstGeneric::Global(global_ref.id))
             }
-            RawConstantExpr::Adt(..)
-            | RawConstantExpr::Array { .. }
-            | RawConstantExpr::RawMemory { .. }
-            | RawConstantExpr::TraitConst { .. }
-            | RawConstantExpr::Ref(_)
-            | RawConstantExpr::Ptr(..)
-            | RawConstantExpr::FnPtr { .. }
-            | RawConstantExpr::Opaque(_)
-            | RawConstantExpr::PtrNoProvenance(..) => {
+            ConstantExprKind::Adt(..)
+            | ConstantExprKind::Array { .. }
+            | ConstantExprKind::RawMemory { .. }
+            | ConstantExprKind::TraitConst { .. }
+            | ConstantExprKind::Ref(_)
+            | ConstantExprKind::Ptr(..)
+            | ConstantExprKind::FnPtr { .. }
+            | ConstantExprKind::Opaque(_)
+            | ConstantExprKind::PtrNoProvenance(..) => {
                 raise_error!(self, span, "Unexpected constant generic: {:?}", value)
             }
         }

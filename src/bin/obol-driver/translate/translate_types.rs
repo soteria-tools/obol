@@ -1,8 +1,8 @@
 extern crate rustc_abi;
 extern crate rustc_hir;
 extern crate rustc_middle;
-extern crate rustc_smir;
-extern crate stable_mir;
+extern crate rustc_public;
+extern crate rustc_public_bridge;
 
 use super::translate_ctx::*;
 use charon_lib::ast::*;
@@ -10,8 +10,8 @@ use charon_lib::ids::Vector;
 use charon_lib::{raise_error, register_error};
 use core::convert::*;
 use log::trace;
-use rustc_smir::IndexedVal;
-use stable_mir::{abi, mir, ty};
+use rustc_public::{abi, mir, ty};
+use rustc_public_bridge::IndexedVal;
 
 impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     // Translate a region
@@ -193,10 +193,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 TyKind::FnPtr(RegionBinder::empty((inputs, output)))
             }
             ty::RigidTy::FnDef(item, args) => {
-                let instance = stable_mir::mir::mono::Instance::resolve(*item, args)?;
+                let instance = mir::mono::Instance::resolve(*item, args)?;
                 let fn_id = self.register_fun_decl_id(span, instance);
                 let fnref = RegionBinder::empty(FnPtr {
-                    func: Box::new(FunIdOrTraitMethodRef::Fun(FunId::Regular(fn_id))),
+                    kind: Box::new(FnPtrKind::Fun(FunId::Regular(fn_id))),
                     generics: Box::new(GenericArgs::empty()),
                 });
                 TyKind::FnDef(fnref)
@@ -279,8 +279,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     /// Translate a Dynamically Sized Type metadata kind.
     ///
     /// Returns `None` if the type is generic, or if it is not a DST.
-    pub fn translate_ptr_metadata(&self) -> Option<PtrMetadata> {
-        None
+    pub fn translate_ptr_metadata(&self) -> PtrMetadata {
+        PtrMetadata::None
         // // prepare the call to the method
         // use rustc_middle::ty;
         // let tcx = self.t_ctx.tcx;
@@ -319,7 +319,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         genargs: &ty::GenericArgs,
         kind: &TypeDeclKind,
     ) -> Option<Layout> {
-        use stable_mir::abi as r_abi;
+        use rustc_public::abi as r_abi;
         // Panics if the fields layout is not `Arbitrary`.
         fn translate_variant_layout(
             variant_layout: &r_abi::LayoutShape,
@@ -381,14 +381,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         // Note: it is possible that the tag is stored in the niche of a pointer type, but will
         // be returned as an integer instead. This is supposed to be a different interpretation of the same bytes.
         fn translate_discr_to_tag(
-            discr: ScalarValue,
+            discr: Literal,
             variant: ty::VariantIdx,
             tag_ty: IntegerTy,
             encoding: &r_abi::TagEncoding,
         ) -> Option<ScalarValue> {
             match &encoding {
                 // The direct encoding is just a cast.
-                r_abi::TagEncoding::Direct => Some(ScalarValue::from_bits(tag_ty, discr.to_bits())),
+                r_abi::TagEncoding::Direct => {
+                    // FIXME: this is not the most accurate; really we should query rustc
+                    Some(ScalarValue::from_bits(tag_ty, discr.as_scalar()?.to_bits()))
+                }
                 r_abi::TagEncoding::Niche {
                     untagged_variant,
                     niche_variants,
@@ -512,6 +515,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                 .get(translate_variant_id(&variant))
                                 .expect("Variant index out of bounds while getting discr")
                                 .discriminant
+                                .clone()
                         });
 
                         let tag = discr.and_then(|discr| {
@@ -651,13 +655,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 fields.push(field);
             }
 
-            let (discriminant, variant_name) = if adt.kind().is_enum() {
+            let variant_name = var_def.name().clone();
+            let discriminant = {
                 let discr = adt.discriminant_for_variant(var_def.idx);
-                let discriminant = self.translate_discriminant(def_span, &discr)?;
-                let variant_name = var_def.name().clone();
-                (discriminant, variant_name)
-            } else {
-                (ScalarValue::Unsigned(UIntTy::U8, 0), String::new())
+
+                let ty = self.translate_ty(def_span, discr.ty)?;
+                let lit_ty = ty.kind().as_literal().unwrap();
+                match Literal::from_bits(lit_ty, discr.val) {
+                    Some(lit) => lit,
+                    None => raise_error!(self, def_span, "unexpected discriminant type: {ty:?}",),
+                }
             };
 
             let mut variant = Variant {
@@ -701,16 +708,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         };
 
         Ok(type_def_kind)
-    }
-
-    fn translate_discriminant(
-        &mut self,
-        def_span: Span,
-        discr: &ty::Discr,
-    ) -> Result<ScalarValue, Error> {
-        let ty = self.translate_ty(def_span, discr.ty)?;
-        let int_ty = ty.kind().as_literal().unwrap().to_integer_ty().unwrap();
-        Ok(ScalarValue::from_bits(int_ty, discr.val))
     }
 
     pub fn translate_generic_args(

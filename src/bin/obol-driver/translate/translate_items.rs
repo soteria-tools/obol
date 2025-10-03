@@ -1,10 +1,10 @@
 extern crate rustc_hir;
 extern crate rustc_middle;
+extern crate rustc_public;
 extern crate rustc_span;
-extern crate stable_mir;
 
 use log::trace;
-use stable_mir::{mir, ty};
+use rustc_public::{mir, ty};
 
 use charon_lib::{ast::*, register_error};
 
@@ -45,7 +45,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub(crate) fn translate_item_aux(
         &mut self,
         item_src: &TransItemSource,
-        trans_id: Option<AnyTransId>,
+        trans_id: Option<ItemId>,
     ) -> Result<(), Error> {
         // Translate the meta information
         let name = self.translate_name(item_src)?;
@@ -59,7 +59,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         let bt_ctx = ItemTransCtx::new(trans_id, self);
         match item_src {
             TransItemSource::Type(adt, generics) => {
-                let Some(AnyTransId::Type(id)) = trans_id else {
+                let Some(ItemId::Type(id)) = trans_id else {
                     unreachable!()
                 };
                 let generics = generics.clone().into();
@@ -67,21 +67,21 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 self.translated.type_decls.set_slot(id, ty);
             }
             TransItemSource::Fun(instance) => {
-                let Some(AnyTransId::Fun(id)) = trans_id else {
+                let Some(ItemId::Fun(id)) = trans_id else {
                     unreachable!()
                 };
                 let fun_decl = bt_ctx.translate_function(id, item_meta, *instance)?;
                 self.translated.fun_decls.set_slot(id, fun_decl);
             }
             TransItemSource::Global(def) => {
-                let Some(AnyTransId::Global(id)) = trans_id else {
+                let Some(ItemId::Global(id)) = trans_id else {
                     unreachable!()
                 };
                 let global_decl = bt_ctx.translate_global(id, item_meta, &def)?;
                 self.translated.global_decls.set_slot(id, global_decl);
             }
             TransItemSource::Closure(def, generics) => {
-                let Some(AnyTransId::Type(id)) = trans_id else {
+                let Some(ItemId::Type(id)) = trans_id else {
                     unreachable!()
                 };
                 let generics: ty::GenericArgs = generics.clone().into();
@@ -89,7 +89,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 self.translated.type_decls.set_slot(id, ty);
             }
             TransItemSource::ClosureAsFn(def, generics) => {
-                let Some(AnyTransId::Fun(id)) = trans_id else {
+                let Some(ItemId::Fun(id)) = trans_id else {
                     unreachable!()
                 };
                 let generics: ty::GenericArgs = generics.clone().into();
@@ -98,7 +98,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 self.translated.fun_decls.set_slot(id, fun_decl);
             }
             TransItemSource::ForeignType(def) => {
-                let Some(AnyTransId::Type(id)) = trans_id else {
+                let Some(ItemId::Type(id)) = trans_id else {
                     unreachable!()
                 };
                 let ty = bt_ctx.translate_foreign_type_decl(id, item_meta, &def)?;
@@ -113,9 +113,9 @@ impl ItemTransCtx<'_, '_> {
     pub(crate) fn get_item_kind(
         &mut self,
         _span: Span,
-        _def: &stable_mir::DefId,
-    ) -> Result<ItemKind, Error> {
-        Ok(ItemKind::TopLevel)
+        _def: &rustc_public::DefId,
+    ) -> Result<ItemSource, Error> {
+        Ok(ItemSource::TopLevel)
     }
 
     /// Translate a type definition.
@@ -188,7 +188,7 @@ impl ItemTransCtx<'_, '_> {
             kind,
             src,
             layout: None,
-            ptr_metadata: None,
+            ptr_metadata: PtrMetadata::None,
         };
 
         Ok(type_def)
@@ -247,7 +247,7 @@ impl ItemTransCtx<'_, '_> {
             def_id,
             item_meta,
             signature,
-            kind: ItemKind::TopLevel,
+            src: ItemSource::TopLevel,
             is_global_initializer: None,
             body,
         })
@@ -307,7 +307,7 @@ impl ItemTransCtx<'_, '_> {
             item_meta,
             generics: GenericParams::empty(),
             ty,
-            kind: item_kind,
+            src: item_kind,
             global_kind,
             init: initializer,
         })

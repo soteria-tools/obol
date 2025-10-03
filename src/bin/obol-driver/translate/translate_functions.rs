@@ -4,12 +4,12 @@
 //! independently.
 
 extern crate rustc_middle;
-extern crate stable_mir;
+extern crate rustc_public;
 
 use super::translate_ctx::*;
 use charon_lib::ast::*;
 use charon_lib::{raise_error, register_error};
-use stable_mir::{CrateDef, mir, rustc_internal, ty};
+use rustc_public::{CrateDef, mir, rustc_internal, ty};
 
 impl ItemTransCtx<'_, '_> {
     pub fn requires_caller_location(&self, instance: mir::mono::Instance) -> bool {
@@ -84,15 +84,15 @@ impl ItemTransCtx<'_, '_> {
         span: Span,
         def: mir::mono::Instance,
     ) -> Result<(Vec<ty::Ty>, ty::Ty), Error> {
-        let Ok(crate_item) = stable_mir::CrateItem::try_from(def) else {
+        let Ok(crate_item) = rustc_public::CrateItem::try_from(def) else {
             // worth a shot
             return self.get_function_ins_outs_sure_function(span, def);
         };
         match crate_item.kind() {
-            stable_mir::ItemKind::Fn | stable_mir::ItemKind::Ctor(_) => {
+            rustc_public::ItemKind::Fn | rustc_public::ItemKind::Ctor(_) => {
                 self.get_function_ins_outs_sure_function(span, def)
             }
-            stable_mir::ItemKind::Static => {
+            rustc_public::ItemKind::Static => {
                 let stt: mir::mono::StaticDef = crate_item.try_into()?;
                 Ok((vec![], stt.ty()))
             }

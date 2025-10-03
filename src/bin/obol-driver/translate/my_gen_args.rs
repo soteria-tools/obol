@@ -1,8 +1,8 @@
-extern crate rustc_smir;
-extern crate stable_mir;
+extern crate rustc_public;
+extern crate rustc_public_bridge;
 
-use rustc_smir::IndexedVal;
-use stable_mir::ty::{self};
+use rustc_public::ty::{self};
+use rustc_public_bridge::IndexedVal;
 use std::hash::Hash;
 
 #[repr(transparent)]
