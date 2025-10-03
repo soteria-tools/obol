@@ -334,6 +334,8 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
         type_trans_cache: Default::default(),
     };
 
+    ctx.translate_unit_metadata_const();
+
     let units = collect_entrypoints(options, tcx);
     units
         .into_iter()

@@ -215,13 +215,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             ty::RigidTy::Dynamic(_existential_preds, _region, _) => {
                 // TODO: we don't translate the predicates yet because our machinery can't handle
                 // it.
-                TyKind::DynTrait(DynPredicate {
-                    binder: Binder::new(
-                        BinderKind::Dyn,
-                        GenericParams::empty(),
-                        TyKind::Never.into_ty(),
-                    ),
-                })
+                TyKind::Error("&dyn not supported in Obol".into())
             }
 
             ty::RigidTy::Coroutine(..) => {
@@ -656,7 +650,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }
 
             let variant_name = var_def.name().clone();
-            let discriminant = {
+            let discriminant = if adt.kind().is_enum() {
                 let discr = adt.discriminant_for_variant(var_def.idx);
 
                 let ty = self.translate_ty(def_span, discr.ty)?;
@@ -665,6 +659,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     Some(lit) => lit,
                     None => raise_error!(self, def_span, "unexpected discriminant type: {ty:?}",),
                 }
+            } else {
+                Literal::Scalar(ScalarValue::Unsigned(UIntTy::U8, 0))
             };
 
             let mut variant = Variant {
