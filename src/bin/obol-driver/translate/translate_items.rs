@@ -4,7 +4,7 @@ extern crate rustc_public;
 extern crate rustc_span;
 
 use log::trace;
-use rustc_public::{mir, ty};
+use rustc_public::{CrateDef, mir, ty};
 
 use charon_lib::{ast::*, register_error};
 
@@ -304,13 +304,27 @@ impl ItemTransCtx<'_, '_> {
         // let is_global_initializer =
         //     is_global_initializer.then(|| self.register_global_decl_id(span, &def.def_id));
 
-        let body = if item_meta.opacity.with_private_contents().is_opaque() {
-            Err(Opaque)
-        } else if !matches!(def.kind, mir::mono::InstanceKind::Virtual { .. })
-            && let Some(body) = def.body()
+        let body = if item_meta.opacity.with_private_contents().is_opaque()
+            || matches!(def.kind, mir::mono::InstanceKind::Virtual { .. })
+            || matches!(def.kind, mir::mono::InstanceKind::Intrinsic)
         {
-            // Translate the body. This doesn't store anything if we can't/decide not to translate
-            // this body.
+            None
+        } else if def.has_body() {
+            def.body()
+        } else {
+            let inner_id = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def.def_id());
+            let body_internal = if self.t_ctx.tcx.is_mir_available(inner_id) {
+                Some(self.t_ctx.tcx.optimized_mir(inner_id))
+            } else if self.t_ctx.tcx.is_ctfe_mir_available(inner_id) {
+                Some(self.t_ctx.tcx.mir_for_ctfe(inner_id))
+            } else {
+                println!("No body for function {:?}", def);
+                None
+            };
+            body_internal.map(rustc_public::rustc_internal::stable)
+        };
+
+        let body = if let Some(body) = body {
             let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals());
             match bt_ctx.translate_body(item_meta.span, def, &body) {
                 Ok(Ok(body)) => Ok(body),
@@ -321,9 +335,10 @@ impl ItemTransCtx<'_, '_> {
                 Err(_) => Err(Opaque),
             }
         } else {
-            println!("Instance {} has no body -- left opaque", def.name());
+            trace!("Instance {} has no body -- left opaque.", def.name(),);
             Err(Opaque)
         };
+
         Ok(FunDecl {
             def_id,
             item_meta,

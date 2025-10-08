@@ -352,7 +352,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             .enumerate()
                             .map(|(idx, f)| {
                                 let fty = f.ty_with_args(generics);
-                                println!("Field {idx} of {rty:?}: {fty:?}");
                                 let size = fty.layout().unwrap().shape().size;
                                 (idx, fty, size)
                             })
