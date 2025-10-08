@@ -19,7 +19,10 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         let trans_id = self.id_map.get(&item_src).copied();
         let def_id = item_src.as_def_id();
         self.with_def_id(&def_id, trans_id, |mut ctx| {
-            let span = Span::dummy();
+            let def_id_internal = rustc_public::rustc_internal::internal(ctx.tcx, def_id);
+            let span = ctx.tcx.def_span(def_id_internal);
+            let span = rustc_public::rustc_internal::stable(span);
+            let span = ctx.translate_span_from_smir(&span);
             // Catch cycles
             let res = {
                 // Stopgap measure because there are still many panics in charon and hax.
@@ -116,9 +119,19 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub fn translate_unit_metadata_const(&mut self) {
         use charon_lib::ullbc_ast::*;
         let name = Name::from_path(&["UNIT_METADATA"]);
+        let file_id = self.translated.files.push(File {
+            name: FileName::Virtual("dummy file".into()),
+            crate_name: "dummy".into(),
+            contents: None,
+        });
+        let span = {
+            let mut span = Span::dummy();
+            span.data.file_id = file_id;
+            span
+        };
         let item_meta = ItemMeta {
             name,
-            span: Span::dummy(),
+            span,
             source_text: None,
             attr_info: AttrInfo::default(),
             is_local: false,
@@ -128,7 +141,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
         let body = {
             let mut body = GExprBody {
-                span: Span::dummy(),
+                span,
                 locals: Locals::new(0),
                 comments: Default::default(),
                 body: Vector::default(),
@@ -142,6 +155,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         };
 
         let global_id = self.translated.global_decls.reserve_slot();
+
         let initializer = self.translated.fun_decls.push_with(|def_id| FunDecl {
             def_id,
             item_meta: item_meta.clone(),
