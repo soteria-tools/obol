@@ -309,8 +309,9 @@ impl ItemTransCtx<'_, '_> {
             || matches!(def.kind, mir::mono::InstanceKind::Intrinsic)
         {
             None
-        } else if def.has_body() {
-            def.body()
+        } else if let Some(body) = def.body() {
+            // we can't rely on "has_body", as in some cases it returns false even when there is a body.
+            Some(body)
         } else {
             let inner_id = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def.def_id());
             let body_internal = if self.t_ctx.tcx.is_mir_available(inner_id) {
