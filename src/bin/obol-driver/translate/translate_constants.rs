@@ -4,9 +4,13 @@ extern crate rustc_public;
 extern crate rustc_public_bridge;
 
 use charon_lib::{ast::*, error_assert, raise_error, register_error};
+use itertools::Itertools;
 use log::trace;
 use rustc_apfloat::{Float, ieee};
-use rustc_public::{abi, mir, ty};
+use rustc_public::{
+    abi, mir,
+    ty::{self, VariantIdx},
+};
 use rustc_public_bridge::IndexedVal;
 use std::io::Read;
 
@@ -54,7 +58,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             .iter()
             .copied()
             .collect::<Option<Vec<_>>>()
-            .ok_or_else(|| "Found uninitialized bytes".into())
+            .ok_or_else(|| format!("Found uninitialized bytes when reading {bytes:?}").into())
     }
 
     fn provenance_at<'a>(
@@ -339,6 +343,44 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         (Some(variant_idx_charon), fields, offsets.clone())
                     }
                     ty::AdtKind::Union => {
+                        // FIXME: this is unsound; we should just encode it as an array of optional
+                        // bytes with provenance
+                        assert_eq!(adt.num_variants(), 1);
+                        let fields = adt.variant(VariantIdx::to_val(0)).unwrap().fields();
+                        let mut variant_tys = fields
+                            .into_iter()
+                            .enumerate()
+                            .map(|(idx, f)| {
+                                let fty = f.ty_with_args(generics);
+                                println!("Field {idx} of {rty:?}: {fty:?}");
+                                let size = fty.layout().unwrap().shape().size;
+                                (idx, fty, size)
+                            })
+                            .collect::<Vec<_>>();
+                        variant_tys.sort_by_key(|(_, _, s)| s.bytes());
+                        variant_tys.reverse();
+
+                        // Super unsound: we just try parsing variants in decreasing size order,
+                        // until one works.
+
+                        for (vidx, vty, _) in variant_tys {
+                            let field_ty = self.translate_ty(span, vty)?;
+                            let res = self.translate_allocation_at(
+                                span,
+                                alloc,
+                                field_ty.kind(),
+                                &vty,
+                                offset,
+                            );
+                            if let Ok(res) = res {
+                                let field = FieldId::from_raw(vidx);
+                                return Ok(ConstantExpr {
+                                    kind: ConstantExprKind::Union(field, Box::new(res)),
+                                    ty: ty.clone().into_ty(),
+                                });
+                            }
+                        }
+
                         trace!("Gave up for union raw memory of type {ty:?} with alloc {alloc:?}");
                         return Ok(ConstantExpr {
                             kind: ConstantExprKind::RawMemory(Self::as_init(bytes)?),
@@ -536,7 +578,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             | ConstantExprKind::Ptr(..)
             | ConstantExprKind::FnPtr { .. }
             | ConstantExprKind::Opaque(_)
-            | ConstantExprKind::PtrNoProvenance(..) => {
+            | ConstantExprKind::PtrNoProvenance(..)
+            | ConstantExprKind::Union(..) => {
                 raise_error!(self, span, "Unexpected constant generic: {:?}", value)
             }
         }

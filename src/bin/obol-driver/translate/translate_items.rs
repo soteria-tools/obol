@@ -30,14 +30,18 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 Ok(Ok(())) => return,
                 // Translation error
                 Ok(Err(_)) => {
+                    println!("Item {def_id:?} caused errors; ignoring.");
                     register_error!(ctx, span, "Item `{def_id:?}` caused errors; ignoring.")
                 }
                 // Panic
-                Err(_) => register_error!(
-                    ctx,
-                    span,
-                    "Thread panicked when extracting item `{def_id:?}`."
-                ),
+                Err(_) => {
+                    println!("Item {def_id:?} caused errors; ignoring.");
+                    register_error!(
+                        ctx,
+                        span,
+                        "Thread panicked when extracting item `{def_id:?}`."
+                    )
+                }
             };
         })
     }
@@ -220,6 +224,7 @@ impl ItemTransCtx<'_, '_> {
             kind,
             src,
             layout,
+            repr: None,
             ptr_metadata,
         };
 
@@ -249,6 +254,7 @@ impl ItemTransCtx<'_, '_> {
             kind,
             src,
             layout: None,
+            repr: None,
             ptr_metadata: PtrMetadata::None,
         };
 
@@ -301,7 +307,7 @@ impl ItemTransCtx<'_, '_> {
                 Err(_) => Err(Opaque),
             }
         } else {
-            trace!("Instance {} has no body -- left opaque", def.name());
+            println!("Instance {} has no body -- left opaque", def.name());
             Err(Opaque)
         };
         Ok(FunDecl {
@@ -405,6 +411,7 @@ impl ItemTransCtx<'_, '_> {
             kind,
             src,
             layout,
+            repr: None,
             ptr_metadata,
         };
 
