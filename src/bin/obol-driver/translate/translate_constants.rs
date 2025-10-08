@@ -4,6 +4,7 @@ extern crate rustc_public;
 extern crate rustc_public_bridge;
 
 use charon_lib::{ast::*, error_assert, raise_error, register_error};
+use itertools::Itertools;
 use log::trace;
 use rustc_apfloat::{Float, ieee};
 use rustc_public::{abi, mir, ty};
@@ -54,7 +55,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             .iter()
             .copied()
             .collect::<Option<Vec<_>>>()
-            .ok_or_else(|| "Found uninitialized bytes".into())
+            .ok_or_else(|| format!("Found uninitialized bytes when reading {bytes:?}").into())
     }
 
     fn provenance_at<'a>(

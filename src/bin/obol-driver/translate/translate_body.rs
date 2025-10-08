@@ -1231,8 +1231,18 @@ impl BodyTransCtx<'_, '_, '_> {
         match res {
             Ok(Ok(body)) => Ok(body),
             // Translation error
-            Ok(Err(e)) => Err(e),
+            Ok(Err(e)) => {
+                println!(
+                    "Thread errored when extracting body of {}: {e:?}",
+                    instance.name()
+                );
+                Err(e)
+            }
             Err(_) => {
+                println!(
+                    "Thread panicked when extracting body of {}",
+                    instance.name()
+                );
                 raise_error!(self, span, "Thread panicked when extracting body.");
             }
         }
