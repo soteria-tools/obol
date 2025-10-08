@@ -10,8 +10,8 @@ use charon_lib::ids::Vector;
 use charon_lib::{raise_error, register_error};
 use core::convert::*;
 use log::trace;
-use rustc_public::{abi, mir, ty};
-use rustc_public_bridge::IndexedVal;
+use rustc_middle::ty as rustc_ty;
+use rustc_public::{mir, ty};
 
 impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     // Translate a region
@@ -311,140 +311,82 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         def: &ty::AdtDef,
         genargs: &ty::GenericArgs,
-        kind: &TypeDeclKind,
     ) -> Option<Layout> {
-        use rustc_public::abi as r_abi;
-        // Panics if the fields layout is not `Arbitrary`.
+        use rustc_abi as r_abi;
+
         fn translate_variant_layout(
-            variant_layout: &r_abi::LayoutShape,
+            variant_layout: &r_abi::LayoutData<r_abi::FieldIdx, r_abi::VariantIdx>,
             tag: Option<ScalarValue>,
         ) -> VariantLayout {
-            match &variant_layout.fields {
+            let field_offsets = match &variant_layout.fields {
                 r_abi::FieldsShape::Arbitrary { offsets, .. } => {
-                    let mut v = Vector::with_capacity(offsets.len());
-                    for o in offsets.iter() {
-                        v.push(o.bytes() as u64);
-                    }
-                    VariantLayout {
-                        field_offsets: v,
-                        uninhabited: false,
-                        tag,
-                    }
+                    offsets.iter().map(|o| o.bytes()).collect()
                 }
-                r_abi::FieldsShape::Union(fields) => VariantLayout {
-                    field_offsets: (0..fields.get()).map(|_| 0).collect::<Vec<_>>().into(),
-                    uninhabited: false,
-                    tag: None,
-                },
-                r_abi::FieldsShape::Primitive | r_abi::FieldsShape::Array { .. } => {
-                    panic!("Unexpected layout shape: {:?}", variant_layout.fields)
-                }
+                r_abi::FieldsShape::Primitive | r_abi::FieldsShape::Union(_) => Vector::default(),
+                r_abi::FieldsShape::Array { .. } => panic!("Unexpected layout shape"),
+            };
+            VariantLayout {
+                field_offsets,
+                uninhabited: variant_layout.is_uninhabited(),
+                tag,
             }
         }
 
-        fn translate_primitive_int(int_ty: &r_abi::IntegerLength, signed: bool) -> IntegerTy {
+        fn translate_primitive_int(int_ty: r_abi::Integer, signed: bool) -> IntegerTy {
             if signed {
-                match int_ty {
-                    r_abi::IntegerLength::I8 => IntegerTy::Signed(IntTy::I8),
-                    r_abi::IntegerLength::I16 => IntegerTy::Signed(IntTy::I16),
-                    r_abi::IntegerLength::I32 => IntegerTy::Signed(IntTy::I32),
-                    r_abi::IntegerLength::I64 => IntegerTy::Signed(IntTy::I64),
-                    r_abi::IntegerLength::I128 => IntegerTy::Signed(IntTy::I128),
-                }
+                IntegerTy::Signed(match int_ty {
+                    r_abi::Integer::I8 => IntTy::I8,
+                    r_abi::Integer::I16 => IntTy::I16,
+                    r_abi::Integer::I32 => IntTy::I32,
+                    r_abi::Integer::I64 => IntTy::I64,
+                    r_abi::Integer::I128 => IntTy::I128,
+                })
             } else {
-                match int_ty {
-                    r_abi::IntegerLength::I8 => IntegerTy::Unsigned(UIntTy::U8),
-                    r_abi::IntegerLength::I16 => IntegerTy::Unsigned(UIntTy::U16),
-                    r_abi::IntegerLength::I32 => IntegerTy::Unsigned(UIntTy::U32),
-                    r_abi::IntegerLength::I64 => IntegerTy::Unsigned(UIntTy::U64),
-                    r_abi::IntegerLength::I128 => IntegerTy::Unsigned(UIntTy::U128),
-                }
+                IntegerTy::Unsigned(match int_ty {
+                    r_abi::Integer::I8 => UIntTy::U8,
+                    r_abi::Integer::I16 => UIntTy::U16,
+                    r_abi::Integer::I32 => UIntTy::U32,
+                    r_abi::Integer::I64 => UIntTy::U64,
+                    r_abi::Integer::I128 => UIntTy::U128,
+                })
             }
         }
 
-        fn translate_variant_id(r_id: &ty::VariantIdx) -> VariantId {
-            VariantId::from_usize(r_id.to_index())
-        }
-
-        // Computes the tag representation of the variant's discriminant if possible.
-        //
-        // If the discriminant is encoded as a niche the following holds:
-        // If discriminant != self.discriminant_layout.untagged_variant
-        // then tag = (d-self.discriminant_layout.tagged_variants_start).wrapping_add(self.discriminant_layout.niche_start)
-        //
-        // Note: it is possible that the tag is stored in the niche of a pointer type, but will
-        // be returned as an integer instead. This is supposed to be a different interpretation of the same bytes.
-        fn translate_discr_to_tag(
-            discr: Literal,
-            variant: ty::VariantIdx,
-            tag_ty: IntegerTy,
-            encoding: &r_abi::TagEncoding,
-        ) -> Option<ScalarValue> {
-            match &encoding {
-                // The direct encoding is just a cast.
-                r_abi::TagEncoding::Direct => {
-                    // FIXME: this is not the most accurate; really we should query rustc
-                    Some(ScalarValue::from_bits(tag_ty, discr.as_scalar()?.to_bits()))
-                }
-                r_abi::TagEncoding::Niche {
-                    untagged_variant,
-                    niche_variants,
-                    niche_start,
-                } => {
-                    if variant == *untagged_variant {
-                        None // This variant does not have a tag.
-                    } else if variant.to_index() < niche_variants.start().to_index() {
-                        // The variant is before the niche variants, so it is not tagged.
-                        // Could e.g. be the case if it is uninhabited.
-                        None
-                    } else {
-                        let discr_rel = variant.to_index() - niche_variants.start().to_index();
-                        // In theory we need to do a wrapping_add in the tag type,
-                        // but we follow the approach of the rustc backends, that
-                        // simply does the addition in `u128` and cuts off the uninteresting bits.
-                        let tag_bits = (discr_rel as u128).wrapping_add(*niche_start);
-                        Some(ScalarValue::from_bits(tag_ty, tag_bits))
-                    }
-                }
-            }
-        }
-
-        let Ok(layout) = def.ty_with_args(genargs).layout().map(abi::Layout::shape) else {
-            return None;
-        };
+        // If layout computation returns an error, we return `None`.
+        let ty = def.ty_with_args(genargs);
+        let layout = ty.layout().unwrap();
+        let layout = rustc_public::rustc_internal::internal(self.t_ctx.tcx, layout);
+        let ty = rustc_public::rustc_internal::internal(self.t_ctx.tcx, ty);
 
         let (size, align) = if layout.is_sized() {
             (
-                Some(layout.size.bytes() as u64),
-                Some(layout.abi_align as u64),
+                Some(layout.size().bytes()),
+                Some(layout.align().abi.bytes()),
             )
         } else {
             (None, None)
         };
 
         // Get the layout of the discriminant when there is one (even if it is encoded in a niche).
-        let discriminant_layout = match &layout.variants {
-            r_abi::VariantsShape::Multiple {
+        let discriminant_layout = match layout.variants() {
+            r_abi::Variants::Multiple {
                 tag,
                 tag_encoding,
                 tag_field,
                 ..
             } => {
                 // The tag_field is the index into the `offsets` vector.
-                let r_abi::FieldsShape::Arbitrary { offsets, .. } = &layout.fields else {
+                let r_abi::FieldsShape::Arbitrary { offsets, .. } = layout.fields() else {
                     unreachable!()
                 };
-                let abi::Scalar::Initialized { value, .. } = tag else {
-                    return None;
-                };
 
-                let tag_ty = match value {
-                    r_abi::Primitive::Int { length, signed } => {
-                        translate_primitive_int(length, *signed)
+                let tag_ty = match tag.primitive() {
+                    r_abi::Primitive::Int(int_ty, signed) => {
+                        translate_primitive_int(int_ty, signed)
                     }
                     // Try to handle pointer as integers of the same size.
                     r_abi::Primitive::Pointer(_) => IntegerTy::Signed(IntTy::Isize),
-                    r_abi::Primitive::Float { .. } => {
+                    r_abi::Primitive::Float(_) => {
                         unreachable!()
                     }
                 };
@@ -454,124 +396,83 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     r_abi::TagEncoding::Niche {
                         untagged_variant, ..
                     } => TagEncoding::Niche {
-                        untagged_variant: translate_variant_id(untagged_variant),
+                        untagged_variant: VariantId::from_usize(r_abi::VariantIdx::as_usize(
+                            *untagged_variant,
+                        )),
                     },
                 };
                 offsets.get(*tag_field).map(|s| DiscriminantLayout {
-                    offset: s.bytes() as u64,
+                    offset: r_abi::Size::bytes(*s),
                     tag_ty,
                     encoding,
                 })
             }
-            r_abi::VariantsShape::Single { .. } | r_abi::VariantsShape::Empty => None,
+            r_abi::Variants::Single { .. } | r_abi::Variants::Empty => None,
         };
 
-        // Try to find the variants even through an alias.
-        fn get_variants_from_kind<'a>(
-            ty_decls: &'a Vector<TypeDeclId, TypeDecl>,
-            ty_decl_kind: &'a TypeDeclKind,
-        ) -> Option<&'a Vector<VariantId, Variant>> {
-            match ty_decl_kind {
-                TypeDeclKind::Enum(variants) => Some(variants),
-                TypeDeclKind::Alias(ty) => match ty.kind() {
-                    TyKind::Adt(r) => match r.id {
-                        TypeId::Adt(td_id) => ty_decls
-                            .get(td_id)
-                            .and_then(|td| get_variants_from_kind(ty_decls, &td.kind)),
-                        _ => None,
-                    },
-                    _ => None,
-                },
-                _ => None, // Sometimes, multiple variants can occur for aliases etc.
-            }
-        }
+        let mut variant_layouts: Vector<VariantId, VariantLayout> = Vector::new();
 
-        let variant_layouts: Vector<VariantId, VariantLayout> = match layout.variants {
-            r_abi::VariantsShape::Multiple {
-                tag_encoding,
-                variants,
-                ..
-            } => {
+        match layout.variants() {
+            r_abi::Variants::Multiple { variants, .. } => {
                 let tag_ty = discriminant_layout
                     .as_ref()
                     .expect("No discriminant layout for enum?")
                     .tag_ty;
+                let ptr_size = self.t_ctx.translated.target_information.target_pointer_size;
+                let tag_size = r_abi::Size::from_bytes(tag_ty.target_size(ptr_size));
 
-                let type_decls = &self.t_ctx.translated.type_decls;
-                let variants_from_kind = get_variants_from_kind(type_decls, kind);
-                variants
-                    .iter()
-                    .enumerate()
-                    .map(|(id, variant_layout)| {
-                        let variant = ty::VariantIdx::to_val(id);
-                        let discr = variants_from_kind.map(|variants_from_kind| {
-                            variants_from_kind
-                                .get(translate_variant_id(&variant))
-                                .expect("Variant index out of bounds while getting discr")
-                                .discriminant
-                                .clone()
-                        });
-
-                        let tag = discr.and_then(|discr| {
-                            translate_discr_to_tag(discr, variant, tag_ty, &tag_encoding)
-                        });
-                        translate_variant_layout(variant_layout, tag)
-                    })
-                    .collect()
-            }
-            r_abi::VariantsShape::Single { index } => {
-                // For structs we add a single variant that has the field offsets. Unions don't
-                // have field offsets.
-                let tag = kind.is_enum().then(|| {
-                    let discr = def.discriminant_for_variant(index);
-                    match &discr.ty.kind().rigid() {
-                        Some(ty::RigidTy::Int(intty)) => {
-                            let intty = self.translate_int_ty(intty);
-                            ScalarValue::Signed(intty, discr.val as i128)
-                        }
-                        Some(ty::RigidTy::Uint(intty)) => {
-                            let intty = self.translate_uint_ty(intty);
-                            ScalarValue::Unsigned(intty, discr.val as u128)
-                        }
-                        Some(ty::RigidTy::Ref(..) | ty::RigidTy::RawPtr(..)) => {
-                            // This is a niche optimization where the discriminant is stored in the
-                            // niche of a pointer. We represent it as an integer instead.
-                            ScalarValue::Unsigned(UIntTy::Usize, discr.val as u128)
-                        }
-                        Some(ty) => {
-                            panic!("Expected an integer literal for the discriminant, got {ty:?}")
-                        }
-                        None => {
-                            panic!("Expected a rigid type for the discriminant, got None")
-                        }
-                    }
-                });
-
-                let type_decls = &self.t_ctx.translated.type_decls;
-                if let Some(variants) = get_variants_from_kind(type_decls, kind) {
-                    variants.map_ref_indexed(|i, _| {
-                        if i.index() == index.to_index() {
-                            translate_variant_layout(&layout, tag)
-                        } else {
-                            VariantLayout {
-                                uninhabited: true,
-                                field_offsets: Vector::new(),
-                                tag: None,
-                            }
-                        }
-                    })
-                } else {
-                    vec![translate_variant_layout(&layout, tag)].into()
+                for (id, variant_layout) in variants.iter_enumerated() {
+                    let tag = if variant_layout.is_uninhabited() {
+                        None
+                    } else {
+                        let ty_env = rustc_ty::TypingEnv {
+                            param_env: rustc_ty::ParamEnv::empty(),
+                            typing_mode: rustc_ty::TypingMode::PostAnalysis,
+                        };
+                        self.t_ctx
+                            .tcx
+                            .tag_for_variant(ty_env.as_query_input((ty, id)))
+                            .map(|s| match tag_ty {
+                                IntegerTy::Signed(int_ty) => {
+                                    ScalarValue::from_int(ptr_size, int_ty, s.to_int(tag_size))
+                                        .unwrap()
+                                }
+                                IntegerTy::Unsigned(uint_ty) => {
+                                    ScalarValue::from_uint(ptr_size, uint_ty, s.to_uint(tag_size))
+                                        .unwrap()
+                                }
+                            })
+                    };
+                    variant_layouts.push(translate_variant_layout(variant_layout, tag));
                 }
             }
-            r_abi::VariantsShape::Empty => Vector::new(),
-        };
+            r_abi::Variants::Single { index } => {
+                if let r_abi::FieldsShape::Arbitrary { .. } = layout.fields() {
+                    let n_variants = match ty.kind() {
+                        _ if let Some(range) = ty.variant_range(self.t_ctx.tcx) => {
+                            range.end.index()
+                        }
+                        _ => 1,
+                    };
+                    // All the variants not initialized below are uninhabited.
+                    variant_layouts = (0..n_variants)
+                        .map(|_| VariantLayout {
+                            field_offsets: Vector::default(),
+                            uninhabited: true,
+                            tag: None,
+                        })
+                        .collect();
+                    variant_layouts[index.index()] = translate_variant_layout(&layout, None);
+                }
+            }
+            r_abi::Variants::Empty => {}
+        }
 
         Some(Layout {
             size,
             align,
             discriminant_layout,
-            uninhabited: true,
+            uninhabited: layout.is_uninhabited(),
             variant_layouts,
         })
     }

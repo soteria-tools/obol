@@ -2,6 +2,7 @@
 #![feature(iterator_try_collect)]
 #![feature(iter_array_chunks)]
 #![feature(impl_trait_in_bindings)]
+#![feature(if_let_guard)]
 
 extern crate rustc_driver;
 extern crate rustc_hir;
