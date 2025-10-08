@@ -229,7 +229,7 @@ impl ItemTransCtx<'_, '_> {
             Ok(kind) => kind,
             Err(err) => TypeDeclKind::Error(err.msg),
         };
-        let layout = self.translate_layout(def, genargs, &kind);
+        let layout = self.translate_layout(def, genargs);
         let ptr_metadata = self.translate_ptr_metadata();
         let type_def = TypeDecl {
             def_id: trans_id,
@@ -319,7 +319,6 @@ impl ItemTransCtx<'_, '_> {
             } else if self.t_ctx.tcx.is_ctfe_mir_available(inner_id) {
                 Some(self.t_ctx.tcx.mir_for_ctfe(inner_id))
             } else {
-                println!("No body for function {:?}", def);
                 None
             };
             body_internal.map(rustc_public::rustc_internal::stable)
