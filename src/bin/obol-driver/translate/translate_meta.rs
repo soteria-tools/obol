@@ -182,8 +182,19 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
     /// Retrieve the name for an item.
     pub fn translate_name(&mut self, src: &TransItemSource) -> Result<Name, Error> {
-        let def_id = src.as_def_id();
-        let mut name = self.def_id_to_name(def_id)?;
+        let mut name = if src.has_def_id() {
+            let def_id = src.as_def_id();
+            self.def_id_to_name(def_id)?
+        } else if let TransItemSource::VTable(_, _) | TransItemSource::VTableInit(_, _) = src {
+            // VTables may not have a def_id if they are for an auto-trait.
+            Name {
+                name: vec![PathElem::Ident("unknown_trait".into(), Disambiguator::ZERO)],
+            }
+        } else {
+            Name {
+                name: vec![PathElem::Ident("todo_name".into(), Disambiguator::ZERO)],
+            }
+        };
 
         match src {
             TransItemSource::Closure(..) => name
@@ -206,6 +217,25 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let mut item_ctx = ItemTransCtx::new(None, self);
                 let generics = item_ctx.translate_generic_args(span, &gargs)?;
                 name.name.push(PathElem::Monomorphized(Box::new(generics)));
+            }
+            TransItemSource::VTable(ty, tref) | TransItemSource::VTableInit(ty, tref) => {
+                let mut item_ctx = ItemTransCtx::new(None, self);
+                let generics = if let Some((_, args)) = tref {
+                    item_ctx.translate_generic_args(Span::dummy(), &args.clone().into())?
+                } else {
+                    let charon_ty = item_ctx.translate_ty(Span::dummy(), *ty)?;
+                    GenericArgs {
+                        const_generics: vec![].into(),
+                        types: vec![charon_ty].into(),
+                        trait_refs: vec![].into(),
+                        regions: vec![].into(),
+                    }
+                };
+                name.name.push(PathElem::Monomorphized(Box::new(generics)));
+                name.name.splice(
+                    0..0,
+                    [PathElem::Ident("{vtable}".into(), Disambiguator::ZERO)],
+                );
             }
             _ => {}
         }
@@ -307,22 +337,36 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         if let Some(item_meta) = self.cached_item_metas.get(&item_src) {
             return item_meta.clone();
         }
-        let crate_def: &dyn CrateDef = match item_src {
-            TransItemSource::Closure(def, _) | TransItemSource::ClosureAsFn(def, _) => def,
-            TransItemSource::ForeignType(def) => def,
-            TransItemSource::Fun(instance) => &instance.def,
-            TransItemSource::Global(def) => def,
-            TransItemSource::Type(def, _) => def,
+        let crate_def: Option<&dyn CrateDef> = match item_src {
+            TransItemSource::Closure(def, _) | TransItemSource::ClosureAsFn(def, _) => Some(def),
+            TransItemSource::ForeignType(def) => Some(def),
+            TransItemSource::Fun(instance) => Some(&instance.def),
+            TransItemSource::Global(def) => Some(def),
+            TransItemSource::Type(def, _) => Some(def),
+            TransItemSource::VTable(_, tdef) | TransItemSource::VTableInit(_, tdef) => {
+                tdef.as_ref().map(|t| -> &dyn CrateDef { &t.0 })
+            }
         };
-        let span = crate_def.span();
-        let span = self.translate_span_from_smir(&span);
-        let attr_info = self.translate_attr_info(span, crate_def);
+        let span = crate_def
+            .map(|def| self.translate_span_from_smir(&def.span()))
+            .unwrap_or(Span::dummy());
+        let attr_info = crate_def
+            .map(|def| self.translate_attr_info(span, def))
+            .unwrap_or(AttrInfo {
+                attributes: Vec::new(),
+                inline: None,
+                public: true,
+                rename: None,
+            });
 
-        let internal_id = rustc_internal::internal(self.tcx, item_src.as_def_id());
-        let lang_item = self
-            .tcx
-            .as_lang_item(internal_id)
-            .map(|l| l.name().to_ident_string());
+        let lang_item = if item_src.has_def_id() {
+            let internal_id = rustc_internal::internal(self.tcx, item_src.as_def_id());
+            self.tcx
+                .as_lang_item(internal_id)
+                .map(|l| l.name().to_ident_string())
+        } else {
+            None
+        };
 
         let name_opacity = ItemOpacity::Transparent;
         let opacity = if attr_info.attributes.iter().any(|attr| attr.is_opaque()) {

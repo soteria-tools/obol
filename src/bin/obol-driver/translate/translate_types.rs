@@ -4,6 +4,8 @@ extern crate rustc_middle;
 extern crate rustc_public;
 extern crate rustc_public_bridge;
 
+use crate::translate::translate_crate::FAKE_DYN_TRAIT;
+
 use super::translate_ctx::*;
 use charon_lib::ast::*;
 use charon_lib::ids::Vector;
@@ -215,7 +217,34 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             ty::RigidTy::Dynamic(_existential_preds, _region, _) => {
                 // TODO: we don't translate the predicates yet because our machinery can't handle
                 // it.
-                TyKind::Error("&dyn not supported in Obol".into())
+                TyKind::DynTrait(DynPredicate {
+                    binder: Binder {
+                        params: GenericParams {
+                            regions: vec![].into(),
+                            types: vec![].into(),
+                            const_generics: vec![].into(),
+                            trait_clauses: vec![TraitParam {
+                                clause_id: TraitClauseId::ZERO,
+                                span: None,
+                                origin: PredicateOrigin::Dyn,
+                                trait_: RegionBinder::empty(TraitDeclRef {
+                                    id: FAKE_DYN_TRAIT,
+                                    generics: Box::new(GenericArgs::empty()),
+                                }),
+                            }]
+                            .into(),
+                            regions_outlive: vec![].into(),
+                            types_outlive: vec![].into(),
+                            trait_type_constraints: vec![].into(),
+                        },
+                        skip_binder: TyKind::TypeVar(DeBruijnVar::bound(
+                            DeBruijnId::zero(),
+                            TypeVarId::ZERO,
+                        ))
+                        .into_ty(),
+                        kind: BinderKind::Dyn,
+                    },
+                })
             }
 
             ty::RigidTy::Coroutine(..) => {

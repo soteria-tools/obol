@@ -35,6 +35,8 @@ pub enum TransItemSource {
     Closure(ty::ClosureDef, MyGenericArgs),
     ClosureAsFn(ty::ClosureDef, MyGenericArgs),
     ForeignType(ty::ForeignDef),
+    VTable(ty::Ty, Option<(ty::TraitDef, MyGenericArgs)>),
+    VTableInit(ty::Ty, Option<(ty::TraitDef, MyGenericArgs)>),
 }
 
 impl TransItemSource {
@@ -46,29 +48,50 @@ impl TransItemSource {
             TransItemSource::Closure(def, _) => def.def_id(),
             TransItemSource::ClosureAsFn(def, _) => def.def_id(),
             TransItemSource::ForeignType(def) => def.def_id(),
+            TransItemSource::VTable(_, Some((tr, _))) => tr.0,
+            TransItemSource::VTableInit(_, Some((tr, _))) => tr.0,
+            TransItemSource::VTable(_, None) => unreachable!("VTables have no def id"),
+            TransItemSource::VTableInit(_, None) => unreachable!("VTable inits have no def id"),
         }
+    }
+
+    pub(crate) fn has_def_id(&self) -> bool {
+        !matches!(
+            self,
+            TransItemSource::VTable(_, None) | TransItemSource::VTableInit(_, None)
+        )
     }
 
     /// Value with which we order values.
     fn sort_key(&self) -> impl Ord + Debug {
-        fn key(k: &mir::mono::InstanceKind) -> isize {
+        fn key_instance(k: &mir::mono::InstanceKind) -> usize {
             match k {
                 mir::mono::InstanceKind::Intrinsic => 0,
                 mir::mono::InstanceKind::Item => 1,
                 mir::mono::InstanceKind::Shim => 2,
-                mir::mono::InstanceKind::Virtual { idx } => 3 + (*idx as isize),
+                mir::mono::InstanceKind::Virtual { idx } => 3 + *idx,
+            }
+        }
+        fn key_trait(t: &Option<(ty::TraitDef, MyGenericArgs)>) -> usize {
+            match t {
+                None => 0,
+                Some((tr, args)) => tr.0.to_index() * 31 + args.sort_key(),
             }
         }
 
         match self {
             TransItemSource::Global(id) => (0, id.0.to_index(), 0),
-            TransItemSource::Fun(instance) => (1, instance.def.to_index(), key(&instance.kind)),
+            TransItemSource::Fun(instance) => {
+                (1, instance.def.to_index(), key_instance(&instance.kind))
+            }
             TransItemSource::Type(id, gargs) => (2, id.0.to_index(), gargs.sort_key()),
             TransItemSource::Closure(def, gargs) => (3, def.def_id().to_index(), gargs.sort_key()),
             TransItemSource::ClosureAsFn(def, gargs) => {
                 (4, def.def_id().to_index(), gargs.sort_key())
             }
             TransItemSource::ForeignType(def) => (5, def.def_id().to_index(), 0),
+            TransItemSource::VTable(ty, t) => (6, ty.to_index(), key_trait(t)),
+            TransItemSource::VTableInit(ty, t) => (7, ty.to_index(), key_trait(t)),
         }
     }
 }
@@ -100,10 +123,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     | TransItemSource::ForeignType(..) => {
                         ItemId::Type(self.translated.type_decls.reserve_slot())
                     }
-                    TransItemSource::Global(_) => {
+                    TransItemSource::Global(_) | TransItemSource::VTable(..) => {
                         ItemId::Global(self.translated.global_decls.reserve_slot())
                     }
-                    TransItemSource::Fun(..) | TransItemSource::ClosureAsFn(..) => {
+                    TransItemSource::Fun(..)
+                    | TransItemSource::ClosureAsFn(..)
+                    | TransItemSource::VTableInit(..) => {
                         ItemId::Fun(self.translated.fun_decls.reserve_slot())
                     }
                 };
@@ -197,6 +222,30 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .as_type()
             .unwrap()
     }
+
+    pub(crate) fn register_vtable(
+        &mut self,
+        src: &Option<DepSource>,
+        ty: ty::Ty,
+        traitdef: Option<(ty::TraitDef, MyGenericArgs)>,
+    ) -> GlobalDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::VTable(ty, traitdef))
+            .as_global()
+            .unwrap()
+    }
+
+    pub(crate) fn register_vtable_init(
+        &mut self,
+        src: &Option<DepSource>,
+        ty: ty::Ty,
+        traitdef: Option<(ty::TraitDef, MyGenericArgs)>,
+    ) -> FunDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::VTableInit(ty, traitdef))
+            .as_fun()
+            .unwrap()
+    }
 }
 
 // Id and item reference registration.
@@ -265,6 +314,28 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let src = self.make_dep_source(span);
         self.t_ctx.register_foreign_type_decl_id(&src, def)
     }
+
+    pub(crate) fn register_vtable(
+        &mut self,
+        span: Span,
+        ty: ty::Ty,
+        traitdef: Option<ty::TraitRef>,
+    ) -> GlobalDeclId {
+        let src = self.make_dep_source(span);
+        let traitdef = traitdef.map(|t| (t.def_id, t.args().clone().into()));
+        self.t_ctx.register_vtable(&src, ty, traitdef)
+    }
+
+    pub(crate) fn register_vtable_init(
+        &mut self,
+        span: Span,
+        ty: ty::Ty,
+        traitdef: Option<ty::TraitRef>,
+    ) -> FunDeclId {
+        let src = self.make_dep_source(span);
+        let traitdef = traitdef.map(|t| (t.def_id, t.args().clone().into()));
+        self.t_ctx.register_vtable_init(&src, ty, traitdef)
+    }
 }
 
 fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instance> {
@@ -303,6 +374,8 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
         .collect()
 }
 
+pub(crate) const FAKE_DYN_TRAIT: TraitDeclId = TraitDeclId::ZERO;
+
 pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformCtx {
     // Retrieve the crate name: if the user specified a custom name, use it, otherwise retrieve it
     // from hax.
@@ -335,6 +408,7 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
     };
 
     ctx.translate_unit_metadata_const();
+    ctx.translate_fake_dyn_trait();
 
     let units = collect_entrypoints(options, tcx);
     units

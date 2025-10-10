@@ -204,60 +204,58 @@ impl BodyTransCtx<'_, '_, '_> {
     fn translate_unsizing_metadata(
         &mut self,
         span: Span,
-        src_ty: ty::Ty,
-        tgt_ty: ty::Ty,
+        src_ty_stable: ty::Ty,
+        tgt_ty_stable: ty::Ty,
     ) -> Result<UnsizingMetadata, Error> {
         let tcx = self.t_ctx.tcx;
-        let src_ty = rustc_internal::internal(tcx, src_ty);
-        let tgt_ty = rustc_internal::internal(tcx, tgt_ty);
-        match (src_ty.builtin_deref(true), tgt_ty.builtin_deref(true)) {
-            (Some(src_ty), Some(tgt_ty)) => {
-                use rustc_middle::ty;
-                let typing_env = ty::TypingEnv::fully_monomorphized();
-                let (src_ty, tgt_ty) =
-                    tcx.struct_lockstep_tails_for_codegen(src_ty, tgt_ty, typing_env);
-                match tgt_ty.kind() {
-                    ty::Slice(_) | ty::Str => match src_ty.kind() {
-                        ty::Array(_, len) => {
-                            let len = rustc_internal::stable(len);
-                            let len = self.translate_tyconst_to_const_generic(span, &len)?;
-                            Ok(UnsizingMetadata::Length(len))
-                        }
-                        _ => {
-                            trace!("Unknown unsize for {src_ty:?} => {tgt_ty:?}");
-                            Ok(UnsizingMetadata::Unknown)
-                        }
-                    },
-                    ty::Dynamic(_preds, ..) => {
-                        // let vtable = if let Some(pred) = preds.principal() {
-                        // } else {
-                        // };
-                        // let tgt_ty = rustc_internal::stable(tgt_ty);
-                        // let tgt_ty_kind = tgt_ty.kind();
-                        // use ty;
-                        // let Some(ty::RigidTy::Dynamic(preds, r, k)) = tgt_ty_kind.rigid() else {
-                        //     unreachable!();
-                        // };
+        let src_ty = rustc_internal::internal(tcx, src_ty_stable);
+        let tgt_ty = rustc_internal::internal(tcx, tgt_ty_stable);
 
-                        // let pred = preds[0].with_self_ty(tcx, src_ty);
-                        // let clause = pred.as_trait_clause().expect(
-                        //     "the first `ExistentialPredicate` of `TyKind::Dynamic` \
-                        //         should be a trait clause",
-                        // );
-                        // let tref = clause.rebind(clause.skip_binder().trait_ref);
-                        Ok(UnsizingMetadata::VTablePtr(TraitRef {
-                            kind: TraitRefKind::Unknown("dyn not supported".into()),
-                            trait_decl_ref: RegionBinder::empty(TraitDeclRef {
-                                id: TraitDeclId::ZERO,
-                                generics: Box::new(GenericArgs::empty()),
-                            }),
-                        }))
-                    }
-                    _ => {
-                        trace!("Unknown unsize for {src_ty:?} => {tgt_ty:?}");
-                        Ok(UnsizingMetadata::Unknown)
-                    }
+        let (Some(src_ty), Some(tgt_ty)) = (src_ty.builtin_deref(true), tgt_ty.builtin_deref(true))
+        else {
+            trace!("Couldn't get deref for {src_ty_stable:?} => {tgt_ty_stable:?}");
+            return Ok(UnsizingMetadata::Unknown);
+        };
+
+        use rustc_middle::ty;
+        let typing_env = ty::TypingEnv::fully_monomorphized();
+        let (src_ty, tgt_ty) = tcx.struct_lockstep_tails_for_codegen(src_ty, tgt_ty, typing_env);
+        match (src_ty.kind(), tgt_ty.kind()) {
+            (ty::Array(_, len), ty::Slice(_) | ty::Str) => {
+                let len = rustc_internal::stable(len);
+                let len = self.translate_tyconst_to_const_generic(span, &len)?;
+                Ok(UnsizingMetadata::Length(len))
+            }
+            (ty::Dynamic(from_preds, ..), ty::Dynamic(to_preds, ..)) => {
+                // see
+                // https://github.com/rust-lang/rust/blob/9725c4baacef19345e13f91b27e66e10ef5592ae/compiler/rustc_codegen_ssa/src/base.rs#L171-L208
+                let target_principal = to_preds.principal();
+                if from_preds.principal() != target_principal
+                    && target_principal.is_some()
+                    && let Some(vptr_entry_idx) =
+                        self.t_ctx.tcx.supertrait_vtable_slot((src_ty, tgt_ty))
+                {
+                    Ok(UnsizingMetadata::MonoVTableReindex(Some(vptr_entry_idx)))
+                } else {
+                    // Fallback to original vtable
+                    Ok(UnsizingMetadata::MonoVTableReindex(None))
                 }
+            }
+            (_, ty::Dynamic(preds, ..)) => {
+                let self_ty = rustc_public::rustc_internal::stable(src_ty);
+                let trait_ref = preds.principal().map(|bound_tref| {
+                    let ex_trait_ref = self
+                        .t_ctx
+                        .tcx
+                        .instantiate_bound_regions_with_erased(bound_tref);
+                    let stable = rustc_public::rustc_internal::stable(ex_trait_ref);
+                    stable.with_self_ty(self_ty)
+                });
+                let vtable_global = self.register_vtable(span, self_ty, trait_ref);
+                Ok(UnsizingMetadata::MonoVTablePtr(GlobalDeclRef {
+                    id: vtable_global,
+                    generics: Box::new(GenericArgs::empty()),
+                }))
             }
             _ => {
                 trace!("Unknown unsize for {src_ty:?} => {tgt_ty:?}");
@@ -1034,15 +1032,17 @@ impl BodyTransCtx<'_, '_, '_> {
             ty::TyKind::RigidTy(ty::RigidTy::FnDef(fn_def, args)) => {
                 let instance = mir::mono::Instance::resolve(fn_def, &args)?;
 
-                // If this is a VTable call, do something else
-                // if let mir::mono::InstanceKind::Virtual { .. } = instance.kind {};
-
                 let fn_id = self.register_fun_decl_id(span, instance);
                 let fn_ptr = FnPtr {
                     kind: Box::new(FnPtrKind::Fun(FunId::Regular(fn_id))),
                     generics: Box::new(GenericArgs::empty()),
                 };
-                FnOperand::Regular(fn_ptr)
+                // If this is a VTable call, do something else
+                if let mir::mono::InstanceKind::Virtual { idx } = instance.kind {
+                    FnOperand::VTableMethod(fn_ptr, idx)
+                } else {
+                    FnOperand::Regular(fn_ptr)
+                }
             }
             _ => {
                 let (mir::Operand::Move(place) | mir::Operand::Copy(place)) = fun else {

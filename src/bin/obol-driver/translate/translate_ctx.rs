@@ -64,12 +64,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .span_err(&self.translated, span, msg, level)
     }
 
-    pub(crate) fn with_def_id<F, T>(
-        &mut self,
-        _def_id: &rustc_public::DefId,
-        item_id: Option<ItemId>,
-        f: F,
-    ) -> T
+    pub(crate) fn with_item_id<F, T>(&mut self, item_id: Option<ItemId>, f: F) -> T
     where
         F: FnOnce(&mut Self) -> T,
     {
