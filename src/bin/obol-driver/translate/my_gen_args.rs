@@ -51,7 +51,7 @@ impl Into<ty::GenericArgs> for MyGenericArgs {
 }
 
 impl MyGenericArgs {
-    pub fn sort_key(&self) -> isize {
+    pub fn sort_key(&self) -> usize {
         let vec = self
             .0
             .iter()
@@ -62,7 +62,7 @@ impl MyGenericArgs {
         use std::hash::Hasher;
         let mut hasher = DefaultHasher::new();
         vec.hash(&mut hasher);
-        hasher.finish() as isize
+        hasher.finish() as usize
     }
 
     pub fn empty() -> Self {

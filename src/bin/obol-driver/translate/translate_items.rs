@@ -17,12 +17,17 @@ use crate::translate::{
 impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub(crate) fn translate_item(&mut self, item_src: &TransItemSource) {
         let trans_id = self.id_map.get(&item_src).copied();
-        let def_id = item_src.as_def_id();
-        self.with_def_id(&def_id, trans_id, |mut ctx| {
-            let def_id_internal = rustc_public::rustc_internal::internal(ctx.tcx, def_id);
-            let span = ctx.tcx.def_span(def_id_internal);
-            let span = rustc_public::rustc_internal::stable(span);
-            let span = ctx.translate_span_from_smir(&span);
+        self.with_item_id(trans_id, |mut ctx| {
+            let (name, span) = if item_src.has_def_id() {
+                let def_id = item_src.as_def_id();
+                let def_id_internal = rustc_public::rustc_internal::internal(ctx.tcx, def_id);
+                let span = ctx.tcx.def_span(def_id_internal);
+                let span = rustc_public::rustc_internal::stable(span);
+                let span = ctx.translate_span_from_smir(&span);
+                (def_id.name(), span)
+            } else {
+                (format!("{:?}", item_src), Span::dummy())
+            };
             // Catch cycles
             let res = {
                 // Stopgap measure because there are still many panics in charon and hax.
@@ -33,17 +38,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 Ok(Ok(())) => return,
                 // Translation error
                 Ok(Err(_)) => {
-                    println!("Item {def_id:?} caused errors; ignoring.");
-                    register_error!(ctx, span, "Item `{def_id:?}` caused errors; ignoring.")
+                    println!("Item {name} caused errors; ignoring.");
+                    register_error!(ctx, span, "Item `{name}` caused errors; ignoring.")
                 }
                 // Panic
                 Err(_) => {
-                    println!("Item {def_id:?} caused errors; ignoring.");
-                    register_error!(
-                        ctx,
-                        span,
-                        "Thread panicked when extracting item `{def_id:?}`."
-                    )
+                    println!("Item {name} caused errors; ignoring.");
+                    register_error!(ctx, span, "Thread panicked when extracting item `{name}`.")
                 }
             };
         })
@@ -110,6 +111,26 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 };
                 let ty = bt_ctx.translate_foreign_type_decl(id, item_meta, &def)?;
                 self.translated.type_decls.set_slot(id, ty);
+            }
+            TransItemSource::VTable(ty, tref) => {
+                let Some(ItemId::Global(id)) = trans_id else {
+                    unreachable!()
+                };
+                let tref = tref
+                    .clone()
+                    .map(|(def_id, args)| ty::TraitRef::try_new(def_id, args.into()).unwrap());
+                let decl = bt_ctx.translate_vtable(id, item_meta, *ty, tref)?;
+                self.translated.global_decls.set_slot(id, decl);
+            }
+            TransItemSource::VTableInit(ty, tref) => {
+                let Some(ItemId::Fun(id)) = trans_id else {
+                    unreachable!()
+                };
+                let tref = tref
+                    .clone()
+                    .map(|(def_id, args)| ty::TraitRef::try_new(def_id, args.into()).unwrap());
+                let decl = bt_ctx.translate_vtable_init(id, item_meta, *ty, tref)?;
+                self.translated.fun_decls.set_slot(id, decl);
             }
         }
         Ok(())
@@ -184,6 +205,32 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         self.translated.unit_metadata = Some(GlobalDeclRef {
             id: global_id,
             generics: Box::new(GenericArgs::empty()),
+        });
+    }
+
+    pub fn translate_fake_dyn_trait(&mut self) {
+        self.translated.trait_decls.push(TraitDecl {
+            def_id: TraitDeclId::ZERO,
+            item_meta: ItemMeta {
+                name: Name {
+                    name: vec![PathElem::Ident("FakeTrait".into(), Disambiguator::ZERO)],
+                },
+                span: Span::dummy(),
+                source_text: None,
+                attr_info: AttrInfo::default(),
+                is_local: false,
+                opacity: ItemOpacity::Transparent,
+                lang_item: None,
+            },
+            generics: GenericParams::empty(),
+            implied_clauses: vec![].into(),
+            consts: vec![],
+            types: vec![],
+            methods: vec![],
+            vtable: Some(TypeDeclRef {
+                id: TypeId::Tuple,
+                generics: Box::new(GenericArgs::empty()),
+            }),
         });
     }
 }

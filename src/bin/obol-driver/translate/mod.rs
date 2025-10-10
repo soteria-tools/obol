@@ -8,3 +8,4 @@ pub mod translate_functions;
 pub mod translate_items;
 pub mod translate_meta;
 pub mod translate_types;
+pub mod translate_vtables;
