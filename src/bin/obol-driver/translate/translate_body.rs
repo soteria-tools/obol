@@ -846,7 +846,7 @@ impl BodyTransCtx<'_, '_, '_> {
                     StatementKind::Assign(
                         ptr_place.clone(),
                         Rvalue::RawPtr {
-                            place,
+                            place: place.clone(),
                             kind: RefKind::Mut,
                             ptr_metadata: Operand::mk_const_unit(),
                         },
@@ -856,13 +856,18 @@ impl BodyTransCtx<'_, '_, '_> {
 
                 let drop_fn_id = self.register_fun_decl_id(span, drop_shim);
                 let on_unwind = self.translate_unwind(span, unwind);
-
+                let fn_ptr = FnPtr {
+                    kind: Box::new(FnPtrKind::Fun(FunId::Regular(drop_fn_id))),
+                    generics: Box::new(GenericArgs::empty()),
+                };
+                let func = if matches!(place.ty().kind(), TyKind::DynTrait(_)) {
+                    FnOperand::VTableMethod(fn_ptr, 0)
+                } else {
+                    FnOperand::Regular(fn_ptr)
+                };
                 TerminatorKind::Call {
                     call: Call {
-                        func: FnOperand::Regular(FnPtr {
-                            kind: Box::new(FnPtrKind::Fun(FunId::Regular(drop_fn_id))),
-                            generics: Box::new(GenericArgs::empty()),
-                        }),
+                        func,
                         args: vec![operand],
                         dest: unit_place,
                     },
