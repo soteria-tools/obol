@@ -201,23 +201,67 @@ impl BodyTransCtx<'_, '_, '_> {
         })
     }
 
+    fn deref_middle_tys(&self, l: ty::Ty, r: ty::Ty) -> Option<(ty::Ty, ty::Ty)> {
+        // See:
+        // https://github.com/rust-lang/rust/blob/b3f8586fb1e4859678d6b231e780ff81801d2282/compiler/rustc_codegen_ssa/src/base.rs#L220
+        let lk = l.kind();
+        let Some(lr) = lk.rigid() else {
+            return None;
+        };
+        let rk = r.kind();
+        let Some(rr) = rk.rigid() else {
+            return None;
+        };
+
+        match (lr, rr) {
+            (ty::RigidTy::Ref(_, a, _), ty::RigidTy::Ref(_, b, _) | ty::RigidTy::RawPtr(b, _))
+            | (ty::RigidTy::RawPtr(a, _), ty::RigidTy::RawPtr(b, _)) => Some((*a, *b)),
+            (ty::RigidTy::Adt(def_a, args1), ty::RigidTy::Adt(def_b, args2)) => {
+                // find the only field that is not a ZST
+                let non_zst: Vec<_> = def_a.variants()[0]
+                    .fields()
+                    .into_iter()
+                    .enumerate()
+                    .filter_map(|(i, f)| {
+                        let ty = f.ty_with_args(&args1);
+                        if let Ok(layout) = ty.layout()
+                            && !layout.shape().is_1zst()
+                        {
+                            Some((i, ty))
+                        } else {
+                            None
+                        }
+                    })
+                    .rev()
+                    .collect();
+                if non_zst.len() == 0 {
+                    return None;
+                }
+                // the last field should be the DST for the right-hand side
+                let (idx, ty_l) = non_zst[0];
+                let ty_r = def_b.variants()[0].fields()[idx].ty_with_args(&args2);
+                self.deref_middle_tys(ty_l, ty_r)
+            }
+            _ => None,
+        }
+    }
+
     fn translate_unsizing_metadata(
         &mut self,
         span: Span,
-        src_ty_stable: ty::Ty,
-        tgt_ty_stable: ty::Ty,
+        src_ty: ty::Ty,
+        tgt_ty: ty::Ty,
     ) -> Result<UnsizingMetadata, Error> {
         let tcx = self.t_ctx.tcx;
-        let src_ty = rustc_internal::internal(tcx, src_ty_stable);
-        let tgt_ty = rustc_internal::internal(tcx, tgt_ty_stable);
 
-        let (Some(src_ty), Some(tgt_ty)) = (src_ty.builtin_deref(true), tgt_ty.builtin_deref(true))
-        else {
-            trace!("Couldn't get deref for {src_ty_stable:?} => {tgt_ty_stable:?}");
+        let Some((src_ty, tgt_ty)) = self.deref_middle_tys(src_ty, tgt_ty) else {
+            println!("Couldn't deref middle for {src_ty:?} => {tgt_ty:?}");
             return Ok(UnsizingMetadata::Unknown);
         };
 
         use rustc_middle::ty;
+        let src_ty = rustc_internal::internal(tcx, src_ty);
+        let tgt_ty = rustc_internal::internal(tcx, tgt_ty);
         let typing_env = ty::TypingEnv::fully_monomorphized();
         let (src_ty, tgt_ty) = tcx.struct_lockstep_tails_for_codegen(src_ty, tgt_ty, typing_env);
         match (src_ty.kind(), tgt_ty.kind()) {
@@ -258,7 +302,7 @@ impl BodyTransCtx<'_, '_, '_> {
                 }))
             }
             _ => {
-                trace!("Unknown unsize for {src_ty:?} => {tgt_ty:?}");
+                println!("Unknown unsize for ({src_ty:?}) => ({tgt_ty:?})");
                 Ok(UnsizingMetadata::Unknown)
             }
         }
