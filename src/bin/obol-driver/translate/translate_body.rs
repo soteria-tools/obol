@@ -4,8 +4,9 @@ extern crate rustc_public;
 extern crate rustc_public_bridge;
 extern crate rustc_span;
 
+use itertools::Itertools;
 use log::trace;
-use rustc_public::{abi, mir, rustc_internal, ty};
+use rustc_public::{mir, rustc_internal, ty};
 use rustc_public_bridge::IndexedVal;
 use std::{
     collections::{HashMap, VecDeque},
@@ -24,6 +25,7 @@ pub(crate) struct BodyTransCtx<'tcx, 'tctx, 'ictx> {
     pub i_ctx: &'ictx mut ItemTransCtx<'tcx, 'tctx>,
 
     pub local_decls: &'ictx [mir::LocalDecl],
+    pub signature: &'ictx mut FunSig,
 
     /// The (regular) variables in the current function body.
     pub locals: Locals,
@@ -57,10 +59,12 @@ impl<'tcx, 'tctx, 'ictx> BodyTransCtx<'tcx, 'tctx, 'ictx> {
     pub(crate) fn new(
         i_ctx: &'ictx mut ItemTransCtx<'tcx, 'tctx>,
         local_decls: &'ictx [mir::LocalDecl],
+        signature: &'ictx mut FunSig,
     ) -> Self {
         BodyTransCtx {
             i_ctx,
             local_decls,
+            signature,
             locals: Default::default(),
             locals_map: Default::default(),
             blocks: Default::default(),
@@ -1161,108 +1165,93 @@ impl BodyTransCtx<'_, '_, '_> {
             .try_collect()
     }
 
-    // The body is translated as if the locals are: ret value, state, arg-1,
-    // ..., arg-N, rest...
-    // However, there is only one argument with the tupled closure arguments;
-    // we must thus shift all locals with index >=2 by 1, and add a new local
-    // for the tupled arg, giving us: ret value, state, args, arg-1, ...,
-    // arg-N, rest...
-    // We then add N statements of the form `locals[N+3] := move locals[2].N`,
+    // The body is translated as if the locals are:
+    // ret value, ..., arg-1, ..., arg-N, ...
+    // However, there is only one argument with the tupled arg-1..N arguments;
+    // we must thus shift all locals with index >=spread_arg by 1, and add a new local
+    // for the tupled arg, giving us:
+    // ret value, ..., args, arg-1, ..., arg-N, ...
+    // We then add N statements of the form `locals[I+N+1] := move locals[I].N`,
     // to destructure the arguments.
-    fn untuple_closure_arguments(&mut self, instance: mir::mono::Instance) -> Result<(), Error> {
-        // We need to figure out if this is a closure;
+    // We also modify the signature, by adding the tupled argument.
+    // The spread_arg is the local of the spread argument; it's None if one needs to be
+    // added, for closures.
+    fn spread_argument(&mut self, spread_loc_opt: Option<usize>) -> Result<(), Error> {
+        let spread_loc = spread_loc_opt.unwrap_or_else(|| {
+            let spread_tys: Vec<_> = self.signature.inputs.iter().cloned().skip(1).collect();
+            let inputs_tupled = Ty::mk_tuple(spread_tys.clone());
+            let mut old_locals = mem::take(&mut self.locals.locals).into_iter();
 
-        // 1. Only closures
-        if !self.instance_is_closure(instance) {
+            // keep the return place and the first argument (the self place)
+            self.locals.locals.extend(old_locals.by_ref().take(2));
+            let spread_loc = self
+                .locals
+                .new_var(Some("spread_args".to_string()), inputs_tupled)
+                .as_local()
+                .unwrap()
+                .index();
+            self.locals
+                .locals
+                .extend(old_locals.update(|l| l.index += 1));
+
+            // update the rest of the locals
+            self.blocks.dyn_visit_mut(|local: &mut LocalId| {
+                let idx = local.index();
+                if idx >= spread_loc {
+                    *local = LocalId::new(idx + 1)
+                }
+            });
+
+            spread_loc
+        });
+
+        let TyKind::Adt(TypeDeclRef {
+            id: TypeId::Tuple,
+            generics,
+        }) = self.locals.locals[spread_loc].ty.kind()
+        else {
+            raise_error!(
+                self,
+                Span::dummy(),
+                "Expected a tuple type for spread argument"
+            );
+        };
+        let inputs_untupled: Vec<_> = generics.types.clone().into_iter().collect();
+
+        // Update the signature
+        let inputs = &mut self.signature.inputs;
+        let inputs_spread = inputs.split_off(inputs.len() - inputs_untupled.len());
+        inputs.push(Ty::mk_tuple(inputs_spread));
+        self.locals.arg_count = inputs.len();
+
+        // we only need to re-add the projections when spread_arg is not provided
+        if spread_loc_opt.is_some() {
             return Ok(());
         }
 
-        // 2. There is a first argument
-        let Ok(abi) = instance.fn_abi() else {
-            return Ok(());
-        };
-        let Some(abi::ArgAbi { ty, .. }) = abi.args.get(0) else {
-            return Ok(());
-        };
-
-        // 3. This argument is a closure !
-        let ty_kind = ty.kind();
-        let (_, generics) = match ty_kind.rigid() {
-            Some(ty::RigidTy::Closure(def, generics)) => (def.clone(), generics.clone()),
-            Some(ty::RigidTy::Ref(_, subty, _)) => {
-                let ty_kind = subty.kind();
-                match ty_kind.rigid() {
-                    Some(ty::RigidTy::Closure(def, generics)) => (def.clone(), generics.clone()),
-                    _ => return Ok(()),
-                }
-            }
-            _ => return Ok(()),
-        };
-
-        // 4. Fetch the closure's signature from its generics -- see:
-        // https://doc.rust-lang.org/beta/nightly-rustc/src/rustc_type_ir/ty_kind/closure.rs.html#12-29
-        let [.., ty::GenericArgKind::Type(fnptr_ty), _] = generics.0.as_slice() else {
-            return Ok(());
-        };
-        let fn_ptr_ty_kind = fnptr_ty.kind();
-        let Some(ty::RigidTy::FnPtr(fn_sig)) = fn_ptr_ty_kind.rigid() else {
-            return Ok(());
-        };
-        assert!(
-            fn_sig
-                .bound_vars
-                .iter()
-                .all(|v| matches!(v, ty::BoundVariableKind::Region(..))),
-            "Non-region late bound variables in closure?"
-        );
-
-        let fn_ptr_abi = fn_sig.clone().fn_ptr_abi()?;
-        let inputs_untupled = fn_ptr_abi
-            .args
+        // Add projections as prelude
+        let tupled_arg = self.locals.place_for_var(LocalId::from_raw(spread_loc));
+        let spread_arg_count = inputs_untupled.len();
+        let new_stts = inputs_untupled
             .iter()
-            .map(|v| v.ty)
-            .collect::<Vec<_>>()
-            .into_boxed_slice();
-
-        // Let's get to work...
-
-        let inputs_tupled = ty::Ty::new_tuple(&*inputs_untupled);
-        let tupled_inputs_ty = self.translate_ty(Span::dummy(), inputs_tupled)?;
-
-        self.blocks.dyn_visit_mut(|local: &mut LocalId| {
-            let idx = local.index();
-            if idx >= 2 {
-                *local = LocalId::new(idx + 1)
-            }
-        });
-
-        let mut old_locals = mem::take(&mut self.locals.locals).into_iter();
-        self.locals.arg_count = 2;
-        self.locals.locals.push(old_locals.next().unwrap()); // ret
-        self.locals.locals.push(old_locals.next().unwrap()); // state
-        let tupled_arg = self
-            .locals
-            .new_var(Some("tupled_args".to_string()), tupled_inputs_ty.clone());
-        self.locals.locals.extend(old_locals.map(|mut l| {
-            l.index += 1;
-            l
-        }));
-
-        let untupled_args = tupled_inputs_ty.as_tuple().unwrap();
-        let closure_arg_count = untupled_args.elem_count();
-        let new_stts = untupled_args.iter().cloned().enumerate().map(|(i, ty)| {
-            let nth_field = tupled_arg.clone().project(
-                ProjectionElem::Field(FieldProjKind::Tuple(closure_arg_count), FieldId::new(i)),
-                ty,
-            );
-            Statement::new(
-                Span::dummy(),
-                StatementKind::Assign(
-                    self.locals.place_for_var(LocalId::new(i + 3)),
-                    Rvalue::Use(Operand::Move(nth_field)),
-                ),
-            )
-        });
+            .cloned()
+            .enumerate()
+            .filter_map(|(i, ty)| {
+                let idx = LocalId::new(spread_loc + i + 1);
+                let Some(local) = self.locals.locals.get(idx) else {
+                    return None;
+                };
+                assert_eq!(local.ty, ty);
+                let place = Place::new(local.index, local.ty.clone());
+                let nth_field = tupled_arg.clone().project(
+                    ProjectionElem::Field(FieldProjKind::Tuple(spread_arg_count), FieldId::new(i)),
+                    ty,
+                );
+                Some(Statement::new(
+                    Span::dummy(),
+                    StatementKind::Assign(place, Rvalue::Use(Operand::Move(nth_field))),
+                ))
+            });
         self.blocks[BlockId::ZERO].statements.splice(0..0, new_stts);
         Ok(())
     }
@@ -1326,8 +1315,12 @@ impl BodyTransCtx<'_, '_, '_> {
             self.blocks.set_slot(block_id, block);
         }
 
-        // If we're translating a closure, we need to tuple up the arguments!
-        self.untuple_closure_arguments(instance)?;
+        // We might need to tuple arguments, and possibly create a local too
+        if let Some(spread_local) = body.spread_arg() {
+            self.spread_argument(Some(spread_local))?;
+        } else if self.instance_is_closure(instance) {
+            self.spread_argument(None)?;
+        }
 
         // Create the body
         Ok(Ok(Body::Unstructured(ExprBody {

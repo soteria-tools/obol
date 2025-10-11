@@ -26,28 +26,8 @@ impl ItemTransCtx<'_, '_> {
         self.t_ctx.tcx.is_closure_like(def)
     }
 
-    /// If this instance is a closure or a call shim, meaning in MIR it has untupled arguments but
-    /// only in the signature!
-    pub fn instance_is_closure_or_call_shim(&self, def: mir::mono::Instance) -> bool {
-        let def_ty = def.ty().kind();
-        let name_opt = match def_ty.rigid() {
-            Some(ty::RigidTy::FnDef(fndef, _)) => Some(fndef.def_id().name()),
-            _ => None,
-        };
-        self.instance_is_closure(def)
-            || name_opt.is_some_and(|name| {
-                matches!(
-                    name.as_str(),
-                    "std::ops::Fn::call"
-                        | "std::ops::FnMut::call_mut"
-                        | "std::ops::FnOnce::call_once"
-                )
-            })
-    }
-
     fn get_function_ins_outs_sure_function(
         &mut self,
-        span: Span,
         def: mir::mono::Instance,
     ) -> Result<(Vec<ty::Ty>, ty::Ty), Error> {
         // Translate the signature
@@ -63,19 +43,11 @@ impl ItemTransCtx<'_, '_> {
             instance_abi.args.len()
         };
 
-        let mut inputs: Vec<_> = instance_abi.args[0..arg_count]
+        let inputs: Vec<_> = instance_abi.args[0..arg_count]
             .iter()
             .map(|arg| arg.ty)
             .collect();
 
-        // If the first argument is a closure, we need to tuple up the remaining arguments
-        if self.instance_is_closure_or_call_shim(def) {
-            let [closure_state, rest @ ..] = &*inputs.into_boxed_slice() else {
-                raise_error!(self, span, "Unexpected closure signature");
-            };
-            let tupled_args = ty::Ty::new_tuple(rest);
-            inputs = vec![*closure_state, tupled_args];
-        }
         Ok((inputs, instance_abi.ret.ty))
     }
 
@@ -86,11 +58,11 @@ impl ItemTransCtx<'_, '_> {
     ) -> Result<(Vec<ty::Ty>, ty::Ty), Error> {
         let Ok(crate_item) = rustc_public::CrateItem::try_from(def) else {
             // worth a shot
-            return self.get_function_ins_outs_sure_function(span, def);
+            return self.get_function_ins_outs_sure_function(def);
         };
         match crate_item.kind() {
             rustc_public::ItemKind::Fn | rustc_public::ItemKind::Ctor(_) => {
-                self.get_function_ins_outs_sure_function(span, def)
+                self.get_function_ins_outs_sure_function(def)
             }
             rustc_public::ItemKind::Static => {
                 let stt: mir::mono::StaticDef = crate_item.try_into()?;
