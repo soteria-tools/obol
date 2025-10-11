@@ -334,22 +334,7 @@ impl ItemTransCtx<'_, '_> {
 
         // Translate the function signature
         trace!("Translating function signature");
-        let signature = self.translate_function_signature(def, &item_meta)?;
-
-        // Check whether this function is a method declaration for a trait definition.
-        // If this is the case, it shouldn't contain a body.
-
-        // let is_global_initializer = matches!(
-        //     def.kind(),
-        //     rustc_hir::def::DefKind::Const { .. }
-        //         | rustc_hir::def::DefKind::AssocConst { .. }
-        //         | rustc_hir::def::DefKind::AnonConst { .. }
-        //         | rustc_hir::def::DefKind::InlineConst { .. }
-        //         | rustc_hir::def::DefKind::PromotedConst { .. }
-        //         | rustc_hir::def::DefKind::Static { .. }
-        // );
-        // let is_global_initializer =
-        //     is_global_initializer.then(|| self.register_global_decl_id(span, &def.def_id));
+        let mut signature = self.translate_function_signature(def, &item_meta)?;
 
         let body = if item_meta.opacity.with_private_contents().is_opaque()
             || matches!(def.kind, mir::mono::InstanceKind::Virtual { .. })
@@ -372,7 +357,7 @@ impl ItemTransCtx<'_, '_> {
         };
 
         let body = if let Some(body) = body {
-            let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals());
+            let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals(), &mut signature);
             match bt_ctx.translate_body(item_meta.span, def, &body) {
                 Ok(Ok(body)) => Ok(body),
                 // Opaque declaration
