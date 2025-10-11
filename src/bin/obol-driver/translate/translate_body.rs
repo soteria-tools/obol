@@ -930,11 +930,9 @@ impl BodyTransCtx<'_, '_, '_> {
                 target,
                 unwind,
             } => {
-                let (term, stt) =
+                let (term, stts) =
                     self.translate_function_call(span, func, args, destination, target, unwind)?;
-                if let Some(stt) = stt {
-                    statements.push(Statement::new(span, stt));
-                };
+                statements.extend(stts);
                 term
             }
             mir::TerminatorKind::Assert {
@@ -1073,14 +1071,14 @@ impl BodyTransCtx<'_, '_, '_> {
         destination: &mir::Place,
         target: &Option<usize>,
         unwind: &mir::UnwindAction,
-    ) -> Result<(TerminatorKind, Option<StatementKind>), Error> {
+    ) -> Result<(TerminatorKind, Vec<Statement>), Error> {
         // There are two cases, depending on whether this is a "regular"
         // call to a top-level function identified by its id, or if we
         // are using a local function pointer (i.e., the operand is a "move").
         let lval = self.translate_place(span, destination)?;
         // Translate the function operand.
         let fn_ty = fun.ty(self.local_decls)?;
-        let mut extra_stt = None;
+        let mut extra_stts: Vec<StatementKind> = vec![];
         let fn_operand = match fn_ty.kind() {
             ty::TyKind::RigidTy(ty::RigidTy::FnDef(fn_def, args)) => {
                 let instance = mir::mono::Instance::resolve(fn_def, &args)?;
@@ -1111,13 +1109,9 @@ impl BodyTransCtx<'_, '_, '_> {
                 if matches!(fun, mir::Operand::Copy(_)) {
                     // Charon doesn't allow copy as a fn operand, so we create a temporary
                     // variable that copies the value, and then move that
-                    let local_id = self.locals.locals.push_with(|index| Local {
-                        index,
-                        name: None,
-                        ty: p.ty.clone(),
-                    });
-                    let new_place = Place::new(local_id, p.ty.clone());
-                    extra_stt = Some(StatementKind::Assign(
+                    let new_place = self.locals.new_var(None, p.ty.clone());
+                    extra_stts.push(StatementKind::StorageLive(new_place.local_id().unwrap()));
+                    extra_stts.push(StatementKind::Assign(
                         new_place.clone(),
                         Rvalue::Use(Operand::Copy(p)),
                     ));
@@ -1143,13 +1137,17 @@ impl BodyTransCtx<'_, '_, '_> {
             }
         };
         let on_unwind = self.translate_unwind(span, unwind);
+        let extra_stts = extra_stts
+            .into_iter()
+            .map(|kind| Statement::new(span, kind))
+            .collect();
         Ok((
             TerminatorKind::Call {
                 call,
                 target,
                 on_unwind,
             },
-            extra_stt,
+            extra_stts,
         ))
     }
 
