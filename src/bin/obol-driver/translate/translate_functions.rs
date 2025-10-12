@@ -78,9 +78,7 @@ impl ItemTransCtx<'_, '_> {
         }
     }
 
-    /// Translate a function's signature, and initialize a body translation context
-    /// at the same time - the function signature gives us the list of region and
-    /// type parameters, that we put in the translation context.
+    /// Translate a function's signature
     pub(crate) fn translate_function_signature(
         &mut self,
         def: mir::mono::Instance,

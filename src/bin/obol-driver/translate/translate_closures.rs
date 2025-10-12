@@ -83,9 +83,9 @@ impl ItemTransCtx<'_, '_> {
         let instance =
             mir::mono::Instance::resolve_closure(*closure, args, ty::ClosureKind::FnOnce)?;
         let mut signature = self.translate_function_signature(instance, &item_meta)?;
+
         let state_ty = signature.inputs.remove(0);
-        let args_tuple_ty = signature.inputs.remove(0);
-        signature.inputs = args_tuple_ty.as_tuple().unwrap().iter().cloned().collect();
+        let args_untupled = signature.inputs.clone();
 
         let body = if item_meta.opacity.with_private_contents().is_opaque() {
             Err(Opaque)
@@ -124,6 +124,7 @@ impl ItemTransCtx<'_, '_> {
                 .enumerate()
                 .map(|(i, ty)| locals.new_var(Some(format!("arg{}", i + 1)), ty.clone()))
                 .collect();
+            let args_tuple_ty = Ty::mk_tuple(args_untupled);
             let args_tupled = locals.new_var(Some("args".to_string()), args_tuple_ty.clone());
             let state = locals.new_var(Some("state".to_string()), state_ty.clone());
 
