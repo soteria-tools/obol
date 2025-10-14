@@ -435,19 +435,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let glob_alloc: GlobalAlloc = alloc.0.into();
                 match glob_alloc {
                     GlobalAlloc::Function(instance) => {
-                        // This may be wrong... I think we need a new ConstantExpr::FnPtr;
-                        // a FnPtr is not a pointer to a FnDef :p
                         let id = self.register_fun_decl_id(span, instance);
                         let generics = self.translate_generic_args(span, &instance.args())?;
                         let fn_ptr = FnPtr {
                             generics: Box::new(generics),
                             kind: Box::new(FnPtrKind::Fun(FunId::Regular(id))),
                         };
-                        let sub_const = ConstantExpr {
-                            kind: ConstantExprKind::FnPtr(fn_ptr.clone()),
-                            ty: TyKind::FnDef(RegionBinder::empty(fn_ptr)).into_ty(),
+                        let TyKind::FnPtr(sig) = ty else {
+                            unreachable!("Unexpected type for fn ptr: {ty:?}");
                         };
-                        ConstantExprKind::Ptr(RefKind::Shared, Box::new(sub_const))
+                        ConstantExprKind::FnPtr(fn_ptr, sig.clone())
                     }
                     _ => {
                         println!("Gave up for raw memory of fndef with alloc {glob_alloc:?}");
@@ -473,7 +470,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         rty: &ty::Ty,
     ) -> Result<ConstantExpr, Error> {
         let kind = match ty {
-            TyKind::FnDef(fnptr) => ConstantExprKind::FnPtr(fnptr.skip_binder.clone()),
+            TyKind::FnDef(fnptr) => ConstantExprKind::FnDef(fnptr.skip_binder.clone()),
             TyKind::Adt(_) if rty.kind().is_array() => {
                 let rtyk = rty.kind();
                 let ty::RigidTy::Array(rty, len) = rtyk.rigid().unwrap() else {
@@ -576,6 +573,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             | ConstantExprKind::Ref(_)
             | ConstantExprKind::Ptr(..)
             | ConstantExprKind::FnPtr { .. }
+            | ConstantExprKind::FnDef { .. }
             | ConstantExprKind::Opaque(_)
             | ConstantExprKind::PtrNoProvenance(..)
             | ConstantExprKind::Union(..) => {
