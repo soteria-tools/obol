@@ -76,7 +76,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             "drop".into(),
                             Operand::Const(Box::new(ConstantExpr {
                                 ty: TyKind::FnDef(RegionBinder::empty(fn_ptr.clone())).into_ty(),
-                                kind: ConstantExprKind::FnPtr(fn_ptr),
+                                kind: ConstantExprKind::FnDef(fn_ptr),
                             })),
                         ))
                     }
@@ -110,7 +110,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             name,
                             Operand::Const(Box::new(ConstantExpr {
                                 ty: TyKind::FnDef(RegionBinder::empty(fn_ptr.clone())).into_ty(),
-                                kind: ConstantExprKind::FnPtr(fn_ptr),
+                                kind: ConstantExprKind::FnDef(fn_ptr),
                             })),
                         ))
                     }
