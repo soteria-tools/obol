@@ -141,22 +141,40 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 }
             },
             TyKind::Ref(_, subty, _) | TyKind::RawPtr(subty, _) => 'ptr_case: {
-                let Some(alloc) = self.provenance_at(alloc, offset) else {
+                let Some(suballoc) = self.provenance_at(alloc, offset) else {
                     let value = self.read_target_uint(Self::as_init(bytes)?.as_slice())?;
                     break 'ptr_case ConstantExprKind::PtrNoProvenance(value);
                 };
                 use mir::alloc::GlobalAlloc;
-                let glob_alloc: GlobalAlloc = alloc.0.into();
+                let glob_alloc: GlobalAlloc = suballoc.0.into();
                 match glob_alloc {
-                    GlobalAlloc::Memory(suballoc)
-                        if subty
-                            .kind()
-                            .as_adt()
-                            .is_some_and(|a| a.id == TypeId::Builtin(BuiltinTy::Str)) =>
-                    {
+                    GlobalAlloc::Memory(suballoc) if subty.is_str() => {
                         let as_str =
                             unsafe { String::from_utf8_unchecked(suballoc.raw_bytes().unwrap()) };
                         ConstantExprKind::Literal(Literal::Str(as_str))
+                    }
+                    GlobalAlloc::Memory(suballoc) if subty.is_slice() => {
+                        let meta_bytes = &alloc.bytes.as_slice()[offset + size / 2..offset + size];
+                        let len = self.read_target_uint(Self::as_init(meta_bytes)?.as_slice())?;
+                        let subty = subty.as_array_or_slice().unwrap();
+                        let rtyk = rty.kind().builtin_deref(true).unwrap().ty.kind();
+                        let ty::RigidTy::Slice(rsubty) = rtyk.rigid().unwrap() else {
+                            unreachable!("Unexpected rigid type for slice: {rty:?}");
+                        };
+                        let elem_size = rsubty.layout().unwrap().shape().size.bytes();
+                        let sub_constants = (0..len as usize)
+                            .map(|i| {
+                                let elem_off = elem_size * i;
+                                self.translate_allocation_at(
+                                    span,
+                                    &suballoc,
+                                    subty.kind(),
+                                    *rsubty,
+                                    elem_off,
+                                )
+                            })
+                            .try_collect()?;
+                        ConstantExprKind::Slice(sub_constants)
                     }
                     GlobalAlloc::Memory(suballoc) => {
                         let rtyk = rty.kind();
@@ -586,6 +604,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }
             ConstantExprKind::Adt(..)
             | ConstantExprKind::Array { .. }
+            | ConstantExprKind::Slice { .. }
             | ConstantExprKind::RawMemory { .. }
             | ConstantExprKind::TraitConst { .. }
             | ConstantExprKind::Ref(_)
