@@ -503,7 +503,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     ConstantExprKind::Array(vec![cexpr; len as usize])
                 }
             }
-            TyKind::Adt(_) if rty.kind().is_adt() => {
+            TyKind::Adt(TypeDeclRef {
+                id: TypeId::Adt(..) | TypeId::Tuple,
+                ..
+            }) => {
                 let rtyk = rty.kind();
                 let (variant, rtys) = match rtyk.rigid().unwrap() {
                     ty::RigidTy::Tuple(rtys) => (None, rtys.clone()),
