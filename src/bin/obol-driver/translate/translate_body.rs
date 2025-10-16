@@ -437,10 +437,10 @@ impl BodyTransCtx<'_, '_, '_> {
                 let ty = self.translate_ty(span, const_op.ty())?;
                 let cexpr = match &const_op.const_.kind() {
                     ty::ConstantKind::Allocated(alloc) => {
-                        self.translate_allocation(span, alloc, ty.kind(), &const_op.ty())?
+                        self.translate_allocation(span, alloc, ty.kind(), const_op.ty())?
                     }
                     ty::ConstantKind::ZeroSized => {
-                        self.translate_zst_constant(span, ty.kind(), &const_op.ty())?
+                        self.translate_zst_constant(span, ty.kind(), const_op.ty())?
                     }
                     ty::ConstantKind::Param(_) => ConstantExpr {
                         kind: ConstantExprKind::Opaque("Unhandled: Param".into()),
@@ -747,12 +747,26 @@ impl BodyTransCtx<'_, '_, '_> {
                 let ty = self.translate_ty(span, *ty)?;
                 Ok(Rvalue::ShallowInitBox(op, ty))
             }
-            mir::Rvalue::ThreadLocalRef(_) => {
-                raise_error!(
-                    self,
-                    span,
-                    "charon does not support thread local references"
-                );
+            mir::Rvalue::ThreadLocalRef(_def) => {
+                // Once we have Rvalue::ThreadLocalRef in charon, we can implement this as:
+                //
+                // let def_i = rustc_public::rustc_internal::internal(self.t_ctx.tcx, *_def);
+                // let alloc = self.t_ctx.tcx.eval_static_initializer(def_i).unwrap();
+                // let alloc = rustc_public::rustc_internal::stable(alloc);
+                // let const_ty = match tgt_ty.kind() {
+                //     TyKind::Ref(_, ty, _) | TyKind::RawPtr(ty, _) => ty.clone(),
+                //     _ => raise_error!(
+                //         self,
+                //         span,
+                //         "ThreadLocalRef target type must be a reference or raw pointer"
+                //     ),
+                // };
+                // let rty = rvalue.ty(self.local_decls)?;
+                // let const_expr = self.translate_allocation(span, &alloc, &const_ty, rty)?;
+                // Ok(Rvalue::ThreadLocalRef(Box::new(const_expr)))
+                //
+
+                raise_error!(self, span, "obol does not support thread local references");
             }
         }
     }
