@@ -79,7 +79,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         span: Span,
         alloc: &ty::Allocation,
         ty: &TyKind,
-        rty: &ty::Ty,
+        rty: ty::Ty,
     ) -> Result<ConstantExpr, Error> {
         self.translate_allocation_at(span, alloc, ty, rty, 0)
     }
@@ -89,7 +89,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         span: Span,
         alloc: &ty::Allocation,
         ty: &TyKind,
-        rty: &ty::Ty,
+        rty: ty::Ty,
         offset: usize,
     ) -> Result<ConstantExpr, Error> {
         let size = rty.layout()?.shape().size.bytes();
@@ -161,8 +161,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     GlobalAlloc::Memory(suballoc) => {
                         let rtyk = rty.kind();
                         let rsubty = match rtyk.rigid().unwrap() {
-                            ty::RigidTy::RawPtr(rsubty, _) => rsubty,
-                            ty::RigidTy::Ref(_, rsubty, _) => rsubty,
+                            ty::RigidTy::RawPtr(rsubty, _) => *rsubty,
+                            ty::RigidTy::Ref(_, rsubty, _) => *rsubty,
                             _ => unreachable!(
                                 "Unexpected rigid type for raw pointer/reference: {rty:?}"
                             ),
@@ -218,7 +218,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             span,
                             alloc,
                             field_ty.kind(),
-                            &field_rty,
+                            field_rty,
                             field_offset + offset,
                         )
                     })
@@ -368,7 +368,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                 span,
                                 alloc,
                                 field_ty.kind(),
-                                &vty,
+                                vty,
                                 offset,
                             );
                             if let Ok(res) = res {
@@ -397,7 +397,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             span,
                             alloc,
                             field_ty.kind(),
-                            &field_rty,
+                            field_rty,
                             field_offset + offset,
                         )
                     })
@@ -418,7 +418,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let elems = (0..count as usize)
                     .map(|i| {
                         let elem_off = stride * i + offset;
-                        self.translate_allocation_at(span, alloc, subty, subrty, elem_off)
+                        self.translate_allocation_at(span, alloc, subty, *subrty, elem_off)
                     })
                     .try_collect()?;
                 ConstantExprKind::Array(elems)
@@ -435,14 +435,28 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let glob_alloc: GlobalAlloc = alloc.0.into();
                 match glob_alloc {
                     GlobalAlloc::Function(instance) => {
-                        let id = self.register_fun_decl_id(span, instance);
+                        let TyKind::FnPtr(sig) = ty else {
+                            unreachable!("Unexpected type for fn ptr: {ty:?}");
+                        };
+
+                        // special-case: if the first argument is ignored, because the signature
+                        // is shorter, we do a closure_as_fn conversion
+                        let abi = instance.fn_abi()?;
+                        let id = if abi.args.len() == sig.skip_binder.0.len() + 1
+                            && let Some(closure_arg) = abi.args.get(0)
+                            && closure_arg.mode == rustc_public::abi::PassMode::Ignore
+                            && let ty::TyKind::RigidTy(ty::RigidTy::Closure(closure, args)) =
+                                closure_arg.ty.kind()
+                        {
+                            self.register_closure_as_fn_id(span, closure, args)
+                        } else {
+                            self.register_fun_decl_id(span, instance)
+                        };
+
                         let generics = self.translate_generic_args(span, &instance.args())?;
                         let fn_ptr = FnPtr {
                             generics: Box::new(generics),
                             kind: Box::new(FnPtrKind::Fun(FunId::Regular(id))),
-                        };
-                        let TyKind::FnPtr(sig) = ty else {
-                            unreachable!("Unexpected type for fn ptr: {ty:?}");
                         };
                         ConstantExprKind::FnPtr(fn_ptr, sig.clone())
                     }
@@ -467,7 +481,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         span: Span,
         ty: &TyKind,
-        rty: &ty::Ty,
+        rty: ty::Ty,
     ) -> Result<ConstantExpr, Error> {
         let kind = match ty {
             TyKind::FnDef(fnptr) => ConstantExprKind::FnDef(fnptr.skip_binder.clone()),
@@ -484,7 +498,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 } else if len == 0 {
                     ConstantExprKind::Array(vec![])
                 } else {
-                    let cexpr = self.translate_zst_constant(span, ty, rty)?;
+                    let cexpr = self.translate_zst_constant(span, ty, *rty)?;
                     ConstantExprKind::Array(vec![cexpr; len as usize])
                 }
             }
@@ -536,7 +550,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .into_iter()
                     .map(|field_rty| {
                         let field_ty = self.translate_ty(span, field_rty)?;
-                        self.translate_zst_constant(span, field_ty.kind(), &field_rty)
+                        self.translate_zst_constant(span, field_ty.kind(), field_rty)
                     })
                     .try_collect()?;
                 ConstantExprKind::Adt(variant, fields)
@@ -590,7 +604,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         match v.kind() {
             ty::TyConstKind::Value(rty, alloc) => {
                 let ty = self.translate_ty(span, *rty)?;
-                let alloc = self.translate_allocation(span, alloc, ty.kind(), rty)?;
+                let alloc = self.translate_allocation(span, alloc, ty.kind(), *rty)?;
                 self.translate_constant_expr_to_const_generic(span, alloc)
             }
             _ => {
