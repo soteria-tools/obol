@@ -386,11 +386,11 @@ impl BodyTransCtx<'_, '_, '_> {
                 };
                 ProjectionElem::Field(kind, FieldId::from_usize(*field_idx))
             }
+            mir::ProjectionElem::Subtype(ty) => {
+                return Ok((of_place, *ty, variant_id));
+            }
             mir::ProjectionElem::OpaqueCast(..) => {
                 raise_error!(self, span, "Unexpected ProjectionElem::OpaqueCast");
-            }
-            mir::ProjectionElem::Subtype(..) => {
-                raise_error!(self, span, "Unexpected ProjectionElem::Subtype");
             }
         };
         let place = of_place.project(proj_elem, ty);
