@@ -304,13 +304,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         let tag_bytes = &bytes[tag_offset..tag_offset + length_bytes];
                         let tag_value =
                             self.read_target_uint(Self::as_init(tag_bytes)?.as_slice())?;
-
+                        let mask = (1u128 << (length_bytes * 8)) - 1;
                         let variant_idx = match tag_encoding {
                             abi::TagEncoding::Direct => adt
                                 .variants_iter()
                                 .find_map(|v| {
                                     let discr = adt.discriminant_for_variant(v.idx);
-                                    (discr.val == tag_value).then_some(v.idx)
+                                    ((discr.val & mask) == tag_value).then_some(v.idx)
                                 })
                                 .unwrap(),
                             abi::TagEncoding::Niche {
