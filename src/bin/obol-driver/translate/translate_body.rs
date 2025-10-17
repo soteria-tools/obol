@@ -1308,8 +1308,7 @@ impl BodyTransCtx<'_, '_, '_> {
 
         // Initialize the local variables
         trace!("Translating the body locals");
-        let (inputs, _) = self.get_function_ins_outs(span, instance)?;
-        self.locals.arg_count = inputs.len();
+        self.locals.arg_count = self.signature.inputs.len();
         self.translate_body_locals(&body)?;
 
         // Translate the expression body
