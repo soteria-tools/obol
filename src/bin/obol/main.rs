@@ -48,7 +48,6 @@ fn translate_with_cargo(options: CliOpts) -> Result<ExitStatus> {
         cmd.arg(&get_rustc_version()?.host);
     }
     cmd.args(options.spread);
-    println!("CMD: {cmd:?}");
     Ok(cmd
         .spawn()
         .expect("could not run cargo")
