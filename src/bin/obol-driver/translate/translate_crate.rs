@@ -30,6 +30,7 @@ use std::hash::Hash;
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum TransItemSource {
     Global(mir::mono::StaticDef),
+    GlobalConstFn(mir::mono::StaticDef), // the const initialiser of a global
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -43,6 +44,7 @@ impl TransItemSource {
     pub(crate) fn as_def_id(&self) -> DefId {
         match self {
             TransItemSource::Global(id) => id.0.clone(),
+            TransItemSource::GlobalConstFn(id) => id.0.clone(),
             TransItemSource::Fun(instance) => instance.def.def_id(),
             TransItemSource::Type(id, _) => id.0,
             TransItemSource::Closure(def, _) => def.def_id(),
@@ -92,6 +94,7 @@ impl TransItemSource {
             TransItemSource::ForeignType(def) => (5, def.def_id().to_index(), 0),
             TransItemSource::VTable(ty, t) => (6, ty.to_index(), key_trait(t)),
             TransItemSource::VTableInit(ty, t) => (7, ty.to_index(), key_trait(t)),
+            TransItemSource::GlobalConstFn(id) => (8, id.0.to_index(), 0),
         }
     }
 }
@@ -128,7 +131,8 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     }
                     TransItemSource::Fun(..)
                     | TransItemSource::ClosureAsFn(..)
-                    | TransItemSource::VTableInit(..) => {
+                    | TransItemSource::VTableInit(..)
+                    | TransItemSource::GlobalConstFn(..) => {
                         ItemId::Fun(self.translated.fun_decls.reserve_slot())
                     }
                 };
@@ -246,6 +250,17 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .as_fun()
             .unwrap()
     }
+
+    pub(crate) fn register_global_const_fn(
+        &mut self,
+        src: &Option<DepSource>,
+        stt: mir::mono::StaticDef,
+    ) -> FunDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::GlobalConstFn(stt))
+            .as_fun()
+            .unwrap()
+    }
 }
 
 // Id and item reference registration.
@@ -335,6 +350,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let src = self.make_dep_source(span);
         let traitdef = traitdef.map(|t| (t.def_id, t.args().clone().into()));
         self.t_ctx.register_vtable_init(&src, ty, traitdef)
+    }
+
+    pub(crate) fn register_global_const_fn(
+        &mut self,
+        span: Span,
+        stt: mir::mono::StaticDef,
+    ) -> FunDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx.register_global_const_fn(&src, stt)
     }
 }
 

@@ -132,6 +132,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let decl = bt_ctx.translate_vtable_init(id, item_meta, *ty, tref)?;
                 self.translated.fun_decls.set_slot(id, decl);
             }
+            TransItemSource::GlobalConstFn(stt) => {
+                let Some(ItemId::Fun(id)) = trans_id else {
+                    unreachable!()
+                };
+                let fun_decl = bt_ctx.translate_global_const_fn(id, item_meta, stt.clone())?;
+                self.translated.fun_decls.set_slot(id, fun_decl);
+            }
         }
         Ok(())
     }
@@ -391,44 +398,18 @@ impl ItemTransCtx<'_, '_> {
         trace!("About to translate global:\n{:?}", def.0);
         let span = item_meta.span;
 
-        // Translate the generics and predicates - globals *can* have generics
-        // Ex.:
-        // ```
-        // impl<const N : usize> Foo<N> {
-        //   const LEN : usize = N;
-        // }
-        // ```
-        // self.translate_def_generics(span, def)?;
-
         // Retrieve the kind
         let item_kind = self.get_item_kind(span, &def.0)?;
-
         trace!("Translating global type");
-        // let ty = match &def.kind {
-        //     rustc_hir::def::DefKind::Const { ty, .. }
-        //     | rustc_hir::def::DefKind::AssocConst { ty, .. }
-        //     | rustc_hir::def::DefKind::AnonConst { ty, .. }
-        //     | rustc_hir::def::DefKind::InlineConst { ty, .. }
-        //     | rustc_hir::def::DefKind::PromotedConst { ty, .. }
-        //     | rustc_hir::def::DefKind::Static { ty, .. } => ty,
-        //     _ => panic!("Unexpected def for constant: {def:?}"),
-        // };
         let ty = self.translate_ty(span, def.ty())?;
-
-        // let global_kind = match &def. {
-        //     rustc_hir::def::DefKind::Static { .. } => GlobalKind::Static,
-        //     rustc_hir::def::DefKind::Const { .. } | rustc_hir::def::DefKind::AssocConst { .. } => {
-        //         GlobalKind::NamedConst
-        //     }
-        //     rustc_hir::def::DefKind::AnonConst { .. }
-        //     | rustc_hir::def::DefKind::InlineConst { .. }
-        //     | rustc_hir::def::DefKind::PromotedConst { .. } => GlobalKind::AnonConst,
-        //     _ => panic!("Unexpected def for constant: {def:?}"),
-        // };
         let global_kind = GlobalKind::Static; // For now, we only support statics.
 
-        let instance: mir::mono::Instance = (*def).into();
-        let initializer = self.register_fun_decl_id(span, instance);
+        let initializer = if def.ty().kind().is_fn() {
+            let instance: mir::mono::Instance = (*def).into();
+            self.register_fun_decl_id(span, instance)
+        } else {
+            self.register_global_const_fn(span, def.clone())
+        };
 
         Ok(GlobalDecl {
             def_id,
@@ -477,5 +458,58 @@ impl ItemTransCtx<'_, '_> {
         };
 
         Ok(type_def)
+    }
+
+    pub fn translate_global_const_fn(
+        mut self,
+        def_id: FunDeclId,
+        item_meta: ItemMeta,
+        def: mir::mono::StaticDef,
+    ) -> Result<FunDecl, Error> {
+        let span = self.translate_span_from_smir(&def.span());
+        let global_id = self.register_global_decl_id(span, def);
+        let output = self.translate_ty(span, def.ty())?;
+        let signature = FunSig {
+            is_unsafe: false,
+            generics: GenericParams::empty(),
+            inputs: vec![],
+            output: output.clone(),
+        };
+
+        use ullbc_ast::*;
+        let alloc = def.eval_initializer()?;
+        let const_val = self.translate_allocation(span, &alloc, &output, def.ty())?;
+
+        let mut locals = Locals::new(0);
+        locals.locals.push_with(|index| Local {
+            index,
+            name: None,
+            ty: output.clone(),
+        });
+        let body = Ok(Body::Unstructured(GExprBody {
+            body: vec![BlockData {
+                statements: vec![Statement::new(
+                    span,
+                    StatementKind::Assign(
+                        locals.return_place(),
+                        Rvalue::Use(Operand::Const(Box::new(const_val))),
+                    ),
+                )],
+                terminator: Terminator::new(span, ullbc_ast::TerminatorKind::Return),
+            }]
+            .into(),
+            span,
+            locals,
+            comments: vec![],
+        }));
+
+        Ok(FunDecl {
+            def_id,
+            item_meta,
+            signature,
+            src: ItemSource::TopLevel,
+            is_global_initializer: Some(global_id),
+            body,
+        })
     }
 }

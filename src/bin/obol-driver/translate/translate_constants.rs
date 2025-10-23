@@ -197,14 +197,14 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         let id = self.register_global_decl_id(span, stt);
                         let instance: mir::mono::Instance = stt.into();
                         let generics = self.translate_generic_args(span, &instance.args())?;
-                        let sub_constant = ConstantExprKind::Global(GlobalDeclRef {
-                            id,
-                            generics: Box::new(generics),
-                        });
                         let sub_constant = ConstantExpr {
-                            kind: sub_constant,
+                            kind: ConstantExprKind::Global(GlobalDeclRef {
+                                id,
+                                generics: Box::new(generics),
+                            }),
                             ty: subty.clone(),
                         };
+                        // };
 
                         if let TyKind::RawPtr(_, rk) = ty {
                             ConstantExprKind::Ptr(*rk, Box::new(sub_constant))
