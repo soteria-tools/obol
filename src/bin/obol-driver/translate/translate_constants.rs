@@ -552,7 +552,27 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                 Some(index)
                             }
                             ty::AdtKind::Union => {
-                                raise_error!(self, span, "Unhandled: ZST union type {rty:?}");
+                                let variant = adt.variants_iter().next().unwrap();
+                                let zst_fields = variant
+                                    .fields()
+                                    .iter()
+                                    .enumerate()
+                                    .map(|(i, f)| (i, f.ty_with_args(generics)))
+                                    .filter(|(_, f)| f.layout().is_ok_and(|l| l.shape().is_1zst()))
+                                    .collect::<Vec<_>>();
+                                assert!(
+                                    !zst_fields.is_empty(),
+                                    "ZST const union with no ZST fields?"
+                                );
+                                let (field_idx, field) = zst_fields[0];
+                                let field_idx = FieldId::from_raw(field_idx);
+                                let field_ty = self.translate_ty(span, field)?;
+                                let sub_const =
+                                    self.translate_zst_constant(span, field_ty.kind(), field)?;
+                                return Ok(ConstantExpr {
+                                    kind: ConstantExprKind::Union(field_idx, Box::new(sub_const)),
+                                    ty: ty.clone().into_ty(),
+                                });
                             }
                         };
                         let variant = variant_r.map(|v| self.translate_variant_id(v));
