@@ -341,7 +341,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             TransItemSource::Closure(def, _) | TransItemSource::ClosureAsFn(def, _) => Some(def),
             TransItemSource::ForeignType(def) => Some(def),
             TransItemSource::Fun(instance) => Some(&instance.def),
-            TransItemSource::Global(def) => Some(def),
+            TransItemSource::Global(def) | TransItemSource::GlobalConstFn(def) => Some(def),
             TransItemSource::Type(def, _) => Some(def),
             TransItemSource::VTable(_, tdef) | TransItemSource::VTableInit(_, tdef) => {
                 tdef.as_ref().map(|t| -> &dyn CrateDef { &t.0 })
