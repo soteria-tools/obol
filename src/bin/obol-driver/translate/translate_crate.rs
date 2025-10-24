@@ -405,7 +405,11 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
     // from hax.
     let krate = rustc_public::local_crate();
 
-    let charon_opts = CharonCliOpts::default();
+    let charon_opts = CharonCliOpts {
+        opaque: options.opaque.clone(),
+        extract_opaque_bodies: true,
+        ..CharonCliOpts::default()
+    };
     let mut error_ctx = ErrorCtx::new(!charon_opts.abort_on_error, charon_opts.error_on_warnings);
     let translate_options = TranslateOptions::new(&mut error_ctx, &charon_opts);
     let mut ctx = TranslateCtx {

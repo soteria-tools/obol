@@ -368,7 +368,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             None
         };
 
-        let name_opacity = ItemOpacity::Transparent;
+        let name_opacity = self.options.opacity_for_name(&self.translated, &name);
         let opacity = if attr_info.attributes.iter().any(|attr| attr.is_opaque()) {
             // Force opaque in these cases.
             ItemOpacity::Opaque.max(name_opacity)

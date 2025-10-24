@@ -31,6 +31,11 @@ pub struct CliOpts {
         help = "List of attributes (e.g. `kani::proof`) that count as entry points to generate; empty by default."
     )]
     pub entry_attribs: Vec<String>,
+    #[clap(
+        long = "opaque",
+        help = "List of item names to keep opaque during translation"
+    )]
+    pub opaque: Vec<String>,
     /// Args that are passed to the underlying tool (`rustc` or `cargo` depending on `--cargo`).
     #[arg(last = true)]
     pub spread: Vec<String>,
