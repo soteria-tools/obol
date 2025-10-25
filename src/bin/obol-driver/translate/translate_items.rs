@@ -404,8 +404,10 @@ impl ItemTransCtx<'_, '_> {
         let ty = self.translate_ty(span, def.ty())?;
         let global_kind = GlobalKind::Static; // For now, we only support statics.
 
-        let initializer = if def.ty().kind().is_fn() {
-            let instance: mir::mono::Instance = (*def).into();
+        let instance: mir::mono::Instance = (*def).into();
+
+        // Some statics don't have a body, such as non-generics in the sysroot.
+        let initializer = if instance.has_body() {
             self.register_fun_decl_id(span, instance)
         } else {
             self.register_global_const_fn(span, def.clone())
