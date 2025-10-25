@@ -204,7 +204,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             }),
                             ty: subty.clone(),
                         };
-                        // };
 
                         if let TyKind::RawPtr(_, rk) = ty {
                             ConstantExprKind::Ptr(*rk, Box::new(sub_constant))
@@ -304,7 +303,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         let tag_bytes = &bytes[tag_offset..tag_offset + length_bytes];
                         let tag_value =
                             self.read_target_uint(Self::as_init(tag_bytes)?.as_slice())?;
-                        let mask = (1u128 << (length_bytes * 8)) - 1;
+                        let mask = if length_bytes * 8 == 128 {
+                            u128::MAX
+                        } else {
+                            (1u128 << (length_bytes * 8)) - 1
+                        };
                         let variant_idx = match tag_encoding {
                             abi::TagEncoding::Direct => adt
                                 .variants_iter()
