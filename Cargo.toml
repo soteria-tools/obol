@@ -5,20 +5,19 @@ edition = "2024"
 publish = false
 
 [dependencies]
-charon = { path = "../charon/charon", default-features = true }
-hax = { package = "hax-frontend-exporter", git = "https://github.com/AeneasVerif/hax", branch = "main", optional = true }
+charon_lib = { package = "charon", subdir = "charon", git = "https://github.com/soteria-tools/charon", rev = "a96a00b82f9aa79b35566b6f5fd49d5d9f250b2b" }
+# charon_lib = { path = "../charon/charon", default-features = true }
 dot-writer = "0.1.4"
 anyhow = "1"
 log = "0.4.17"
 home = "0.5"
-clap = "4.5.41"
+clap = { version = "4.0", features = ["derive", "env"] }
 itertools = "0.14.0"
-serde = "1.0.219"
+serde = { version = "1.0.152", features = ["derive", "rc"] }
+serde_json = { version = "1.0.91", features = ["unbounded_depth"] }
 toml = "0.9.5"
 which = "8.0.0"
 rustc_version = "0.4.1"
-serde_json = "1.0.142"
-serde_derive = "1.0.219"
 
 
 [[bin]]
