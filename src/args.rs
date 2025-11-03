@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
-use serde::Deserialize;
-use serde_derive::Serialize;
+use serde::{Deserialize, Serialize};
 
 pub const OBOL_ARGS: &str = "OBOL_ARGS";
 
