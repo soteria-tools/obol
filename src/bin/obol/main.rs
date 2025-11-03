@@ -17,6 +17,20 @@ fn main() -> Result<()> {
     let res = match opts {
         ObolCli::Rustc(opts) => translate_without_cargo(opts)?,
         ObolCli::Cargo(opts) => translate_with_cargo(opts)?,
+        ObolCli::ToolchainPath => {
+            let path = toolchain_path()?;
+            println!("{}", path.display());
+            ExitStatus::default()
+        }
+        ObolCli::Version(opts) => {
+            let v = if opts.charon {
+                charon_lib::VERSION
+            } else {
+                obol_lib::VERSION
+            };
+            println!("{v}");
+            ExitStatus::default()
+        }
     };
 
     handle_exit_status(res)

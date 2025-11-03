@@ -12,6 +12,10 @@ pub enum ObolCli {
     Rustc(CliOpts),
     /// Runs obol on a cargo project.
     Cargo(CliOpts),
+    /// Print the path to the rustc toolchain used by obol.
+    ToolchainPath,
+    /// Print the version of Obol (or Charon, if flag provided)
+    Version(VersionOpts),
 }
 
 #[derive(Debug, Default, Clone, clap::Parser, Serialize, Deserialize)]
@@ -42,6 +46,12 @@ pub struct CliOpts {
     /// Args that are passed to the underlying tool (`rustc` or `cargo` depending on `--cargo`).
     #[arg(last = true)]
     pub spread: Vec<String>,
+}
+
+#[derive(Debug, Default, Clone, clap::Parser, Serialize, Deserialize)]
+pub struct VersionOpts {
+    #[clap(long = "charon", help = "Print Charon version instead of Obol.")]
+    pub charon: bool,
 }
 
 impl CliOpts {
