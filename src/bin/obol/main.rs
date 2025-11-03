@@ -4,7 +4,7 @@
 
 use anyhow::Result;
 use clap::Parser;
-use obol_lib::args::{CliOpts, OBOL_ARGS};
+use obol_lib::args::{CliOpts, OBOL_ARGS, ObolCli};
 use std::{env, process::ExitStatus};
 
 use crate::toolchain::toolchain_path;
@@ -12,21 +12,18 @@ use crate::toolchain::toolchain_path;
 mod toolchain;
 
 fn main() -> Result<()> {
-    let mut opts = CliOpts::parse();
-    if opts.entry_attribs.is_empty() && opts.entry_names.is_empty() {
-        opts.entry_names.push("main".to_string());
-    }
+    let opts = ObolCli::parse();
 
-    let res = if opts.use_cargo {
-        translate_with_cargo(opts)?
-    } else {
-        translate_without_cargo(opts)?
+    let res = match opts {
+        ObolCli::Rustc(opts) => translate_without_cargo(opts)?,
+        ObolCli::Cargo(opts) => translate_with_cargo(opts)?,
     };
 
     handle_exit_status(res)
 }
 
-fn translate_with_cargo(options: CliOpts) -> Result<ExitStatus> {
+fn translate_with_cargo(mut options: CliOpts) -> Result<ExitStatus> {
+    options.validate()?;
     ensure_rustup();
 
     let mut cmd = toolchain::in_toolchain("cargo")?;
@@ -57,6 +54,7 @@ fn translate_with_cargo(options: CliOpts) -> Result<ExitStatus> {
 }
 
 fn translate_without_cargo(mut options: CliOpts) -> Result<ExitStatus> {
+    options.validate()?;
     ensure_rustup();
 
     let mut cmd = toolchain::driver_cmd()?;
