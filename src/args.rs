@@ -1,17 +1,21 @@
 use std::path::PathBuf;
 
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
 pub const OBOL_ARGS: &str = "OBOL_ARGS";
 
-#[derive(Debug, Default, Clone, clap::Parser, Serialize, Deserialize)]
+#[derive(Debug, clap::Parser)]
 #[clap(name = "Obol")]
+pub enum ObolCli {
+    /// Runs Obol on a single rust file (and the modules it references, if any).
+    Rustc(CliOpts),
+    /// Runs obol on a cargo project.
+    Cargo(CliOpts),
+}
+
+#[derive(Debug, Default, Clone, clap::Parser, Serialize, Deserialize)]
 pub struct CliOpts {
-    #[clap(
-        long = "cargo",
-        help = "If Obol should compile the crate using Cargo; otherwise, uses rustc to compile a single file."
-    )]
-    pub use_cargo: bool,
     /// The destination file. By default `<dest_dir>/<crate_name>.ullbc`.
     #[clap(long = "dest-file", value_parser)]
     pub dest_file: Option<PathBuf>,
@@ -38,4 +42,13 @@ pub struct CliOpts {
     /// Args that are passed to the underlying tool (`rustc` or `cargo` depending on `--cargo`).
     #[arg(last = true)]
     pub spread: Vec<String>,
+}
+
+impl CliOpts {
+    pub fn validate(&mut self) -> Result<()> {
+        if self.entry_attribs.is_empty() && self.entry_names.is_empty() {
+            self.entry_names.push("main".to_string());
+        }
+        Ok(())
+    }
 }
