@@ -5,7 +5,7 @@ edition = "2024"
 publish = false
 
 [dependencies]
-charon_lib = { package = "charon", subdir = "charon", git = "https://github.com/soteria-tools/charon", rev = "68bf861b78c8ede8cc501e7440f5cfa5e16c50f5" }
+charon_lib = { package = "charon",  git = "https://github.com/soteria-tools/charon", rev = "68bf861b78c8ede8cc501e7440f5cfa5e16c50f5" }
 # charon_lib = { path = "../charon/charon", default-features = true }
 dot-writer = "0.1.4"
 anyhow = "1"
