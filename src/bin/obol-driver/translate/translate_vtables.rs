@@ -50,7 +50,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             let cast_kind = if matches!(op_ty.kind(), TyKind::FnDef(..)) {
                 CastKind::FnPtr(op_ty.clone(), inner_ty.clone())
             } else {
-                CastKind::RawPtr(op_ty.clone(), inner_ty.clone())
+                // We want a transmute, instead of a RawPtr, as that would imply a int-ptr
+                // cast with provenance, which we don't need for size/alignment constants
+                // (we're just cheating, really)
+                CastKind::Transmute(op_ty.clone(), inner_ty.clone())
             };
             statements.push(StatementKind::Assign(
                 local.clone(),
