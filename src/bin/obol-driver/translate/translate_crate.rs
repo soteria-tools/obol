@@ -29,8 +29,8 @@ use std::hash::Hash;
 /// `FunDecl` one (for its initializer function).
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum TransItemSource {
-    Global(mir::mono::StaticDef),
-    GlobalConstFn(mir::mono::StaticDef), // the const initialiser of a global
+    Global(mir::alloc::AllocId),
+    GlobalConstFn(mir::alloc::AllocId), // the const initialiser of a global
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -41,27 +41,26 @@ pub enum TransItemSource {
 }
 
 impl TransItemSource {
-    pub(crate) fn as_def_id(&self) -> DefId {
+    pub(crate) fn as_def_id(&self) -> Option<DefId> {
         match self {
-            TransItemSource::Global(id) => id.0.clone(),
-            TransItemSource::GlobalConstFn(id) => id.0.clone(),
-            TransItemSource::Fun(instance) => instance.def.def_id(),
-            TransItemSource::Type(id, _) => id.0,
-            TransItemSource::Closure(def, _) => def.def_id(),
-            TransItemSource::ClosureAsFn(def, _) => def.def_id(),
-            TransItemSource::ForeignType(def) => def.def_id(),
-            TransItemSource::VTable(_, Some((tr, _))) => tr.0,
-            TransItemSource::VTableInit(_, Some((tr, _))) => tr.0,
-            TransItemSource::VTable(_, None) => unreachable!("VTables have no def id"),
-            TransItemSource::VTableInit(_, None) => unreachable!("VTable inits have no def id"),
+            TransItemSource::Global(id) | TransItemSource::GlobalConstFn(id) => {
+                let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
+                match glob_alloc {
+                    mir::alloc::GlobalAlloc::Function(instance) => Some(instance.def.def_id()),
+                    mir::alloc::GlobalAlloc::Static(static_def) => Some(static_def.def_id()),
+                    _ => None,
+                }
+            }
+            TransItemSource::Fun(instance) => Some(instance.def.def_id()),
+            TransItemSource::Type(id, _) => Some(id.0),
+            TransItemSource::Closure(def, _) => Some(def.def_id()),
+            TransItemSource::ClosureAsFn(def, _) => Some(def.def_id()),
+            TransItemSource::ForeignType(def) => Some(def.def_id()),
+            TransItemSource::VTable(_, Some((tr, _))) => Some(tr.0),
+            TransItemSource::VTableInit(_, Some((tr, _))) => Some(tr.0),
+            TransItemSource::VTable(_, None) => None,
+            TransItemSource::VTableInit(_, None) => None,
         }
-    }
-
-    pub(crate) fn has_def_id(&self) -> bool {
-        !matches!(
-            self,
-            TransItemSource::VTable(_, None) | TransItemSource::VTableInit(_, None)
-        )
     }
 
     /// Value with which we order values.
@@ -82,7 +81,7 @@ impl TransItemSource {
         }
 
         match self {
-            TransItemSource::Global(id) => (0, id.0.to_index(), 0),
+            TransItemSource::Global(id) => (0, id.to_index(), 0),
             TransItemSource::Fun(instance) => {
                 (1, instance.def.to_index(), key_instance(&instance.kind))
             }
@@ -94,7 +93,7 @@ impl TransItemSource {
             TransItemSource::ForeignType(def) => (5, def.def_id().to_index(), 0),
             TransItemSource::VTable(ty, t) => (6, ty.to_index(), key_trait(t)),
             TransItemSource::VTableInit(ty, t) => (7, ty.to_index(), key_trait(t)),
-            TransItemSource::GlobalConstFn(id) => (8, id.0.to_index(), 0),
+            TransItemSource::GlobalConstFn(id) => (8, id.to_index(), 0),
         }
     }
 }
@@ -208,7 +207,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub(crate) fn register_global_decl_id(
         &mut self,
         src: &Option<DepSource>,
-        stt: mir::mono::StaticDef,
+        stt: mir::alloc::AllocId,
     ) -> GlobalDeclId {
         *self
             .register_and_enqueue_id(src, TransItemSource::Global(stt))
@@ -254,7 +253,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub(crate) fn register_global_const_fn(
         &mut self,
         src: &Option<DepSource>,
-        stt: mir::mono::StaticDef,
+        stt: mir::alloc::AllocId,
     ) -> FunDeclId {
         *self
             .register_and_enqueue_id(src, TransItemSource::GlobalConstFn(stt))
@@ -315,7 +314,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     pub(crate) fn register_global_decl_id(
         &mut self,
         span: Span,
-        stt: mir::mono::StaticDef,
+        stt: mir::alloc::AllocId,
     ) -> GlobalDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_global_decl_id(&src, stt)
@@ -355,7 +354,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     pub(crate) fn register_global_const_fn(
         &mut self,
         span: Span,
-        stt: mir::mono::StaticDef,
+        stt: mir::alloc::AllocId,
     ) -> FunDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_global_const_fn(&src, stt)

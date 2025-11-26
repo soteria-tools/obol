@@ -146,7 +146,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     break 'ptr_case ConstantExprKind::PtrNoProvenance(value);
                 };
                 use mir::alloc::GlobalAlloc;
-                let glob_alloc: GlobalAlloc = suballoc.0.into();
+                let alloc_id = suballoc.0;
+                let glob_alloc: GlobalAlloc = alloc_id.into();
                 match glob_alloc {
                     GlobalAlloc::Memory(suballoc) if subty.is_str() => {
                         let as_str =
@@ -176,27 +177,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             .try_collect()?;
                         ConstantExprKind::Slice(sub_constants)
                     }
-                    GlobalAlloc::Memory(suballoc) => {
-                        let rtyk = rty.kind();
-                        let rsubty = match rtyk.rigid().unwrap() {
-                            ty::RigidTy::RawPtr(rsubty, _) => *rsubty,
-                            ty::RigidTy::Ref(_, rsubty, _) => *rsubty,
-                            _ => unreachable!(
-                                "Unexpected rigid type for raw pointer/reference: {rty:?}"
-                            ),
+                    _ => {
+                        let id = self.register_global_decl_id(span, alloc_id);
+                        let generics = match glob_alloc {
+                            GlobalAlloc::Static(stt) => {
+                                let instance: mir::mono::Instance = stt.into();
+                                self.translate_generic_args(span, &instance.args())?
+                            }
+                            _ => GenericArgs::empty(),
                         };
-                        let sub_constant =
-                            self.translate_allocation(span, &suballoc, subty, rsubty)?;
-                        if let TyKind::RawPtr(_, rk) = ty {
-                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant))
-                        } else {
-                            ConstantExprKind::Ref(Box::new(sub_constant))
-                        }
-                    }
-                    GlobalAlloc::Static(stt) => {
-                        let id = self.register_global_decl_id(span, stt);
-                        let instance: mir::mono::Instance = stt.into();
-                        let generics = self.translate_generic_args(span, &instance.args())?;
                         let sub_constant = ConstantExpr {
                             kind: ConstantExprKind::Global(GlobalDeclRef {
                                 id,
@@ -211,7 +200,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             ConstantExprKind::Ref(Box::new(sub_constant))
                         }
                     }
-                    _ => unreachable!("Unhandled global: {glob_alloc:?} for type {ty:?}"),
                 }
             }
             TyKind::Adt(TypeDeclRef {
@@ -662,5 +650,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 )
             }
         }
+    }
+
+    pub fn allocation_as_bytes(&mut self, alloc: &ty::Allocation) -> Ty {
+        let size = alloc.bytes.len();
+        let arr_len = ConstGeneric::Value(
+            Literal::from_bits(&LiteralTy::UInt(UIntTy::Usize), size as u128).unwrap(),
+        );
+        Ty::mk_array(
+            TyKind::Literal(LiteralTy::UInt(UIntTy::U8)).into_ty(),
+            arr_len,
+        )
     }
 }

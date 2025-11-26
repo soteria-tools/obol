@@ -5,6 +5,7 @@ extern crate rustc_attr_data_structures;
 extern crate rustc_attr_parsing;
 extern crate rustc_hir;
 extern crate rustc_public;
+extern crate rustc_public_bridge;
 extern crate rustc_span;
 
 use super::translate_crate::TransItemSource;
@@ -12,7 +13,8 @@ use super::translate_ctx::{ItemTransCtx, TranslateCtx};
 use charon_lib::{ast::*, register_error};
 use itertools::Itertools;
 use log::trace;
-use rustc_public::{CrateDef, rustc_internal, ty};
+use rustc_public::{CrateDef, DefId, mir, rustc_internal, ty};
+use rustc_public_bridge::IndexedVal;
 use std::cmp::Ord;
 use std::path::Component;
 
@@ -182,17 +184,23 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 
     /// Retrieve the name for an item.
     pub fn translate_name(&mut self, src: &TransItemSource) -> Result<Name, Error> {
-        let mut name = if src.has_def_id() {
-            let def_id = src.as_def_id();
+        let mut name = if let Some(def_id) = src.as_def_id() {
             self.def_id_to_name(def_id)?
-        } else if let TransItemSource::VTable(_, _) | TransItemSource::VTableInit(_, _) = src {
-            // VTables may not have a def_id if they are for an auto-trait.
-            Name {
-                name: vec![PathElem::Ident("unknown_trait".into(), Disambiguator::ZERO)],
-            }
         } else {
-            Name {
-                name: vec![PathElem::Ident("todo_name".into(), Disambiguator::ZERO)],
+            match src {
+                // VTables may not have a def_id if they are for an auto-trait.
+                TransItemSource::VTable(_, _) | TransItemSource::VTableInit(_, _) => Name {
+                    name: vec![PathElem::Ident("unknown_trait".into(), Disambiguator::ZERO)],
+                },
+                TransItemSource::Global(id) | TransItemSource::GlobalConstFn(id) => Name {
+                    name: vec![PathElem::Ident(
+                        format!("anon_const_{}", id.to_index()),
+                        Disambiguator::ZERO,
+                    )],
+                },
+                _ => Name {
+                    name: vec![PathElem::Ident("todo_name".into(), Disambiguator::ZERO)],
+                },
             }
         };
 
@@ -290,12 +298,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
     }
 
-    pub(crate) fn translate_attr_info(&mut self, span: Span, def: &dyn CrateDef) -> AttrInfo {
+    pub(crate) fn translate_attr_info(&mut self, span: Span, def: DefId) -> AttrInfo {
         // Default to `false` for impl blocks and closures.
         // let public = def.visibility.unwrap_or(false);
         // let inline = self.translate_inline(def);
 
-        let internal = rustc_public::rustc_internal::internal(self.tcx, def.def_id());
+        let internal = rustc_public::rustc_internal::internal(self.tcx, def);
         let attributes = self.tcx.get_all_attrs(internal);
 
         let attributes: Vec<Attribute> = attributes
@@ -337,30 +345,47 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         if let Some(item_meta) = self.cached_item_metas.get(&item_src) {
             return item_meta.clone();
         }
-        let crate_def: Option<&dyn CrateDef> = match item_src {
-            TransItemSource::Closure(def, _) | TransItemSource::ClosureAsFn(def, _) => Some(def),
-            TransItemSource::ForeignType(def) => Some(def),
-            TransItemSource::Fun(instance) => Some(&instance.def),
-            TransItemSource::Global(def) | TransItemSource::GlobalConstFn(def) => Some(def),
-            TransItemSource::Type(def, _) => Some(def),
+        let span = match item_src {
+            TransItemSource::Closure(def, _) | TransItemSource::ClosureAsFn(def, _) => {
+                Some(def.span())
+            }
+            TransItemSource::ForeignType(def) => Some(def.span()),
+            TransItemSource::Fun(instance) => Some(instance.def.span()),
+            TransItemSource::Global(id) | TransItemSource::GlobalConstFn(id) => {
+                let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
+                match glob_alloc {
+                    mir::alloc::GlobalAlloc::Function(instance) => Some(instance.def.span()),
+                    mir::alloc::GlobalAlloc::Static(static_def) => Some(static_def.span()),
+                    // mir::alloc::GlobalAlloc::Memory(mem) => {
+                    //     // let sources =
+                    // }
+                    _ => {
+                        println!("Some alloc?: {:?}", glob_alloc);
+                        None
+                    }
+                }
+            }
+            TransItemSource::Type(def, _) => Some(def.span()),
             TransItemSource::VTable(_, tdef) | TransItemSource::VTableInit(_, tdef) => {
-                tdef.as_ref().map(|t| -> &dyn CrateDef { &t.0 })
+                tdef.as_ref().map(|t| t.0.span())
             }
         };
-        let span = crate_def
-            .map(|def| self.translate_span_from_smir(&def.span()))
-            .unwrap_or(Span::dummy());
-        let attr_info = crate_def
-            .map(|def| self.translate_attr_info(span, def))
-            .unwrap_or(AttrInfo {
+        let span = match span {
+            Some(s) => self.translate_span_from_smir(&s),
+            None => Span::dummy(),
+        };
+        let attr_info = match item_src.as_def_id() {
+            Some(def_id) => self.translate_attr_info(span, def_id),
+            None => AttrInfo {
                 attributes: Vec::new(),
                 inline: None,
                 public: true,
                 rename: None,
-            });
+            },
+        };
 
-        let lang_item = if item_src.has_def_id() {
-            let internal_id = rustc_internal::internal(self.tcx, item_src.as_def_id());
+        let lang_item = if let Some(def_id) = item_src.as_def_id() {
+            let internal_id = rustc_internal::internal(self.tcx, def_id);
             self.tcx
                 .as_lang_item(internal_id)
                 .map(|l| l.name().to_ident_string())
