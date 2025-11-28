@@ -178,7 +178,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         ConstantExprKind::Slice(sub_constants)
                     }
                     _ => {
-                        let id = self.register_global_decl_id(span, alloc_id);
+                        let inner = rty.kind().builtin_deref(true).unwrap().ty;
+                        let id = self.register_global_decl_id(span, alloc_id, inner);
                         let generics = match glob_alloc {
                             GlobalAlloc::Static(stt) => {
                                 let instance: mir::mono::Instance = stt.into();
@@ -435,10 +436,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             TyKind::FnPtr(_) => 'fnptr_case: {
                 let Some((_, alloc)) = alloc.provenance.ptrs.iter().find(|(o, _)| *o == offset)
                 else {
-                    let value = self.read_target_int(Self::as_init(bytes)?.as_slice())?;
-                    break 'fnptr_case ConstantExprKind::Literal(Literal::Scalar(
-                        ScalarValue::Signed(IntTy::Isize, value),
-                    ));
+                    let value = self.read_target_uint(Self::as_init(bytes)?.as_slice())?;
+                    break 'fnptr_case ConstantExprKind::PtrNoProvenance(value);
                 };
                 use mir::alloc::GlobalAlloc;
                 let glob_alloc: GlobalAlloc = alloc.0.into();
@@ -650,16 +649,5 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 )
             }
         }
-    }
-
-    pub fn allocation_as_bytes(&mut self, alloc: &ty::Allocation) -> Ty {
-        let size = alloc.bytes.len();
-        let arr_len = ConstGeneric::Value(
-            Literal::from_bits(&LiteralTy::UInt(UIntTy::Usize), size as u128).unwrap(),
-        );
-        Ty::mk_array(
-            TyKind::Literal(LiteralTy::UInt(UIntTy::U8)).into_ty(),
-            arr_len,
-        )
     }
 }

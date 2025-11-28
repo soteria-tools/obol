@@ -192,7 +192,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 TransItemSource::VTable(_, _) | TransItemSource::VTableInit(_, _) => Name {
                     name: vec![PathElem::Ident("unknown_trait".into(), Disambiguator::ZERO)],
                 },
-                TransItemSource::Global(id) | TransItemSource::GlobalConstFn(id) => Name {
+                TransItemSource::Global(id, ..) | TransItemSource::GlobalConstFn(id, ..) => Name {
                     name: vec![PathElem::Ident(
                         format!("anon_const_{}", id.to_index()),
                         Disambiguator::ZERO,
@@ -351,18 +351,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             }
             TransItemSource::ForeignType(def) => Some(def.span()),
             TransItemSource::Fun(instance) => Some(instance.def.span()),
-            TransItemSource::Global(id) | TransItemSource::GlobalConstFn(id) => {
+            TransItemSource::Global(id, ..) | TransItemSource::GlobalConstFn(id, ..) => {
                 let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
                 match glob_alloc {
                     mir::alloc::GlobalAlloc::Function(instance) => Some(instance.def.span()),
                     mir::alloc::GlobalAlloc::Static(static_def) => Some(static_def.span()),
-                    // mir::alloc::GlobalAlloc::Memory(mem) => {
-                    //     // let sources =
-                    // }
-                    _ => {
-                        println!("Some alloc?: {:?}", glob_alloc);
-                        None
-                    }
+                    _ => None,
                 }
             }
             TransItemSource::Type(def, _) => Some(def.span()),

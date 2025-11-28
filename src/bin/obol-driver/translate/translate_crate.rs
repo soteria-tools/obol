@@ -29,8 +29,8 @@ use std::hash::Hash;
 /// `FunDecl` one (for its initializer function).
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum TransItemSource {
-    Global(mir::alloc::AllocId),
-    GlobalConstFn(mir::alloc::AllocId), // the const initialiser of a global
+    Global(mir::alloc::AllocId, ty::Ty), // the static or const itself, with its type
+    GlobalConstFn(mir::alloc::AllocId, ty::Ty), // the const initialiser of a global
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -43,7 +43,7 @@ pub enum TransItemSource {
 impl TransItemSource {
     pub(crate) fn as_def_id(&self) -> Option<DefId> {
         match self {
-            TransItemSource::Global(id) | TransItemSource::GlobalConstFn(id) => {
+            TransItemSource::Global(id, _) | TransItemSource::GlobalConstFn(id, _) => {
                 let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
                 match glob_alloc {
                     mir::alloc::GlobalAlloc::Function(instance) => Some(instance.def.def_id()),
@@ -81,7 +81,7 @@ impl TransItemSource {
         }
 
         match self {
-            TransItemSource::Global(id) => (0, id.to_index(), 0),
+            TransItemSource::Global(id, ty) => (0, id.to_index(), ty.to_index()),
             TransItemSource::Fun(instance) => {
                 (1, instance.def.to_index(), key_instance(&instance.kind))
             }
@@ -93,7 +93,7 @@ impl TransItemSource {
             TransItemSource::ForeignType(def) => (5, def.def_id().to_index(), 0),
             TransItemSource::VTable(ty, t) => (6, ty.to_index(), key_trait(t)),
             TransItemSource::VTableInit(ty, t) => (7, ty.to_index(), key_trait(t)),
-            TransItemSource::GlobalConstFn(id) => (8, id.to_index(), 0),
+            TransItemSource::GlobalConstFn(id, ty) => (8, id.to_index(), ty.to_index()),
         }
     }
 }
@@ -125,7 +125,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     | TransItemSource::ForeignType(..) => {
                         ItemId::Type(self.translated.type_decls.reserve_slot())
                     }
-                    TransItemSource::Global(_) | TransItemSource::VTable(..) => {
+                    TransItemSource::Global(..) | TransItemSource::VTable(..) => {
                         ItemId::Global(self.translated.global_decls.reserve_slot())
                     }
                     TransItemSource::Fun(..)
@@ -208,9 +208,10 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         &mut self,
         src: &Option<DepSource>,
         stt: mir::alloc::AllocId,
+        ty: ty::Ty,
     ) -> GlobalDeclId {
         *self
-            .register_and_enqueue_id(src, TransItemSource::Global(stt))
+            .register_and_enqueue_id(src, TransItemSource::Global(stt, ty))
             .as_global()
             .unwrap()
     }
@@ -254,9 +255,10 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         &mut self,
         src: &Option<DepSource>,
         stt: mir::alloc::AllocId,
+        ty: ty::Ty,
     ) -> FunDeclId {
         *self
-            .register_and_enqueue_id(src, TransItemSource::GlobalConstFn(stt))
+            .register_and_enqueue_id(src, TransItemSource::GlobalConstFn(stt, ty))
             .as_fun()
             .unwrap()
     }
@@ -315,9 +317,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         span: Span,
         stt: mir::alloc::AllocId,
+        ty: ty::Ty,
     ) -> GlobalDeclId {
         let src = self.make_dep_source(span);
-        self.t_ctx.register_global_decl_id(&src, stt)
+        self.t_ctx.register_global_decl_id(&src, stt, ty)
     }
 
     pub(crate) fn register_foreign_type_decl_id(
@@ -355,9 +358,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         span: Span,
         stt: mir::alloc::AllocId,
+        ty: ty::Ty,
     ) -> FunDeclId {
         let src = self.make_dep_source(span);
-        self.t_ctx.register_global_const_fn(&src, stt)
+        self.t_ctx.register_global_const_fn(&src, stt, ty)
     }
 }
 
