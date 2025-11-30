@@ -88,7 +88,7 @@ impl ItemTransCtx<'_, '_> {
         let args_untupled = signature.inputs.clone();
 
         let body = if item_meta.opacity.with_private_contents().is_opaque() {
-            Err(Opaque)
+            Body::Opaque
         } else {
             // Target translation:
             //
@@ -162,7 +162,7 @@ impl ItemTransCtx<'_, '_> {
                 comments: vec![],
                 body: blocks,
             };
-            Ok(Body::Unstructured(body))
+            Body::Unstructured(body)
         };
 
         Ok(FunDecl {

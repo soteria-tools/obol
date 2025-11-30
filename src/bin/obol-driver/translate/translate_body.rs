@@ -250,6 +250,13 @@ impl BodyTransCtx<'_, '_, '_> {
         }
     }
 
+    fn dummy_trait_ref(&self) -> TraitRef {
+        TraitRef::new(
+            TraitRefKind::Dyn,
+            RegionBinder::empty(self.dummy_trait_decl_ref()),
+        )
+    }
+
     fn translate_unsizing_metadata(
         &mut self,
         span: Span,
@@ -283,10 +290,13 @@ impl BodyTransCtx<'_, '_, '_> {
                     && let Some(vptr_entry_idx) =
                         self.t_ctx.tcx.supertrait_vtable_slot((src_ty, tgt_ty))
                 {
-                    Ok(UnsizingMetadata::MonoVTableReindex(Some(vptr_entry_idx)))
+                    Ok(UnsizingMetadata::VTableNested(
+                        self.dummy_trait_ref(),
+                        Some(FieldId::new(vptr_entry_idx)),
+                    ))
                 } else {
                     // Fallback to original vtable
-                    Ok(UnsizingMetadata::MonoVTableReindex(None))
+                    Ok(UnsizingMetadata::VTableNested(self.dummy_trait_ref(), None))
                 }
             }
             (_, ty::Dynamic(preds, ..)) => {
@@ -300,10 +310,13 @@ impl BodyTransCtx<'_, '_, '_> {
                     stable.with_self_ty(self_ty)
                 });
                 let vtable_global = self.register_vtable(span, self_ty, trait_ref);
-                Ok(UnsizingMetadata::MonoVTablePtr(GlobalDeclRef {
-                    id: vtable_global,
-                    generics: Box::new(GenericArgs::empty()),
-                }))
+                Ok(UnsizingMetadata::VTableDirect(
+                    self.dummy_trait_ref(),
+                    Some(GlobalDeclRef {
+                        id: vtable_global,
+                        generics: Box::new(GenericArgs::empty()),
+                    }),
+                ))
             }
             _ => {
                 println!("Unknown unsize for ({src_ty:?}) => ({tgt_ty:?})");
@@ -385,9 +398,6 @@ impl BodyTransCtx<'_, '_, '_> {
                     kind => unreachable!("Unexpected type in field projection: {kind:?}"),
                 };
                 ProjectionElem::Field(kind, FieldId::from_usize(*field_idx))
-            }
-            mir::ProjectionElem::Subtype(ty) => {
-                return Ok((of_place, *ty, variant_id));
             }
             mir::ProjectionElem::OpaqueCast(..) => {
                 raise_error!(self, span, "Unexpected ProjectionElem::OpaqueCast");
@@ -588,7 +598,9 @@ impl BodyTransCtx<'_, '_, '_> {
                         | mir::PointerCoercion::ReifyFnPointer,
                         ..,
                     ) => CastKind::FnPtr(src_ty, tgt_ty),
-                    mir::CastKind::Transmute => CastKind::Transmute(src_ty, tgt_ty),
+                    mir::CastKind::Subtype | mir::CastKind::Transmute => {
+                        CastKind::Transmute(src_ty, tgt_ty)
+                    }
                     mir::CastKind::PointerCoercion(mir::PointerCoercion::Unsize) => {
                         let mir_src_ty = mir_operand.ty(self.local_decls)?;
                         let unsizing_meta =
@@ -608,25 +620,16 @@ impl BodyTransCtx<'_, '_, '_> {
                 self.translate_operand(span, left)?,
                 self.translate_operand(span, right)?,
             )),
-            mir::Rvalue::NullaryOp(nullop, ty) => {
+            mir::Rvalue::NullaryOp(nullop) => {
                 trace!("NullOp: {:?}", nullop);
-                let ty = self.translate_ty(span, *ty)?;
                 let op = match nullop {
-                    mir::NullOp::SizeOf => NullOp::SizeOf,
-                    mir::NullOp::AlignOf => NullOp::AlignOf,
-                    mir::NullOp::OffsetOf(fields) => NullOp::OffsetOf(
-                        fields
-                            .iter()
-                            .copied()
-                            .map(|(n, idx)| (n.to_index(), FieldId::new(idx)))
-                            .collect(),
-                    ),
-                    mir::NullOp::UbChecks => NullOp::UbChecks,
-                    mir::NullOp::ContractChecks => {
-                        raise_error!(self, span, "charon does not support contracts");
-                    }
+                    mir::NullOp::RuntimeChecks(check) => match check {
+                        mir::RuntimeChecks::UbChecks => NullOp::UbChecks,
+                        mir::RuntimeChecks::ContractChecks => NullOp::ContractChecks,
+                        mir::RuntimeChecks::OverflowChecks => NullOp::ContractChecks,
+                    },
                 };
-                Ok(Rvalue::NullaryOp(op, ty))
+                Ok(Rvalue::NullaryOp(op, LiteralTy::Bool.into()))
             }
             mir::Rvalue::UnaryOp(unop, operand) => {
                 let operand = self.translate_operand(span, operand)?;
@@ -803,10 +806,6 @@ impl BodyTransCtx<'_, '_, '_> {
                 let var_id = self.translate_local(&local).unwrap();
                 Some(StatementKind::StorageDead(var_id))
             }
-            mir::StatementKind::Deinit(place) => {
-                let t_place = self.translate_place(span, &place)?;
-                Some(StatementKind::Deinit(t_place))
-            }
             // This asserts the operand true on pain of UB. We treat it like a normal assertion.
             mir::StatementKind::Intrinsic(mir::NonDivergingIntrinsic::Assume(op)) => {
                 let op = self.translate_operand(span, &op)?;
@@ -914,7 +913,7 @@ impl BodyTransCtx<'_, '_, '_> {
                         },
                     ),
                 ));
-                let operand = Operand::Move(ptr_place);
+                let operand = Operand::Move(ptr_place.clone());
 
                 let drop_fn_id = self.register_fun_decl_id(span, drop_shim);
                 let on_unwind = self.translate_unwind(span, unwind);
@@ -923,7 +922,14 @@ impl BodyTransCtx<'_, '_, '_> {
                     generics: Box::new(GenericArgs::empty()),
                 };
                 let func = if matches!(place.ty().kind(), TyKind::DynTrait(_)) {
-                    FnOperand::VTableMethod(fn_ptr, 0)
+                    let unit_ptr_ty = TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty();
+                    let unit_ptr_ptr_ty = TyKind::RawPtr(unit_ptr_ty, RefKind::Shared).into_ty();
+                    let unit_ptr_ptr_ptr_ty =
+                        TyKind::RawPtr(unit_ptr_ptr_ty, RefKind::Shared).into_ty();
+                    let drop_pointer = ptr_place
+                        .project(ProjectionElem::PtrMetadata, unit_ptr_ptr_ptr_ty)
+                        .deref();
+                    FnOperand::Dynamic(Operand::Copy(drop_pointer))
                 } else {
                     FnOperand::Regular(fn_ptr)
                 };
@@ -1090,6 +1096,7 @@ impl BodyTransCtx<'_, '_, '_> {
         // call to a top-level function identified by its id, or if we
         // are using a local function pointer (i.e., the operand is a "move").
         let lval = self.translate_place(span, destination)?;
+        let fn_args = self.translate_arguments(span, args)?;
         // Translate the function operand.
         let fn_ty = fun.ty(self.local_decls)?;
         let mut extra_stts: Vec<StatementKind> = vec![];
@@ -1104,41 +1111,53 @@ impl BodyTransCtx<'_, '_, '_> {
                 };
                 // If this is a VTable call, do something else
                 if let mir::mono::InstanceKind::Virtual { idx } = instance.kind {
-                    FnOperand::VTableMethod(fn_ptr, idx)
+                    let mut dyn_element_place = match &fn_args[0] {
+                        Operand::Copy(place) | Operand::Move(place) => place.clone(),
+                        Operand::Const(_) => {
+                            panic!("Unexpected constant as receiver for dyn trait method call")
+                        }
+                    };
+
+                    if matches!(dyn_element_place.ty.kind(), TyKind::DynTrait(_)) {
+                        let PlaceKind::Projection(dyn_ref_place, ProjectionElem::Deref) =
+                            dyn_element_place.kind
+                        else {
+                            panic!("dyn variable without a deref?")
+                        };
+                        dyn_element_place = *dyn_ref_place.clone();
+                    }
+
+                    let unit_ptr_ty = TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty();
+                    let unit_ptr_ptr_ty =
+                        TyKind::RawPtr(unit_ptr_ty.clone(), RefKind::Shared).into_ty();
+                    let unit_ptr_ptr_ptr_ty =
+                        TyKind::RawPtr(unit_ptr_ptr_ty.clone(), RefKind::Shared).into_ty();
+                    let offset = Operand::Const(Box::new(ConstantExpr {
+                        kind: ConstantExprKind::Literal(Literal::Scalar(ScalarValue::Unsigned(
+                            UIntTy::Usize,
+                            idx as u128,
+                        ))),
+                        ty: Ty::mk_usize(),
+                    }));
+                    let vtable_ptr =
+                        dyn_element_place.project(ProjectionElem::PtrMetadata, unit_ptr_ptr_ptr_ty);
+                    let fn_pointer =
+                        Rvalue::BinaryOp(BinOp::Offset, Operand::Copy(vtable_ptr), offset);
+                    let fn_pointer_place = self.locals.new_var(None, unit_ptr_ptr_ty.clone());
+                    extra_stts.push(StatementKind::Assign(fn_pointer_place.clone(), fn_pointer));
+                    FnOperand::Dynamic(Operand::Copy(fn_pointer_place.deref()))
                 } else {
                     FnOperand::Regular(fn_ptr)
                 }
             }
             _ => {
-                let (mir::Operand::Move(place) | mir::Operand::Copy(place)) = fun else {
-                    raise_error!(
-                        self,
-                        span,
-                        "Expected a move/copy function pointer operand, got constant {fun:?}"
-                    );
-                };
-                // Call to a local function pointer
-                let p = self.translate_place(span, place)?;
-
-                if matches!(fun, mir::Operand::Copy(_)) {
-                    // Charon doesn't allow copy as a fn operand, so we create a temporary
-                    // variable that copies the value, and then move that
-                    let new_place = self.locals.new_var(None, p.ty.clone());
-                    extra_stts.push(StatementKind::StorageLive(new_place.local_id().unwrap()));
-                    extra_stts.push(StatementKind::Assign(
-                        new_place.clone(),
-                        Rvalue::Use(Operand::Copy(p)),
-                    ));
-                    FnOperand::Move(new_place)
-                } else {
-                    FnOperand::Move(p)
-                }
+                let fun = self.translate_operand(span, fun)?;
+                FnOperand::Dynamic(fun)
             }
         };
-        let args = self.translate_arguments(span, args)?;
         let call = Call {
             func: fn_operand,
-            args,
+            args: fn_args,
             dest: lval,
         };
 
@@ -1274,7 +1293,7 @@ impl BodyTransCtx<'_, '_, '_> {
         span: Span,
         instance: mir::mono::Instance,
         body: &mir::Body,
-    ) -> Result<Result<Body, Opaque>, Error> {
+    ) -> Result<Body, Error> {
         // Stopgap measure because there are still many panics in charon and hax.
         let mut this = panic::AssertUnwindSafe(&mut *self);
         let res = panic::catch_unwind(move || this.translate_body_aux(instance, body));
@@ -1302,7 +1321,7 @@ impl BodyTransCtx<'_, '_, '_> {
         &mut self,
         instance: mir::mono::Instance,
         body: &mir::Body,
-    ) -> Result<Result<Body, Opaque>, Error> {
+    ) -> Result<Body, Error> {
         // Compute the span information
         let span = self.translate_span_from_smir(&body.span);
 
@@ -1334,11 +1353,11 @@ impl BodyTransCtx<'_, '_, '_> {
         }
 
         // Create the body
-        Ok(Ok(Body::Unstructured(ExprBody {
+        Ok(Body::Unstructured(ExprBody {
             span,
             locals: mem::take(&mut self.locals),
             body: mem::take(&mut self.blocks),
             comments: vec![],
-        })))
+        }))
     }
 }

@@ -60,6 +60,41 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         }
     }
 
+    pub(crate) fn dummy_trait_decl_ref(&self) -> TraitDeclRef {
+        TraitDeclRef {
+            id: FAKE_DYN_TRAIT,
+            generics: Box::new(GenericArgs::empty()),
+        }
+    }
+
+    pub(crate) fn dummy_dyn_ty(&self) -> TyKind {
+        TyKind::DynTrait(DynPredicate {
+            binder: Binder {
+                params: GenericParams {
+                    regions: vec![].into(),
+                    types: vec![].into(),
+                    const_generics: vec![].into(),
+                    trait_clauses: vec![TraitParam {
+                        clause_id: TraitClauseId::ZERO,
+                        span: None,
+                        origin: PredicateOrigin::Dyn,
+                        trait_: RegionBinder::empty(self.dummy_trait_decl_ref()),
+                    }]
+                    .into(),
+                    regions_outlive: vec![].into(),
+                    types_outlive: vec![].into(),
+                    trait_type_constraints: vec![].into(),
+                },
+                skip_binder: TyKind::TypeVar(DeBruijnVar::bound(
+                    DeBruijnId::zero(),
+                    TypeVarId::ZERO,
+                ))
+                .into_ty(),
+                kind: BinderKind::Dyn,
+            },
+        })
+    }
+
     /// Translate a Ty.
     ///
     /// Typically used in this module to translate the fields of a structure/
@@ -214,37 +249,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 TyKind::Adt(tref)
             }
 
-            ty::RigidTy::Dynamic(_existential_preds, _region, _) => {
+            ty::RigidTy::Dynamic(_existential_preds, _region) => {
                 // TODO: we don't translate the predicates yet because our machinery can't handle
                 // it.
-                TyKind::DynTrait(DynPredicate {
-                    binder: Binder {
-                        params: GenericParams {
-                            regions: vec![].into(),
-                            types: vec![].into(),
-                            const_generics: vec![].into(),
-                            trait_clauses: vec![TraitParam {
-                                clause_id: TraitClauseId::ZERO,
-                                span: None,
-                                origin: PredicateOrigin::Dyn,
-                                trait_: RegionBinder::empty(TraitDeclRef {
-                                    id: FAKE_DYN_TRAIT,
-                                    generics: Box::new(GenericArgs::empty()),
-                                }),
-                            }]
-                            .into(),
-                            regions_outlive: vec![].into(),
-                            types_outlive: vec![].into(),
-                            trait_type_constraints: vec![].into(),
-                        },
-                        skip_binder: TyKind::TypeVar(DeBruijnVar::bound(
-                            DeBruijnId::zero(),
-                            TypeVarId::ZERO,
-                        ))
-                        .into_ty(),
-                        kind: BinderKind::Dyn,
-                    },
-                })
+                self.dummy_dyn_ty()
             }
 
             ty::RigidTy::Coroutine(..) => {

@@ -208,7 +208,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             },
             src: ItemSource::TopLevel,
             is_global_initializer: Some(global),
-            body: Ok(body),
+            body,
         })
     }
 

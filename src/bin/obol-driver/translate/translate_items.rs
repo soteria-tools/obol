@@ -194,7 +194,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 inputs: vec![],
                 output: Ty::mk_unit(),
             },
-            body: Ok(Body::Unstructured(body)),
+            body: Body::Unstructured(body),
         });
         self.translated.global_decls.set_slot(
             global_id,
@@ -365,16 +365,13 @@ impl ItemTransCtx<'_, '_> {
         let body = if let Some(body) = body {
             let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals(), &mut signature);
             match bt_ctx.translate_body(item_meta.span, def, &body) {
-                Ok(Ok(body)) => Ok(body),
-                // Opaque declaration
-                Ok(Err(Opaque)) => Err(Opaque),
+                Ok(body) => body,
                 // Translation error.
-                // FIXME: handle error cases more explicitly.
-                Err(_) => Err(Opaque),
+                Err(err) => Body::Error(format!("{:?}", err).into()),
             }
         } else {
             trace!("Instance {} has no body -- left opaque.", def.name(),);
-            Err(Opaque)
+            Body::Missing
         };
 
         Ok(FunDecl {
@@ -419,7 +416,15 @@ impl ItemTransCtx<'_, '_> {
                 let initializer = self.register_global_const_fn(span, def.clone(), ty);
                 (GlobalKind::AnonConst, initializer)
             }
-            _ => panic!("Cannot translate global: {def:?}"),
+            mir::alloc::GlobalAlloc::TypeId { .. } => {
+                panic!("Obol does not support translating TypeId globals")
+            }
+            mir::alloc::GlobalAlloc::VTable(..) => {
+                panic!("Shouldn't reach a VTable global")
+            }
+            mir::alloc::GlobalAlloc::Function(..) => {
+                unreachable!("Shouldn't reach a global function")
+            }
         };
         let ty = self.translate_ty(span, ty)?;
 
@@ -492,7 +497,6 @@ impl ItemTransCtx<'_, '_> {
                 (span, mem)
             }
             _ => {
-                println!("ERROR!!!!");
                 panic!("Cannot translate global const fn: {def:?}")
             }
         };
@@ -515,7 +519,7 @@ impl ItemTransCtx<'_, '_> {
             name: None,
             ty: output.clone(),
         });
-        let body = Ok(Body::Unstructured(GExprBody {
+        let body = Body::Unstructured(GExprBody {
             body: vec![BlockData {
                 statements: vec![Statement::new(
                     span,
@@ -530,7 +534,7 @@ impl ItemTransCtx<'_, '_> {
             span,
             locals,
             comments: vec![],
-        }));
+        });
 
         Ok(FunDecl {
             def_id,

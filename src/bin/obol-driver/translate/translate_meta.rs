@@ -1,7 +1,6 @@
 //! Translate information about items: name, attributes, etc.
 
 extern crate rustc_ast_pretty;
-extern crate rustc_attr_data_structures;
 extern crate rustc_attr_parsing;
 extern crate rustc_hir;
 extern crate rustc_public;
@@ -224,7 +223,11 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let span = self.translate_span_from_smir(&span);
                 let mut item_ctx = ItemTransCtx::new(None, self);
                 let generics = item_ctx.translate_generic_args(span, &gargs)?;
-                name.name.push(PathElem::Monomorphized(Box::new(generics)));
+                name.name
+                    .push(PathElem::Instantiated(Box::new(Binder::empty(
+                        BinderKind::Other,
+                        generics,
+                    ))));
             }
             TransItemSource::VTable(ty, tref) | TransItemSource::VTableInit(ty, tref) => {
                 let mut item_ctx = ItemTransCtx::new(None, self);
@@ -239,7 +242,11 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                         regions: vec![].into(),
                     }
                 };
-                name.name.push(PathElem::Monomorphized(Box::new(generics)));
+                name.name
+                    .push(PathElem::Instantiated(Box::new(Binder::empty(
+                        BinderKind::Other,
+                        generics,
+                    ))));
                 name.name.splice(
                     0..0,
                     [PathElem::Ident("{vtable}".into(), Disambiguator::ZERO)],
@@ -286,15 +293,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 };
                 Some(Attribute::Unknown(RawAttribute { path, args }))
             }
-            rustc_hir::Attribute::Parsed(kind) => {
-                use rustc_attr_data_structures::AttributeKind;
-                match kind {
-                    AttributeKind::DocComment { comment, .. } => {
-                        Some(Attribute::DocComment(comment.to_string()))
-                    }
-                    _ => None,
+            rustc_hir::Attribute::Parsed(kind) => match kind {
+                rustc_hir::attrs::AttributeKind::DocComment { comment, .. } => {
+                    Some(Attribute::DocComment(comment.to_string()))
                 }
-            }
+                _ => None,
+            },
         }
     }
 
