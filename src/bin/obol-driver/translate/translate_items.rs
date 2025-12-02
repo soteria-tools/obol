@@ -390,7 +390,7 @@ impl ItemTransCtx<'_, '_> {
         def_id: GlobalDeclId,
         item_meta: ItemMeta,
         def: &mir::alloc::AllocId,
-        ty: ty::Ty,
+        ty: Option<ty::Ty>,
     ) -> Result<GlobalDecl, Error> {
         trace!("About to translate global:\n{:?}", def);
         let span = item_meta.span;
@@ -426,7 +426,10 @@ impl ItemTransCtx<'_, '_> {
                 unreachable!("Shouldn't reach a global function")
             }
         };
-        let ty = self.translate_ty(span, ty)?;
+        let ty = match ty {
+            Some(ty) => self.translate_ty(span, ty)?,
+            None => TyKind::Error("Untype global".into()).into_ty(),
+        };
 
         Ok(GlobalDecl {
             def_id,
@@ -482,7 +485,7 @@ impl ItemTransCtx<'_, '_> {
         def_id: FunDeclId,
         item_meta: ItemMeta,
         def: mir::alloc::AllocId,
-        ty: ty::Ty,
+        ty: Option<ty::Ty>,
     ) -> Result<FunDecl, Error> {
         let alloc: mir::alloc::GlobalAlloc = def.clone().into();
 
@@ -502,7 +505,23 @@ impl ItemTransCtx<'_, '_> {
         };
 
         let global_id = self.register_global_decl_id(span, def, ty);
-        let output = self.translate_ty(span, ty)?;
+        let (output, const_val) = match ty {
+            Some(ty) => {
+                let output = self.translate_ty(span, ty)?;
+                let const_val = self.translate_allocation(span, &alloc, &output, ty)?;
+                (output, const_val)
+            }
+            None => {
+                let size = alloc.bytes.len();
+                let maybe_uninit = self.maybe_uninit_bytes(span, size)?;
+                let bytes = self.as_charon_bytes(span, &alloc, 0, size);
+                let const_val = ConstantExpr {
+                    kind: ConstantExprKind::RawMemory(bytes),
+                    ty: maybe_uninit.clone(),
+                };
+                (maybe_uninit, const_val)
+            }
+        };
         let signature = FunSig {
             is_unsafe: false,
             generics: GenericParams::empty(),
@@ -511,7 +530,6 @@ impl ItemTransCtx<'_, '_> {
         };
 
         use ullbc_ast::*;
-        let const_val = self.translate_allocation(span, &alloc, &output, ty)?;
 
         let mut locals = Locals::new(0);
         locals.locals.push_with(|index| Local {

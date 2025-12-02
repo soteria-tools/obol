@@ -3,6 +3,7 @@ extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate rustc_public;
 extern crate rustc_public_bridge;
+extern crate rustc_span;
 
 use crate::translate::translate_crate::FAKE_DYN_TRAIT;
 
@@ -93,6 +94,24 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 kind: BinderKind::Dyn,
             },
         })
+    }
+
+    pub fn maybe_uninit_bytes(&mut self, span: Span, len: usize) -> Result<Ty, Error> {
+        let maybe_uninit = self
+            .t_ctx
+            .tcx
+            .require_lang_item(rustc_hir::LangItem::MaybeUninit, rustc_span::DUMMY_SP);
+        let u8_ty = ty::Ty::from_rigid_kind(ty::RigidTy::Uint(ty::UintTy::U8));
+        let len_cg = ty::TyConst::try_from_target_usize(len as u64)?;
+        let array_ty = ty::Ty::new_array_with_const_len(u8_ty, len_cg);
+        let array_ty = rustc_public::rustc_internal::internal(self.t_ctx.tcx, array_ty);
+        let maybe_uninit = self
+            .t_ctx
+            .tcx
+            .type_of(maybe_uninit)
+            .instantiate(self.t_ctx.tcx, &[array_ty.into()]);
+        let maybe_uninit: ty::Ty = rustc_public::rustc_internal::stable(maybe_uninit);
+        self.translate_ty(span, maybe_uninit)
     }
 
     /// Translate a Ty.

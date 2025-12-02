@@ -29,8 +29,8 @@ use std::hash::Hash;
 /// `FunDecl` one (for its initializer function).
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum TransItemSource {
-    Global(mir::alloc::AllocId, ty::Ty), // the static or const itself, with its type
-    GlobalConstFn(mir::alloc::AllocId, ty::Ty), // the const initialiser of a global
+    Global(mir::alloc::AllocId, Option<ty::Ty>), // the static or const itself, with its type
+    GlobalConstFn(mir::alloc::AllocId, Option<ty::Ty>), // the const initialiser of a global
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -81,7 +81,9 @@ impl TransItemSource {
         }
 
         match self {
-            TransItemSource::Global(id, ty) => (0, id.to_index(), ty.to_index()),
+            TransItemSource::Global(id, ty) => {
+                (0, id.to_index(), ty.map(|t| t.to_index()).unwrap_or(0))
+            }
             TransItemSource::Fun(instance) => {
                 (1, instance.def.to_index(), key_instance(&instance.kind))
             }
@@ -93,7 +95,9 @@ impl TransItemSource {
             TransItemSource::ForeignType(def) => (5, def.def_id().to_index(), 0),
             TransItemSource::VTable(ty, t) => (6, ty.to_index(), key_trait(t)),
             TransItemSource::VTableInit(ty, t) => (7, ty.to_index(), key_trait(t)),
-            TransItemSource::GlobalConstFn(id, ty) => (8, id.to_index(), ty.to_index()),
+            TransItemSource::GlobalConstFn(id, ty) => {
+                (8, id.to_index(), ty.map(|t| t.to_index()).unwrap_or(0))
+            }
         }
     }
 }
@@ -208,7 +212,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         &mut self,
         src: &Option<DepSource>,
         stt: mir::alloc::AllocId,
-        ty: ty::Ty,
+        ty: Option<ty::Ty>,
     ) -> GlobalDeclId {
         *self
             .register_and_enqueue_id(src, TransItemSource::Global(stt, ty))
@@ -255,7 +259,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         &mut self,
         src: &Option<DepSource>,
         stt: mir::alloc::AllocId,
-        ty: ty::Ty,
+        ty: Option<ty::Ty>,
     ) -> FunDeclId {
         *self
             .register_and_enqueue_id(src, TransItemSource::GlobalConstFn(stt, ty))
@@ -317,7 +321,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         span: Span,
         stt: mir::alloc::AllocId,
-        ty: ty::Ty,
+        ty: Option<ty::Ty>,
     ) -> GlobalDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_global_decl_id(&src, stt, ty)
@@ -358,7 +362,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         &mut self,
         span: Span,
         stt: mir::alloc::AllocId,
-        ty: ty::Ty,
+        ty: Option<ty::Ty>,
     ) -> FunDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_global_const_fn(&src, stt, ty)

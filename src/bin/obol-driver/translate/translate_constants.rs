@@ -5,12 +5,9 @@ extern crate rustc_public_bridge;
 
 use charon_lib::{ast::*, error_assert, raise_error, register_error};
 use itertools::Itertools;
-use log::trace;
 use rustc_apfloat::{Float, ieee};
-use rustc_public::{
-    abi, mir,
-    ty::{self, VariantIdx},
-};
+use rustc_middle::mir::interpret::PointerArithmetic;
+use rustc_public::{abi, mir, ty};
 use rustc_public_bridge::IndexedVal;
 use std::io::Read;
 
@@ -59,6 +56,52 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             .copied()
             .collect::<Option<Vec<_>>>()
             .ok_or_else(|| format!("Found uninitialized bytes when reading {bytes:?}").into())
+    }
+
+    pub fn as_charon_bytes(
+        &mut self,
+        span: Span,
+        alloc: &ty::Allocation,
+        offset: usize,
+        size: usize,
+    ) -> Vec<Byte> {
+        let mut bytes: Vec<Byte> = alloc.bytes.as_slice()[offset..offset + size]
+            .iter()
+            .map(|b| match b {
+                None => Byte::Uninit,
+                Some(v) => Byte::Value(*v),
+            })
+            .collect();
+
+        let ptr_size = self.t_ctx.tcx.pointer_size().bytes_usize();
+        for (prov_ofs, prov) in alloc.provenance.ptrs.iter() {
+            let prov_alloc: mir::alloc::GlobalAlloc = prov.0.into();
+            let prov = match prov_alloc {
+                mir::alloc::GlobalAlloc::Function(fun) => {
+                    let id = self.register_fun_decl_id(span, fun);
+                    Provenance::Function(FunDeclRef {
+                        id,
+                        generics: Box::new(GenericArgs::empty()),
+                    })
+                }
+                _ => {
+                    let id = self.register_global_decl_id(span, prov.0, None);
+                    Provenance::Global(GlobalDeclRef {
+                        id,
+                        generics: Box::new(GenericArgs::empty()),
+                    })
+                }
+            };
+            let prov_ofs = *prov_ofs;
+            for ptr_i in 0..ptr_size {
+                let alloc_i = prov_ofs + ptr_i;
+                if offset <= alloc_i && alloc_i < offset + size {
+                    bytes[alloc_i] = Byte::Provenance(prov.clone(), ptr_i as u8);
+                }
+            }
+        }
+
+        bytes
     }
 
     fn provenance_at<'a>(
@@ -186,7 +229,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             ConstantExprKind::Slice(sub_constants)
                         } else {
                             let inner = rty.kind().builtin_deref(true).unwrap().ty;
-                            let id = self.register_global_decl_id(span, alloc_id, inner);
+                            let id = self.register_global_decl_id(span, alloc_id, Some(inner));
                             let generics = match glob_alloc {
                                 GlobalAlloc::Static(stt) => {
                                     let instance: mir::mono::Instance = stt.into();
@@ -363,46 +406,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         (Some(variant_idx_charon), fields, offsets.clone())
                     }
                     ty::AdtKind::Union => {
-                        // FIXME: this is unsound; we should just encode it as an array of optional
-                        // bytes with provenance
-                        assert_eq!(adt.num_variants(), 1);
-                        let fields = adt.variant(VariantIdx::to_val(0)).unwrap().fields();
-                        let mut variant_tys = fields
-                            .into_iter()
-                            .enumerate()
-                            .map(|(idx, f)| {
-                                let fty = f.ty_with_args(generics);
-                                let size = fty.layout().unwrap().shape().size;
-                                (idx, fty, size)
-                            })
-                            .collect::<Vec<_>>();
-                        variant_tys.sort_by_key(|(_, _, s)| s.bytes());
-                        variant_tys.reverse();
-
-                        // Super unsound: we just try parsing variants in decreasing size order,
-                        // until one works.
-
-                        for (vidx, vty, _) in variant_tys {
-                            let field_ty = self.translate_ty(span, vty)?;
-                            let res = self.translate_allocation_at(
-                                span,
-                                alloc,
-                                field_ty.kind(),
-                                vty,
-                                offset,
-                            );
-                            if let Ok(res) = res {
-                                let field = FieldId::from_raw(vidx);
-                                return Ok(ConstantExpr {
-                                    kind: ConstantExprKind::Union(field, Box::new(res)),
-                                    ty: ty.clone().into_ty(),
-                                });
-                            }
-                        }
-
-                        trace!("Gave up for union raw memory of type {ty:?} with alloc {alloc:?}");
                         return Ok(ConstantExpr {
-                            kind: ConstantExprKind::RawMemory(Self::as_init(bytes)?),
+                            kind: ConstantExprKind::RawMemory(
+                                self.as_charon_bytes(span, alloc, offset, size),
+                            ),
                             ty: ty.clone().into_ty(),
                         });
                     }
@@ -444,13 +451,12 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 ConstantExprKind::Array(elems)
             }
             TyKind::FnPtr(_) => 'fnptr_case: {
-                let Some((_, alloc)) = alloc.provenance.ptrs.iter().find(|(o, _)| *o == offset)
-                else {
+                let Some(prov) = self.provenance_at(alloc, offset) else {
                     let value = self.read_target_uint(Self::as_init(bytes)?.as_slice())?;
                     break 'fnptr_case ConstantExprKind::PtrNoProvenance(value);
                 };
                 use mir::alloc::GlobalAlloc;
-                let glob_alloc: GlobalAlloc = alloc.0.into();
+                let glob_alloc: GlobalAlloc = prov.0.into();
                 match glob_alloc {
                     GlobalAlloc::Function(instance) => {
                         let TyKind::FnPtr(sig) = ty else {
@@ -480,13 +486,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     }
                     _ => {
                         println!("Gave up for raw memory of fndef with alloc {glob_alloc:?}");
-                        ConstantExprKind::RawMemory(Self::as_init(bytes)?)
+                        ConstantExprKind::RawMemory(self.as_charon_bytes(span, alloc, offset, size))
                     }
                 }
             }
             _ => {
                 println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
-                ConstantExprKind::RawMemory(Self::as_init(bytes)?)
+                ConstantExprKind::RawMemory(self.as_charon_bytes(span, alloc, offset, size))
             }
         };
         Ok(ConstantExpr {
@@ -552,25 +558,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                 Some(index)
                             }
                             ty::AdtKind::Union => {
-                                let variant = adt.variants_iter().next().unwrap();
-                                let zst_fields = variant
-                                    .fields()
-                                    .iter()
-                                    .enumerate()
-                                    .map(|(i, f)| (i, f.ty_with_args(generics)))
-                                    .filter(|(_, f)| f.layout().is_ok_and(|l| l.shape().is_1zst()))
-                                    .collect::<Vec<_>>();
-                                assert!(
-                                    !zst_fields.is_empty(),
-                                    "ZST const union with no ZST fields?"
-                                );
-                                let (field_idx, field) = zst_fields[0];
-                                let field_idx = FieldId::from_raw(field_idx);
-                                let field_ty = self.translate_ty(span, field)?;
-                                let sub_const =
-                                    self.translate_zst_constant(span, field_ty.kind(), field)?;
                                 return Ok(ConstantExpr {
-                                    kind: ConstantExprKind::Union(field_idx, Box::new(sub_const)),
+                                    kind: ConstantExprKind::RawMemory(vec![]),
                                     ty: ty.clone().into_ty(),
                                 });
                             }
@@ -632,8 +621,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             | ConstantExprKind::FnPtr { .. }
             | ConstantExprKind::FnDef { .. }
             | ConstantExprKind::Opaque(_)
-            | ConstantExprKind::PtrNoProvenance(..)
-            | ConstantExprKind::Union(..) => {
+            | ConstantExprKind::PtrNoProvenance(..) => {
                 raise_error!(self, span, "Unexpected constant generic: {:?}", value)
             }
         }
