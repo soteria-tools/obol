@@ -415,14 +415,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let layout = rustc_public::rustc_internal::internal(self.t_ctx.tcx, layout);
         let ty = rustc_public::rustc_internal::internal(self.t_ctx.tcx, ty);
 
-        let (size, align) = if layout.is_sized() {
-            (
-                Some(layout.size().bytes()),
-                Some(layout.align().abi.bytes()),
-            )
-        } else {
-            (None, None)
-        };
+        let (size, align) = (
+            Some(layout.size().bytes()),
+            Some(layout.align().abi.bytes()),
+        );
 
         // Get the layout of the discriminant when there is one (even if it is encoded in a niche).
         let discriminant_layout = match layout.variants() {
