@@ -378,7 +378,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 r_abi::FieldsShape::Arbitrary { offsets, .. } => {
                     offsets.iter().map(|o| o.bytes()).collect()
                 }
-                r_abi::FieldsShape::Primitive | r_abi::FieldsShape::Union(_) => Vector::default(),
+                r_abi::FieldsShape::Union(x) => vec![0].repeat(x.get()).into(),
+                r_abi::FieldsShape::Primitive => Vector::default(),
                 r_abi::FieldsShape::Array { .. } => panic!("Unexpected layout shape"),
             };
             VariantLayout {
@@ -503,22 +504,28 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 }
             }
             r_abi::Variants::Single { index } => {
-                if let r_abi::FieldsShape::Arbitrary { .. } = layout.fields() {
-                    let n_variants = match ty.kind() {
-                        _ if let Some(range) = ty.variant_range(self.t_ctx.tcx) => {
-                            range.end.index()
-                        }
-                        _ => 1,
-                    };
-                    // All the variants not initialized below are uninhabited.
-                    variant_layouts = (0..n_variants)
-                        .map(|_| VariantLayout {
-                            field_offsets: Vector::default(),
-                            uninhabited: true,
-                            tag: None,
-                        })
-                        .collect();
-                    variant_layouts[index.index()] = translate_variant_layout(&layout, None);
+                match layout.fields() {
+                    r_abi::FieldsShape::Arbitrary { .. } => {
+                        let n_variants = match ty.kind() {
+                            _ if let Some(range) = ty.variant_range(self.t_ctx.tcx) => {
+                                range.end.index()
+                            }
+                            _ => 1,
+                        };
+                        // All the variants not initialized below are uninhabited.
+                        variant_layouts = (0..n_variants)
+                            .map(|_| VariantLayout {
+                                field_offsets: Vector::default(),
+                                uninhabited: true,
+                                tag: None,
+                            })
+                            .collect();
+                        variant_layouts[index.index()] = translate_variant_layout(&layout, None);
+                    }
+                    r_abi::FieldsShape::Union { .. } => {
+                        variant_layouts.push(translate_variant_layout(&layout, None));
+                    }
+                    _ => {}
                 }
             }
             r_abi::Variants::Empty => {}
