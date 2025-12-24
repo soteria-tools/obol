@@ -3,7 +3,7 @@ extern crate rustc_public;
 
 use super::translate_ctx::*;
 
-use charon_lib::{ast::*, ullbc_ast::*};
+use charon_lib::{ast::*, ids::IndexVec, ullbc_ast::*};
 use rustc_middle::ty as mty;
 use rustc_public::{mir::mono::Instance, ty};
 
@@ -176,7 +176,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         ));
 
         let body = Body::Unstructured(ExprBody {
-            body: vec![BlockData {
+            body: IndexVec::from_vec(vec![BlockData {
                 statements: statements
                     .into_iter()
                     .map(|k| Statement {
@@ -190,8 +190,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     comments_before: vec![],
                     kind: TerminatorKind::Return,
                 },
-            }]
-            .into(),
+            }]),
+            bound_body_regions: 0,
             locals,
             span: Span::dummy(),
             comments: vec![],
@@ -202,10 +202,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             item_meta,
             signature: FunSig {
                 is_unsafe: false,
-                generics: GenericParams::empty(),
                 inputs: vec![],
                 output: TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty(),
             },
+            generics: GenericParams::empty(),
             src: ItemSource::TopLevel,
             is_global_initializer: Some(global),
             body,

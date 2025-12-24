@@ -6,7 +6,7 @@ extern crate rustc_span;
 use log::trace;
 use rustc_public::{CrateDef, mir, ty};
 
-use charon_lib::{ast::*, register_error};
+use charon_lib::{ast::*, ids::IndexVec, register_error};
 
 use crate::translate::{
     translate_body::BodyTransCtx,
@@ -171,7 +171,8 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 span,
                 locals: Locals::new(0),
                 comments: Default::default(),
-                body: Vector::default(),
+                body: IndexVec::default(),
+                bound_body_regions: 0,
             };
             let _ = body.locals.new_var(None, Ty::mk_unit());
             body.body.push(BlockData {
@@ -188,9 +189,9 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             item_meta: item_meta.clone(),
             src: ItemSource::TopLevel,
             is_global_initializer: Some(global_id),
+            generics: Default::default(),
             signature: FunSig {
                 is_unsafe: false,
-                generics: Default::default(),
                 inputs: vec![],
                 output: Ty::mk_unit(),
             },
@@ -378,6 +379,7 @@ impl ItemTransCtx<'_, '_> {
             def_id,
             item_meta,
             signature,
+            generics: GenericParams::empty(),
             src: ItemSource::TopLevel,
             is_global_initializer: None,
             body,
@@ -524,7 +526,6 @@ impl ItemTransCtx<'_, '_> {
         };
         let signature = FunSig {
             is_unsafe: false,
-            generics: GenericParams::empty(),
             inputs: vec![],
             output: output.clone(),
         };
@@ -538,7 +539,7 @@ impl ItemTransCtx<'_, '_> {
             ty: output.clone(),
         });
         let body = Body::Unstructured(GExprBody {
-            body: vec![BlockData {
+            body: IndexVec::from_vec(vec![BlockData {
                 statements: vec![Statement::new(
                     span,
                     StatementKind::Assign(
@@ -547,8 +548,8 @@ impl ItemTransCtx<'_, '_> {
                     ),
                 )],
                 terminator: Terminator::new(span, ullbc_ast::TerminatorKind::Return),
-            }]
-            .into(),
+            }]),
+            bound_body_regions: 0,
             span,
             locals,
             comments: vec![],
@@ -558,6 +559,7 @@ impl ItemTransCtx<'_, '_> {
             def_id,
             item_meta,
             signature,
+            generics: GenericParams::empty(),
             src: ItemSource::TopLevel,
             is_global_initializer: Some(global_id),
             body,

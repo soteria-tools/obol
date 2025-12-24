@@ -466,7 +466,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         // special-case: if the first argument is ignored, because the signature
                         // is shorter, we do a closure_as_fn conversion
                         let abi = instance.fn_abi()?;
-                        let id = if abi.args.len() == sig.skip_binder.0.len() + 1
+                        let id = if abi.args.len() == sig.skip_binder.inputs.len() + 1
                             && let Some(closure_arg) = abi.args.get(0)
                             && closure_arg.mode == rustc_public::abi::PassMode::Ignore
                             && let ty::TyKind::RigidTy(ty::RigidTy::Closure(closure, args)) =

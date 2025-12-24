@@ -9,7 +9,7 @@ use crate::translate::translate_crate::FAKE_DYN_TRAIT;
 
 use super::translate_ctx::*;
 use charon_lib::ast::*;
-use charon_lib::ids::Vector;
+use charon_lib::ids::IndexVec;
 use charon_lib::{raise_error, register_error};
 use core::convert::*;
 use log::trace;
@@ -73,7 +73,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             binder: Binder {
                 params: GenericParams {
                     regions: vec![].into(),
-                    types: vec![].into(),
+                    types: vec![TypeParam::new(TypeVarId::ZERO, "dyn".into())].into(),
                     const_generics: vec![].into(),
                     trait_clauses: vec![TraitParam {
                         clause_id: TraitClauseId::ZERO,
@@ -181,7 +181,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let ty = self.translate_ty(span, *ty)?;
                 let tref = TypeDeclRef::new(
                     TypeId::Builtin(BuiltinTy::Array),
-                    GenericArgs::new(Vector::new(), [ty].into(), [c].into(), Vector::new()),
+                    GenericArgs::new(IndexMap::new(), [ty].into(), [c].into(), IndexMap::new()),
                 );
                 TyKind::Adt(tref)
             }
@@ -246,7 +246,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 //     let output = ctx.translate_ty(span, &sig.output)?;
                 //     Ok((inputs, output))
                 // })?;
-                TyKind::FnPtr(RegionBinder::empty((inputs, output)))
+                TyKind::FnPtr(RegionBinder::empty(FunSig {
+                    inputs,
+                    output,
+                    is_unsafe: false,
+                }))
             }
             ty::RigidTy::FnDef(item, args) => {
                 let instance = mir::mono::Instance::resolve(*item, args)?;
@@ -378,8 +382,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 r_abi::FieldsShape::Arbitrary { offsets, .. } => {
                     offsets.iter().map(|o| o.bytes()).collect()
                 }
-                r_abi::FieldsShape::Union(x) => vec![0].repeat(x.get()).into(),
-                r_abi::FieldsShape::Primitive => Vector::default(),
+                r_abi::FieldsShape::Union(x) => IndexVec::from_vec(vec![0].repeat(x.get())),
+                r_abi::FieldsShape::Primitive => IndexVec::new(),
                 r_abi::FieldsShape::Array { .. } => panic!("Unexpected layout shape"),
             };
             VariantLayout {
@@ -463,7 +467,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             r_abi::Variants::Single { .. } | r_abi::Variants::Empty => None,
         };
 
-        let mut variant_layouts: Vector<VariantId, VariantLayout> = Vector::new();
+        let mut variant_layouts: IndexVec<VariantId, VariantLayout> = IndexVec::new();
 
         match layout.variants() {
             r_abi::Variants::Multiple { variants, .. } => {
@@ -511,7 +515,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         // All the variants not initialized below are uninhabited.
                         variant_layouts = (0..n_variants)
                             .map(|_| VariantLayout {
-                                field_offsets: Vector::default(),
+                                field_offsets: IndexVec::new(),
                                 uninhabited: true,
                                 tag: None,
                             })
@@ -583,11 +587,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         }
 
         // The type is transparent: explore the variants
-        let mut variants: Vector<VariantId, Variant> = Default::default();
+        let mut variants: IndexVec<VariantId, Variant> = Default::default();
         for (i, var_def) in adt.variants_iter().enumerate() {
             trace!("variant {i}: {var_def:?}");
 
-            let mut fields: Vector<FieldId, Field> = Default::default();
+            let mut fields: IndexVec<FieldId, Field> = Default::default();
             for (j, field_def) in var_def.fields().iter().enumerate() {
                 trace!("variant {i}: field {j}: {field_def:?}");
                 // Translate the field type

@@ -95,7 +95,6 @@ impl ItemTransCtx<'_, '_> {
         let output = self.translate_ty(span, outputs)?;
 
         Ok(FunSig {
-            generics: GenericParams::empty(),
             is_unsafe: false,
             inputs,
             output,

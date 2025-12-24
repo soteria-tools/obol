@@ -15,7 +15,7 @@ use std::{
     panic,
 };
 
-use charon_lib::{ast::*, ids::Vector, raise_error, register_error, ullbc_ast::*};
+use charon_lib::{ast::*, raise_error, register_error, ullbc_ast::*};
 
 use crate::translate::translate_ctx::ItemTransCtx;
 
@@ -32,7 +32,7 @@ pub(crate) struct BodyTransCtx<'tcx, 'tctx, 'ictx> {
     /// The map from rust variable indices to translated variables indices.
     pub locals_map: HashMap<usize, LocalId>,
     /// The translated blocks.
-    pub blocks: Vector<BlockId, BlockData>,
+    pub blocks: IndexMap<BlockId, BlockData>,
     /// The map from rust blocks to translated blocks.
     /// Note that when translating terminators like DropAndReplace, we might have
     /// to introduce new blocks which don't appear in the original MIR.
@@ -290,13 +290,12 @@ impl BodyTransCtx<'_, '_, '_> {
                     && let Some(vptr_entry_idx) =
                         self.t_ctx.tcx.supertrait_vtable_slot((src_ty, tgt_ty))
                 {
-                    Ok(UnsizingMetadata::VTableNested(
-                        self.dummy_trait_ref(),
-                        Some(FieldId::new(vptr_entry_idx)),
-                    ))
+                    Ok(UnsizingMetadata::VTableUpcast(vec![FieldId::new(
+                        vptr_entry_idx,
+                    )]))
                 } else {
                     // Fallback to original vtable
-                    Ok(UnsizingMetadata::VTableNested(self.dummy_trait_ref(), None))
+                    Ok(UnsizingMetadata::VTableUpcast(vec![]))
                 }
             }
             (_, ty::Dynamic(preds, ..)) => {
@@ -310,7 +309,7 @@ impl BodyTransCtx<'_, '_, '_> {
                     stable.with_self_ty(self_ty)
                 });
                 let vtable_global = self.register_vtable(span, self_ty, trait_ref);
-                Ok(UnsizingMetadata::VTableDirect(
+                Ok(UnsizingMetadata::VTable(
                     self.dummy_trait_ref(),
                     Some(GlobalDeclRef {
                         id: vtable_global,
@@ -1355,8 +1354,9 @@ impl BodyTransCtx<'_, '_, '_> {
         // Create the body
         Ok(Body::Unstructured(ExprBody {
             span,
+            bound_body_regions: 0,
             locals: mem::take(&mut self.locals),
-            body: mem::take(&mut self.blocks),
+            body: mem::take(&mut self.blocks).make_contiguous(),
             comments: vec![],
         }))
     }

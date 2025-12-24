@@ -415,6 +415,9 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
     let charon_opts = CharonCliOpts {
         opaque: options.opaque.clone(),
         extract_opaque_bodies: true,
+        reconstruct_asserts: true,
+        raw_consts: false,
+        reconstruct_fallible_operations: true,
         ..CharonCliOpts::default()
     };
     let mut error_ctx = ErrorCtx::new(!charon_opts.abort_on_error, charon_opts.error_on_warnings);

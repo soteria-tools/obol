@@ -6,7 +6,7 @@ extern crate rustc_span;
 use log::trace;
 use rustc_public::{mir, ty};
 
-use charon_lib::{ast::*, ids::Vector, raise_error, register_error, ullbc_ast::*};
+use charon_lib::{ast::*, ids::IndexVec, raise_error, register_error, ullbc_ast::*};
 
 use crate::translate::translate_ctx::ItemTransCtx;
 
@@ -34,7 +34,7 @@ impl ItemTransCtx<'_, '_> {
         };
 
         // let upvars =
-        let mut fields: Vector<FieldId, Field> = Default::default();
+        let mut fields: IndexVec<FieldId, Field> = Default::default();
         for (j, state_ty) in state_tys.iter().enumerate() {
             // Translate the field type
             let ty = self.translate_ty(def_span, *state_ty)?;
@@ -75,7 +75,7 @@ impl ItemTransCtx<'_, '_> {
         let tupled_upvars = self.translate_ty(span, *tupled_upvars)?;
 
         assert!(
-            tupled_upvars.as_tuple().is_some_and(Vector::is_empty),
+            tupled_upvars.as_tuple().is_some_and(IndexMap::is_empty),
             "Only stateless closures can be translated as functions"
         );
 
@@ -112,10 +112,9 @@ impl ItemTransCtx<'_, '_> {
 
             let mut locals = Locals {
                 arg_count: signature.inputs.len(),
-                locals: Vector::new(),
+                locals: IndexVec::new(),
             };
             let mut statements = vec![];
-            let mut blocks = Vector::default();
 
             let output = locals.new_var(None, signature.output.clone());
             let args: Vec<Place> = signature
@@ -142,6 +141,7 @@ impl ItemTransCtx<'_, '_> {
                 Rvalue::Aggregate(AggregateKind::Adt(state_ty_adt.clone(), None, None), vec![]),
             )));
 
+            let mut blocks = IndexMap::default();
             let start_block = blocks.reserve_slot();
             let ret_block = blocks.push(mk_block(vec![], TerminatorKind::Return));
             let unwind_block = blocks.push(mk_block(vec![], TerminatorKind::UnwindResume));
@@ -160,7 +160,8 @@ impl ItemTransCtx<'_, '_> {
                 span,
                 locals,
                 comments: vec![],
-                body: blocks,
+                body: blocks.make_contiguous(),
+                bound_body_regions: 0,
             };
             Body::Unstructured(body)
         };
@@ -170,6 +171,7 @@ impl ItemTransCtx<'_, '_> {
             item_meta,
             signature,
             src: ItemSource::TopLevel,
+            generics: GenericParams::empty(),
             is_global_initializer: None,
             body,
         })
