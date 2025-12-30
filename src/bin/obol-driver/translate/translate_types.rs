@@ -179,19 +179,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             ty::RigidTy::Array(ty, const_param) => {
                 let c = self.translate_tyconst_to_const_generic(span, const_param)?;
                 let ty = self.translate_ty(span, *ty)?;
-                let tref = TypeDeclRef::new(
-                    TypeId::Builtin(BuiltinTy::Array),
-                    GenericArgs::new(IndexMap::new(), [ty].into(), [c].into(), IndexMap::new()),
-                );
-                TyKind::Adt(tref)
+                TyKind::Array(ty, c)
             }
             ty::RigidTy::Slice(ty) => {
                 let ty = self.translate_ty(span, *ty)?;
-                let tref = TypeDeclRef::new(
-                    TypeId::Builtin(BuiltinTy::Slice),
-                    GenericArgs::new_for_builtin([ty].into()),
-                );
-                TyKind::Adt(tref)
+                TyKind::Slice(ty)
             }
             ty::RigidTy::Ref(region, ty, mutability) => {
                 trace!("Ref");

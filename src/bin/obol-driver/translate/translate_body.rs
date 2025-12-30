@@ -535,12 +535,9 @@ impl BodyTransCtx<'_, '_, '_> {
             mir::Rvalue::Len(place) => {
                 let place = self.translate_place(span, place)?;
                 let ty = place.ty().clone();
-                let tref = ty.as_adt().unwrap();
-                let cg = match tref.id {
-                    TypeId::Builtin(BuiltinTy::Array) => {
-                        Some(tref.generics.const_generics[0].clone())
-                    }
-                    TypeId::Builtin(BuiltinTy::Slice) => None,
+                let cg = match ty.kind() {
+                    TyKind::Array(_, len) => Some(len.clone()),
+                    TyKind::Slice(_) => None,
                     _ => unreachable!(),
                 };
                 Ok(Rvalue::Len(place, ty, cg))

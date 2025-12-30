@@ -174,8 +174,8 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "charon"
-version = "0.1.160"
-source = "git+https://github.com/soteria-tools/charon?branch=obol#c6d24e42b9728deaf0c986bc309cea20c6220134"
+version = "0.1.161"
+source = "git+https://github.com/soteria-tools/charon?rev=c85ee4ec891be10fdb4c57dc30a1c9356c0d556a#c85ee4ec891be10fdb4c57dc30a1c9356c0d556a"
 dependencies = [
  "annotate-snippets",
  "anstream",
@@ -697,7 +697,7 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 [[package]]
 name = "macros"
 version = "0.1.0"
-source = "git+https://github.com/soteria-tools/charon?branch=obol#c6d24e42b9728deaf0c986bc309cea20c6220134"
+source = "git+https://github.com/soteria-tools/charon?rev=c85ee4ec891be10fdb4c57dc30a1c9356c0d556a#c85ee4ec891be10fdb4c57dc30a1c9356c0d556a"
 dependencies = [
  "proc-macro2",
  "quote",

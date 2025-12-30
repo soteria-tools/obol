@@ -136,16 +136,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             UIntTy::Usize,
             entries.len() as u128,
         )));
-        let entry_array_ty = TyKind::Adt(TypeDeclRef {
-            id: TypeId::Builtin(BuiltinTy::Array),
-            generics: Box::new(GenericArgs {
-                regions: vec![].into(),
-                types: vec![inner_ty.clone()].into(),
-                const_generics: vec![entry_count.clone()].into(),
-                trait_refs: vec![].into(),
-            }),
-        })
-        .into_ty();
+        let entry_array_ty = TyKind::Array(inner_ty.clone(), entry_count.clone()).into_ty();
         let entry_array = locals.new_var(Some("entry_array".into()), entry_array_ty.clone());
         statements.push(StatementKind::Assign(
             entry_array.clone(),
