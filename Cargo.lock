@@ -174,8 +174,8 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "charon"
-version = "0.1.161"
-source = "git+https://github.com/soteria-tools/charon?rev=c85ee4ec891be10fdb4c57dc30a1c9356c0d556a#c85ee4ec891be10fdb4c57dc30a1c9356c0d556a"
+version = "0.1.162"
+source = "git+https://github.com/soteria-tools/charon?rev=95fb6b5f31a0cf74e9a3977c1dbe43786661fe39#95fb6b5f31a0cf74e9a3977c1dbe43786661fe39"
 dependencies = [
  "annotate-snippets",
  "anstream",
@@ -206,6 +206,7 @@ dependencies = [
  "serde_json",
  "serde_stacker",
  "serde_state",
+ "smallvec",
  "stacker",
  "strip-ansi-escapes",
  "take_mut",
@@ -697,7 +698,7 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 [[package]]
 name = "macros"
 version = "0.1.0"
-source = "git+https://github.com/soteria-tools/charon?rev=c85ee4ec891be10fdb4c57dc30a1c9356c0d556a#c85ee4ec891be10fdb4c57dc30a1c9356c0d556a"
+source = "git+https://github.com/soteria-tools/charon?rev=95fb6b5f31a0cf74e9a3977c1dbe43786661fe39#95fb6b5f31a0cf74e9a3977c1dbe43786661fe39"
 dependencies = [
  "proc-macro2",
  "quote",
