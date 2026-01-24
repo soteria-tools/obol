@@ -431,8 +431,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .try_collect()?;
                 ConstantExprKind::Adt(variant.clone(), consts)
             }
-            TyKind::Adt(TypeDeclRef { generics, .. }) if rty.kind().is_array() => {
-                let subty = generics.types.get(TypeVarId::ZERO).unwrap();
+            TyKind::Array(subty, _) if rty.kind().is_array() => {
                 let rtyk = rty.kind();
                 let ty::RigidTy::Array(subrty, _) = rtyk.rigid().unwrap() else {
                     unreachable!();
@@ -509,7 +508,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> Result<ConstantExpr, Error> {
         let kind = match ty {
             TyKind::FnDef(fnptr) => ConstantExprKind::FnDef(fnptr.skip_binder.clone()),
-            TyKind::Adt(TypeDeclRef { generics, .. }) if rty.kind().is_array() => {
+            TyKind::Array(subty, _) => {
                 let rtyk = rty.kind();
                 let ty::RigidTy::Array(rty, len) = rtyk.rigid().unwrap() else {
                     unreachable!();
@@ -522,8 +521,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 } else if len == 0 {
                     ConstantExprKind::Array(vec![])
                 } else {
-                    let ty = generics.types.get(TypeVarId::ZERO).unwrap();
-                    let cexpr = self.translate_zst_constant(span, ty, *rty)?;
+                    let cexpr = self.translate_zst_constant(span, subty, *rty)?;
                     ConstantExprKind::Array(vec![cexpr; len as usize])
                 }
             }
