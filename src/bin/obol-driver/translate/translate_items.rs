@@ -138,6 +138,20 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let fun_decl = bt_ctx.translate_global_const_fn(id, item_meta, stt.clone(), *ty)?;
                 self.translated.fun_decls.set_slot(id, fun_decl);
             }
+            TransItemSource::Static(stt) => {
+                let Some(ItemId::Global(id)) = trans_id else {
+                    unreachable!()
+                };
+                let decl = bt_ctx.translate_global_from_static(id, item_meta, *stt)?;
+                self.translated.global_decls.set_slot(id, decl);
+            }
+            TransItemSource::StaticFn(stt) => {
+                let Some(ItemId::Fun(id)) = trans_id else {
+                    unreachable!()
+                };
+                let decl = bt_ctx.translate_global_from_static_fn(id, item_meta, *stt)?;
+                self.translated.fun_decls.set_slot(id, decl);
+            }
         }
         Ok(())
     }
@@ -482,31 +496,15 @@ impl ItemTransCtx<'_, '_> {
         Ok(type_def)
     }
 
-    pub fn translate_global_const_fn(
+    fn make_trivial_return_function(
         mut self,
         def_id: FunDeclId,
         item_meta: ItemMeta,
-        def: mir::alloc::AllocId,
+        span: Span,
+        alloc: ty::Allocation,
         ty: Option<ty::Ty>,
+        global_id: GlobalDeclId,
     ) -> Result<FunDecl, Error> {
-        let alloc: mir::alloc::GlobalAlloc = def.clone().into();
-
-        let (span, alloc) = match alloc {
-            mir::alloc::GlobalAlloc::Static(def) => {
-                let span = self.translate_span_from_smir(&def.span());
-                let alloc = def.eval_initializer()?;
-                (span, alloc)
-            }
-            mir::alloc::GlobalAlloc::Memory(mem) => {
-                let span = Span::dummy();
-                (span, mem)
-            }
-            _ => {
-                panic!("Cannot translate global const fn: {def:?}")
-            }
-        };
-
-        let global_id = self.register_global_decl_id(span, def, ty);
         let (output, const_val) = match ty {
             Some(ty) => {
                 let output = self.translate_ty(span, ty)?;
@@ -564,5 +562,72 @@ impl ItemTransCtx<'_, '_> {
             is_global_initializer: Some(global_id),
             body,
         })
+    }
+
+    pub fn translate_global_const_fn(
+        mut self,
+        def_id: FunDeclId,
+        item_meta: ItemMeta,
+        def: mir::alloc::AllocId,
+        ty: Option<ty::Ty>,
+    ) -> Result<FunDecl, Error> {
+        let alloc: mir::alloc::GlobalAlloc = def.clone().into();
+
+        let (span, alloc) = match alloc {
+            mir::alloc::GlobalAlloc::Static(def) => {
+                let span = self.translate_span_from_smir(&def.span());
+                let alloc = def.eval_initializer()?;
+                (span, alloc)
+            }
+            mir::alloc::GlobalAlloc::Memory(mem) => {
+                let span = Span::dummy();
+                (span, mem)
+            }
+            _ => {
+                panic!("Cannot translate global const fn: {def:?}")
+            }
+        };
+        let global_id = self.register_global_decl_id(span, def, ty);
+
+        self.make_trivial_return_function(def_id, item_meta, span, alloc, ty, global_id)
+    }
+
+    pub fn translate_global_from_static(
+        mut self,
+        def_id: GlobalDeclId,
+        item_meta: ItemMeta,
+        def: mir::mono::StaticDef,
+    ) -> Result<GlobalDecl, Error> {
+        trace!("About to translate global from static:\n{:?}", def);
+        let span = item_meta.span;
+
+        // Retrieve the kind
+        let item_kind = ItemSource::TopLevel;
+        trace!("Translating global type");
+        let initializer = self.register_global_from_static_fn(span, def);
+        let ty = self.translate_ty(span, def.ty())?;
+
+        Ok(GlobalDecl {
+            def_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            ty,
+            src: item_kind,
+            global_kind: GlobalKind::Static,
+            init: initializer,
+        })
+    }
+
+    pub fn translate_global_from_static_fn(
+        mut self,
+        def_id: FunDeclId,
+        item_meta: ItemMeta,
+        def: mir::mono::StaticDef,
+    ) -> Result<FunDecl, Error> {
+        let span = def.span();
+        let span = self.translate_span_from_smir(&span);
+        let alloc = def.eval_initializer()?;
+        let global_id = self.register_global_from_static(span, def);
+        self.make_trivial_return_function(def_id, item_meta, span, alloc, Some(def.ty()), global_id)
     }
 }

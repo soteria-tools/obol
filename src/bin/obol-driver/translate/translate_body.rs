@@ -746,26 +746,45 @@ impl BodyTransCtx<'_, '_, '_> {
                 let ty = self.translate_ty(span, *ty)?;
                 Ok(Rvalue::ShallowInitBox(op, ty))
             }
-            mir::Rvalue::ThreadLocalRef(_def) => {
-                // Once we have Rvalue::ThreadLocalRef in charon, we can implement this as:
-                //
-                // let def_i = rustc_public::rustc_internal::internal(self.t_ctx.tcx, *_def);
-                // let alloc = self.t_ctx.tcx.eval_static_initializer(def_i).unwrap();
-                // let alloc = rustc_public::rustc_internal::stable(alloc);
-                // let const_ty = match tgt_ty.kind() {
-                //     TyKind::Ref(_, ty, _) | TyKind::RawPtr(ty, _) => ty.clone(),
-                //     _ => raise_error!(
-                //         self,
-                //         span,
-                //         "ThreadLocalRef target type must be a reference or raw pointer"
-                //     ),
-                // };
-                // let rty = rvalue.ty(self.local_decls)?;
-                // let const_expr = self.translate_allocation(span, &alloc, &const_ty, rty)?;
-                // Ok(Rvalue::ThreadLocalRef(Box::new(const_expr)))
-                //
+            mir::Rvalue::ThreadLocalRef(def) => {
+                let const_ty = match tgt_ty.kind() {
+                    TyKind::Ref(_, ty, _) | TyKind::RawPtr(ty, _) => ty.clone(),
+                    _ => raise_error!(
+                        self,
+                        span,
+                        "ThreadLocalRef target type must be a reference or raw pointer"
+                    ),
+                };
 
-                raise_error!(self, span, "obol does not support thread local references");
+                let stt: mir::mono::StaticDef = def.clone().try_into()?;
+                let global = self.register_global_from_static(span, stt);
+                let place = Place::new_global(
+                    GlobalDeclRef {
+                        id: global,
+                        generics: Box::new(GenericArgs::empty()),
+                    },
+                    const_ty,
+                );
+
+                register_error!(
+                    self,
+                    span,
+                    "Obol translated a ThreadLocalRef as just a constant allocation; concurrency is not yet supported."
+                );
+
+                match tgt_ty.kind() {
+                    TyKind::Ref(_, _, kind) => Ok(Rvalue::Ref {
+                        place,
+                        kind: kind.clone().into(),
+                        ptr_metadata: Operand::mk_const_unit(),
+                    }),
+                    TyKind::RawPtr(_, rk) => Ok(Rvalue::RawPtr {
+                        place,
+                        kind: rk.clone().into(),
+                        ptr_metadata: Operand::mk_const_unit(),
+                    }),
+                    _ => unreachable!(),
+                }
             }
         }
     }
