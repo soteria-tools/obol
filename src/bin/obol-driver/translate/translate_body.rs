@@ -278,8 +278,8 @@ impl BodyTransCtx<'_, '_, '_> {
         match (src_ty.kind(), tgt_ty.kind()) {
             (ty::Array(_, len), ty::Slice(_) | ty::Str) => {
                 let len = rustc_internal::stable(len);
-                let len = self.translate_tyconst_to_const_generic(span, &len)?;
-                Ok(UnsizingMetadata::Length(len))
+                let len = self.translate_tyconst_to_const_expr(span, &len)?;
+                Ok(UnsizingMetadata::Length(Box::new(len)))
             }
             (ty::Dynamic(from_preds, ..), ty::Dynamic(to_preds, ..)) => {
                 // see
@@ -505,10 +505,10 @@ impl BodyTransCtx<'_, '_, '_> {
                 Ok(Rvalue::Use(Operand::Copy(place)))
             }
             mir::Rvalue::Repeat(operand, cnst) => {
-                let c = self.translate_tyconst_to_const_generic(span, cnst)?;
+                let c = self.translate_tyconst_to_const_expr(span, cnst)?;
                 let (operand, t) = self.translate_operand_with_type(span, operand)?;
                 // Remark: we could desugar this into a function call later.
-                Ok(Rvalue::Repeat(operand, t, c))
+                Ok(Rvalue::Repeat(operand, t, Box::new(c)))
             }
             mir::Rvalue::Ref(_region, borrow_kind, place) => {
                 let place = self.translate_place(span, place)?;
@@ -670,12 +670,12 @@ impl BodyTransCtx<'_, '_, '_> {
                 match aggregate_kind {
                     mir::AggregateKind::Array(ty) => {
                         let t_ty = self.translate_ty(span, *ty)?;
-                        let cg = ConstGeneric::Value(Literal::Scalar(ScalarValue::Unsigned(
+                        let cg = ConstantExpr::mk_usize(ScalarValue::Unsigned(
                             UIntTy::Usize,
                             operands_t.len() as u128,
-                        )));
+                        ));
                         Ok(Rvalue::Aggregate(
-                            AggregateKind::Array(t_ty, cg),
+                            AggregateKind::Array(t_ty, Box::new(cg)),
                             operands_t,
                         ))
                     }

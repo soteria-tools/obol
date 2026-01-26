@@ -3,7 +3,7 @@ extern crate rustc_apfloat;
 extern crate rustc_public;
 extern crate rustc_public_bridge;
 
-use charon_lib::{ast::*, error_assert, raise_error, register_error};
+use charon_lib::{ast::*, raise_error, register_error};
 use itertools::Itertools;
 use rustc_apfloat::{Float, ieee};
 use rustc_middle::mir::interpret::PointerArithmetic;
@@ -595,46 +595,19 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         })
     }
 
-    pub(crate) fn translate_constant_expr_to_const_generic(
-        &mut self,
-        span: Span,
-        value: ConstantExpr,
-    ) -> Result<ConstGeneric, Error> {
-        match value.kind {
-            ConstantExprKind::Var(v) => Ok(ConstGeneric::Var(v)),
-            ConstantExprKind::Literal(v) => Ok(ConstGeneric::Value(v)),
-            ConstantExprKind::Global(global_ref) => {
-                // TODO: handle constant arguments with generics (this can likely only happen with
-                // a feature gate).
-                error_assert!(self, span, global_ref.generics.is_empty());
-                Ok(ConstGeneric::Global(global_ref.id))
-            }
-            ConstantExprKind::Adt(..)
-            | ConstantExprKind::Array { .. }
-            | ConstantExprKind::Slice { .. }
-            | ConstantExprKind::RawMemory { .. }
-            | ConstantExprKind::TraitConst { .. }
-            | ConstantExprKind::Ref(_)
-            | ConstantExprKind::Ptr(..)
-            | ConstantExprKind::FnPtr { .. }
-            | ConstantExprKind::FnDef { .. }
-            | ConstantExprKind::Opaque(_)
-            | ConstantExprKind::PtrNoProvenance(..) => {
-                raise_error!(self, span, "Unexpected constant generic: {:?}", value)
-            }
-        }
-    }
-
-    pub fn translate_tyconst_to_const_generic(
+    pub fn translate_tyconst_to_const_expr(
         &mut self,
         span: Span,
         v: &ty::TyConst,
-    ) -> Result<ConstGeneric, Error> {
+    ) -> Result<ConstantExpr, Error> {
         match v.kind() {
             ty::TyConstKind::Value(rty, alloc) => {
                 let ty = self.translate_ty(span, *rty)?;
-                let alloc = self.translate_allocation(span, alloc, ty.kind(), *rty)?;
-                self.translate_constant_expr_to_const_generic(span, alloc)
+                self.translate_allocation(span, alloc, ty.kind(), *rty)
+            }
+            ty::TyConstKind::ZSTValue(rty) => {
+                let ty = self.translate_ty(span, *rty)?;
+                self.translate_zst_constant(span, ty.kind(), *rty)
             }
             _ => {
                 raise_error!(

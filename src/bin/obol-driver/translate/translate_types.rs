@@ -177,9 +177,9 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 TyKind::Adt(tref)
             }
             ty::RigidTy::Array(ty, const_param) => {
-                let c = self.translate_tyconst_to_const_generic(span, const_param)?;
+                let c = self.translate_tyconst_to_const_expr(span, const_param)?;
                 let ty = self.translate_ty(span, *ty)?;
-                TyKind::Array(ty, c)
+                TyKind::Array(ty, Box::new(c))
             }
             ty::RigidTy::Slice(ty) => {
                 let ty = self.translate_ty(span, *ty)?;
@@ -679,7 +679,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         Ok(())
                     }
                     ty::GenericArgKind::Const(c) => {
-                        let c = self.translate_tyconst_to_const_generic(span, c)?;
+                        let c = self.translate_tyconst_to_const_expr(span, c)?;
                         generics.const_generics.push(c);
                         Ok(())
                     }

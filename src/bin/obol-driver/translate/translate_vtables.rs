@@ -132,16 +132,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 })
                 .collect();
 
-        let entry_count = ConstGeneric::Value(Literal::Scalar(ScalarValue::Unsigned(
-            UIntTy::Usize,
-            entries.len() as u128,
-        )));
-        let entry_array_ty = TyKind::Array(inner_ty.clone(), entry_count.clone()).into_ty();
+        let entry_count =
+            ConstantExpr::mk_usize(ScalarValue::Unsigned(UIntTy::Usize, entries.len() as u128));
+        let entry_array_ty =
+            TyKind::Array(inner_ty.clone(), Box::new(entry_count.clone())).into_ty();
         let entry_array = locals.new_var(Some("entry_array".into()), entry_array_ty.clone());
         statements.push(StatementKind::Assign(
             entry_array.clone(),
             Rvalue::Aggregate(
-                AggregateKind::Array(inner_ty.clone(), entry_count.clone()),
+                AggregateKind::Array(inner_ty.clone(), Box::new(entry_count.clone())),
                 entries,
             ),
         ));
