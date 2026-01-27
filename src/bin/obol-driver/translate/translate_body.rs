@@ -250,13 +250,6 @@ impl BodyTransCtx<'_, '_, '_> {
         }
     }
 
-    fn dummy_trait_ref(&self) -> TraitRef {
-        TraitRef::new(
-            TraitRefKind::Dyn,
-            RegionBinder::empty(self.dummy_trait_decl_ref()),
-        )
-    }
-
     fn translate_unsizing_metadata(
         &mut self,
         span: Span,

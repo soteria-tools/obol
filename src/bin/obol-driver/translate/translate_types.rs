@@ -68,6 +68,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         }
     }
 
+    pub(crate) fn dummy_trait_ref(&self) -> TraitRef {
+        TraitRef::new(
+            TraitRefKind::Dyn,
+            RegionBinder::empty(self.dummy_trait_decl_ref()),
+        )
+    }
+
     pub(crate) fn dummy_dyn_ty(&self) -> TyKind {
         TyKind::DynTrait(DynPredicate {
             binder: Binder {

@@ -197,61 +197,115 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             unsafe { String::from_utf8_unchecked(suballoc.raw_bytes().unwrap()) };
                         ConstantExprKind::Literal(Literal::Str(as_str))
                     }
-                    _ => {
-                        let sub_constant = if subty.is_slice() {
-                            let meta_bytes =
-                                &alloc.bytes.as_slice()[offset + size / 2..offset + size];
-                            let len =
-                                self.read_target_uint(Self::as_init(meta_bytes)?.as_slice())?;
-                            let subty = subty.as_array_or_slice().unwrap();
-                            let rtyk = rty.kind().builtin_deref(true).unwrap().ty.kind();
-                            let ty::RigidTy::Slice(rsubty) = rtyk.rigid().unwrap() else {
-                                unreachable!("Unexpected rigid type for slice: {rty:?}");
-                            };
-                            let elem_size = rsubty.layout().unwrap().shape().size.bytes();
-                            let GlobalAlloc::Memory(suballoc) = glob_alloc else {
-                                unreachable!(
-                                    "Unexpected global allocation for slice: {glob_alloc:?}"
-                                );
-                            };
-                            let sub_constants = (0..len as usize)
-                                .map(|i| {
-                                    let elem_off = elem_size * i;
-                                    self.translate_allocation_at(
-                                        span,
-                                        &suballoc,
-                                        subty.kind(),
-                                        *rsubty,
-                                        elem_off,
-                                    )
-                                })
-                                .try_collect()?;
-                            ConstantExprKind::Slice(sub_constants)
-                        } else {
-                            let inner = rty.kind().builtin_deref(true).unwrap().ty;
-                            let id = self.register_global_decl_id(span, alloc_id, Some(inner));
-                            let generics = match glob_alloc {
-                                GlobalAlloc::Static(stt) => {
-                                    let instance: mir::mono::Instance = stt.into();
-                                    self.translate_generic_args(span, &instance.args())?
-                                }
-                                _ => GenericArgs::empty(),
-                            };
-
-                            ConstantExprKind::Global(GlobalDeclRef {
-                                id,
-                                generics: Box::new(generics),
-                            })
+                    GlobalAlloc::Memory(suballoc) if subty.is_slice() => {
+                        let meta_bytes = &alloc.bytes.as_slice()[offset + size / 2..offset + size];
+                        let len = self.read_target_uint(Self::as_init(meta_bytes)?.as_slice())?;
+                        let subty = subty.as_array_or_slice().unwrap();
+                        let rtyk = rty.kind().builtin_deref(true).unwrap().ty.kind();
+                        let ty::RigidTy::Slice(rsubty) = rtyk.rigid().unwrap() else {
+                            unreachable!("Unexpected rigid type for slice: {rty:?}");
                         };
+                        let elem_size = rsubty.layout().unwrap().shape().size.bytes();
+                        let sub_constants = (0..len as usize)
+                            .map(|i| {
+                                let elem_off = elem_size * i;
+                                self.translate_allocation_at(
+                                    span,
+                                    &suballoc,
+                                    subty.kind(),
+                                    *rsubty,
+                                    elem_off,
+                                )
+                            })
+                            .try_collect()?;
                         let sub_constant = ConstantExpr {
-                            kind: sub_constant,
+                            kind: ConstantExprKind::Slice(sub_constants),
                             ty: subty.clone(),
                         };
 
                         if let TyKind::RawPtr(_, rk) = ty {
-                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant))
+                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant), None)
                         } else {
-                            ConstantExprKind::Ref(Box::new(sub_constant))
+                            ConstantExprKind::Ref(Box::new(sub_constant), None)
+                        }
+                    }
+                    _ => {
+                        let metadata = match subty.kind() {
+                            TyKind::Slice(_) => {
+                                let meta_bytes =
+                                    &alloc.bytes.as_slice()[offset + size / 2..offset + size];
+                                let len =
+                                    self.read_target_uint(Self::as_init(meta_bytes)?.as_slice())?;
+                                Some(UnsizingMetadata::Length(Box::new(ConstantExpr::mk_usize(
+                                    ScalarValue::Unsigned(UIntTy::Usize, len),
+                                ))))
+                            }
+                            TyKind::DynTrait(_) => {
+                                let Some(vtable_prov) =
+                                    self.provenance_at(alloc, offset + size / 2)
+                                else {
+                                    unreachable!("&dyn constant with no vtable provenance?");
+                                };
+                                let alloc: mir::alloc::GlobalAlloc = vtable_prov.0.into();
+                                let vtable_global = match alloc {
+                                    mir::alloc::GlobalAlloc::VTable(self_ty, trait_ref) => {
+                                        let trait_ref = trait_ref.map(|t| {
+                                            let t = rustc_public::rustc_internal::internal(
+                                                self.t_ctx.tcx,
+                                                t,
+                                            );
+                                            let t = self
+                                                .t_ctx
+                                                .tcx
+                                                .instantiate_bound_regions_with_erased(t);
+                                            let t = rustc_public::rustc_internal::stable(t);
+                                            t.with_self_ty(self_ty)
+                                        });
+                                        self.register_vtable(span, self_ty, trait_ref)
+                                    }
+                                    _ => {
+                                        unreachable!("&dyn constant with non-vtable provenance?");
+                                    }
+                                };
+                                Some(UnsizingMetadata::VTable(
+                                    self.dummy_trait_ref(),
+                                    Some(GlobalDeclRef {
+                                        id: vtable_global,
+                                        generics: Box::new(GenericArgs::empty()),
+                                    }),
+                                ))
+                            }
+                            _ => None,
+                        };
+
+                        let glob_ty = match glob_alloc {
+                            // we try checking if there's a static we can use the type of,
+                            // to avoid registering unsized globals (a static is always sized)
+                            GlobalAlloc::Static(stt) => stt.ty(),
+                            _ => rty.kind().builtin_deref(true).unwrap().ty,
+                        };
+
+                        let id = self.register_global_decl_id(span, alloc_id, Some(glob_ty));
+                        let glob_ty = self.translate_ty(span, glob_ty)?;
+                        let generics = match glob_alloc {
+                            GlobalAlloc::Static(stt) => {
+                                let instance: mir::mono::Instance = stt.into();
+                                self.translate_generic_args(span, &instance.args())?
+                            }
+                            _ => GenericArgs::empty(),
+                        };
+                        let sub_constant = ConstantExpr {
+                            kind: ConstantExprKind::Global(GlobalDeclRef {
+                                id,
+                                generics: Box::new(generics),
+                            }),
+                            ty: glob_ty,
+                        };
+
+                        if let TyKind::RawPtr(_, rk) = ty {
+                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant), metadata)
+                        } else {
+                            ConstantExprKind::Ref(Box::new(sub_constant), metadata)
                         }
                     }
                 }
@@ -585,8 +639,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 ConstantExprKind::Adt(variant, fields)
             }
             _ => {
-                println!("Gave up on const for ZST type: {:?}", ty);
-                ConstantExprKind::RawMemory(vec![])
+                panic!("Gave up on const for ZST type: {:?}", ty);
+                // ConstantExprKind::RawMemory(vec![])
             }
         };
         Ok(ConstantExpr {
