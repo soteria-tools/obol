@@ -218,15 +218,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                 )
                             })
                             .try_collect()?;
+                        let len = ConstantExpr::mk_usize(ScalarValue::Unsigned(UIntTy::Usize, len));
                         let sub_constant = ConstantExpr {
-                            kind: ConstantExprKind::Slice(sub_constants),
-                            ty: subty.clone(),
+                            kind: ConstantExprKind::Array(sub_constants),
+                            ty: Ty::mk_array(subty.clone(), len.clone()),
                         };
+                        let metadata = Some(UnsizingMetadata::Length(Box::new(len)));
 
                         if let TyKind::RawPtr(_, rk) = ty {
-                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant), None)
+                            ConstantExprKind::Ptr(*rk, Box::new(sub_constant), metadata)
                         } else {
-                            ConstantExprKind::Ref(Box::new(sub_constant), None)
+                            ConstantExprKind::Ref(Box::new(sub_constant), metadata)
                         }
                     }
                     _ => {
@@ -338,7 +340,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .try_collect()?;
                 ConstantExprKind::Adt(None, fields)
             }
-            TyKind::Adt(_) if rty.kind().is_adt() => {
+            TyKind::Adt(TypeDeclRef {
+                id: TypeId::Adt(..),
+                ..
+            }) => {
                 let rtyk = rty.kind();
                 let ty::RigidTy::Adt(adt, generics) = rtyk.rigid().unwrap() else {
                     unreachable!("Unexpected rigid type for adt: {rty:?}");
@@ -485,7 +490,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .try_collect()?;
                 ConstantExprKind::Adt(variant.clone(), consts)
             }
-            TyKind::Array(subty, _) if rty.kind().is_array() => {
+            TyKind::Array(subty, _) => {
                 let rtyk = rty.kind();
                 let ty::RigidTy::Array(subrty, _) = rtyk.rigid().unwrap() else {
                     unreachable!();
@@ -543,7 +548,27 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     }
                 }
             }
-            _ => {
+
+            TyKind::Adt(TypeDeclRef {
+                id: TypeId::Builtin(BuiltinTy::Box),
+                ..
+            }) => {
+                unreachable!("We never create builtin boxes");
+            }
+            TyKind::DynTrait(..)
+            | TyKind::Slice(..)
+            | TyKind::Adt(TypeDeclRef {
+                id: TypeId::Builtin(BuiltinTy::Str),
+                ..
+            }) => {
+                unreachable!("Translating unsized constant?");
+            }
+            TyKind::Error(..)
+            | TyKind::Never
+            | TyKind::TypeVar(..)
+            | TyKind::TraitType(..)
+            | TyKind::FnDef(..)
+            | TyKind::PtrMetadata(..) => {
                 println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
                 ConstantExprKind::RawMemory(self.as_charon_bytes(span, alloc, offset, size))
             }
