@@ -44,7 +44,6 @@ fn translate_with_cargo(mut options: CliOpts) -> Result<ExitStatus> {
     cmd.env("RUSTC_WRAPPER", toolchain::driver_path());
     cmd.env("OBOL_USING_CARGO", "1");
     cmd.env_remove("CARGO_PRIMARY_PACKAGE");
-    cmd.env(OBOL_ARGS, serde_json::to_string(&options).unwrap());
     if cfg!(target_os = "macos") {
         let mut lib = toolchain_path()?;
         lib.push("lib");
@@ -58,7 +57,8 @@ fn translate_with_cargo(mut options: CliOpts) -> Result<ExitStatus> {
         cmd.arg("--target");
         cmd.arg(&get_rustc_version()?.host);
     }
-    cmd.args(options.spread);
+    cmd.args(std::mem::take(&mut options.spread));
+    cmd.env(OBOL_ARGS, serde_json::to_string(&options).unwrap());
     Ok(cmd
         .spawn()
         .expect("could not run cargo")
