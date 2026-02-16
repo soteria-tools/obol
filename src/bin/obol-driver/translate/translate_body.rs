@@ -817,11 +817,14 @@ impl BodyTransCtx<'_, '_, '_> {
             // This asserts the operand true on pain of UB. We treat it like a normal assertion.
             mir::StatementKind::Intrinsic(mir::NonDivergingIntrinsic::Assume(op)) => {
                 let op = self.translate_operand(span, &op)?;
-                Some(StatementKind::Assert(Assert {
-                    cond: op,
-                    expected: true,
+                Some(StatementKind::Assert {
+                    assert: Assert {
+                        cond: op,
+                        expected: true,
+                        check_kind: None,
+                    },
                     on_failure: AbortKind::UndefinedBehavior,
-                }))
+                })
             }
             mir::StatementKind::Intrinsic(mir::NonDivergingIntrinsic::CopyNonOverlapping(
                 mir::CopyNonOverlapping { src, dst, count },
@@ -833,11 +836,19 @@ impl BodyTransCtx<'_, '_, '_> {
                     CopyNonOverlapping { src, dst, count },
                 )))
             }
+            mir::StatementKind::PlaceMention(p) => {
+                let place = self.translate_place(span, p)?;
+                if place.is_local() {
+                    None
+                } else {
+                    Some(StatementKind::PlaceMention(place))
+                }
+            }
             // This is for the stacked borrows memory model.
             mir::StatementKind::Retag(_, _) => None,
             // These two are only there to make borrow-checking accept less code, and are removed
             // in later MIRs.
-            mir::StatementKind::FakeRead(..) | mir::StatementKind::PlaceMention(..) => None,
+            mir::StatementKind::FakeRead(..) => None,
             // There are user-provided type annotations with no semantic effect (since we get a
             // fully-typechecked MIR (TODO: this isn't quite true with opaque types, we should
             // really use promoted MIR)).
@@ -966,18 +977,23 @@ impl BodyTransCtx<'_, '_, '_> {
             mir::TerminatorKind::Assert {
                 cond,
                 expected,
-                msg: _,
+                msg,
                 target,
-                unwind: _, // We model unwinding as an effet, we don't represent it in control flow
+                unwind, // We model unwinding as an effet, we don't represent it in control flow
             } => {
+                let kind = self.translate_assert_kind(span, msg)?;
                 let assert = Assert {
                     cond: self.translate_operand(span, cond)?,
                     expected: *expected,
-                    on_failure: AbortKind::Panic(None),
+                    check_kind: Some(kind),
                 };
-                statements.push(Statement::new(span, StatementKind::Assert(assert)));
                 let target = self.translate_basic_block_id(*target);
-                TerminatorKind::Goto { target }
+                let on_unwind = self.translate_unwind(span, unwind);
+                TerminatorKind::Assert {
+                    assert,
+                    target,
+                    on_unwind,
+                }
             }
             mir::TerminatorKind::InlineAsm { .. } => {
                 raise_error!(self, span, "Inline assembly is not supported");
@@ -1063,6 +1079,55 @@ impl BodyTransCtx<'_, '_, '_> {
                 ))
             }
             _ => raise_error!(self, span, "Can't match on type {switch_ty}"),
+        }
+    }
+
+    fn translate_assert_kind(
+        &mut self,
+        span: Span,
+        kind: &mir::AssertMessage,
+    ) -> Result<BuiltinAssertKind, Error> {
+        match kind {
+            mir::AssertMessage::BoundsCheck { len, index } => {
+                let len = self.translate_operand(span, len)?;
+                let index = self.translate_operand(span, index)?;
+                Ok(BuiltinAssertKind::BoundsCheck { len, index })
+            }
+            mir::AssertMessage::Overflow(binop, left, right) => {
+                let binop = self.translate_binaryop_kind(span, *binop)?;
+                let left = self.translate_operand(span, left)?;
+                let right = self.translate_operand(span, right)?;
+                Ok(BuiltinAssertKind::Overflow(binop, left, right))
+            }
+            mir::AssertMessage::OverflowNeg(operand) => {
+                let operand = self.translate_operand(span, operand)?;
+                Ok(BuiltinAssertKind::OverflowNeg(operand))
+            }
+            mir::AssertMessage::DivisionByZero(operand) => {
+                let operand = self.translate_operand(span, operand)?;
+                Ok(BuiltinAssertKind::DivisionByZero(operand))
+            }
+            mir::AssertMessage::RemainderByZero(operand) => {
+                let operand = self.translate_operand(span, operand)?;
+                Ok(BuiltinAssertKind::RemainderByZero(operand))
+            }
+            mir::AssertMessage::MisalignedPointerDereference { required, found } => {
+                let required = self.translate_operand(span, required)?;
+                let found = self.translate_operand(span, found)?;
+                Ok(BuiltinAssertKind::MisalignedPointerDereference { required, found })
+            }
+            mir::AssertMessage::NullPointerDereference => {
+                Ok(BuiltinAssertKind::NullPointerDereference)
+            }
+            mir::AssertMessage::InvalidEnumConstruction(operand) => {
+                let operand = self.translate_operand(span, operand)?;
+                Ok(BuiltinAssertKind::InvalidEnumConstruction(operand))
+            }
+            mir::AssertMessage::ResumedAfterDrop(..)
+            | mir::AssertMessage::ResumedAfterPanic(..)
+            | mir::AssertMessage::ResumedAfterReturn(..) => {
+                raise_error!(self, span, "Coroutines are not supported");
+            }
         }
     }
 

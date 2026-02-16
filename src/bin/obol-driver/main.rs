@@ -51,6 +51,7 @@ fn transformation_passes(_opts: &CliOpts) -> Vec<Pass> {
         UnstructuredBody(&finish_translation::insert_assign_return_unit::Transform),
         NonBody(&finish_translation::insert_storage_lives::Transform),
         // ullbc
+        UnstructuredBody(&resugar::move_asserts_to_statements::Transform),
         UnstructuredBody(&control_flow::merge_goto_chains::Transform),
         UnstructuredBody(&resugar::reconstruct_fallible_operations::Transform),
         UnstructuredBody(&resugar::reconstruct_asserts::Transform),
