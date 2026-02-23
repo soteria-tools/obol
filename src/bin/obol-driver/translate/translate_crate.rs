@@ -418,6 +418,10 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 }
 
 fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instance> {
+    let collect_all = options.start_from.is_empty()
+        && options.start_from_attribute.is_empty()
+        && !options.start_from_pub;
+
     rustc_public::all_local_items()
         .iter()
         .filter_map(|item| {
@@ -433,9 +437,20 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
                 return None;
             }
 
+            if collect_all {
+                return Some(instance);
+            }
+
+            if options.start_from_pub {
+                let def_id = rustc_public::rustc_internal::internal(tcx, instance.def.def_id());
+                if tcx.visibility(def_id).is_public() {
+                    return Some(instance);
+                }
+            }
+
             let instance_name = instance.name();
             let name_split = instance_name.split("::").last().unwrap();
-            if options.entry_names.contains(&name_split.to_string()) {
+            if options.start_from.contains(&name_split.to_string()) {
                 return Some(instance);
             }
 
@@ -444,11 +459,15 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
                 rustc_hir::Attribute::Parsed(..) => false,
                 rustc_hir::Attribute::Unparsed(attr) => {
                     let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
-                    options.entry_attribs.contains(&path)
+                    options.start_from_attribute.contains(&path)
                 }
             });
 
-            attrib_match.then_some(instance)
+            if attrib_match {
+                return Some(instance);
+            }
+
+            None
         })
         .collect()
 }

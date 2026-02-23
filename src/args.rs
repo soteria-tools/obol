@@ -29,15 +29,20 @@ pub struct CliOpts {
     )]
     pub print_ullbc: bool,
     #[clap(
-        long = "entry-names",
+        long = "start-from",
         help = "List of function names that count as entry points to generate; if none are specified, main is used."
     )]
-    pub entry_names: Vec<String>,
+    pub start_from: Vec<String>,
     #[clap(
-        long = "entry-attribs",
+        long = "start-from-attribute",
         help = "List of attributes (e.g. `kani::proof`) that count as entry points to generate; empty by default."
     )]
-    pub entry_attribs: Vec<String>,
+    pub start_from_attribute: Vec<String>,
+    #[clap(
+        long = "start-from-pub",
+        help = "Whether to start translation from all public items."
+    )]
+    pub start_from_pub: bool,
     #[clap(
         long = "opaque",
         help = "List of item names to keep opaque during translation"
@@ -56,9 +61,6 @@ pub struct VersionOpts {
 
 impl CliOpts {
     pub fn validate(&mut self) -> Result<()> {
-        if self.entry_attribs.is_empty() && self.entry_names.is_empty() {
-            self.entry_names.push("main".to_string());
-        }
         Ok(())
     }
 }
