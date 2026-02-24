@@ -418,6 +418,8 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 }
 
 fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instance> {
+    let collect_all = options.entry_attribs.is_empty() && options.entry_names.is_empty();
+
     rustc_public::all_local_items()
         .iter()
         .filter_map(|item| {
@@ -431,6 +433,10 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
             // Only collect monomorphic items.
             if !matches!(item.kind(), rustc_public::ItemKind::Fn) {
                 return None;
+            }
+
+            if collect_all {
+                return Some(instance);
             }
 
             let instance_name = instance.name();
@@ -448,8 +454,13 @@ fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instan
                 }
             });
 
-            attrib_match.then_some(instance)
+            if attrib_match {
+                return Some(instance);
+            }
+
+            None
         })
+        .sorted_by_key(|i| i.def.def_id().to_index())
         .collect()
 }
 
@@ -497,10 +508,8 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
     ctx.translate_unit_metadata_const();
     ctx.translate_fake_dyn_trait();
 
-    let units = collect_entrypoints(options, tcx);
-    units
+    collect_entrypoints(options, tcx)
         .into_iter()
-        .sorted_by_key(|i| i.def.def_id().to_index())
         .for_each(|instance| {
             ctx.register_fun_decl_id(&None, instance);
         });

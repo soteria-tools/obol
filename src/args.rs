@@ -56,9 +56,6 @@ pub struct VersionOpts {
 
 impl CliOpts {
     pub fn validate(&mut self) -> Result<()> {
-        if self.entry_attribs.is_empty() && self.entry_names.is_empty() {
-            self.entry_names.push("main".to_string());
-        }
         Ok(())
     }
 }
