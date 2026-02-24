@@ -12,7 +12,7 @@ use super::translate_ctx::{ItemTransCtx, TranslateCtx};
 use charon_lib::{ast::*, register_error};
 use itertools::Itertools;
 use log::trace;
-use rustc_public::{CrateDef, DefId, mir, rustc_internal, ty};
+use rustc_public::{CrateDef, mir, rustc_internal, ty};
 use rustc_public_bridge::IndexedVal;
 use std::cmp::Ord;
 use std::path::Component;
@@ -299,12 +299,25 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
     }
 
-    pub(crate) fn translate_attr_info(&mut self, span: Span, def: DefId) -> AttrInfo {
-        // Default to `false` for impl blocks and closures.
-        // let public = def.visibility.unwrap_or(false);
-        // let inline = self.translate_inline(def);
+    pub(crate) fn translate_attr_info(&mut self, span: Span, src: &TransItemSource) -> AttrInfo {
+        let Some(def) = src.as_def_id() else {
+            return AttrInfo::default();
+        };
 
+        // we need to ignore a few cases, as tcx.visibility will panic for them
         let internal = rustc_public::rustc_internal::internal(self.tcx, def);
+        if matches!(
+            src,
+            TransItemSource::Closure(..)
+                | TransItemSource::ClosureAsFn(..)
+                | TransItemSource::VTable(..)
+                | TransItemSource::VTableInit(..)
+        ) || (matches!(src, TransItemSource::Fun(..)) && self.tcx.is_closure_like(internal))
+        {
+            return AttrInfo::default();
+        }
+
+        let public = self.tcx.visibility(internal).is_public();
         let attributes = self.tcx.get_all_attrs(internal);
 
         let attributes: Vec<Attribute> = attributes
@@ -329,7 +342,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         AttrInfo {
             attributes,
             inline: None,
-            public: true,
+            public,
             rename,
         }
     }
@@ -370,14 +383,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             Some(s) => self.translate_span_from_smir(&s),
             None => Span::dummy(),
         };
-        let attr_info = match item_src.as_def_id() {
-            Some(def_id) => self.translate_attr_info(span, def_id),
-            None => AttrInfo {
-                attributes: Vec::new(),
-                inline: None,
-                public: true,
-                rename: None,
-            },
+        let attr_info = self.translate_attr_info(span, item_src);
+        let is_local = match item_src.as_def_id() {
+            Some(def_id) => {
+                let internal = rustc_public::rustc_internal::internal(self.tcx, def_id);
+                internal.is_local()
+            }
+            None => false,
         };
 
         let lang_item = if let Some(def_id) = item_src.as_def_id() {
@@ -402,7 +414,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             span,
             source_text: None,
             attr_info,
-            is_local: true,
+            is_local,
             opacity,
             lang_item,
         };
