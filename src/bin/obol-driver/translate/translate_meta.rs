@@ -21,12 +21,11 @@ use std::path::Component;
 impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     /// Register a file if it is a "real" file and was not already registered
     /// `span` must be a span from which we obtained that filename.
-    fn register_file(&mut self, filename: FileName, span: ty::Span) -> FileId {
+    fn register_file(&mut self, filename: FileName, span: rustc_span::Span) -> FileId {
         // Lookup the file if it was already registered
         match self.file_to_id.get(&filename) {
             Some(id) => *id,
             None => {
-                let span = rustc_public::rustc_internal::internal(self.tcx, span);
                 let source_file = self.tcx.sess.source_map().lookup_source_file(span.lo());
                 let crate_name = self.tcx.crate_name(source_file.cnum).to_string();
                 let file = File {
@@ -79,25 +78,23 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
     }
 
-    pub fn translate_raw_span(&mut self, rspan: &ty::Span) -> meta::SpanData {
-        let filename = FileName::Local(rspan.get_filename().into());
-        let file_id = match &filename {
-            FileName::NotReal(_) => {
-                // For now we forbid not real filenames
-                unimplemented!();
-            }
-            FileName::Virtual(_) | FileName::Local(_) => self.register_file(filename, *rspan),
-        };
+    pub fn translate_raw_span(&mut self, span: &ty::Span) -> meta::SpanData {
+        let span = rustc_public::rustc_internal::internal(self.tcx, *span);
+        let span = span.source_callsite();
+        let smap: &rustc_span::source_map::SourceMap = self.tcx.sess.psess.source_map();
+        let filename = smap.span_to_filename(span);
+        let filename = self.translate_filename(&filename);
+        let file_id = self.register_file(filename, span);
 
-        let lines = rspan.get_lines();
-        let beg = Loc {
-            line: lines.start_line,
-            col: lines.start_col,
+        let convert_loc = |pos: rustc_span::BytePos| -> Loc {
+            let loc = smap.lookup_char_pos(pos);
+            Loc {
+                line: loc.line,
+                col: loc.col_display + 1,
+            }
         };
-        let end = Loc {
-            line: lines.end_line,
-            col: lines.end_col,
-        };
+        let beg = convert_loc(span.lo());
+        let end = convert_loc(span.hi());
 
         // Put together
         meta::SpanData { file_id, beg, end }
