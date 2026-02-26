@@ -82,10 +82,8 @@ impl ItemTransCtx<'_, '_> {
     pub(crate) fn translate_function_signature(
         &mut self,
         def: mir::mono::Instance,
-        item_meta: &ItemMeta,
+        span: Span,
     ) -> Result<FunSig, Error> {
-        let span = item_meta.span;
-
         let (inputs, outputs) = self.get_function_ins_outs(span, def)?;
 
         let inputs = inputs

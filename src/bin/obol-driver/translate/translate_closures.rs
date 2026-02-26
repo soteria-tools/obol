@@ -58,6 +58,37 @@ impl ItemTransCtx<'_, '_> {
         Ok(type_def_kind)
     }
 
+    pub fn translate_closure_src_info(
+        &mut self,
+        _span: Span,
+        _closure: &ty::ClosureDef,
+        args: &ty::GenericArgs,
+    ) -> Result<ItemSource, Error> {
+        let signature = FunSig {
+            is_unsafe: false,
+            inputs: vec![],
+            output: Ty::mk_unit(),
+        };
+        let args = rustc_public::rustc_internal::internal(self.t_ctx.tcx, args);
+        let closure = args.as_closure();
+        let kind = match closure.kind() {
+            rustc_middle::ty::ClosureKind::FnOnce => ClosureKind::FnOnce,
+            rustc_middle::ty::ClosureKind::FnMut => ClosureKind::FnMut,
+            rustc_middle::ty::ClosureKind::Fn => ClosureKind::Fn,
+        };
+
+        Ok(ItemSource::Closure {
+            info: ClosureInfo {
+                kind,
+                // HACK: put whatever ^-^'
+                fn_once_impl: RegionBinder::empty(self.dummy_trait_impl_ref()),
+                fn_mut_impl: None,
+                fn_impl: None,
+                signature: RegionBinder::empty(signature),
+            },
+        })
+    }
+
     /// Given an item that is a non-capturing closure, generate the equivalent function,
     /// by removing the state from the parameters and untupling the arguments.
     pub fn translate_stateless_closure_as_fn(
@@ -82,7 +113,7 @@ impl ItemTransCtx<'_, '_> {
         // Translate the function signature
         let instance =
             mir::mono::Instance::resolve_closure(*closure, args, ty::ClosureKind::FnOnce)?;
-        let mut signature = self.translate_function_signature(instance, &item_meta)?;
+        let mut signature = self.translate_function_signature(instance, span)?;
 
         let state_ty = signature.inputs.remove(0);
         let args_untupled = signature.inputs.clone();
@@ -166,11 +197,13 @@ impl ItemTransCtx<'_, '_> {
             Body::Unstructured(body)
         };
 
+        let src = self.translate_closure_src_info(span, closure, args)?;
+
         Ok(FunDecl {
             def_id,
             item_meta,
             signature,
-            src: ItemSource::TopLevel,
+            src,
             generics: GenericParams::empty(),
             is_global_initializer: None,
             body,

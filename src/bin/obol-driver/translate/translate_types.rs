@@ -68,6 +68,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         }
     }
 
+    pub(crate) fn dummy_trait_impl_ref(&self) -> TraitImplRef {
+        TraitImplRef {
+            id: TraitImplId::ZERO,
+            generics: Box::new(GenericArgs::empty()),
+        }
+    }
+
     pub(crate) fn dummy_trait_ref(&self) -> TraitRef {
         TraitRef::new(
             TraitRefKind::Dyn,

@@ -257,14 +257,6 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
 }
 
 impl ItemTransCtx<'_, '_> {
-    pub(crate) fn get_item_kind(
-        &mut self,
-        _span: Span,
-        _def: &rustc_public::DefId,
-    ) -> Result<ItemSource, Error> {
-        Ok(ItemSource::TopLevel)
-    }
-
     /// Translate a type definition.
     ///
     /// Note that we translate the types one by one: we don't need to take into
@@ -281,9 +273,6 @@ impl ItemTransCtx<'_, '_> {
 
         // Translate generics and predicates
         // self.translate_def_generics(span, def)?;
-
-        // Get the kind of the type decl -- is it a closure?
-        let src = self.get_item_kind(span, &def.0)?;
 
         // Translate type body
         let kind = match &def.kind() {
@@ -304,7 +293,7 @@ impl ItemTransCtx<'_, '_> {
             item_meta,
             generics: GenericParams::empty(),
             kind,
-            src,
+            src: ItemSource::TopLevel,
             layout,
             repr: None,
             ptr_metadata,
@@ -314,18 +303,13 @@ impl ItemTransCtx<'_, '_> {
     }
 
     pub fn translate_foreign_type_decl(
-        mut self,
+        self,
         trans_id: TypeDeclId,
         item_meta: ItemMeta,
-        def: &ty::ForeignDef,
+        _def: &ty::ForeignDef,
     ) -> Result<TypeDecl, Error> {
-        let span = item_meta.span;
-
         // Translate generics and predicates
         // self.translate_def_generics(span, def)?;
-
-        // Get the kind of the type decl -- is it a closure?
-        let src = self.get_item_kind(span, &def.0)?;
 
         // Translate type body
         let kind = TypeDeclKind::Opaque;
@@ -334,7 +318,7 @@ impl ItemTransCtx<'_, '_> {
             item_meta,
             generics: GenericParams::empty(),
             kind,
-            src,
+            src: ItemSource::TopLevel,
             layout: None,
             repr: None,
             ptr_metadata: PtrMetadata::None,
@@ -351,11 +335,11 @@ impl ItemTransCtx<'_, '_> {
         def: mir::mono::Instance,
     ) -> Result<FunDecl, Error> {
         trace!("About to translate function:\n{:?}", def);
-        // let span = item_meta.span;
+        let span = item_meta.span;
 
         // Translate the function signature
         trace!("Translating function signature");
-        let mut signature = self.translate_function_signature(def, &item_meta)?;
+        let mut signature = self.translate_function_signature(def, span)?;
 
         let body = if item_meta.opacity.with_private_contents().is_opaque()
             || matches!(def.kind, mir::mono::InstanceKind::Virtual { .. })
@@ -379,7 +363,7 @@ impl ItemTransCtx<'_, '_> {
 
         let body = if let Some(body) = body {
             let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals(), &mut signature);
-            match bt_ctx.translate_body(item_meta.span, def, &body) {
+            match bt_ctx.translate_body(span, def, &body) {
                 Ok(body) => body,
                 // Translation error.
                 Err(err) => Body::Error(format!("{:?}", err).into()),
@@ -389,12 +373,24 @@ impl ItemTransCtx<'_, '_> {
             Body::Missing
         };
 
+        let internal = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def.def_id());
+        let src = if self.t_ctx.tcx.is_closure_like(internal) {
+            let closure_ty = self.t_ctx.tcx.type_of(internal).instantiate_identity();
+            let closure_ty = rustc_public::rustc_internal::stable(closure_ty).kind();
+            let Some(ty::RigidTy::Closure(def, args)) = closure_ty.rigid() else {
+                panic!("Closure-like instance has non-closure type: {closure_ty:?}")
+            };
+            self.translate_closure_src_info(span, def, args)?
+        } else {
+            ItemSource::TopLevel
+        };
+
         Ok(FunDecl {
             def_id,
             item_meta,
             signature,
             generics: GenericParams::empty(),
-            src: ItemSource::TopLevel,
+            src,
             is_global_initializer: None,
             body,
         })
@@ -470,8 +466,7 @@ impl ItemTransCtx<'_, '_> {
         // Translate generics and predicates
         // self.translate_def_generics(span, def)?;
 
-        // Get the kind of the type decl -- is it a closure?
-        let src = self.get_item_kind(span, &def.0)?;
+        let src = self.translate_closure_src_info(span, def, genargs)?;
 
         // Translate type body
         let kind = self.translate_closure_as_adt_def(trans_id, span, &item_meta, def, genargs);
