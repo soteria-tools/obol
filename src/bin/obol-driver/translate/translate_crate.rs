@@ -417,59 +417,65 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     }
 }
 
-fn collect_entrypoints<'tcx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> Vec<Instance> {
-    let collect_all = options.start_from.is_empty()
-        && options.start_from_attribute.is_empty()
-        && !options.start_from_pub;
+impl<'tcx> TranslateCtx<'tcx> {
+    fn collect_entrypoints(&mut self, options: &CliOpts) {
+        let collect_all = options.start_from.is_empty()
+            && options.start_from_attribute.is_empty()
+            && !options.start_from_pub;
 
-    rustc_public::all_local_items()
-        .iter()
-        .filter_map(|item| {
-            let Ok(instance) = Instance::try_from(*item) else {
-                return None;
-            };
-            let int_def_id = rustc_internal::internal(tcx, instance.def.def_id());
-            if matches!(tcx.def_kind(int_def_id), rustc_hir::def::DefKind::GlobalAsm) {
-                return None;
-            }
-            // Only collect monomorphic items.
-            if !matches!(item.kind(), rustc_public::ItemKind::Fn) {
-                return None;
-            }
+        rustc_public::all_local_items()
+            .iter()
+            .filter_map(|item| {
+                let Ok(instance) = Instance::try_from(*item) else {
+                    return None;
+                };
 
-            if collect_all {
-                return Some(instance);
-            }
+                let def_id = rustc_internal::internal(self.tcx, instance.def.def_id());
 
-            if options.start_from_pub {
-                let def_id = rustc_public::rustc_internal::internal(tcx, instance.def.def_id());
-                if tcx.visibility(def_id).is_public() {
+                if matches!(
+                    self.tcx.def_kind(def_id),
+                    rustc_hir::def::DefKind::GlobalAsm
+                ) {
+                    return None;
+                }
+                // Only collect monomorphic items.
+                if !matches!(item.kind(), rustc_public::ItemKind::Fn) {
+                    return None;
+                }
+
+                if collect_all {
                     return Some(instance);
                 }
-            }
 
-            let instance_name = instance.name();
-            let name_split = instance_name.split("::").last().unwrap();
-            if options.start_from.contains(&name_split.to_string()) {
-                return Some(instance);
-            }
-
-            let def_id = rustc_public::rustc_internal::internal(tcx, instance.def.def_id());
-            let attrib_match = tcx.get_all_attrs(def_id).iter().any(|a| match a {
-                rustc_hir::Attribute::Parsed(..) => false,
-                rustc_hir::Attribute::Unparsed(attr) => {
-                    let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
-                    options.start_from_attribute.contains(&path)
+                if options.start_from_pub && self.tcx.visibility(def_id).is_public() {
+                    return Some(instance);
                 }
-            });
 
-            if attrib_match {
-                return Some(instance);
-            }
+                let instance_name = instance.name();
+                let name_split = instance_name.split("::").last().unwrap();
+                if options.start_from.contains(&name_split.to_string()) {
+                    return Some(instance);
+                }
 
-            None
-        })
-        .collect()
+                let attrib_match = self.tcx.get_all_attrs(def_id).iter().any(|a| match a {
+                    rustc_hir::Attribute::Parsed(..) => false,
+                    rustc_hir::Attribute::Unparsed(attr) => {
+                        let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
+                        options.start_from_attribute.contains(&path)
+                    }
+                });
+
+                if attrib_match {
+                    return Some(instance);
+                }
+
+                None
+            })
+            .sorted_by_key(|i| i.def.def_id().to_index())
+            .for_each(|instance| {
+                self.register_fun_decl_id(&None, instance);
+            })
+    }
 }
 
 pub(crate) const FAKE_DYN_TRAIT: TraitDeclId = TraitDeclId::ZERO;
@@ -516,13 +522,7 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
     ctx.translate_unit_metadata_const();
     ctx.translate_fake_dyn_trait();
 
-    let units = collect_entrypoints(options, tcx);
-    units
-        .into_iter()
-        .sorted_by_key(|i| i.def.def_id().to_index())
-        .for_each(|instance| {
-            ctx.register_fun_decl_id(&None, instance);
-        });
+    ctx.collect_entrypoints(options);
 
     // Translate.
     //
