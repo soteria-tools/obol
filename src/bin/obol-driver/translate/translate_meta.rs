@@ -320,10 +320,28 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         let public = self.tcx.visibility(internal).is_public();
         let attributes = self.tcx.get_all_attrs(internal);
 
-        let attributes: Vec<Attribute> = attributes
+        let mut attributes: Vec<Attribute> = attributes
             .iter()
             .filter_map(|attr| self.translate_attribute(attr))
             .collect();
+
+        // When building a test binary, inject a synthetic `#[test]` attribute on functions
+        // detected via `rustc_test_marker`. The original `#[test]` attribute is consumed by
+        // macro expansion and is not present in HIR, so we re-create it here so that the OCaml
+        // analysis backend can find test entry points via `Attrib "test"`.
+        if let TransItemSource::Fun(instance) = src {
+            let instance_name = instance.name();
+            let is_test = self.test_fn_paths.iter().any(|test_path| {
+                instance_name == test_path.as_str()
+                    || instance_name.ends_with(&format!("::{test_path}"))
+            });
+            if is_test {
+                attributes.push(Attribute::Unknown(RawAttribute {
+                    path: "test".into(),
+                    args: None,
+                }));
+            }
+        }
 
         let rename = {
             let mut renames = attributes.iter().filter_map(|a| a.as_rename()).cloned();

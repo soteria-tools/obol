@@ -45,6 +45,12 @@ pub struct TranslateCtx<'tcx> {
     pub cached_names: HashMap<rustc_public::DefId, Name>,
     /// Cache the `ItemMeta`s to compute them only once each.
     pub cached_item_metas: HashMap<TransItemSource, ItemMeta>,
+    /// When building a test binary (`OBOL_BUILDING_TEST`), the set of test function paths
+    /// detected via `#[rustc_test_marker]` on generated `TestDescAndFn` consts. Used to
+    /// inject a synthetic `"test"` attribute so the OCaml side can find them as entry points.
+    // FIXME: in the future, we should look into preserving attributes that exist in the AST.
+    // see https://rust-lang.zulipchat.com/#narrow/channel/131828-t-compiler/topic/Retrieving.20.60.23.5Btest.5D.60.20and.20.60.23.5Bshould_panic.5D.60/with/577547122
+    pub test_fn_paths: HashSet<String>,
 }
 
 /// A translation context for items.

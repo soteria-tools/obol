@@ -1,4 +1,5 @@
 extern crate rustc_abi;
+extern crate rustc_ast;
 extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate rustc_public;
@@ -418,8 +419,45 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 }
 
 impl<'tcx> TranslateCtx<'tcx> {
+    /// When building a test binary (OBOL_BUILDING_TEST is set), scan all local const items for
+    /// the `#[rustc_test_marker = "path"]` attribute that rustc adds when expanding `#[test]`.
+    /// Returns a set of test function paths (e.g. "my_test" or "submod::my_test") that can be
+    /// matched against instance names.
+    fn collect_test_marker_paths(&self) -> std::collections::HashSet<String> {
+        self.tcx
+            .hir_crate_items(())
+            .free_items()
+            .filter_map(|item_id| {
+                let item = self.tcx.hir_item(item_id);
+                // rustc_test_marker is placed on generated const items
+                if !matches!(item.kind, rustc_hir::ItemKind::Const(..)) {
+                    return None;
+                }
+                let def_id = item_id.owner_id.def_id.to_def_id();
+                self.tcx.get_all_attrs(def_id).iter().find_map(|a| {
+                    let rustc_hir::Attribute::Unparsed(attr) = a else {
+                        return None;
+                    };
+                    let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
+                    if path != "rustc_test_marker" {
+                        return None;
+                    }
+                    // The value is the test path string, e.g. "my_test" or "submod::my_test"
+                    a.value_lit().map(|lit| lit.symbol.as_str().to_owned())
+                })
+            })
+            .collect()
+    }
+
     fn collect_entrypoints(&mut self, options: &CliOpts) {
-        let collect_all = options.start_from.is_empty()
+        // When compiling a test binary, detect #[test] functions via the rustc_test_marker
+        // attribute that rustc adds to the generated TestDescAndFn consts during #[test] expansion.
+        // If any test markers are found, use them exclusively as entry points (the normal
+        // start_from / start_from_attribute logic would otherwise pick up the generated `main`).
+        let use_test_markers = !self.test_fn_paths.is_empty();
+
+        let collect_all = !use_test_markers
+            && options.start_from.is_empty()
             && options.start_from_attribute.is_empty()
             && !options.start_from_pub;
 
@@ -441,6 +479,19 @@ impl<'tcx> TranslateCtx<'tcx> {
                 // Only collect monomorphic items.
                 if !matches!(item.kind(), rustc_public::ItemKind::Fn) {
                     return None;
+                }
+
+                // In test mode, only include functions whose fully-qualified name ends with one
+                // of the test marker paths (e.g. "crate::submod::my_test" ends with "submod::my_test").
+                if use_test_markers {
+                    let instance_name = instance.name();
+                    let is_test = self.test_fn_paths.iter().any(|test_path| {
+                        instance_name == test_path.as_str()
+                            || instance_name.ends_with(&format!("::{test_path}"))
+                    });
+                    if is_test {
+                        return Some(instance);
+                    };
                 }
 
                 if collect_all {
@@ -517,7 +568,14 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
         cached_item_metas: Default::default(),
         cached_names: Default::default(),
         type_trans_cache: Default::default(),
+        test_fn_paths: Default::default(),
     };
+
+    // When building a test binary, detect #[test] functions via rustc_test_marker and store
+    // the paths so translate_attr_info can inject a synthetic "test" attribute on them.
+    if std::env::var("OBOL_BUILDING_TEST").is_ok() {
+        ctx.test_fn_paths = ctx.collect_test_marker_paths();
+    }
 
     ctx.translate_unit_metadata_const();
     ctx.translate_fake_dyn_trait();
