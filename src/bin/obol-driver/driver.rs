@@ -1,11 +1,11 @@
 //! Run the rustc compiler with our custom options and hooks.
-use crate::ObolError;
 use crate::translate::translate_crate;
+use crate::ObolError;
 use charon_lib::transform::TransformCtx;
 use obol_lib::args::CliOpts;
 use rustc_driver::{Callbacks, Compilation};
-use rustc_interface::Config;
 use rustc_interface::interface::Compiler;
+use rustc_interface::Config;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{OutputType, OutputTypes};
 use std::ops::Deref;
@@ -80,8 +80,16 @@ pub fn run_rustc_driver(options: &CliOpts) -> Result<Option<TransformCtx>, ObolE
     // This matches what Miri does, which hopefully makes it reliable enough. This relies on us
     // always invoking cargo itself with `--target`, which `charon` ensures.
     let is_target = arg_values(&compiler_args, "--target").next().is_some();
+    // When building test binaries with `cargo test --no-run`, cargo first compiles the library
+    // crate (primary package, with codegen) and then the test binary. We only want to translate
+    // the actual test binary (identified by the `--test` flag that cargo passes to rustc), not the
+    // library. If we suppressed codegen for the library, the test binary could not link against it.
+    // `OBOL_BUILDING_TEST` is set by `obol` when it detects `--test` in the spread args.
+    let is_building_test_target = env::var("OBOL_BUILDING_TEST").is_ok();
+    let is_test_binary = compiler_args.iter().any(|a| a == "--test");
     // Whether this is the crate we want to translate.
-    let is_selected_crate = !is_workspace_dependency && is_target;
+    let is_selected_crate =
+        !is_workspace_dependency && is_target && (!is_building_test_target || is_test_binary);
 
     let output = if !is_selected_crate {
         // Run the compiler normally.

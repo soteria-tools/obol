@@ -49,16 +49,33 @@ fn translate_with_cargo(mut options: CliOpts) -> Result<ExitStatus> {
         lib.push("lib");
         cmd.env("DYLD_LIBRARY_PATH", lib);
     }
-    cmd.arg("build");
-    let is_specified = |arg| options.spread.iter().any(|input| input.starts_with(arg));
+
+    // When a test target is requested (--test <name> in spread args), we need
+    // `cargo test --no-run` so that the library is fully built (with codegen)
+    // before the test binary is compiled. `cargo build --test` would cause
+    // obol-driver to suppress codegen for the library, making the test binary
+    // unable to link against it.
+    let is_specified = |arg: &str| options.spread.iter().any(|input| input.starts_with(arg));
+    if is_specified("--test") {
+        cmd.arg("test");
+        cmd.arg("--no-run");
+        // Signal to obol-driver that we are building a test target so it knows
+        // not to translate (and suppress codegen for) the library crate.
+        cmd.env("OBOL_BUILDING_TEST", "1");
+    } else {
+        cmd.arg("build");
+    }
+
     if !is_specified("--target") {
         // Make sure the build target is explicitly set. This is needed to detect which crates are
         // proc-macro/build-script in `obol-driver`.
         cmd.arg("--target");
         cmd.arg(&get_rustc_version()?.host);
     }
+
     cmd.args(std::mem::take(&mut options.spread));
     cmd.env(OBOL_ARGS, serde_json::to_string(&options).unwrap());
+
     Ok(cmd
         .spawn()
         .expect("could not run cargo")
