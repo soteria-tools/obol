@@ -269,12 +269,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                         unreachable!("&dyn constant with non-vtable provenance?");
                                     }
                                 };
+                                let global_ref = GlobalDeclRef {
+                                    id: vtable_global,
+                                    generics: Box::new(GenericArgs::empty()),
+                                };
+                                let meta = ConstantExpr {
+                                    kind: ConstantExprKind::Global(global_ref),
+                                    ty: TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty(),
+                                };
                                 Some(UnsizingMetadata::VTable(
                                     self.dummy_trait_ref(),
-                                    Some(GlobalDeclRef {
-                                        id: vtable_global,
-                                        generics: Box::new(GenericArgs::empty()),
-                                    }),
+                                    Box::new(meta),
                                 ))
                             }
                             _ => None,
@@ -459,10 +464,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             .collect::<Vec<ty::Ty>>();
                         let variant_idx_charon = self.translate_variant_id(variant_idx);
                         let variant_layout = variants.get(variant_idx.to_index()).unwrap();
-                        let abi::FieldsShape::Arbitrary { offsets } = &variant_layout.fields else {
-                            unreachable!("Unexpected layout for enum: {layout:?}");
-                        };
-                        (Some(variant_idx_charon), fields, offsets.clone())
+                        (
+                            Some(variant_idx_charon),
+                            fields,
+                            variant_layout.offsets.clone(),
+                        )
                     }
                     ty::AdtKind::Union => {
                         return Ok(ConstantExpr {

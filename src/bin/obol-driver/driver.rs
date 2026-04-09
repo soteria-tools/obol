@@ -1,11 +1,11 @@
 //! Run the rustc compiler with our custom options and hooks.
-use crate::translate::translate_crate;
 use crate::ObolError;
+use crate::translate::translate_crate;
 use charon_lib::transform::TransformCtx;
 use obol_lib::args::CliOpts;
 use rustc_driver::{Callbacks, Compilation};
-use rustc_interface::interface::Compiler;
 use rustc_interface::Config;
+use rustc_interface::interface::Compiler;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{OutputType, OutputTypes};
 use std::ops::Deref;
@@ -132,13 +132,17 @@ impl<'a> Callbacks for ObolCallbacks<'a> {
     /// "built" MIR (which results from the conversion to HIR to MIR) to become unaccessible.
     /// Because we require built MIR at the moment, we hook ourselves before MIR-based analysis
     /// passes.
-    fn after_expansion<'tcx>(&mut self, _compiler: &Compiler, tcx: TyCtxt<'tcx>) -> Compilation {
+    fn after_expansion<'tcx>(&mut self, compiler: &Compiler, tcx: TyCtxt<'tcx>) -> Compilation {
         // Set up our own `DefId` debug routine.
         rustc_hir::def_id::DEF_ID_DEBUG
             .swap(&(def_id_debug as fn(_, &mut fmt::Formatter<'_>) -> _));
 
         let transform_ctx = rustc_public::rustc_internal::run(tcx, || {
-            translate_crate::translate(&self.options, tcx)
+            translate_crate::translate(
+                &self.options,
+                tcx,
+                compiler.sess.opts.sysroot.path().to_owned(),
+            )
         });
         if let Ok(transform_ctx) = transform_ctx {
             self.transform_ctx = Some(transform_ctx);

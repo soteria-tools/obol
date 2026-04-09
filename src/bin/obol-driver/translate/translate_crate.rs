@@ -24,6 +24,7 @@ use rustc_public_bridge::IndexedVal;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::hash::Hash;
+use std::path::PathBuf;
 
 /// The id of an untranslated item. Note that a given `DefId` may show up as multiple different
 /// item sources, e.g. a constant will have both a `Global` version (for the constant itself) and a
@@ -531,7 +532,11 @@ impl<'tcx> TranslateCtx<'tcx> {
 
 pub(crate) const FAKE_DYN_TRAIT: TraitDeclId = TraitDeclId::ZERO;
 
-pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformCtx {
+pub fn translate<'tcx, 'ctx>(
+    options: &CliOpts,
+    tcx: TyCtxt<'tcx>,
+    sysroot: PathBuf,
+) -> TransformCtx {
     // Retrieve the crate name: if the user specified a custom name, use it, otherwise retrieve it
     // from hax.
     let krate = rustc_public::local_crate();
@@ -550,6 +555,7 @@ pub fn translate<'tcx, 'ctx>(options: &CliOpts, tcx: TyCtxt<'tcx>) -> TransformC
     let mut ctx = TranslateCtx {
         tcx,
         options: translate_options,
+        sysroot,
         errors: RefCell::new(error_ctx),
         translated: TranslatedCrate {
             crate_name: krate.name,

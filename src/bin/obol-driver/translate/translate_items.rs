@@ -350,12 +350,17 @@ impl ItemTransCtx<'_, '_> {
             // we can't rely on "has_body", as in some cases it returns false even when there is a body.
             Some(body)
         } else {
-            let inner_id = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def.def_id());
-            let body_internal = if self.t_ctx.tcx.is_mir_available(inner_id) {
-                Some(self.t_ctx.tcx.optimized_mir(inner_id))
-            } else if self.t_ctx.tcx.is_ctfe_mir_available(inner_id) {
-                Some(self.t_ctx.tcx.mir_for_ctfe(inner_id))
+            let tcx = self.t_ctx.tcx;
+            let inner_id = rustc_public::rustc_internal::internal(tcx, def.def.def_id());
+            let mir_available = tcx.is_mir_available(inner_id);
+            let is_global = tcx.is_static(inner_id);
+
+            let body_internal = if mir_available && !is_global {
+                Some(tcx.optimized_mir(inner_id).clone())
+            } else if (is_global && !tcx.is_trivial_const(inner_id)) || tcx.is_const_fn(inner_id) {
+                Some(tcx.mir_for_ctfe(inner_id).clone())
             } else {
+                trace!("mir not available for {:?}", inner_id);
                 None
             };
             body_internal.map(rustc_public::rustc_internal::stable)
@@ -530,6 +535,7 @@ impl ItemTransCtx<'_, '_> {
             index,
             name: None,
             ty: output.clone(),
+            span,
         });
         let body = Body::Unstructured(GExprBody {
             body: IndexVec::from_vec(vec![BlockData {

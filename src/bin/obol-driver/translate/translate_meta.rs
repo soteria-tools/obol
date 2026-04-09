@@ -14,8 +14,9 @@ use itertools::Itertools;
 use log::trace;
 use rustc_public::{CrateDef, mir, rustc_internal, ty};
 use rustc_public_bridge::IndexedVal;
+use rustc_span::RemapPathScopeComponents;
 use std::cmp::Ord;
-use std::path::Component;
+use std::path::{Component, PathBuf};
 
 // Spans
 impl<'tcx, 'ctx> TranslateCtx<'tcx> {
@@ -43,13 +44,49 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     pub fn translate_filename(&mut self, name: &rustc_span::FileName) -> meta::FileName {
         match name {
             rustc_span::FileName::Real(name) => {
-                use rustc_span::RealFileName;
-                match name {
-                    RealFileName::LocalPath(path) => FileName::Local(path.clone()),
-                    RealFileName::Remapped { virtual_name, .. } => {
+                match name.local_path() {
+                    Some(path) => {
+                        let path = if let Ok(path) = path.strip_prefix(&self.sysroot) {
+                            // The path to files in the standard library may be full paths to somewhere
+                            // in the sysroot. This may depend on how the toolchain is installed
+                            // (rustup vs nix), so we normalize the paths here to avoid
+                            // inconsistencies in the translation.
+                            if let Ok(path) = path.strip_prefix("lib/rustlib/src/rust") {
+                                let mut rewritten_path: PathBuf = "/rustc".into();
+                                rewritten_path.extend(path);
+                                rewritten_path
+                            } else {
+                                // Unclear if this can happen, but just in case.
+                                let mut rewritten_path: PathBuf = "/toolchain".into();
+                                rewritten_path.extend(path);
+                                rewritten_path
+                            }
+                        } else {
+                            // Find the cargo home directory: according to cargo docs and having a
+                            // look at the cargo source, it's either the `$CARGO_HOME` var or
+                            // `$HOME/.cargo`
+                            let cargo_home = std::env::var("CARGO_HOME")
+                                .map(PathBuf::from)
+                                .ok()
+                                .or_else(|| std::env::home_dir().map(|p| p.join(".cargo")));
+                            if let Some(cargo_home) = cargo_home
+                                && let Ok(path) = path.strip_prefix(cargo_home)
+                            {
+                                // Avoid some more machine-dependent paths in the llbc output.
+                                let mut rewritten_path: PathBuf = "/cargo".into();
+                                rewritten_path.extend(path);
+                                rewritten_path
+                            } else {
+                                path.into()
+                            }
+                        };
+                        FileName::Local(path)
+                    }
+                    None => {
                         // We use the virtual name because it is always available.
                         // That name normally starts with `/rustc/<hash>/`. For our purposes we hide
                         // the hash.
+                        let virtual_name = name.path(RemapPathScopeComponents::MACRO);
                         let mut components_iter = virtual_name.components();
                         if let Some(
                             [
@@ -67,7 +104,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                                 .collect();
                             FileName::Virtual(path_without_hash)
                         } else {
-                            FileName::Virtual(virtual_name.clone())
+                            FileName::Virtual(virtual_name.into())
                         }
                     }
                 }

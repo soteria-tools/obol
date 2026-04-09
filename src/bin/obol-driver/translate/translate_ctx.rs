@@ -10,6 +10,7 @@ use charon_lib::options::TranslateOptions;
 use rustc_middle::ty::TyCtxt;
 use std::cell::RefCell;
 use std::collections::{BTreeSet, HashMap, HashSet};
+use std::path::PathBuf;
 
 // Re-export to avoid having to fix imports.
 pub(crate) use charon_lib::errors::{DepSource, ErrorCtx, Level};
@@ -23,6 +24,9 @@ pub struct TranslateCtx<'tcx> {
     pub options: TranslateOptions,
     /// The translated data.
     pub translated: TranslatedCrate,
+
+    /// Path to the toolchain root.
+    pub sysroot: PathBuf,
 
     /// The map from rustc id to translated id.
     pub id_map: HashMap<TransItemSource, ItemId>,

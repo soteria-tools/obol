@@ -74,6 +74,35 @@ impl<'tcx, 'tctx, 'ictx> BodyTransCtx<'tcx, 'tctx, 'ictx> {
     }
 }
 
+/// A translation context for function blocks.
+pub(crate) struct BlockTransCtx<'tcx, 'tctx, 'ictx, 'bctx> {
+    /// The translation context for the item.
+    pub b_ctx: &'bctx mut BodyTransCtx<'tcx, 'tctx, 'ictx>,
+    /// List of currently translated statements
+    pub statements: Vec<Statement>,
+}
+
+impl<'tcx, 'tctx, 'ictx, 'bctx> BlockTransCtx<'tcx, 'tctx, 'ictx, 'bctx> {
+    pub(crate) fn new(b_ctx: &'bctx mut BodyTransCtx<'tcx, 'tctx, 'ictx>) -> Self {
+        BlockTransCtx {
+            b_ctx,
+            statements: Vec::new(),
+        }
+    }
+}
+
+impl<'tcx, 'tctx, 'ictx, 'bctx> Deref for BlockTransCtx<'tcx, 'tctx, 'ictx, 'bctx> {
+    type Target = BodyTransCtx<'tcx, 'tctx, 'ictx>;
+    fn deref(&self) -> &Self::Target {
+        self.b_ctx
+    }
+}
+impl<'tcx, 'tctx, 'ictx, 'bctx> DerefMut for BlockTransCtx<'tcx, 'tctx, 'ictx, 'bctx> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.b_ctx
+    }
+}
+
 impl ItemTransCtx<'_, '_> {
     pub fn translate_variant_id(&self, id: ty::VariantIdx) -> VariantId {
         VariantId::new(id.to_index())
@@ -89,11 +118,13 @@ impl BodyTransCtx<'_, '_, '_> {
         self.locals_map.get(local).copied()
     }
 
-    pub(crate) fn push_var(&mut self, rid: usize, ty: Ty, name: Option<String>) {
-        let local_id = self
-            .locals
-            .locals
-            .push_with(|index| Local { index, name, ty });
+    pub(crate) fn push_var(&mut self, rid: usize, ty: Ty, name: Option<String>, span: Span) {
+        let local_id = self.locals.locals.push_with(|index| Local {
+            index,
+            name,
+            ty,
+            span,
+        });
         self.locals_map.insert(rid, local_id);
     }
 
@@ -161,7 +192,7 @@ impl BodyTransCtx<'_, '_, '_> {
             let ty = self.translate_ty(span, var.ty)?;
 
             // Add the variable to the environment
-            self.push_var(index, ty, name);
+            self.push_var(index, ty, name, span);
         }
 
         Ok(())
@@ -185,26 +216,188 @@ impl BodyTransCtx<'_, '_, '_> {
 
     fn translate_basic_block(&mut self, block: &mir::BasicBlock) -> Result<BlockData, Error> {
         // Translate the statements
-        let mut statements = Vec::new();
+        let mut block_ctx = BlockTransCtx::new(self);
         for statement in &block.statements {
-            trace!("statement: {:?}", statement);
-
-            // Some statements might be ignored, hence the optional returned value
-            let opt_statement = self.translate_statement(statement)?;
-            if let Some(statement) = opt_statement {
-                statements.push(statement)
-            }
+            block_ctx.translate_statement(statement)?;
         }
 
         // Translate the terminator
-        let terminator = self.translate_terminator(&block.terminator, &mut statements)?;
+        let terminator = block_ctx.translate_terminator(&block.terminator)?;
 
         Ok(BlockData {
-            statements,
+            statements: block_ctx.statements,
             terminator,
         })
     }
 
+    // The body is translated as if the locals are:
+    // ret value, ..., arg-1, ..., arg-N, ...
+    // However, there is only one argument with the tupled arg-1..N arguments;
+    // we must thus shift all locals with index >=spread_arg by 1, and add a new local
+    // for the tupled arg, giving us:
+    // ret value, ..., args, arg-1, ..., arg-N, ...
+    // We then add N statements of the form `locals[I+N+1] := move locals[I].N`,
+    // to destructure the arguments.
+    // We also modify the signature, by adding the tupled argument.
+    // The spread_arg is the local of the spread argument; it's None if one needs to be
+    // added, for closures.
+    fn spread_argument(&mut self, spread_loc_opt: Option<usize>) -> Result<(), Error> {
+        let spread_loc = spread_loc_opt.unwrap_or_else(|| {
+            let spread_tys: Vec<_> = self.signature.inputs.iter().cloned().skip(1).collect();
+            let inputs_tupled = Ty::mk_tuple(spread_tys.clone());
+            let mut old_locals = mem::take(&mut self.locals.locals).into_iter();
+
+            // keep the return place and the first argument (the self place)
+            self.locals.locals.extend(old_locals.by_ref().take(2));
+            let spread_loc = self
+                .locals
+                .new_var(Some("spread_args".to_string()), inputs_tupled)
+                .as_local()
+                .unwrap()
+                .index();
+            self.locals
+                .locals
+                .extend(old_locals.update(|l| l.index += 1));
+
+            // update the rest of the locals
+            self.blocks.dyn_visit_mut(|local: &mut LocalId| {
+                let idx = local.index();
+                if idx >= spread_loc {
+                    *local = LocalId::new(idx + 1)
+                }
+            });
+
+            spread_loc
+        });
+
+        let TyKind::Adt(TypeDeclRef {
+            id: TypeId::Tuple,
+            generics,
+        }) = self.locals.locals[spread_loc].ty.kind()
+        else {
+            raise_error!(
+                self,
+                Span::dummy(),
+                "Expected a tuple type for spread argument"
+            );
+        };
+        let inputs_untupled: Vec<_> = generics.types.clone().into_iter().collect();
+
+        // Update the signature
+        let inputs = &mut self.signature.inputs;
+        let inputs_spread = inputs.split_off(inputs.len() - inputs_untupled.len());
+        inputs.push(Ty::mk_tuple(inputs_spread));
+        self.locals.arg_count = inputs.len();
+
+        // we only need to re-add the projections when spread_arg is not provided
+        if spread_loc_opt.is_some() {
+            return Ok(());
+        }
+
+        // Add projections as prelude
+        let tupled_arg = self.locals.place_for_var(LocalId::from_raw(spread_loc));
+        let spread_arg_count = inputs_untupled.len();
+        let new_stts = inputs_untupled
+            .iter()
+            .cloned()
+            .enumerate()
+            .filter_map(|(i, ty)| {
+                let idx = LocalId::new(spread_loc + i + 1);
+                let Some(local) = self.locals.locals.get(idx) else {
+                    return None;
+                };
+                assert_eq!(local.ty, ty);
+                let place = Place::new(local.index, local.ty.clone());
+                let nth_field = tupled_arg.clone().project(
+                    ProjectionElem::Field(FieldProjKind::Tuple(spread_arg_count), FieldId::new(i)),
+                    ty,
+                );
+                Some(Statement::new(
+                    Span::dummy(),
+                    StatementKind::Assign(place, Rvalue::Use(Operand::Move(nth_field))),
+                ))
+            });
+        self.blocks[BlockId::ZERO].statements.splice(0..0, new_stts);
+        Ok(())
+    }
+
+    /// Translate a function body.
+    pub fn translate_body(
+        &mut self,
+        span: Span,
+        instance: mir::mono::Instance,
+        body: &mir::Body,
+    ) -> Result<Body, Error> {
+        // Stopgap measure because there are still many panics in charon and hax.
+        let mut this = panic::AssertUnwindSafe(&mut *self);
+        let res = panic::catch_unwind(move || this.translate_body_aux(instance, body));
+        match res {
+            Ok(Ok(body)) => Ok(body),
+            // Translation error
+            Ok(Err(e)) => {
+                println!(
+                    "Thread errored when extracting body of {}: {e:?}",
+                    instance.name()
+                );
+                Err(e)
+            }
+            Err(_) => {
+                println!(
+                    "Thread panicked when extracting body of {}",
+                    instance.name()
+                );
+                raise_error!(self, span, "Thread panicked when extracting body.");
+            }
+        }
+    }
+
+    fn translate_body_aux(
+        &mut self,
+        instance: mir::mono::Instance,
+        body: &mir::Body,
+    ) -> Result<Body, Error> {
+        // Compute the span information
+        let span = self.translate_span_from_smir(&body.span);
+
+        // Initialize the local variables
+        trace!("Translating the body locals");
+        self.locals.arg_count = self.signature.inputs.len();
+        self.translate_body_locals(&body)?;
+
+        // Translate the expression body
+        trace!("Translating the expression body");
+
+        // Register the start block
+        let id = self.translate_basic_block_id(0);
+        assert!(id == START_BLOCK_ID);
+
+        // For as long as there are blocks in the stack, translate them
+        while let Some(mir_block_id) = self.blocks_stack.pop_front() {
+            let mir_block = body.blocks.get(mir_block_id).unwrap();
+            let block_id = self.translate_basic_block_id(mir_block_id);
+            let block = self.translate_basic_block(mir_block)?;
+            self.blocks.set_slot(block_id, block);
+        }
+
+        // We might need to tuple arguments, and possibly create a local too
+        if let Some(spread_local) = body.spread_arg() {
+            self.spread_argument(Some(spread_local))?;
+        } else if self.instance_is_closure(instance) {
+            self.spread_argument(None)?;
+        }
+
+        // Create the body
+        Ok(Body::Unstructured(ExprBody {
+            span,
+            bound_body_regions: 0,
+            locals: mem::take(&mut self.locals),
+            body: mem::take(&mut self.blocks).make_contiguous(),
+            comments: vec![],
+        }))
+    }
+}
+
+impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
     fn deref_middle_tys(&self, l: ty::Ty, r: ty::Ty) -> Option<(ty::Ty, ty::Ty)> {
         // See:
         // https://github.com/rust-lang/rust/blob/b3f8586fb1e4859678d6b231e780ff81801d2282/compiler/rustc_codegen_ssa/src/base.rs#L220
@@ -302,12 +495,17 @@ impl BodyTransCtx<'_, '_, '_> {
                     stable.with_self_ty(self_ty)
                 });
                 let vtable_global = self.register_vtable(span, self_ty, trait_ref);
+                let vtable_ref = GlobalDeclRef {
+                    id: vtable_global,
+                    generics: Box::new(GenericArgs::empty()),
+                };
+                let meta = ConstantExpr {
+                    kind: ConstantExprKind::Global(vtable_ref),
+                    ty: TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty(),
+                };
                 Ok(UnsizingMetadata::VTable(
                     self.dummy_trait_ref(),
-                    Some(GlobalDeclRef {
-                        id: vtable_global,
-                        generics: Box::new(GenericArgs::empty()),
-                    }),
+                    Box::new(meta),
                 ))
             }
             _ => {
@@ -459,6 +657,28 @@ impl BodyTransCtx<'_, '_, '_> {
                 };
                 Ok((Operand::Const(Box::new(cexpr)), ty))
             }
+            mir::Operand::RuntimeChecks(check) => {
+                let op = match check {
+                    mir::RuntimeChecks::UbChecks => NullOp::UbChecks,
+                    mir::RuntimeChecks::OverflowChecks => NullOp::OverflowChecks,
+                    mir::RuntimeChecks::ContractChecks => NullOp::ContractChecks,
+                };
+                let local = self.locals.new_var(None, Ty::mk_bool());
+                self.statements.push(Statement {
+                    span,
+                    kind: StatementKind::StorageLive(local.as_local().unwrap()),
+                    comments_before: vec![],
+                });
+                self.statements.push(Statement {
+                    span,
+                    kind: StatementKind::Assign(
+                        local.clone(),
+                        Rvalue::NullaryOp(op, Ty::mk_bool()),
+                    ),
+                    comments_before: vec![],
+                });
+                Ok((Operand::Move(local), Ty::mk_bool()))
+            }
         }
     }
 
@@ -584,7 +804,7 @@ impl BodyTransCtx<'_, '_, '_> {
                     ) => CastKind::RawPtr(src_ty, tgt_ty),
                     mir::CastKind::PointerCoercion(
                         mir::PointerCoercion::UnsafeFnPointer
-                        | mir::PointerCoercion::ReifyFnPointer,
+                        | mir::PointerCoercion::ReifyFnPointer(_),
                         ..,
                     ) => CastKind::FnPtr(src_ty, tgt_ty),
                     mir::CastKind::Subtype | mir::CastKind::Transmute => {
@@ -609,17 +829,6 @@ impl BodyTransCtx<'_, '_, '_> {
                 self.translate_operand(span, left)?,
                 self.translate_operand(span, right)?,
             )),
-            mir::Rvalue::NullaryOp(nullop) => {
-                trace!("NullOp: {:?}", nullop);
-                let op = match nullop {
-                    mir::NullOp::RuntimeChecks(check) => match check {
-                        mir::RuntimeChecks::UbChecks => NullOp::UbChecks,
-                        mir::RuntimeChecks::ContractChecks => NullOp::ContractChecks,
-                        mir::RuntimeChecks::OverflowChecks => NullOp::ContractChecks,
-                    },
-                };
-                Ok(Rvalue::NullaryOp(op, LiteralTy::Bool.into()))
-            }
             mir::Rvalue::UnaryOp(unop, operand) => {
                 let operand = self.translate_operand(span, operand)?;
                 let unop = match unop {
@@ -785,10 +994,7 @@ impl BodyTransCtx<'_, '_, '_> {
     /// Translate a statement
     ///
     /// We return an option, because we ignore some statements (`Nop`, `StorageLive`...)
-    fn translate_statement(
-        &mut self,
-        statement: &mir::Statement,
-    ) -> Result<Option<Statement>, Error> {
+    fn translate_statement(&mut self, statement: &mir::Statement) -> Result<(), Error> {
         trace!("About to translate statement (MIR) {:?}", statement);
         let span = self.t_ctx.translate_span_from_smir(&statement.span);
 
@@ -863,15 +1069,12 @@ impl BodyTransCtx<'_, '_, '_> {
         };
 
         // Add the span information
-        Ok(t_statement.map(|kind| Statement::new(span, kind)))
+        t_statement.map(|kind| self.statements.push(Statement::new(span, kind)));
+        Ok(())
     }
 
     /// Translate a terminator
-    fn translate_terminator(
-        &mut self,
-        terminator: &mir::Terminator,
-        statements: &mut Vec<Statement>,
-    ) -> Result<Terminator, Error> {
+    fn translate_terminator(&mut self, terminator: &mir::Terminator) -> Result<Terminator, Error> {
         trace!("About to translate terminator (MIR) {:?}", terminator);
         // Compute the span information beforehand (we might need it to introduce
         // intermediate statements - we desugar some terminators)
@@ -921,7 +1124,7 @@ impl BodyTransCtx<'_, '_, '_> {
                     TyKind::RawPtr(place.ty.clone(), RefKind::Mut).into_ty(),
                 );
                 let unit_place = self.locals.new_var(None, Ty::mk_unit());
-                statements.push(Statement::new(
+                self.statements.push(Statement::new(
                     span,
                     StatementKind::Assign(
                         ptr_place.clone(),
@@ -968,12 +1171,7 @@ impl BodyTransCtx<'_, '_, '_> {
                 destination,
                 target,
                 unwind,
-            } => {
-                let (term, stts) =
-                    self.translate_function_call(span, func, args, destination, target, unwind)?;
-                statements.extend(stts);
-                term
-            }
+            } => self.translate_function_call(span, func, args, destination, target, unwind)?,
             mir::TerminatorKind::Assert {
                 cond,
                 expected,
@@ -1164,7 +1362,7 @@ impl BodyTransCtx<'_, '_, '_> {
         destination: &mir::Place,
         target: &Option<usize>,
         unwind: &mir::UnwindAction,
-    ) -> Result<(TerminatorKind, Vec<Statement>), Error> {
+    ) -> Result<TerminatorKind, Error> {
         // There are two cases, depending on whether this is a "regular"
         // call to a top-level function identified by its id, or if we
         // are using a local function pointer (i.e., the operand is a "move").
@@ -1243,18 +1441,16 @@ impl BodyTransCtx<'_, '_, '_> {
             }
         };
         let on_unwind = self.translate_unwind(span, unwind);
-        let extra_stts = extra_stts
-            .into_iter()
-            .map(|kind| Statement::new(span, kind))
-            .collect();
-        Ok((
-            TerminatorKind::Call {
-                call,
-                target,
-                on_unwind,
-            },
-            extra_stts,
-        ))
+        self.statements.extend(
+            extra_stts
+                .into_iter()
+                .map(|kind| Statement::new(span, kind)),
+        );
+        Ok(TerminatorKind::Call {
+            call,
+            target,
+            on_unwind,
+        })
     }
 
     /// Evaluate function arguments in a context, and return the list of computed
@@ -1267,171 +1463,5 @@ impl BodyTransCtx<'_, '_, '_> {
         args.iter()
             .map(|arg| self.translate_operand(span, arg))
             .try_collect()
-    }
-
-    // The body is translated as if the locals are:
-    // ret value, ..., arg-1, ..., arg-N, ...
-    // However, there is only one argument with the tupled arg-1..N arguments;
-    // we must thus shift all locals with index >=spread_arg by 1, and add a new local
-    // for the tupled arg, giving us:
-    // ret value, ..., args, arg-1, ..., arg-N, ...
-    // We then add N statements of the form `locals[I+N+1] := move locals[I].N`,
-    // to destructure the arguments.
-    // We also modify the signature, by adding the tupled argument.
-    // The spread_arg is the local of the spread argument; it's None if one needs to be
-    // added, for closures.
-    fn spread_argument(&mut self, spread_loc_opt: Option<usize>) -> Result<(), Error> {
-        let spread_loc = spread_loc_opt.unwrap_or_else(|| {
-            let spread_tys: Vec<_> = self.signature.inputs.iter().cloned().skip(1).collect();
-            let inputs_tupled = Ty::mk_tuple(spread_tys.clone());
-            let mut old_locals = mem::take(&mut self.locals.locals).into_iter();
-
-            // keep the return place and the first argument (the self place)
-            self.locals.locals.extend(old_locals.by_ref().take(2));
-            let spread_loc = self
-                .locals
-                .new_var(Some("spread_args".to_string()), inputs_tupled)
-                .as_local()
-                .unwrap()
-                .index();
-            self.locals
-                .locals
-                .extend(old_locals.update(|l| l.index += 1));
-
-            // update the rest of the locals
-            self.blocks.dyn_visit_mut(|local: &mut LocalId| {
-                let idx = local.index();
-                if idx >= spread_loc {
-                    *local = LocalId::new(idx + 1)
-                }
-            });
-
-            spread_loc
-        });
-
-        let TyKind::Adt(TypeDeclRef {
-            id: TypeId::Tuple,
-            generics,
-        }) = self.locals.locals[spread_loc].ty.kind()
-        else {
-            raise_error!(
-                self,
-                Span::dummy(),
-                "Expected a tuple type for spread argument"
-            );
-        };
-        let inputs_untupled: Vec<_> = generics.types.clone().into_iter().collect();
-
-        // Update the signature
-        let inputs = &mut self.signature.inputs;
-        let inputs_spread = inputs.split_off(inputs.len() - inputs_untupled.len());
-        inputs.push(Ty::mk_tuple(inputs_spread));
-        self.locals.arg_count = inputs.len();
-
-        // we only need to re-add the projections when spread_arg is not provided
-        if spread_loc_opt.is_some() {
-            return Ok(());
-        }
-
-        // Add projections as prelude
-        let tupled_arg = self.locals.place_for_var(LocalId::from_raw(spread_loc));
-        let spread_arg_count = inputs_untupled.len();
-        let new_stts = inputs_untupled
-            .iter()
-            .cloned()
-            .enumerate()
-            .filter_map(|(i, ty)| {
-                let idx = LocalId::new(spread_loc + i + 1);
-                let Some(local) = self.locals.locals.get(idx) else {
-                    return None;
-                };
-                assert_eq!(local.ty, ty);
-                let place = Place::new(local.index, local.ty.clone());
-                let nth_field = tupled_arg.clone().project(
-                    ProjectionElem::Field(FieldProjKind::Tuple(spread_arg_count), FieldId::new(i)),
-                    ty,
-                );
-                Some(Statement::new(
-                    Span::dummy(),
-                    StatementKind::Assign(place, Rvalue::Use(Operand::Move(nth_field))),
-                ))
-            });
-        self.blocks[BlockId::ZERO].statements.splice(0..0, new_stts);
-        Ok(())
-    }
-
-    /// Translate a function body.
-    pub fn translate_body(
-        &mut self,
-        span: Span,
-        instance: mir::mono::Instance,
-        body: &mir::Body,
-    ) -> Result<Body, Error> {
-        // Stopgap measure because there are still many panics in charon and hax.
-        let mut this = panic::AssertUnwindSafe(&mut *self);
-        let res = panic::catch_unwind(move || this.translate_body_aux(instance, body));
-        match res {
-            Ok(Ok(body)) => Ok(body),
-            // Translation error
-            Ok(Err(e)) => {
-                println!(
-                    "Thread errored when extracting body of {}: {e:?}",
-                    instance.name()
-                );
-                Err(e)
-            }
-            Err(_) => {
-                println!(
-                    "Thread panicked when extracting body of {}",
-                    instance.name()
-                );
-                raise_error!(self, span, "Thread panicked when extracting body.");
-            }
-        }
-    }
-
-    fn translate_body_aux(
-        &mut self,
-        instance: mir::mono::Instance,
-        body: &mir::Body,
-    ) -> Result<Body, Error> {
-        // Compute the span information
-        let span = self.translate_span_from_smir(&body.span);
-
-        // Initialize the local variables
-        trace!("Translating the body locals");
-        self.locals.arg_count = self.signature.inputs.len();
-        self.translate_body_locals(&body)?;
-
-        // Translate the expression body
-        trace!("Translating the expression body");
-
-        // Register the start block
-        let id = self.translate_basic_block_id(0);
-        assert!(id == START_BLOCK_ID);
-
-        // For as long as there are blocks in the stack, translate them
-        while let Some(mir_block_id) = self.blocks_stack.pop_front() {
-            let mir_block = body.blocks.get(mir_block_id).unwrap();
-            let block_id = self.translate_basic_block_id(mir_block_id);
-            let block = self.translate_basic_block(mir_block)?;
-            self.blocks.set_slot(block_id, block);
-        }
-
-        // We might need to tuple arguments, and possibly create a local too
-        if let Some(spread_local) = body.spread_arg() {
-            self.spread_argument(Some(spread_local))?;
-        } else if self.instance_is_closure(instance) {
-            self.spread_argument(None)?;
-        }
-
-        // Create the body
-        Ok(Body::Unstructured(ExprBody {
-            span,
-            bound_body_regions: 0,
-            locals: mem::take(&mut self.locals),
-            body: mem::take(&mut self.blocks).make_contiguous(),
-            comments: vec![],
-        }))
     }
 }
