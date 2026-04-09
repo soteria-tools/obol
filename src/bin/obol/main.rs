@@ -50,13 +50,14 @@ fn translate_with_cargo(mut options: CliOpts) -> Result<ExitStatus> {
         cmd.env("DYLD_LIBRARY_PATH", lib);
     }
 
-    // When a test target is requested (--test <name> in spread args), we need
-    // `cargo test --no-run` so that the library is fully built (with codegen)
-    // before the test binary is compiled. `cargo build --test` would cause
+    // When a test target is requested (--test <name>) or unit tests in src are
+    // requested (--lib), we need `cargo test --no-run` so that the library is
+    // fully built (with codegen) before the test binary is compiled.
+    // `cargo build --test` would cause
     // obol-driver to suppress codegen for the library, making the test binary
     // unable to link against it.
     let is_specified = |arg: &str| options.spread.iter().any(|input| input.starts_with(arg));
-    if is_specified("--test") {
+    if is_specified("--test") || is_specified("--lib") {
         cmd.arg("test");
         cmd.arg("--no-run");
         // Signal to obol-driver that we are building a test target so it knows
