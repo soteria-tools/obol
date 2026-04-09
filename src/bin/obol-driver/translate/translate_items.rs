@@ -348,7 +348,7 @@ impl ItemTransCtx<'_, '_> {
             None
         } else if let Some(body) = def.body() {
             // we can't rely on "has_body", as in some cases it returns false even when there is a body.
-            Some(body)
+            Some((false, body))
         } else {
             let tcx = self.t_ctx.tcx;
             let inner_id = rustc_public::rustc_internal::internal(tcx, def.def.def_id());
@@ -356,23 +356,26 @@ impl ItemTransCtx<'_, '_> {
             let is_global = tcx.is_static(inner_id);
 
             let body_internal = if mir_available && !is_global {
-                Some(tcx.optimized_mir(inner_id).clone())
+                let body = tcx.optimized_mir(inner_id).clone();
+                Some(body)
             } else if (is_global && !tcx.is_trivial_const(inner_id)) || tcx.is_const_fn(inner_id) {
-                Some(tcx.mir_for_ctfe(inner_id).clone())
+                let body = tcx.mir_for_ctfe(inner_id).clone();
+                Some(body)
             } else {
                 trace!("mir not available for {:?}", inner_id);
                 None
             };
-            body_internal.map(rustc_public::rustc_internal::stable)
+            body_internal.map(|b| (b.is_polymorphic, rustc_public::rustc_internal::stable(b)))
         };
 
-        let body = if let Some(body) = body {
-            let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals(), &mut signature);
-            match bt_ctx.translate_body(span, def, &body) {
-                Ok(body) => body,
-                // Translation error.
-                Err(err) => Body::Error(format!("{:?}", err).into()),
-            }
+        let body = if let Some((is_polymorphic, body)) = body {
+            let generics = if is_polymorphic {
+                Some(def.args())
+            } else {
+                None
+            };
+            let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals(), &mut signature, generics);
+            bt_ctx.translate_body(span, def, &body)
         } else {
             trace!("Instance {} has no body -- left opaque.", def.name(),);
             Body::Missing

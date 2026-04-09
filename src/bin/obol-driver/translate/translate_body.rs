@@ -24,6 +24,7 @@ pub(crate) struct BodyTransCtx<'tcx, 'tctx, 'ictx> {
     /// The translation context for the item.
     pub i_ctx: &'ictx mut ItemTransCtx<'tcx, 'tctx>,
 
+    pub generic_args: Option<ty::GenericArgs>,
     pub local_decls: &'ictx [mir::LocalDecl],
     pub signature: &'ictx mut FunSig,
 
@@ -60,11 +61,13 @@ impl<'tcx, 'tctx, 'ictx> BodyTransCtx<'tcx, 'tctx, 'ictx> {
         i_ctx: &'ictx mut ItemTransCtx<'tcx, 'tctx>,
         local_decls: &'ictx [mir::LocalDecl],
         signature: &'ictx mut FunSig,
+        generic_args: Option<ty::GenericArgs>,
     ) -> Self {
         BodyTransCtx {
             i_ctx,
             local_decls,
             signature,
+            generic_args,
             locals: Default::default(),
             locals_map: Default::default(),
             blocks: Default::default(),
@@ -128,45 +131,48 @@ impl BodyTransCtx<'_, '_, '_> {
         self.locals_map.insert(rid, local_id);
     }
 
-    fn translate_binaryop_kind(&mut self, _span: Span, binop: mir::BinOp) -> Result<BinOp, Error> {
-        Ok(match binop {
-            mir::BinOp::BitXor => BinOp::BitXor,
-            mir::BinOp::BitAnd => BinOp::BitAnd,
-            mir::BinOp::BitOr => BinOp::BitOr,
-            mir::BinOp::Eq => BinOp::Eq,
-            mir::BinOp::Lt => BinOp::Lt,
-            mir::BinOp::Le => BinOp::Le,
-            mir::BinOp::Ne => BinOp::Ne,
-            mir::BinOp::Ge => BinOp::Ge,
-            mir::BinOp::Gt => BinOp::Gt,
-            mir::BinOp::Div => BinOp::Div(OverflowMode::UB),
-            mir::BinOp::Rem => BinOp::Rem(OverflowMode::Wrap),
-            mir::BinOp::Add => BinOp::Add(OverflowMode::Wrap),
-            mir::BinOp::AddUnchecked => BinOp::Add(OverflowMode::UB),
-            mir::BinOp::Sub => BinOp::Sub(OverflowMode::Wrap),
-            mir::BinOp::SubUnchecked => BinOp::Sub(OverflowMode::UB),
-            mir::BinOp::Mul => BinOp::Mul(OverflowMode::Wrap),
-            mir::BinOp::MulUnchecked => BinOp::Mul(OverflowMode::UB),
-            mir::BinOp::Shl => BinOp::Shl(OverflowMode::Wrap),
-            mir::BinOp::ShlUnchecked => BinOp::Shl(OverflowMode::UB),
-            mir::BinOp::Shr => BinOp::Shr(OverflowMode::Wrap),
-            mir::BinOp::ShrUnchecked => BinOp::Shr(OverflowMode::UB),
-            mir::BinOp::Cmp => BinOp::Cmp,
-            mir::BinOp::Offset => BinOp::Offset,
-        })
+    fn subst_ty(&mut self, span: Span, ty: ty::Ty) -> Result<ty::Ty, Error> {
+        // For some extremely bizarre reason, constructor functions (e.g. Option::Some)
+        // have their locals non-substituted, despite the function having the right generics.
+        // We thus do it manually, which is... not good.
+        match ty.kind() {
+            ty::TyKind::Param(param) => Ok(self.generic_args.as_ref().unwrap()[param]),
+            ty::TyKind::RigidTy(rigid) => match rigid {
+                ty::RigidTy::Adt(def, args)
+                    if args
+                        .0
+                        .iter()
+                        .any(|a| a.ty().is_some_and(|ty| ty.kind().rigid().is_none())) =>
+                {
+                    let new_args: Vec<_> = args
+                        .clone()
+                        .0
+                        .into_iter()
+                        .map(|arg| -> Result<_, Error> {
+                            match arg {
+                                ty::GenericArgKind::Type(ty) => {
+                                    let ty = self.subst_ty(span, ty)?;
+                                    Ok(ty::GenericArgKind::Type(ty))
+                                }
+                                _ => Ok(arg),
+                            }
+                        })
+                        .try_collect()?;
+                    Ok(ty::Ty::from_rigid_kind(ty::RigidTy::Adt(
+                        def,
+                        ty::GenericArgs(new_args),
+                    )))
+                }
+                _ => Ok(ty),
+            },
+
+            _ => Ok(ty),
+        }
     }
 
-    fn translate_checked_binaryop_kind(
-        &mut self,
-        span: Span,
-        binop: mir::BinOp,
-    ) -> Result<BinOp, Error> {
-        Ok(match binop {
-            mir::BinOp::Add => BinOp::AddChecked,
-            mir::BinOp::Sub => BinOp::SubChecked,
-            mir::BinOp::Mul => BinOp::MulChecked,
-            _ => raise_error!(self, span, "Invalid checked binop: {:?}", binop),
-        })
+    fn translate_ty(&mut self, span: Span, ty: ty::Ty) -> Result<Ty, Error> {
+        let ty = self.subst_ty(span, ty)?;
+        self.i_ctx.translate_ty(span, ty)
     }
 
     /// Translate a function's local variables by adding them in the environment.
@@ -327,26 +333,23 @@ impl BodyTransCtx<'_, '_, '_> {
         span: Span,
         instance: mir::mono::Instance,
         body: &mir::Body,
-    ) -> Result<Body, Error> {
+    ) -> Body {
         // Stopgap measure because there are still many panics in charon and hax.
         let mut this = panic::AssertUnwindSafe(&mut *self);
         let res = panic::catch_unwind(move || this.translate_body_aux(instance, body));
         match res {
-            Ok(Ok(body)) => Ok(body),
+            Ok(Ok(body)) => body,
             // Translation error
             Ok(Err(e)) => {
                 println!(
                     "Thread errored when extracting body of {}: {e:?}",
                     instance.name()
                 );
-                Err(e)
+                Body::Error(e)
             }
             Err(_) => {
-                println!(
-                    "Thread panicked when extracting body of {}",
-                    instance.name()
-                );
-                raise_error!(self, span, "Thread panicked when extracting body.");
+                let e = register_error!(self, span, "Thread panicked when extracting body.");
+                Body::Error(e)
             }
         }
     }
@@ -398,6 +401,47 @@ impl BodyTransCtx<'_, '_, '_> {
 }
 
 impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
+    fn translate_binaryop_kind(&mut self, _span: Span, binop: mir::BinOp) -> Result<BinOp, Error> {
+        Ok(match binop {
+            mir::BinOp::BitXor => BinOp::BitXor,
+            mir::BinOp::BitAnd => BinOp::BitAnd,
+            mir::BinOp::BitOr => BinOp::BitOr,
+            mir::BinOp::Eq => BinOp::Eq,
+            mir::BinOp::Lt => BinOp::Lt,
+            mir::BinOp::Le => BinOp::Le,
+            mir::BinOp::Ne => BinOp::Ne,
+            mir::BinOp::Ge => BinOp::Ge,
+            mir::BinOp::Gt => BinOp::Gt,
+            mir::BinOp::Div => BinOp::Div(OverflowMode::UB),
+            mir::BinOp::Rem => BinOp::Rem(OverflowMode::Wrap),
+            mir::BinOp::Add => BinOp::Add(OverflowMode::Wrap),
+            mir::BinOp::AddUnchecked => BinOp::Add(OverflowMode::UB),
+            mir::BinOp::Sub => BinOp::Sub(OverflowMode::Wrap),
+            mir::BinOp::SubUnchecked => BinOp::Sub(OverflowMode::UB),
+            mir::BinOp::Mul => BinOp::Mul(OverflowMode::Wrap),
+            mir::BinOp::MulUnchecked => BinOp::Mul(OverflowMode::UB),
+            mir::BinOp::Shl => BinOp::Shl(OverflowMode::Wrap),
+            mir::BinOp::ShlUnchecked => BinOp::Shl(OverflowMode::UB),
+            mir::BinOp::Shr => BinOp::Shr(OverflowMode::Wrap),
+            mir::BinOp::ShrUnchecked => BinOp::Shr(OverflowMode::UB),
+            mir::BinOp::Cmp => BinOp::Cmp,
+            mir::BinOp::Offset => BinOp::Offset,
+        })
+    }
+
+    fn translate_checked_binaryop_kind(
+        &mut self,
+        span: Span,
+        binop: mir::BinOp,
+    ) -> Result<BinOp, Error> {
+        Ok(match binop {
+            mir::BinOp::Add => BinOp::AddChecked,
+            mir::BinOp::Sub => BinOp::SubChecked,
+            mir::BinOp::Mul => BinOp::MulChecked,
+            _ => raise_error!(self, span, "Invalid checked binop: {:?}", binop),
+        })
+    }
+
     fn deref_middle_tys(&self, l: ty::Ty, r: ty::Ty) -> Option<(ty::Ty, ty::Ty)> {
         // See:
         // https://github.com/rust-lang/rust/blob/b3f8586fb1e4859678d6b231e780ff81801d2282/compiler/rustc_codegen_ssa/src/base.rs#L220

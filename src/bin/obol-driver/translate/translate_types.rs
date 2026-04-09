@@ -144,13 +144,30 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 
         let kind = mir_ty.kind();
         let Some(ty) = kind.rigid() else {
-            raise_error!(
-                self,
-                span,
-                "Expected a rigid type, got: {:?}\nTrace: {}",
-                kind,
-                std::backtrace::Backtrace::force_capture()
-            );
+            match kind {
+                ty::TyKind::Alias(..) => raise_error!(
+                    self,
+                    span,
+                    "translate_ty got an alias: {:?}\nTrace: {}",
+                    kind,
+                    std::backtrace::Backtrace::force_capture()
+                ),
+                ty::TyKind::Bound(..) => raise_error!(
+                    self,
+                    span,
+                    "translate_ty got a bound variable: {:?}\nTrace: {}",
+                    kind,
+                    std::backtrace::Backtrace::force_capture()
+                ),
+                ty::TyKind::Param(ty) => {
+                    let id = TypeVarId::from_raw(ty.index as usize);
+                    let ty = TyKind::TypeVar(TypeDbVar::Free(id)).into_ty();
+                    self.t_ctx.type_trans_cache.insert(mir_ty, ty.clone());
+                    register_error!(self, span, "translate_ty got a type parameter: {:?}", ty);
+                    return Ok(ty);
+                }
+                ty::TyKind::RigidTy(..) => unreachable!(),
+            }
         };
 
         let kind = match ty {
@@ -421,7 +438,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 
         // If layout computation returns an error, we return `None`.
         let ty = def.ty_with_args(genargs);
-        let layout = ty.layout().unwrap();
+        let layout = match ty.layout() {
+            Ok(layout) => layout,
+            Err(e) => {
+                register_error!(
+                    self,
+                    Span::dummy(),
+                    "Failed to compute layout for type `{ty:?}`, error: {e:?}"
+                );
+                return None;
+            }
+        };
         let layout = rustc_public::rustc_internal::internal(self.t_ctx.tcx, layout);
         let ty = rustc_public::rustc_internal::internal(self.t_ctx.tcx, ty);
 
