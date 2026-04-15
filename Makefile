@@ -17,3 +17,5 @@ build-dev:
 	mkdir -p bin
 	cp -f target/debug/obol bin
 	cp -f target/debug/obol-driver bin
+
+.PHONY: all build build-offline build-dev
