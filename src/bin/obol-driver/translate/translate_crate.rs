@@ -42,6 +42,7 @@ pub enum TransItemSource {
     ForeignType(ty::ForeignDef),
     VTable(ty::Ty, Option<(ty::TraitDef, MyGenericArgs)>),
     VTableInit(ty::Ty, Option<(ty::TraitDef, MyGenericArgs)>),
+    Coroutine(ty::CoroutineDef, MyGenericArgs),
 }
 
 impl TransItemSource {
@@ -58,8 +59,10 @@ impl TransItemSource {
             TransItemSource::Fun(instance) => Some(instance.def.def_id()),
             TransItemSource::Static(stt) | TransItemSource::StaticFn(stt) => Some(stt.0),
             TransItemSource::Type(id, _) => Some(id.0),
-            TransItemSource::Closure(def, _) => Some(def.def_id()),
-            TransItemSource::ClosureAsFn(def, _) => Some(def.def_id()),
+            TransItemSource::Closure(def, _) | TransItemSource::ClosureAsFn(def, _) => {
+                Some(def.def_id())
+            }
+            TransItemSource::Coroutine(def, _) => Some(def.def_id()),
             TransItemSource::ForeignType(def) => Some(def.def_id()),
             TransItemSource::VTable(_, Some((tr, _))) => Some(tr.0),
             TransItemSource::VTableInit(_, Some((tr, _))) => Some(tr.0),
@@ -105,6 +108,9 @@ impl TransItemSource {
             }
             TransItemSource::Static(stt) => (9, stt.0.to_index(), 0),
             TransItemSource::StaticFn(stt) => (10, stt.0.to_index(), 0),
+            TransItemSource::Coroutine(def, gargs) => {
+                (11, def.def_id().to_index(), gargs.sort_key())
+            }
         }
     }
 }
@@ -133,7 +139,8 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let trans_id = match id {
                     TransItemSource::Type(..)
                     | TransItemSource::Closure(..)
-                    | TransItemSource::ForeignType(..) => {
+                    | TransItemSource::ForeignType(..)
+                    | TransItemSource::Coroutine(..) => {
                         ItemId::Type(self.translated.type_decls.reserve_slot())
                     }
                     TransItemSource::Global(..)
@@ -191,6 +198,18 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         *self
             .register_and_enqueue_id(src, TransItemSource::Fun(id))
             .as_fun()
+            .unwrap()
+    }
+
+    pub(crate) fn register_coroutine_type_decl_id(
+        &mut self,
+        src: &Option<DepSource>,
+        def: ty::CoroutineDef,
+        args: ty::GenericArgs,
+    ) -> TypeDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::Coroutine(def, args.into()))
+            .as_type()
             .unwrap()
     }
 
@@ -326,6 +345,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> FunDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_fun_decl_id(&src, id)
+    }
+
+    pub(crate) fn register_coroutine_type_decl_id(
+        &mut self,
+        span: Span,
+        def: ty::CoroutineDef,
+        args: ty::GenericArgs,
+    ) -> TypeDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx.register_coroutine_type_decl_id(&src, def, args)
     }
 
     pub(crate) fn register_closure_type_decl_id(

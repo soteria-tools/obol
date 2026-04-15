@@ -301,8 +301,14 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 self.dummy_dyn_ty()
             }
 
-            ty::RigidTy::Coroutine(..) => {
-                raise_error!(self, span, "Coroutine types are not supported yet")
+            ty::RigidTy::Coroutine(def, gargs) => {
+                let id = self.register_coroutine_type_decl_id(span, *def, gargs.clone());
+                let tref = TypeDeclRef {
+                    id: TypeId::Adt(id),
+                    generics: Box::new(GenericArgs::empty()),
+                };
+
+                TyKind::Adt(tref)
             }
             ty::RigidTy::Pat(..) => {
                 raise_error!(self, span, "Pat types are not supported yet")
