@@ -981,9 +981,17 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
 
                         Ok(Rvalue::Aggregate(akind, operands_t))
                     }
-                    mir::AggregateKind::Coroutine(..)
-                    | mir::AggregateKind::CoroutineClosure(..) => {
-                        raise_error!(self, span, "Coroutines are not supported");
+                    mir::AggregateKind::Coroutine(def, args) => {
+                        let id = self.register_coroutine_type_decl_id(span, *def, args.clone());
+                        let tref = TypeDeclRef {
+                            id: TypeId::Adt(id),
+                            generics: Box::new(GenericArgs::empty()),
+                        };
+                        let akind = AggregateKind::Adt(tref, None, None);
+                        Ok(Rvalue::Aggregate(akind, operands_t))
+                    }
+                    mir::AggregateKind::CoroutineClosure(..) => {
+                        raise_error!(self, span, "Coroutines are not supported (Case 2)");
                     }
                 }
             }

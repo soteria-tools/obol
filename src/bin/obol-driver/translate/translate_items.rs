@@ -511,13 +511,40 @@ impl ItemTransCtx<'_, '_> {
     }
 
     pub fn translate_coroutine_adt(
-        self,
-        _trans_id: TypeDeclId,
-        _item_meta: ItemMeta,
-        _def: &ty::CoroutineDef,
-        _genargs: &ty::GenericArgs,
+        mut self,
+        trans_id: TypeDeclId,
+        item_meta: ItemMeta,
+        def: &ty::CoroutineDef,
+        genargs: &ty::GenericArgs,
     ) -> Result<TypeDecl, Error> {
-        todo!("Translate coroutine ADT");
+        let span = item_meta.span;
+
+        // Translate generics and predicates
+        // self.translate_def_generics(span, def)?;
+
+        let src = self.translate_coroutine_src_info(span, def, genargs)?;
+
+        // Translate type body
+        let kind = self.translate_coroutine_as_adt_def(trans_id, span, &item_meta, def, genargs);
+
+        let kind = match kind {
+            Ok(kind) => kind,
+            Err(err) => TypeDeclKind::Error(err.msg),
+        };
+        let layout: Option<Layout> = None;
+        let ptr_metadata: PtrMetadata = self.translate_ptr_metadata();
+        let type_def = TypeDecl {
+            def_id: trans_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            kind,
+            src,
+            layout,
+            repr: None,
+            ptr_metadata,
+        };
+
+        Ok(type_def)
     }
 
     fn make_trivial_return_function(
