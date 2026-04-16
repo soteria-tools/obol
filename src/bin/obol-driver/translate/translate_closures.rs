@@ -33,7 +33,6 @@ impl ItemTransCtx<'_, '_> {
             raise_error!(self, def_span, "Closure state argument is not a tuple?");
         };
 
-        // let upvars =
         let mut fields: IndexVec<FieldId, Field> = Default::default();
         for (j, state_ty) in state_tys.iter().enumerate() {
             // Translate the field type
