@@ -286,7 +286,11 @@ impl ItemTransCtx<'_, '_> {
             Ok(kind) => kind,
             Err(err) => TypeDeclKind::Error(err.msg),
         };
-        let layout = self.translate_layout(def, genargs);
+        let layout = self
+            .translate_layout(def, genargs)
+            .into_iter()
+            .map(|l| (self.t_ctx.get_target_triple(), l))
+            .collect();
         let ptr_metadata = self.translate_ptr_metadata();
         let type_def = TypeDecl {
             def_id: trans_id,
@@ -319,7 +323,7 @@ impl ItemTransCtx<'_, '_> {
             generics: GenericParams::empty(),
             kind,
             src: ItemSource::TopLevel,
-            layout: None,
+            layout: Default::default(),
             repr: None,
             ptr_metadata: PtrMetadata::None,
         };
@@ -483,7 +487,6 @@ impl ItemTransCtx<'_, '_> {
             Ok(kind) => kind,
             Err(err) => TypeDeclKind::Error(err.msg),
         };
-        let layout = None;
         let ptr_metadata = self.translate_ptr_metadata();
         let type_def = TypeDecl {
             def_id: trans_id,
@@ -491,7 +494,7 @@ impl ItemTransCtx<'_, '_> {
             generics: GenericParams::empty(),
             kind,
             src,
-            layout,
+            layout: Default::default(),
             repr: None,
             ptr_metadata,
         };

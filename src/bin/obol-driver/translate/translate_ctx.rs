@@ -74,6 +74,10 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .span_err(&self.translated, span, msg, level)
     }
 
+    pub fn get_target_triple(&self) -> TargetTriple {
+        self.tcx.sess.opts.target_triple.tuple().to_owned()
+    }
+
     pub(crate) fn with_item_id<F, T>(&mut self, item_id: Option<ItemId>, f: F) -> T
     where
         F: FnOnce(&mut Self) -> T,

@@ -550,7 +550,9 @@ pub fn translate<'tcx, 'ctx>(
         start_from: vec!["*".into()],
         ..CharonCliOpts::default()
     };
-    let mut error_ctx = ErrorCtx::new(!charon_opts.abort_on_error, charon_opts.error_on_warnings);
+    let mut error_ctx = ErrorCtx::new();
+    error_ctx.continue_on_failure = !charon_opts.abort_on_error;
+    error_ctx.error_on_warnings = charon_opts.error_on_warnings;
     let translate_options = TranslateOptions::new(&mut error_ctx, &charon_opts);
     let mut ctx = TranslateCtx {
         tcx,
@@ -560,10 +562,6 @@ pub fn translate<'tcx, 'ctx>(
         translated: TranslatedCrate {
             crate_name: krate.name,
             options: charon_opts.clone(),
-            target_information: TargetInfo {
-                target_pointer_size: tcx.data_layout.pointer_size().bytes(),
-                is_little_endian: matches!(tcx.data_layout.endian, rustc_abi::Endian::Little),
-            },
             ..TranslatedCrate::default()
         },
         id_map: Default::default(),
@@ -576,6 +574,15 @@ pub fn translate<'tcx, 'ctx>(
         type_trans_cache: Default::default(),
         test_fn_paths: Default::default(),
     };
+
+    let triple = ctx.get_target_triple();
+    ctx.translated.target_information.insert(
+        triple,
+        TargetInfo {
+            target_pointer_size: tcx.data_layout.pointer_size().bytes(),
+            is_little_endian: matches!(tcx.data_layout.endian, rustc_abi::Endian::Little),
+        },
+    );
 
     // When building a test binary, detect #[test] functions via rustc_test_marker and store
     // the paths so translate_attr_info can inject a synthetic "test" attribute on them.

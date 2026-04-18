@@ -508,7 +508,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     .as_ref()
                     .expect("No discriminant layout for enum?")
                     .tag_ty;
-                let ptr_size = self.t_ctx.translated.target_information.target_pointer_size;
+                let ptr_size = self
+                    .t_ctx
+                    .translated
+                    .the_target_information()
+                    .target_pointer_size;
                 let tag_size = r_abi::Size::from_bytes(tag_ty.target_size(ptr_size));
 
                 for (id, variant_layout) in variants.iter_enumerated() {
