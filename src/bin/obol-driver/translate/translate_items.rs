@@ -541,7 +541,6 @@ impl ItemTransCtx<'_, '_> {
             Ok(kind) => kind,
             Err(err) => TypeDeclKind::Error(err.msg),
         };
-        let layout: Option<Layout> = None;
         let ptr_metadata: PtrMetadata = self.translate_ptr_metadata();
         let type_def = TypeDecl {
             def_id: trans_id,
@@ -549,7 +548,7 @@ impl ItemTransCtx<'_, '_> {
             generics: GenericParams::empty(),
             kind,
             src,
-            layout,
+            layout: Default::default(),
             repr: None,
             ptr_metadata,
         };
