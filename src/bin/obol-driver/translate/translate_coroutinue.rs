@@ -28,7 +28,7 @@ impl ItemTransCtx<'_, '_> {
 
         let tupled_upvars = args.0.last().unwrap().expect_ty().kind();
         let Some(ty::RigidTy::Tuple(state_tys)) = tupled_upvars.rigid() else {
-            raise_error!(self, def_span, "Closure state argument is not a tuple?");
+            raise_error!(self, def_span, "Coroutine state argument is not a tuple?");
         };
 
         let mut fields: IndexVec<FieldId, Field> = Default::default();
