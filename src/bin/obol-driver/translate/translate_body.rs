@@ -1373,11 +1373,9 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                 let operand = self.translate_operand(span, operand)?;
                 Ok(BuiltinAssertKind::InvalidEnumConstruction(operand))
             }
-            mir::AssertMessage::ResumedAfterDrop(..)
-            | mir::AssertMessage::ResumedAfterPanic(..)
-            | mir::AssertMessage::ResumedAfterReturn(..) => {
-                raise_error!(self, span, "Coroutines are not supported");
-            }
+            mir::AssertMessage::ResumedAfterDrop(..) => Ok(BuiltinAssertKind::ResumedAfterDrop),
+            mir::AssertMessage::ResumedAfterPanic(..) => Ok(BuiltinAssertKind::ResumedAfterPanic),
+            mir::AssertMessage::ResumedAfterReturn(..) => Ok(BuiltinAssertKind::ResumedAfterReturn),
         }
     }
 
