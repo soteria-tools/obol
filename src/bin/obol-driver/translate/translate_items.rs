@@ -42,7 +42,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 }
                 // Panic
                 Err(msg) => {
-                    println!("Item {name} caused errors; ignoring. {msg:?}");
+                    let msg = msg
+                        .downcast_ref::<&str>()
+                        .copied()
+                        .or_else(|| msg.downcast_ref::<String>().map(String::as_str))
+                        .unwrap_or("<non-string panic payload>");
+                    println!("Item {name} caused panic; ignoring. {msg}");
                     register_error!(ctx, span, "Thread panicked when extracting item `{name}`.")
                 }
             };
@@ -397,10 +402,15 @@ impl ItemTransCtx<'_, '_> {
         let src = if self.t_ctx.tcx.is_closure_like(internal) {
             let closure_ty = self.t_ctx.tcx.type_of(internal).instantiate_identity();
             let closure_ty = rustc_public::rustc_internal::stable(closure_ty).kind();
-            let Some(ty::RigidTy::Closure(def, args)) = closure_ty.rigid() else {
-                panic!("Closure-like instance has non-closure type: {closure_ty:?}")
-            };
-            self.translate_closure_src_info(span, def, args)?
+            match closure_ty.rigid() {
+                Some(ty::RigidTy::Closure(def, args)) => {
+                    self.translate_closure_src_info(span, def, args)?
+                }
+                Some(ty::RigidTy::Coroutine(def, args)) => {
+                    self.translate_coroutine_src_info(span, def, args)?
+                }
+                _ => panic!("Closure-like instance has non-closure type: {closure_ty:?}"),
+            }
         } else {
             ItemSource::TopLevel
         };
