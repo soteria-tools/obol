@@ -484,8 +484,18 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         self.t_ctx.translate_span_from_smir(rspan)
     }
 
-    // pub(crate) fn def_span(&mut self, _def_id: stable_mir::DefId) -> Span {
-    //     // self.t_ctx.def_span(def_id)
-    //     Span::dummy()
-    // }
+    pub fn as_extern_name(&mut self, item: mir::mono::Instance) -> Option<String> {
+        let internal = rustc_public::rustc_internal::internal(self.t_ctx.tcx, item);
+        if self.t_ctx.tcx.is_foreign_item(internal.def_id()) {
+            let key = self.t_ctx.tcx.def_key(internal.def_id());
+            let data = key.disambiguated_data.data;
+            use rustc_hir::definitions::DefPathData::*;
+            match data {
+                ValueNs(name) | TypeNs(name) | MacroNs(name) => Some(name.to_string()),
+                _ => panic!("Extern item does not have a name: {:?}", key),
+            }
+        } else {
+            None
+        }
+    }
 }

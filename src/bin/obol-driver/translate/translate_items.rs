@@ -345,34 +345,17 @@ impl ItemTransCtx<'_, '_> {
         trace!("Translating function signature");
         let mut signature = self.translate_function_signature(def, span)?;
 
-        let body = if item_meta.opacity.with_private_contents().is_opaque()
+        let body = if let Some(name) = def.intrinsic_name() {
+            let arg_names = self.translate_argument_names(def, signature.inputs.len());
+            Body::Intrinsic { name, arg_names }
+        } else if let Some(name) = self.as_extern_name(def) {
+            Body::Extern(name)
+        } else if item_meta.opacity.with_private_contents().is_opaque()
             || matches!(def.kind, mir::mono::InstanceKind::Virtual { .. })
             || matches!(def.kind, mir::mono::InstanceKind::Intrinsic)
         {
-            None
-        } else if let Some(body) = def.body() {
-            // we can't rely on "has_body", as in some cases it returns false even when there is a body.
-            Some((false, body))
-        } else {
-            let tcx = self.t_ctx.tcx;
-            let inner_id = rustc_public::rustc_internal::internal(tcx, def.def.def_id());
-            let mir_available = tcx.is_mir_available(inner_id);
-            let is_global = tcx.is_static(inner_id);
-
-            let body_internal = if mir_available && !is_global {
-                let body = tcx.optimized_mir(inner_id).clone();
-                Some(body)
-            } else if (is_global && !tcx.is_trivial_const(inner_id)) || tcx.is_const_fn(inner_id) {
-                let body = tcx.mir_for_ctfe(inner_id).clone();
-                Some(body)
-            } else {
-                trace!("mir not available for {:?}", inner_id);
-                None
-            };
-            body_internal.map(|b| (b.is_polymorphic, rustc_public::rustc_internal::stable(b)))
-        };
-
-        let body = if let Some((is_polymorphic, body)) = body {
+            Body::Opaque
+        } else if let Some((is_polymorphic, body)) = self.get_body(def) {
             let generics = if is_polymorphic {
                 Some(def.args())
             } else {

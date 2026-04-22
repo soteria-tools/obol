@@ -98,4 +98,63 @@ impl ItemTransCtx<'_, '_> {
             output,
         })
     }
+
+    /// Get the MIR body of this instance, if it exists.
+    /// HACK: The boolean indicates whether the body *may* contain uninstantiated generics,
+    /// as if we go into rustc internals some instantiation information may get lost (???)
+    pub fn get_body(
+        &mut self,
+        def: mir::mono::Instance,
+    ) -> Option<(bool, rustc_public::mir::Body)> {
+        if let Some(body) = def.body() {
+            // we can't rely on "has_body", as in some cases it returns false even when there is a body.
+            Some((false, body))
+        } else {
+            let tcx = self.t_ctx.tcx;
+            let inner_id = rustc_public::rustc_internal::internal(tcx, def.def.def_id());
+            let mir_available = tcx.is_mir_available(inner_id);
+            let is_global = tcx.is_static(inner_id);
+
+            let body_internal = if mir_available && !is_global {
+                let body = tcx.optimized_mir(inner_id).clone();
+                Some(body)
+            } else if (is_global && !tcx.is_trivial_const(inner_id)) || tcx.is_const_fn(inner_id) {
+                let body = tcx.mir_for_ctfe(inner_id).clone();
+                Some(body)
+            } else {
+                None
+            };
+            body_internal.map(|b| (b.is_polymorphic, rustc_public::rustc_internal::stable(b)))
+        }
+    }
+
+    /// Translate the names of the arguments of this definition, if they are available,
+    /// otherwise naming arguments `arg0`, `arg1`, etc.
+    /// Note that the names of the arguments are not always available, even when
+    /// we can retrieve the MIR body, in which case we also fall back to `argN`.
+    pub fn translate_argument_names(
+        &mut self,
+        def: mir::mono::Instance,
+        n_args: usize,
+    ) -> Vec<Option<String>> {
+        let Some((_, body)) = self.get_body(def) else {
+            return vec![None; n_args];
+        };
+        body.arg_locals()
+            .iter()
+            .enumerate()
+            .map(|(index, _)| {
+                body.var_debug_info.iter().find_map(|v| {
+                    if let mir::VarDebugInfoContents::Place(place) = &v.value
+                        && place.projection.is_empty()
+                        && place.local == index + 1
+                    {
+                        Some(v.name.clone())
+                    } else {
+                        None
+                    }
+                })
+            })
+            .collect()
+    }
 }
