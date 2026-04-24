@@ -176,8 +176,8 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "charon"
-version = "0.1.181"
-source = "git+https://github.com/soteria-tools/charon?rev=2d35584fb79ef804c50f106d8c40bd3728284f8d#2d35584fb79ef804c50f106d8c40bd3728284f8d"
+version = "0.1.182"
+source = "git+https://github.com/soteria-tools/charon?rev=fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba#fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba"
 dependencies = [
  "annotate-snippets",
  "anstream",
@@ -189,9 +189,10 @@ dependencies = [
  "derive_generic_visitor",
  "either",
  "env_logger",
+ "extension-traits",
  "fraction",
  "hashbrown 0.15.5",
- "hax-frontend-exporter",
+ "hax-adt-into",
  "index_vec",
  "indexmap",
  "indoc",
@@ -202,7 +203,9 @@ dependencies = [
  "nom",
  "nom-supreme",
  "num-bigint",
+ "paste",
  "petgraph",
+ "rustc_trait_elaboration",
  "rustc_version",
  "serde",
  "serde_json",
@@ -516,24 +519,12 @@ checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
 [[package]]
 name = "hax-adt-into"
 version = "0.3.5"
-source = "git+https://github.com/soteria-tools/charon?rev=2d35584fb79ef804c50f106d8c40bd3728284f8d#2d35584fb79ef804c50f106d8c40bd3728284f8d"
+source = "git+https://github.com/soteria-tools/charon?rev=fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba#fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba"
 dependencies = [
- "itertools 0.11.0",
+ "itertools 0.13.0",
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "hax-frontend-exporter"
-version = "0.3.5"
-source = "git+https://github.com/soteria-tools/charon?rev=2d35584fb79ef804c50f106d8c40bd3728284f8d#2d35584fb79ef804c50f106d8c40bd3728284f8d"
-dependencies = [
- "extension-traits",
- "hax-adt-into",
- "itertools 0.11.0",
- "lazy_static",
- "paste",
  "tracing",
 ]
 
@@ -605,15 +596,6 @@ name = "is_terminal_polyfill"
 version = "1.70.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
-
-[[package]]
-name = "itertools"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b1c173a5686ce8bfa551b3563d0c2170bf24ca44da99c7ca4bfdab5418c3fe57"
-dependencies = [
- "either",
-]
 
 [[package]]
 name = "itertools"
@@ -711,11 +693,11 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 [[package]]
 name = "macros"
 version = "0.1.0"
-source = "git+https://github.com/soteria-tools/charon?rev=2d35584fb79ef804c50f106d8c40bd3728284f8d#2d35584fb79ef804c50f106d8c40bd3728284f8d"
+source = "git+https://github.com/soteria-tools/charon?rev=fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba#fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.111",
+ "syn 1.0.109",
 ]
 
 [[package]]
@@ -1074,6 +1056,15 @@ name = "regex-syntax"
 version = "0.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7a2d987857b319362043e95f5353c0535c1f58eec5336fdfcf626430af7def58"
+
+[[package]]
+name = "rustc_trait_elaboration"
+version = "0.1.0"
+source = "git+https://github.com/soteria-tools/charon?rev=fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba#fa7ff7118fc9f695ecde2b4aa8401fe3ea195fba"
+dependencies = [
+ "itertools 0.13.0",
+ "tracing",
+]
 
 [[package]]
 name = "rustc_version"
