@@ -16,7 +16,7 @@ pub mod translate;
 
 use std::{env, fmt, panic, path::PathBuf};
 
-use charon_lib::{export::CrateData, logger, transform::Pass};
+use charon_lib::{export::CrateData, logger, options::SerializationFormat, transform::Pass};
 use obol_lib::args::{self, CliOpts};
 
 pub enum ObolError {
@@ -99,7 +99,7 @@ fn run_obol(options: args::CliOpts) -> Result<usize, ObolError> {
 
     if let Some(path) = path {
         crate_data
-            .serialize_to_file(&path)
+            .serialize_to_file(&path, SerializationFormat::Postcard)
             .expect("Failed to write smir.json to output")
     }
 

@@ -1,3 +1,4 @@
+extern crate rustc_abi;
 extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate rustc_public;
@@ -109,6 +110,10 @@ impl<'tcx, 'tctx, 'ictx, 'bctx> DerefMut for BlockTransCtx<'tcx, 'tctx, 'ictx, '
 impl ItemTransCtx<'_, '_> {
     pub fn translate_variant_id(&self, id: ty::VariantIdx) -> VariantId {
         VariantId::new(id.to_index())
+    }
+
+    pub fn translate_rvariant_id(&self, id: rustc_abi::VariantIdx) -> VariantId {
+        VariantId::new(id.as_usize())
     }
 
     fn translate_field_id(&self, id: mir::FieldIdx) -> FieldId {
@@ -624,7 +629,7 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                     TyKind::Adt(TypeDeclRef {
                         id: TypeId::Tuple,
                         generics,
-                    }) => FieldProjKind::Tuple(generics.types.elem_count()),
+                    }) => FieldProjKind::Tuple(generics.types.len()),
                     TyKind::Adt(TypeDeclRef {
                         id: TypeId::Adt(id),
                         ..

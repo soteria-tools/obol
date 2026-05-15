@@ -329,7 +329,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let abi::FieldsShape::Arbitrary { offsets } = &layout.fields else {
                     unreachable!("Unexpected layout for tuple: {layout:?}");
                 };
-                let fields = (0..generics.types.elem_count())
+                let fields = (0..generics.types.len())
                     .map(|i| {
                         let field_offset = offsets[i].bytes();
                         let field_rty = rtys[i];

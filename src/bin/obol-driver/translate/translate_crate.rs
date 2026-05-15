@@ -590,7 +590,6 @@ pub fn translate<'tcx, 'ctx>(
         ctx.test_fn_paths = ctx.collect_test_marker_paths();
     }
 
-    ctx.translate_unit_metadata_const();
     ctx.translate_fake_dyn_trait();
 
     ctx.collect_entrypoints(options);

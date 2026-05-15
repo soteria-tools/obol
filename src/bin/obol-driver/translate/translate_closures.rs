@@ -106,7 +106,7 @@ impl ItemTransCtx<'_, '_> {
         let tupled_upvars = self.translate_ty(span, *tupled_upvars)?;
 
         assert!(
-            tupled_upvars.as_tuple().is_some_and(IndexMap::is_empty),
+            tupled_upvars.as_tuple().is_some_and(|x| x.is_empty()),
             "Only stateless closures can be translated as functions"
         );
 

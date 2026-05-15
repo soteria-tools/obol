@@ -6,7 +6,7 @@ extern crate rustc_span;
 use log::trace;
 use rustc_public::{CrateDef, mir, ty};
 
-use charon_lib::{ast::*, ids::IndexVec, register_error};
+use charon_lib::{ast::*, register_error};
 
 use crate::translate::{
     translate_body::BodyTransCtx,
@@ -156,79 +156,6 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         Ok(())
     }
 
-    /// Add a `const UNIT: () = ();` const, used as metadata for thin pointers/references.
-    pub fn translate_unit_metadata_const(&mut self) {
-        use charon_lib::ullbc_ast::*;
-        let name = Name::from_path(&["UNIT_METADATA"]);
-        let file_id = self.translated.files.push(File {
-            name: FileName::Virtual("dummy file".into()),
-            crate_name: "dummy".into(),
-            contents: None,
-        });
-        let span = {
-            let mut span = Span::dummy();
-            span.data.file_id = file_id;
-            span
-        };
-        let item_meta = ItemMeta {
-            name,
-            span,
-            source_text: None,
-            attr_info: AttrInfo::default(),
-            is_local: false,
-            opacity: ItemOpacity::Foreign,
-            lang_item: None,
-        };
-
-        let body = {
-            let mut body = GExprBody {
-                span,
-                locals: Locals::new(0),
-                comments: Default::default(),
-                body: IndexVec::default(),
-                bound_body_regions: 0,
-            };
-            let _ = body.locals.new_var(None, Ty::mk_unit());
-            body.body.push(BlockData {
-                statements: Default::default(),
-                terminator: Terminator::new(Span::dummy(), TerminatorKind::Return),
-            });
-            body
-        };
-
-        let global_id = self.translated.global_decls.reserve_slot();
-
-        let initializer = self.translated.fun_decls.push_with(|def_id| FunDecl {
-            def_id,
-            item_meta: item_meta.clone(),
-            src: ItemSource::TopLevel,
-            is_global_initializer: Some(global_id),
-            generics: Default::default(),
-            signature: FunSig {
-                is_unsafe: false,
-                inputs: vec![],
-                output: Ty::mk_unit(),
-            },
-            body: Body::Unstructured(body),
-        });
-        self.translated.global_decls.set_slot(
-            global_id,
-            GlobalDecl {
-                def_id: global_id,
-                item_meta,
-                generics: Default::default(),
-                ty: Ty::mk_unit(),
-                src: ItemSource::TopLevel,
-                global_kind: GlobalKind::NamedConst,
-                init: initializer,
-            },
-        );
-        self.translated.unit_metadata = Some(GlobalDeclRef {
-            id: global_id,
-            generics: Box::new(GenericArgs::empty()),
-        });
-    }
-
     pub fn translate_fake_dyn_trait(&mut self) {
         self.translated.trait_decls.push(TraitDecl {
             def_id: TraitDeclId::ZERO,
@@ -245,9 +172,9 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             },
             generics: GenericParams::empty(),
             implied_clauses: vec![].into(),
-            consts: vec![],
-            types: vec![],
-            methods: vec![],
+            consts: IndexMap::new(),
+            types: IndexMap::new(),
+            methods: IndexMap::new(),
             vtable: Some(TypeDeclRef {
                 id: TypeId::Tuple,
                 generics: Box::new(GenericArgs::empty()),
@@ -527,7 +454,7 @@ impl ItemTransCtx<'_, '_> {
             span,
         });
         let body = Body::Unstructured(GExprBody {
-            body: IndexVec::from_vec(vec![BlockData {
+            body: vec![BlockData {
                 statements: vec![Statement::new(
                     span,
                     StatementKind::Assign(
@@ -536,7 +463,8 @@ impl ItemTransCtx<'_, '_> {
                     ),
                 )],
                 terminator: Terminator::new(span, ullbc_ast::TerminatorKind::Return),
-            }]),
+            }]
+            .into(),
             bound_body_regions: 0,
             span,
             locals,

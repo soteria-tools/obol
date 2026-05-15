@@ -166,7 +166,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         ));
 
         let body = Body::Unstructured(ExprBody {
-            body: IndexVec::from_vec(vec![BlockData {
+            body: IndexVec::from(vec![BlockData {
                 statements: statements
                     .into_iter()
                     .map(|k| Statement {
