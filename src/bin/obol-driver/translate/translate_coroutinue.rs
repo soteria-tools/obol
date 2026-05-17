@@ -4,9 +4,9 @@ extern crate rustc_public;
 extern crate rustc_span;
 
 use log::trace;
-use rustc_public::{mir, ty};
+use rustc_public::ty;
 
-use charon_lib::{ast::*, ids::IndexVec, raise_error, register_error, ullbc_ast::*};
+use charon_lib::{ast::*, ids::IndexVec, raise_error, register_error};
 
 use crate::translate::translate_ctx::ItemTransCtx;
 
