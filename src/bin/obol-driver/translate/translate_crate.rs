@@ -567,6 +567,8 @@ pub fn translate<'tcx, 'ctx>(
         id_map: Default::default(),
         reverse_id_map: Default::default(),
         file_to_id: Default::default(),
+        source_file_to_id: Default::default(),
+        span_cache: Default::default(),
         items_to_translate: Default::default(),
         processed: Default::default(),
         cached_item_metas: Default::default(),

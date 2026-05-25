@@ -2,12 +2,14 @@
 extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate rustc_public;
+extern crate rustc_span;
 
 use super::translate_crate::TransItemSource;
 use charon_lib::ast::*;
 use charon_lib::formatter::{FmtCtx, IntoFormatter};
 use charon_lib::options::TranslateOptions;
 use rustc_middle::ty::TyCtxt;
+use rustc_span::StableSourceFileId;
 use std::cell::RefCell;
 use std::collections::{BTreeSet, HashMap, HashSet};
 use std::path::PathBuf;
@@ -34,6 +36,14 @@ pub struct TranslateCtx<'tcx> {
     pub reverse_id_map: HashMap<ItemId, TransItemSource>,
     /// The reverse filename map.
     pub file_to_id: HashMap<FileName, FileId>,
+    /// Direct cache: rustc `SourceFile` stable id → `FileId`.
+    /// `translate_raw_span` is called once per statement/terminator/local/item, and almost all
+    /// hits land on a handful of source files. This avoids the per-span filename normalization,
+    /// path component walks, and `FileName` hashing that `file_to_id` would otherwise re-do.
+    pub source_file_to_id: HashMap<StableSourceFileId, FileId>,
+    /// Per-span cache: `ty::Span` → translated `SpanData`. The same span is translated repeatedly
+    /// when statements share a macro call site or were generated from the same MIR node.
+    pub span_cache: HashMap<rustc_public::ty::Span, meta::SpanData>,
 
     /// Cache of StableMir type IDs to our translated types.
     pub type_trans_cache: HashMap<rustc_public::ty::Ty, Ty>,
