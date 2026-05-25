@@ -119,9 +119,21 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         let span = rustc_public::rustc_internal::internal(self.tcx, *span);
         let span = span.source_callsite();
         let smap: &rustc_span::source_map::SourceMap = self.tcx.sess.psess.source_map();
-        let filename = smap.span_to_filename(span);
-        let filename = self.translate_filename(&filename);
-        let file_id = self.register_file(filename, span);
+        // Resolving the file via `span_to_filename` + `translate_filename` walks path components
+        // and hashes a `FileName` on every call. Spans are translated once per statement /
+        // terminator / local / item, so caching by the rustc `SourceFile` stable id skips that
+        // work after the first hit.
+        let source_file = smap.lookup_source_file(span.lo());
+        let file_id = match self.source_file_to_id.get(&source_file.stable_id) {
+            Some(id) => *id,
+            None => {
+                let filename = smap.span_to_filename(span);
+                let filename = self.translate_filename(&filename);
+                let id = self.register_file(filename, span);
+                self.source_file_to_id.insert(source_file.stable_id, id);
+                id
+            }
+        };
 
         let convert_loc = |pos: rustc_span::BytePos| -> Loc {
             let loc = smap.lookup_char_pos(pos);
