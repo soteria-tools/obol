@@ -115,14 +115,17 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
     }
 
-    pub fn translate_raw_span(&mut self, span: &ty::Span) -> meta::SpanData {
-        let span = rustc_public::rustc_internal::internal(self.tcx, *span);
+    pub fn translate_raw_span(&mut self, rspan: &ty::Span) -> meta::SpanData {
+        // Top-level cache by `ty::Span`: many MIR statements share the same expansion span.
+        if let Some(cached) = self.span_cache.get(rspan) {
+            return *cached;
+        }
+
+        let span = rustc_public::rustc_internal::internal(self.tcx, *rspan);
         let span = span.source_callsite();
         let smap: &rustc_span::source_map::SourceMap = self.tcx.sess.psess.source_map();
         // Resolving the file via `span_to_filename` + `translate_filename` walks path components
-        // and hashes a `FileName` on every call. Spans are translated once per statement /
-        // terminator / local / item, so caching by the rustc `SourceFile` stable id skips that
-        // work after the first hit.
+        // and hashes a `FileName` on every call, so cache by the rustc `SourceFile` stable id.
         let source_file = smap.lookup_source_file(span.lo());
         let file_id = match self.source_file_to_id.get(&source_file.stable_id) {
             Some(id) => *id,
@@ -145,8 +148,9 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         let beg = convert_loc(span.lo());
         let end = convert_loc(span.hi());
 
-        // Put together
-        meta::SpanData { file_id, beg, end }
+        let data = meta::SpanData { file_id, beg, end };
+        self.span_cache.insert(*rspan, data);
+        data
     }
 
     pub(crate) fn translate_span_from_smir(&mut self, span: &ty::Span) -> Span {

@@ -41,6 +41,9 @@ pub struct TranslateCtx<'tcx> {
     /// hits land on a handful of source files. This avoids the per-span filename normalization,
     /// path component walks, and `FileName` hashing that `file_to_id` would otherwise re-do.
     pub source_file_to_id: HashMap<StableSourceFileId, FileId>,
+    /// Per-span cache: `ty::Span` → translated `SpanData`. The same span is translated repeatedly
+    /// when statements share a macro call site or were generated from the same MIR node.
+    pub span_cache: HashMap<rustc_public::ty::Span, meta::SpanData>,
 
     /// Cache of StableMir type IDs to our translated types.
     pub type_trans_cache: HashMap<rustc_public::ty::Ty, Ty>,
