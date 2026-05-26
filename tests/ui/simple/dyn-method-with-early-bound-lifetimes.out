@@ -1,0 +1,20 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::foo
+fn foo(x_1: &'_ (dyn @TraitDecl0))
+{
+    let _0: (); // return
+    let x_1: &'_ (dyn @TraitDecl0); // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+
+

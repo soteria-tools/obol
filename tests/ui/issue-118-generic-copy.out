@@ -1,0 +1,43 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::Foo
+struct Foo {}
+
+// Full name: <test_crate::Foo as std::clone::Clone>::clone
+pub fn clone(self_1: &'_ Foo) -> Foo
+{
+    let _0: Foo; // return
+    let self_1: &'_ Foo; // arg #1
+
+    bb0: {
+        _0 = copy (*self_1);
+        return;
+    }
+}
+
+// Full name: test_crate::copy_foo
+fn copy_foo(x_1: Foo)
+{
+    let _0: (); // return
+    let x_1: Foo; // arg #1
+    let y_2: Foo; // local
+    let z_3: Foo; // local
+
+    bb0: {
+        _0 = ();
+        storage_live(y_2);
+        y_2 = copy x_1;
+        storage_live(z_3);
+        z_3 = copy x_1;
+        _0 = ();
+        storage_dead(z_3);
+        storage_dead(y_2);
+        return;
+    }
+}
+
+
+

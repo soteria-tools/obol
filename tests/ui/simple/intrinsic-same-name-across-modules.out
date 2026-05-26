@@ -1,0 +1,27 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+pub fn test_crate::first::nested::call() -> u8
+{
+    let _0: u8; // return
+
+    bb0: {
+        _0 = const 1 : u8 wrap.+ const 2 : u8;
+        return;
+    }
+}
+
+fn test_crate::call() -> u8
+{
+    let _0: u8; // return
+
+    bb0: {
+        _0 = const 3 : u8 wrap.+ const 4 : u8;
+        return;
+    }
+}
+
+
+

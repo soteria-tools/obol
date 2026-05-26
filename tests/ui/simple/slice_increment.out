@@ -1,0 +1,28 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::incr
+pub fn incr(s_1: &'_ mut [u32])
+{
+    let _0: (); // return
+    let s_1: &'_ mut [u32]; // arg #1
+    let _2: usize; // anonymous local
+    let _3: u32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _0 = ();
+        storage_live(_2);
+        _2 = const 0 : usize;
+        _3 = copy (*s_1)[copy _2] panic.+ const 1 : u32;
+        (*s_1)[copy _2] = move _3;
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+}
+
+
+

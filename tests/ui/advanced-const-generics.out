@@ -1,0 +1,145 @@
+
+// Final ULLBC:
+
+// Full name: std::fmt::Error
+pub struct Error {}
+
+// Full name: std::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+trait FakeTrait
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn @TraitDecl0),
+}
+
+// Full name: std::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+// Full name: std::fmt::Formatter::<'a>::write_str::<'_>
+pub fn write_str::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ Str) -> Result::<(), Error>
+= <missing>
+
+// Full name: test_crate::Foo
+enum Foo {
+  A,
+  B,
+}
+
+// Full name: <test_crate::Foo as std::cmp::PartialEq>::eq
+pub fn eq(self_1: &'_ Foo, other_2: &'_ Foo) -> bool
+{
+    let _0: bool; // return
+    let self_1: &'_ Foo; // arg #1
+    let other_2: &'_ Foo; // arg #2
+    let __self_discr_3: isize; // local
+    let _4: &'_ Foo; // anonymous local
+    let __arg1_discr_5: isize; // local
+    let _6: &'_ Foo; // anonymous local
+    let _7: isize; // anonymous local
+    let _8: isize; // anonymous local
+
+    bb0: {
+        storage_live(__self_discr_3);
+        storage_live(_4);
+        _4 = &(*self_1);
+        __self_discr_3 = @discriminant((*_4));
+        storage_dead(_4);
+        storage_live(__arg1_discr_5);
+        storage_live(_6);
+        _6 = &(*other_2);
+        __arg1_discr_5 = @discriminant((*_6));
+        storage_dead(_6);
+        storage_live(_7);
+        _7 = copy __self_discr_3;
+        storage_live(_8);
+        _8 = copy __arg1_discr_5;
+        _0 = move _7 == move _8;
+        storage_dead(_8);
+        storage_dead(_7);
+        storage_dead(__arg1_discr_5);
+        storage_dead(__self_discr_3);
+        return;
+    }
+}
+
+// Full name: <test_crate::Foo as std::cmp::Eq>::assert_receiver_is_total_eq
+pub fn assert_receiver_is_total_eq(self_1: &'_ Foo)
+{
+    let _0: (); // return
+    let self_1: &'_ Foo; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: <test_crate::Foo as std::fmt::Debug>::fmt
+pub fn fmt(self_1: &'_ Foo, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ Foo; // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+    let _3: &'_ mut Formatter::<'_>; // anonymous local
+    let _4: &'_ Str; // anonymous local
+    let _5: isize; // anonymous local
+    let _6: &'_ Str; // anonymous local
+    let _7: &'_ Str; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        storage_live(_3);
+        _3 = &two-phase-mut (*f_2);
+        storage_live(_4);
+        _5 = @discriminant((*self_1));
+        switch move _5 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+    }
+
+    bb1: {
+        storage_live(_6);
+        _6 = const "A";
+        _4 = &(*_6) with_metadata(copy _6.metadata);
+        storage_dead(_6);
+        goto bb4;
+    }
+
+    bb2: {
+        storage_live(_7);
+        _7 = const "B";
+        _4 = &(*_7) with_metadata(copy _7.metadata);
+        storage_dead(_7);
+        goto bb4;
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        _0 = write_str::<'_>(move _3, move _4) -> bb5 (unwind: bb6);
+    }
+
+    bb5: {
+        storage_dead(_4);
+        storage_dead(_3);
+        return;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+}
+
+
+

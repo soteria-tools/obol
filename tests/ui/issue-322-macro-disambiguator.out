@@ -1,0 +1,33 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::main::AssertIsAsBytes
+struct AssertIsAsBytes {}
+
+// Full name: test_crate::main::AssertIsAsBytes
+struct AssertIsAsBytes {}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: AssertIsAsBytes; // anonymous local
+    let _2: AssertIsAsBytes; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        _1 = AssertIsAsBytes {  };
+        storage_dead(_1);
+        storage_live(_2);
+        _2 = AssertIsAsBytes {  };
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+}
+
+
+

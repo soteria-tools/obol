@@ -1,0 +1,49 @@
+
+// Final ULLBC:
+
+// Full name: test_crate::sparse_transitions::{closure#0}::closure
+struct closure {}
+
+// Full name: std::iter::FromFn::<closure>
+pub struct FromFn::<closure> {
+  0: closure,
+}
+
+// Full name: std::iter::from_fn::<u8, closure>
+pub fn from_fn::<u8, closure>(f_1: closure) -> FromFn::<closure>
+{
+    let _0: FromFn::<closure>; // return
+    let f_1: closure; // arg #1
+
+    bb0: {
+        _0 = FromFn::<closure> { 0: copy f_1 };
+        return;
+    }
+}
+
+trait FakeTrait
+
+// Full name: test_crate::sparse_transitions::<'_>
+fn sparse_transitions::<'_>() -> FromFn::<closure>
+{
+    let _0: FromFn::<closure>; // return
+    let _1: closure; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = closure {  };
+        _0 = from_fn::<u8, closure>(move _1) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

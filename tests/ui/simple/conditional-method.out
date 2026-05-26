@@ -1,0 +1,7 @@
+error: unexpected argument '--no-serialize' found
+
+  tip: to pass '--no-serialize' as a value, use '-- --no-serialize'
+
+Usage: obol rustc --print-ullbc [-- <SPREAD>...]
+
+For more information, try '--help'.

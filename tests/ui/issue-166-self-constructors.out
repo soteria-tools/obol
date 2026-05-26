@@ -1,0 +1,45 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::Foo
+enum Foo {
+  A,
+  B(0: usize),
+}
+
+// Full name: test_crate::Foo::b
+pub fn b() -> Foo
+{
+    let _0: Foo; // return
+
+    bb0: {
+        _0 = Foo::B { 0: const 0 : usize };
+        return;
+    }
+}
+
+// Full name: test_crate::Bar::<'_>
+struct Bar::<'_> {
+  r: &'_ i32,
+}
+
+// Full name: test_crate::Bar::<'a>::new::<'_>
+fn new::<'_>(r_1: &'_ i32) -> Bar::<'_>
+{
+    let _0: Bar::<'_>; // return
+    let r_1: &'_ i32; // arg #1
+    let _2: &'_ i32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = copy r_1;
+        _0 = Bar::<'_> { r: move _2 };
+        storage_dead(_2);
+        return;
+    }
+}
+
+
+

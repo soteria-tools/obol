@@ -1,0 +1,216 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::foo
+fn foo() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const true;
+        return;
+    }
+}
+
+// Full name: test_crate::bar
+fn bar() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: test_crate::do_something
+fn do_something()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::do_something_else
+fn do_something_else()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::do_something_at_the_end
+fn do_something_at_the_end()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+    let _2: bool; // anonymous local
+    let _3: bool; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        _2 = foo() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        if move _2 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_live(_3);
+        _3 = bar() -> bb5 (unwind: bb6);
+    }
+
+    bb4: {
+        _1 = do_something_else() -> bb7 (unwind: bb8);
+    }
+
+    bb5: {
+        if move _3 -> bb9 else -> bb4;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        storage_dead(_3);
+        storage_dead(_2);
+        storage_dead(_1);
+        _0 = do_something_at_the_end() -> bb10 (unwind: bb11);
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+
+    bb9: {
+        _1 = do_something() -> bb7 (unwind: bb12);
+    }
+
+    bb10: {
+        return;
+    }
+
+    bb11: {
+        unwind_continue;
+    }
+
+    bb12: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::main2
+fn main2()
+{
+    let _0: (); // return
+    let x_1: i32; // local
+    let a_2: bool; // local
+    let b_3: bool; // local
+    let c_4: bool; // local
+    let d_5: bool; // local
+    let _6: bool; // anonymous local
+    let _7: bool; // anonymous local
+    let _8: bool; // anonymous local
+    let _9: bool; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(x_1);
+        x_1 = const 0 : i32;
+        storage_live(a_2);
+        a_2 = const true;
+        storage_live(b_3);
+        b_3 = const true;
+        storage_live(c_4);
+        c_4 = const true;
+        storage_live(d_5);
+        d_5 = const true;
+        storage_live(_6);
+        _6 = copy a_2;
+        if move _6 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_live(_8);
+        _8 = copy c_4;
+        if move _8 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        storage_live(_7);
+        _7 = copy b_3;
+        if move _7 -> bb1 else -> bb5;
+    }
+
+    bb3: {
+        x_1 = const 1 : i32;
+        goto bb6;
+    }
+
+    bb4: {
+        storage_live(_9);
+        _9 = copy d_5;
+        if move _9 -> bb3 else -> bb7;
+    }
+
+    bb5: {
+        goto bb8;
+    }
+
+    bb6: {
+        storage_dead(_9);
+        storage_dead(_8);
+        x_1 = const 2 : i32;
+        goto bb8;
+    }
+
+    bb7: {
+        goto bb6;
+    }
+
+    bb8: {
+        storage_dead(_7);
+        storage_dead(_6);
+        x_1 = const 3 : i32;
+        _0 = ();
+        storage_dead(d_5);
+        storage_dead(c_4);
+        storage_dead(b_3);
+        storage_dead(a_2);
+        storage_dead(x_1);
+        return;
+    }
+}
+
+
+

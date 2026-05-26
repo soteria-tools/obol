@@ -1,0 +1,29 @@
+
+// Final ULLBC:
+
+// Full name: std::result::Result::<bool, ()>
+pub enum Result::<bool, ()> {
+  Ok(0: bool),
+  Err(0: ()),
+}
+
+trait FakeTrait
+
+// Full name: <bool as test_crate::From<&bool>>::from::<'_>
+pub fn from::<'_>(v_1: &'_ bool) -> Result::<bool, ()>
+{
+    let _0: Result::<bool, ()>; // return
+    let v_1: &'_ bool; // arg #1
+    let _2: bool; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = copy (*v_1);
+        _0 = Result::<bool, ()>::Ok { 0: move _2 };
+        storage_dead(_2);
+        return;
+    }
+}
+
+
+

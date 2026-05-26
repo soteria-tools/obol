@@ -1,0 +1,239 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::mul2_add1
+pub fn mul2_add1(x_1: u32) -> u32
+{
+    let _0: u32; // return
+    let x_1: u32; // arg #1
+    let _2: u32; // anonymous local
+    let _3: u32; // anonymous local
+    let _4: u32; // anonymous local
+    let _5: u32; // anonymous local
+    let _6: u32; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        storage_live(_6);
+        storage_live(_2);
+        storage_live(_3);
+        _3 = copy x_1;
+        storage_live(_4);
+        _4 = copy x_1;
+        _5 = copy _3 panic.+ copy _4;
+        _2 = move _5;
+        storage_dead(_4);
+        storage_dead(_3);
+        _6 = copy _2 panic.+ const 1 : u32;
+        _0 = move _6;
+        storage_dead(_2);
+        return;
+    }
+}
+
+// Full name: test_crate::use_mul2_add1
+pub fn use_mul2_add1(x_1: u32, y_2: u32) -> u32
+{
+    let _0: u32; // return
+    let x_1: u32; // arg #1
+    let y_2: u32; // arg #2
+    let _3: u32; // anonymous local
+    let _4: u32; // anonymous local
+    let _5: u32; // anonymous local
+    let _6: u32; // anonymous local
+
+    bb0: {
+        storage_live(_6);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy x_1;
+        _3 = mul2_add1(move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        storage_live(_5);
+        _5 = copy y_2;
+        _6 = copy _3 panic.+ copy _5;
+        _0 = move _6;
+        storage_dead(_5);
+        storage_dead(_3);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+pub fn test_crate::incr(x_1: &'_ mut u32)
+{
+    let _0: (); // return
+    let x_1: &'_ mut u32; // arg #1
+    let _2: u32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        _2 = copy (*x_1) panic.+ const 1 : u32;
+        (*x_1) = move _2;
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::use_incr
+pub fn use_incr()
+{
+    let _0: (); // return
+    let x_1: u32; // local
+    let _2: (); // anonymous local
+    let _3: &'_ mut u32; // anonymous local
+    let _4: &'_ mut u32; // anonymous local
+    let _5: (); // anonymous local
+    let _6: &'_ mut u32; // anonymous local
+    let _7: &'_ mut u32; // anonymous local
+    let _8: (); // anonymous local
+    let _9: &'_ mut u32; // anonymous local
+    let _10: &'_ mut u32; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(x_1);
+        x_1 = const 0 : u32;
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = &mut x_1;
+        _3 = &two-phase-mut (*_4);
+        _2 = test_crate::incr(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_4);
+        storage_dead(_2);
+        storage_live(_5);
+        storage_live(_6);
+        storage_live(_7);
+        _7 = &mut x_1;
+        _6 = &two-phase-mut (*_7);
+        _5 = test_crate::incr(move _6) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_6);
+        storage_dead(_7);
+        storage_dead(_5);
+        storage_live(_8);
+        storage_live(_9);
+        storage_live(_10);
+        _10 = &mut x_1;
+        _9 = &two-phase-mut (*_10);
+        _8 = test_crate::incr(move _9) -> bb5 (unwind: bb6);
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        storage_dead(_9);
+        storage_dead(_10);
+        storage_dead(_8);
+        _0 = ();
+        storage_dead(x_1);
+        return;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::i32_id
+pub fn i32_id(i_1: i32) -> i32
+{
+    let _0: i32; // return
+    let i_1: i32; // arg #1
+    let _2: bool; // anonymous local
+    let _3: i32; // anonymous local
+    let _4: i32; // anonymous local
+    let _5: i32; // anonymous local
+    let _6: i32; // anonymous local
+    let _7: i32; // anonymous local
+    let _8: i32; // anonymous local
+
+    bb0: {
+        storage_live(_7);
+        storage_live(_8);
+        storage_live(_2);
+        storage_live(_3);
+        _3 = copy i_1;
+        _2 = move _3 == const 0 : i32;
+        if move _2 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_dead(_3);
+        _0 = const 0 : i32;
+        goto bb3;
+    }
+
+    bb2: {
+        storage_dead(_3);
+        storage_live(_4);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = copy i_1;
+        _7 = copy _6 panic.- const 1 : i32;
+        _5 = move _7;
+        storage_dead(_6);
+        _4 = i32_id(move _5) -> bb4 (unwind: bb5);
+    }
+
+    bb3: {
+        storage_dead(_2);
+        return;
+    }
+
+    bb4: {
+        storage_dead(_5);
+        _8 = copy _4 panic.+ const 1 : i32;
+        _0 = move _8;
+        storage_dead(_4);
+        goto bb3;
+    }
+
+    bb5: {
+        unwind_continue;
+    }
+}
+
+pub fn <usize as test_crate::Counter>::incr(self_1: &'_ mut usize) -> usize
+{
+    let _0: usize; // return
+    let self_1: &'_ mut usize; // arg #1
+    let x_2: usize; // local
+    let _3: usize; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(x_2);
+        x_2 = copy (*self_1);
+        _3 = copy (*self_1) panic.+ const 1 : usize;
+        (*self_1) = move _3;
+        _0 = copy x_2;
+        storage_dead(x_2);
+        return;
+    }
+}
+
+
+

@@ -1,0 +1,55 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::Portable
+struct Portable {}
+
+// Full name: <test_crate::Portable as test_crate::Ops>::ZERO
+fn ZERO() -> Portable
+{
+    let _0: Portable; // return
+
+    bb0: {
+        _0 = Portable {  };
+        return;
+    }
+}
+
+fn test_crate::ntt_multiply() -> Portable
+{
+    let _0: Portable; // return
+
+    bb0: {
+        _0 = ZERO() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+fn <test_crate::Portable as test_crate::Ops>::ntt_multiply() -> Portable
+{
+    let _0: Portable; // return
+
+    bb0: {
+        _0 = test_crate::ntt_multiply() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

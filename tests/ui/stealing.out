@@ -1,0 +1,21 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::four
+fn four() -> usize
+{
+    let _0: usize; // return
+    let _1: usize; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = const 2 : usize panic.+ const 2 : usize;
+        _0 = move _1;
+        return;
+    }
+}
+
+
+

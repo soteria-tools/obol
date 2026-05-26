@@ -1,0 +1,118 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::main::{closure#0}::closure
+struct closure {
+  upvar_0: &'_ mut u8,
+}
+
+// Full name: test_crate::main::{closure#0}::<i16, fn((u8,)) -> u8, (&'_ mut u8,)>
+fn {closure#0}::<i16, fn((u8,)) -> u8, (&'_ mut u8,)>(_1: &'_ mut closure, spread_args_2: (u8,)) -> u8
+{
+    let _0: u8; // return
+    let _1: &'_ mut closure; // arg #1
+    let spread_args_2: (u8,); // arg #2
+    let x_3: u8; // local
+    let _4: (u8, bool); // anonymous local
+    let _5: u8; // anonymous local
+    let _6: u8; // anonymous local
+    let _7: u8; // anonymous local
+    let _8: &'_ mut u8; // anonymous local
+    let _9: &'_ mut u8; // anonymous local
+    let _10: &'_ mut u8; // anonymous local
+    let _11: &'_ mut u8; // anonymous local
+
+    bb0: {
+        storage_live(x_3);
+        storage_live(_4);
+        storage_live(_7);
+        storage_live(_8);
+        storage_live(_9);
+        storage_live(_10);
+        storage_live(_11);
+        x_3 = move spread_args_2.0;
+        _8 = copy ((*_1)).upvar_0;
+        _4 = copy (*_8) checked.+ const 1 : u8;
+        _9 = copy ((*_1)).upvar_0;
+        assert(move _4.1 == false) (overflow) else panic;
+        _10 = copy ((*_1)).upvar_0;
+        (*_10) = move _4.0;
+        storage_live(_5);
+        _5 = copy x_3;
+        storage_live(_6);
+        _11 = copy ((*_1)).upvar_0;
+        _6 = copy (*_11);
+        _7 = copy _5 panic.+ copy _6;
+        _0 = move _7;
+        storage_dead(_6);
+        storage_dead(_5);
+        return;
+    }
+}
+
+// Full name: test_crate::apply_to_zero_mut::<closure>
+fn apply_to_zero_mut::<closure>(f_1: closure) -> u8
+{
+    let _0: u8; // return
+    let f_1: closure; // arg #1
+    let _2: &'_ mut closure; // anonymous local
+    let _3: (u8,); // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = &mut f_1;
+        storage_live(_3);
+        _3 = (const 0 : u8,);
+        _0 = {closure#0}::<i16, fn((u8,)) -> u8, (&'_ mut u8,)>(move _2, move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let z_1: u8; // local
+    let _2: u8; // anonymous local
+    let _3: closure; // anonymous local
+    let _4: &'_ mut u8; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(z_1);
+        z_1 = const 3 : u8;
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = &mut z_1;
+        _3 = closure { upvar_0: move _4 };
+        storage_dead(_4);
+        _2 = apply_to_zero_mut::<closure>(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        storage_dead(z_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

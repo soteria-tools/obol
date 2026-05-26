@@ -1,0 +1,49 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::slice_pattern_end
+fn slice_pattern_end(x_1: &'_ [()])
+{
+    let _0: (); // return
+    let x_1: &'_ [()]; // arg #1
+    let _2: usize; // anonymous local
+    let _3: usize; // anonymous local
+    let _4: usize; // anonymous local
+    let _5: bool; // anonymous local
+    let _named_6: &'_ (); // local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_5);
+        _0 = ();
+        _3 = copy x_1.metadata;
+        _2 = move _3;
+        _4 = const 1 : usize;
+        _5 = move _2 >= move _4;
+        if move _5 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_live(_named_6);
+        _named_6 = &(*x_1)[-const 1 : usize];
+        _0 = ();
+        storage_dead(_named_6);
+        goto bb3;
+    }
+
+    bb2: {
+        _0 = ();
+        goto bb3;
+    }
+
+    bb3: {
+        return;
+    }
+}
+
+
+

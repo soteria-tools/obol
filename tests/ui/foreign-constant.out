@@ -1,0 +1,18 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::foo
+fn foo() -> u8
+{
+    let _0: u8; // return
+
+    bb0: {
+        _0 = const 16 : u8;
+        return;
+    }
+}
+
+
+
