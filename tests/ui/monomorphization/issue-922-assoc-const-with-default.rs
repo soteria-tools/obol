@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 pub trait SizedTypeProperties: Sized {
     const IS_ZST: bool = size_of::<Self>() == 0;
 }

@@ -1,0 +1,104 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::HashMap::<()>
+pub struct HashMap::<()> {
+  0: (),
+}
+
+// Full name: test_crate::HashMap::<S>::get::<(), ()>
+pub fn get::<(), ()>(_x_1: HashMap::<()>, _k_2: ())
+{
+    let _0: (); // return
+    let _x_1: HashMap::<()>; // arg #1
+    let _k_2: (); // arg #2
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::top_level_get::<(), ()>
+pub fn top_level_get::<(), ()>(_x_1: HashMap::<()>, _k_2: ())
+{
+    let _0: (); // return
+    let _x_1: HashMap::<()>; // arg #1
+    let _k_2: (); // arg #2
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::test1
+pub fn test1(map_1: HashMap::<()>)
+{
+    let _0: (); // return
+    let map_1: HashMap::<()>; // arg #1
+    let _2: (); // anonymous local
+    let _3: HashMap::<()>; // anonymous local
+    let _4: (); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = move map_1;
+        storage_live(_4);
+        _4 = ();
+        _2 = top_level_get::<(), ()>(move _3, move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::test2
+pub fn test2(map_1: HashMap::<()>)
+{
+    let _0: (); // return
+    let map_1: HashMap::<()>; // arg #1
+    let _2: (); // anonymous local
+    let _3: HashMap::<()>; // anonymous local
+    let _4: (); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = move map_1;
+        storage_live(_4);
+        _4 = ();
+        _2 = get::<(), ()>(move _3, move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

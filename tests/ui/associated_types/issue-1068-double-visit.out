@@ -1,0 +1,41 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::Witness2
+pub struct Witness2 {}
+
+// Full name: test_crate::check::<Witness2>
+fn check::<Witness2>()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = check::<Witness2>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

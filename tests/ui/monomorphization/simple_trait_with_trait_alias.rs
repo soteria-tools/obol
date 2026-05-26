@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 #![feature(trait_alias)]
 
 trait A {}

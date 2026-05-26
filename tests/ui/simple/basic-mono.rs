@@ -1,5 +1,3 @@
-//@ obol-args=--monomorphize
-
 fn foo<const K: usize>() {}
 
 fn bar<T>() {}

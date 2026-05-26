@@ -1,7 +1,3 @@
-//@ obol-arg=--monomorphize-mut=except-types
-//@ obol-arg=--remove-adt-clauses
-//@ obol-args=--remove-associated-types=*
-
 fn identity<T>(x: T) -> T {
     x
 }

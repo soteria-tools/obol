@@ -1,0 +1,110 @@
+
+// Final ULLBC:
+
+// Full name: std::marker::PhantomData::<List::<&'_ mut u32>>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<List::<&'_ mut u32>> {}
+
+// Full name: std::alloc::Global
+#[lang_item("global_alloc_ty")]
+pub struct Global {}
+
+// Full name: std::ptr::NonNull::<List::<&'_ mut u32>>
+pub struct NonNull::<List::<&'_ mut u32>> {
+  pointer: *const List::<&'_ mut u32>,
+}
+
+// Full name: std::ptr::Unique::<List::<&'_ mut u32>>
+pub struct Unique::<List::<&'_ mut u32>> {
+  pointer: NonNull::<List::<&'_ mut u32>>,
+  _marker: PhantomData::<List::<&'_ mut u32>>,
+}
+
+// Full name: std::boxed::Box::<List::<&'_ mut u32>, Global>
+#[lang_item("owned_box")]
+pub struct Box::<List::<&'_ mut u32>, Global> {
+  0: Unique::<List::<&'_ mut u32>>,
+  1: Global,
+}
+
+// Full name: test_crate::List::<&'_ mut u32>
+enum List::<&'_ mut u32> {
+  Nil,
+  Cons(0: ListNode::<&'_ mut u32>),
+}
+
+// Full name: test_crate::ListNode::<&'_ mut u32>
+struct ListNode::<&'_ mut u32> {
+  val: &'_ mut u32,
+  next: Box::<List::<&'_ mut u32>, Global>,
+}
+
+trait FakeTrait
+
+// Full name: test_crate::Foo1::<&'_ mut u32>
+struct Foo1::<&'_ mut u32> {
+  0: &'_ mut u32,
+}
+
+// Full name: test_crate::Foo2::<&'_ mut u32>
+struct Foo2::<&'_ mut u32> {
+  0: Foo1::<&'_ mut u32>,
+}
+
+// Full name: test_crate::Foo3::<&'_ mut u32>
+struct Foo3::<&'_ mut u32> {
+  0: Foo2::<&'_ mut u32>,
+}
+
+// Full name: test_crate::use_foo
+fn use_foo(_1: Foo3::<&'_ mut u32>)
+{
+    let _0: (); // return
+    let _1: Foo3::<&'_ mut u32>; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::use_list_mut
+fn use_list_mut(_1: &'_ List::<&'_ mut u32>)
+{
+    let _0: (); // return
+    let _1: &'_ List::<&'_ mut u32>; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::ArrayWrapper::<&'_ mut u32, 1 : usize>
+struct ArrayWrapper::<&'_ mut u32, 1 : usize> {
+  0: [&'_ mut u32; 1 : usize],
+}
+
+// Full name: test_crate::ArrayWrapper::<&'_ mut u32, 2 : usize>
+struct ArrayWrapper::<&'_ mut u32, 2 : usize> {
+  0: [&'_ mut u32; 2 : usize],
+}
+
+// Full name: test_crate::use_const_generic
+fn use_const_generic(_1: ArrayWrapper::<&'_ mut u32, 1 : usize>, _2: ArrayWrapper::<&'_ mut u32, 2 : usize>)
+{
+    let _0: (); // return
+    let _1: ArrayWrapper::<&'_ mut u32, 1 : usize>; // arg #1
+    let _2: ArrayWrapper::<&'_ mut u32, 2 : usize>; // arg #2
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+
+

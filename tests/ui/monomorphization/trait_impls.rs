@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 //@ obol-args=--start-from=crate::main
 // Ensures monomorphization happens when trait implementations are involved.
 pub trait Trait {

@@ -1,5 +1,4 @@
 //@ known-failure
-//@ obol-args=--lift-associated-types=_
 pub trait Foo {
     type Size: Copy;
 }

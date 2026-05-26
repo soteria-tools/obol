@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 pub fn flabada<'a>(x: &'a ()) -> &'a () {
     x
 }

@@ -1,6 +1,3 @@
-//@ obol-args=--exclude=core::ptr::metadata::Thin
-//@ obol-args=--exclude=core::ptr::metadata::Pointee
-//@ obol-args=--include=core::ptr::metadata::from_raw_parts
 #![feature(ptr_metadata)]
 
 fn main() {

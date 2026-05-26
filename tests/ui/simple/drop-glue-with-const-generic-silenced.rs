@@ -1,4 +1,3 @@
-//@ obol-args=--precise-drops
 //@ obol-arg=--opaque={impl core::marker::Destruct for crate::PortableHash}
 struct KeccakState;
 

@@ -1,6 +1,5 @@
-//@ obol-args=--monomorphize
 //@ obol-args=--start-from=crate::main
-//@ obol-args=--remove-associated-types *
+
 // Ensures closures are monomorphized and replaced with static function calls
 
 struct Thing;

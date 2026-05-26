@@ -1,4 +1,3 @@
-//@ obol-args=--precise-drops
 struct A {
     x: Box<u32>,
     b: B,

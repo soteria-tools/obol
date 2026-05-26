@@ -1,4 +1,3 @@
-//@ obol-args=--precise-drops
 fn use_box(_: Box<u32>) {}
 
 fn main() {

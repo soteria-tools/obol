@@ -1,6 +1,3 @@
-//@ obol-args=--precise-drops
-//@ obol-args=--hide-marker-traits
-//@ obol-args=--hide-allocator
 struct Foo {
     x: Box<u32>,
     y: Box<u32>,

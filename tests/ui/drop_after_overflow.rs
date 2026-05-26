@@ -1,5 +1,3 @@
-//@ obol-args=--ullbc --print-ullbc
-
 struct Foo {}
 
 impl Drop for Foo {
@@ -8,6 +6,7 @@ impl Drop for Foo {
     }
 }
 
+#[allow(arithmetic_overflow)]
 fn main() {
     let f = Foo {};
     let _ = 255u8 + 1;

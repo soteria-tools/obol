@@ -1,4 +1,3 @@
-//@ obol-args=--extract-opaque-bodies
 //! Tests the various ways to handle overflow are correctly translated.
 fn main() {
     let _ = 255u8.wrapping_add(1);

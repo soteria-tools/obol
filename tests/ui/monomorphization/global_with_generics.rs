@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 //@ obol-args=--start-from=crate::main
 //@ obol-args=--start-from=crate::FooInt
 //@ obol-args=--start-from=crate::FooBool

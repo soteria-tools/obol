@@ -1,0 +1,142 @@
+
+// Final ULLBC:
+
+pub fn <bool as std::default::Default>::default() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::marker::PhantomData::<u8>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<u8> {}
+
+// Full name: core::num::niche_types::UsizeNoHighBit
+pub struct UsizeNoHighBit {
+  0: usize,
+}
+
+// Full name: std::ptr::NonNull::<u8>
+pub struct NonNull::<u8> {
+  pointer: *const u8,
+}
+
+// Full name: std::ptr::Unique::<u8>
+pub struct Unique::<u8> {
+  pointer: NonNull::<u8>,
+  _marker: PhantomData::<u8>,
+}
+
+// Full name: std::alloc::Global
+#[lang_item("global_alloc_ty")]
+pub struct Global {}
+
+// Full name: alloc::raw_vec::RawVecInner::<Global>
+struct RawVecInner::<Global> {
+  ptr: Unique::<u8>,
+  cap: UsizeNoHighBit,
+  alloc: Global,
+}
+
+// Full name: alloc::raw_vec::RawVec::<u8, Global>
+struct RawVec::<u8, Global> {
+  inner: RawVecInner::<Global>,
+  _marker: PhantomData::<u8>,
+}
+
+// Full name: std::vec::Vec::<u8, Global>
+pub struct Vec::<u8, Global> {
+  buf: RawVec::<u8, Global>,
+  len: usize,
+}
+
+// Full name: std::string::String
+#[lang_item("String")]
+pub struct String {
+  vec: Vec::<u8, Global>,
+}
+
+trait FakeTrait
+
+// Full name: test_crate::Struct::<bool>
+struct Struct::<bool> {
+  0: bool,
+}
+
+pub fn <test_crate::Struct<A> as std::default::Default>::default::<bool>() -> Struct::<bool>
+{
+    let _0: Struct::<bool>; // return
+    let _1: bool; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = <bool as std::default::Default>::default() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        _0 = Struct::<bool> { 0: move _1 };
+        storage_dead(_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: <test_crate::Struct<A> as test_crate::Trait<B>>::method::<u8, bool, String>
+fn method::<u8, bool, String>()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _x_1: (u8, bool); // local
+    let _y_2: Struct::<bool>; // local
+    let _3: (); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_x_1);
+        _x_1 = (const 0 : u8, const false);
+        storage_live(_y_2);
+        _y_2 = <test_crate::Struct<A> as std::default::Default>::default::<bool>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_live(_3);
+        _3 = method::<u8, bool, String>() -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_3);
+        _0 = ();
+        storage_dead(_y_2);
+        storage_dead(_x_1);
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+
+

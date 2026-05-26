@@ -1,0 +1,183 @@
+
+// Final ULLBC:
+
+pub fn std::cmp::impls::<impl std::cmp::PartialEq for u8>::eq(self_1: &'_ u8, other_2: &'_ u8) -> bool
+{
+    let _0: bool; // return
+    let self_1: &'_ u8; // arg #1
+    let other_2: &'_ u8; // arg #2
+    let _3: u8; // anonymous local
+    let _4: u8; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _3 = copy (*self_1);
+        storage_live(_4);
+        _4 = copy (*other_2);
+        _0 = move _3 == move _4;
+        storage_dead(_4);
+        storage_dead(_3);
+        return;
+    }
+}
+
+pub fn std::cmp::impls::<impl std::cmp::PartialEq<&B> for &A>::eq::<'_, '_, u8, u8>(self_1: &'_ &'_ u8, other_2: &'_ &'_ u8) -> bool
+{
+    let _0: bool; // return
+    let self_1: &'_ &'_ u8; // arg #1
+    let other_2: &'_ &'_ u8; // arg #2
+    let _3: &'_ u8; // anonymous local
+    let _4: &'_ u8; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_4);
+        _3 = copy (*self_1);
+        _4 = copy (*other_2);
+        _0 = std::cmp::impls::<impl std::cmp::PartialEq for u8>::eq(move _3, move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+trait FakeTrait
+
+// Full name: test_crate::Enum
+enum Enum {
+  Some(0: u8),
+  None,
+}
+
+pub fn <test_crate::Enum as std::cmp::PartialEq>::eq(self_1: &'_ Enum, other_2: &'_ Enum) -> bool
+{
+    let _0: bool; // return
+    let self_1: &'_ Enum; // arg #1
+    let other_2: &'_ Enum; // arg #2
+    let __self_discr_3: isize; // local
+    let _4: &'_ Enum; // anonymous local
+    let __arg1_discr_5: isize; // local
+    let _6: &'_ Enum; // anonymous local
+    let _7: bool; // anonymous local
+    let _8: isize; // anonymous local
+    let _9: isize; // anonymous local
+    let _10: (&'_ Enum, &'_ Enum); // anonymous local
+    let _11: &'_ Enum; // anonymous local
+    let _12: &'_ Enum; // anonymous local
+    let _13: isize; // anonymous local
+    let _14: isize; // anonymous local
+    let __self_0_15: &'_ u8; // local
+    let __arg1_0_16: &'_ u8; // local
+    let _17: &'_ &'_ u8; // anonymous local
+    let _18: &'_ &'_ u8; // anonymous local
+    let _19: &'_ Enum; // anonymous local
+    let _20: &'_ Enum; // anonymous local
+    let _21: &'_ Enum; // anonymous local
+    let _22: &'_ Enum; // anonymous local
+
+    bb0: {
+        storage_live(_13);
+        storage_live(_14);
+        storage_live(_19);
+        storage_live(_20);
+        storage_live(_21);
+        storage_live(_22);
+        storage_live(__self_discr_3);
+        storage_live(_4);
+        _4 = &(*self_1);
+        __self_discr_3 = @discriminant((*_4));
+        storage_dead(_4);
+        storage_live(__arg1_discr_5);
+        storage_live(_6);
+        _6 = &(*other_2);
+        __arg1_discr_5 = @discriminant((*_6));
+        storage_dead(_6);
+        storage_live(_7);
+        storage_live(_8);
+        _8 = copy __self_discr_3;
+        storage_live(_9);
+        _9 = copy __arg1_discr_5;
+        _7 = move _8 == move _9;
+        if move _7 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_live(_10);
+        storage_live(_11);
+        _11 = copy self_1;
+        storage_live(_12);
+        _12 = copy other_2;
+        _10 = (move _11, move _12);
+        storage_dead(_12);
+        storage_dead(_11);
+        _19 = copy _10.0;
+        _14 = @discriminant((*_19));
+        switch move _14 -> 0 : isize: bb3, otherwise: bb4;
+    }
+
+    bb2: {
+        storage_dead(_9);
+        storage_dead(_8);
+        _0 = const false;
+        goto bb5;
+    }
+
+    bb3: {
+        _20 = copy _10.1;
+        _13 = @discriminant((*_20));
+        switch move _13 -> 0 : isize: bb6, otherwise: bb4;
+    }
+
+    bb4: {
+        _0 = const true;
+        goto bb7;
+    }
+
+    bb5: {
+        storage_dead(_7);
+        storage_dead(__arg1_discr_5);
+        storage_dead(__self_discr_3);
+        return;
+    }
+
+    bb6: {
+        storage_live(__self_0_15);
+        _21 = copy _10.0;
+        __self_0_15 = &((*_21) as variant Enum::Some).0;
+        storage_live(__arg1_0_16);
+        _22 = copy _10.1;
+        __arg1_0_16 = &((*_22) as variant Enum::Some).0;
+        storage_live(_17);
+        _17 = &__self_0_15;
+        storage_live(_18);
+        _18 = &__arg1_0_16;
+        _0 = std::cmp::impls::<impl std::cmp::PartialEq<&B> for &A>::eq::<'_, '_, u8, u8>(move _17, move _18) -> bb8 (unwind: bb9);
+    }
+
+    bb7: {
+        storage_dead(_10);
+        goto bb5;
+    }
+
+    bb8: {
+        storage_dead(_18);
+        storage_dead(_17);
+        storage_dead(__arg1_0_16);
+        storage_dead(__self_0_15);
+        goto bb7;
+    }
+
+    bb9: {
+        unwind_continue;
+    }
+}
+
+
+

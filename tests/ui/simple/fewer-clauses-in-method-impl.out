@@ -1,0 +1,38 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: <() as test_crate::Trait>::method::<()>
+fn method::<()>()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = method::<()>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

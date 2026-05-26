@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 trait HasType {
     type Type;
 }

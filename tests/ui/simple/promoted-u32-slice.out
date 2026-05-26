@@ -1,0 +1,49 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0() -> [u32; 4 : usize]
+{
+    let _0: [u32; 4 : usize]; // return
+    let _1: [u32; 4 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = [const 0 : u32, const 1 : u32, const 2 : u32, const 3 : u32];
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: [u32; 4 : usize] = anon_const_0()
+
+// Full name: test_crate::foo
+pub fn foo() -> &'_ [u32]
+{
+    let _0: &'_ [u32]; // return
+    let _1: &'_ [u32; 4 : usize]; // anonymous local
+    let _2: &'_ [u32; 4 : usize]; // anonymous local
+    let _3: &'_ [u32; 4 : usize]; // anonymous local
+    let _4: &'_ [u32; 4 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_4);
+        _4 = &anon_const_0;
+        _3 = move _4;
+        _2 = &(*_3);
+        _1 = &(*_2);
+        _0 = unsize_cast<&'_ [u32; 4 : usize], &'_ [u32], 4 : usize>(move _1);
+        storage_dead(_1);
+        storage_dead(_2);
+        return;
+    }
+}
+
+
+

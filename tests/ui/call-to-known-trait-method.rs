@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 //! Test that we pass generics correctly in the `skip_trait_refs_when_known` pass.
 #[derive(Default)]
 struct Struct<A>(A);

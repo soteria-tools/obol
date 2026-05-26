@@ -1,4 +1,3 @@
-//@ obol-arg=--monomorphize
 trait Foo {
     fn bar<T>() -> Self;
 }

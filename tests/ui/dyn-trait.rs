@@ -1,7 +1,6 @@
 use std::fmt::Display;
 
 // Opaque because we don't support unsize coercions.
-#[charon::opaque]
 fn construct<T: Display + 'static>(x: T) -> Box<dyn Display> {
     Box::new(x)
 }
@@ -11,7 +10,6 @@ fn destruct(x: &dyn Display) -> String {
 }
 
 // Opaque because we don't support unsize coercions.
-#[charon::opaque]
 fn combine() {
     let x = String::new();
     let _ = destruct(&*construct(x));

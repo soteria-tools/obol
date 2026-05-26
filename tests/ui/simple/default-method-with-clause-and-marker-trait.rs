@@ -1,4 +1,3 @@
-//@ obol-args=--hide-marker-traits
 // https://github.com/AeneasVerif/charon/issues/561
 use std::marker::PhantomData;
 

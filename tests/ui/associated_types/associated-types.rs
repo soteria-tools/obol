@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 #![feature(associated_type_defaults)]
 trait Foo<'a>: Copy {
     type Item: Clone + 'a;

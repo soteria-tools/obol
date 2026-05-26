@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 trait Trait<T> {
     type Item;
     fn comsume(&self);

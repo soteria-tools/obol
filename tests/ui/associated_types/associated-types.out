@@ -1,0 +1,147 @@
+
+// Final ULLBC:
+
+pub fn std::clone::impls::<impl std::clone::Clone for &T>::clone::<'_, bool>(self_1: &'_ &'_ bool) -> &'_ bool
+{
+    let _0: &'_ bool; // return
+    let self_1: &'_ &'_ bool; // arg #1
+
+    bb0: {
+        _0 = copy (*self_1);
+        return;
+    }
+}
+
+// Full name: std::option::Option::<&'_ bool>
+#[lang_item("Option")]
+pub enum Option::<&'_ bool> {
+  None,
+  Some(0: &'_ bool),
+}
+
+pub fn <std::option::Option<T> as std::clone::Clone>::clone::<&'_ bool>(self_1: &'_ Option::<&'_ bool>) -> Option::<&'_ bool>
+{
+    let _0: Option::<&'_ bool>; // return
+    let self_1: &'_ Option::<&'_ bool>; // arg #1
+    let _2: isize; // anonymous local
+    let x_3: &'_ &'_ bool; // local
+    let _4: &'_ bool; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(x_3);
+        _2 = @discriminant((*self_1));
+        switch move _2 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+    }
+
+    bb1: {
+        _0 = Option::<&'_ bool>::None {  };
+        goto bb4;
+    }
+
+    bb2: {
+        x_3 = &((*self_1) as variant Option::<&'_ bool>::Some).0;
+        storage_live(_4);
+        _4 = std::clone::impls::<impl std::clone::Clone for &T>::clone::<'_, bool>(move x_3) -> bb5 (unwind: bb6);
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        return;
+    }
+
+    bb5: {
+        _0 = Option::<&'_ bool>::Some { 0: move _4 };
+        storage_dead(_4);
+        goto bb4;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+}
+
+trait FakeTrait
+
+// Full name: test_crate::Foo::use_item_provided::<'_, &'_ bool>
+fn use_item_provided::<'_, &'_ bool>(x_1: Option::<&'_ bool>) -> Option::<&'_ bool>
+{
+    let _0: Option::<&'_ bool>; // return
+    let x_1: Option::<&'_ bool>; // arg #1
+
+    bb0: {
+        _0 = copy x_1;
+        return;
+    }
+}
+
+// Full name: test_crate::external_use_item::<'_, &'_ bool>
+fn external_use_item::<'_, &'_ bool>(x_1: Option::<&'_ bool>) -> Option::<&'_ bool>
+{
+    let _0: Option::<&'_ bool>; // return
+    let x_1: Option::<&'_ bool>; // arg #1
+    let _2: &'_ Option::<&'_ bool>; // anonymous local
+    let _3: Option::<&'_ bool>; // anonymous local
+    let _4: Option::<&'_ bool>; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy x_1;
+        _3 = use_item_provided::<'_, &'_ bool>(move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        _2 = &_3;
+        storage_dead(_4);
+        _0 = <std::option::Option<T> as std::clone::Clone>::clone::<&'_ bool>(move _2) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_2);
+        storage_dead(_3);
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::call_fn
+fn call_fn()
+{
+    let _0: (); // return
+    let _1: Option::<&'_ bool>; // anonymous local
+    let _2: Option::<&'_ bool>; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        _2 = Option::<&'_ bool>::None {  };
+        _1 = external_use_item::<'_, &'_ bool>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

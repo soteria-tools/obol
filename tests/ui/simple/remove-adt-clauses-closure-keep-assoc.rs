@@ -1,5 +1,3 @@
-//@ obol-args=--remove-adt-clauses
-//@ obol-args=--remove-associated-types=__no_match__
 // `--remove-associated-types` is passed a non-matching pattern so the trait associated types
 // stay in place, exercising the "preserve" path.
 //

@@ -207,6 +207,7 @@ fn perform_test(test_case: &Case) -> anyhow::Result<()> {
     cmd.arg("--crate-name=test_crate");
     cmd.arg("--crate-type=rlib");
     cmd.arg("--allow=unused"); // Removes noise
+    cmd.arg("--edition=2021");
     for (crate_name, _, rlib_path) in deps {
         cmd.arg(format!("--extern={crate_name}={rlib_path}"));
     }

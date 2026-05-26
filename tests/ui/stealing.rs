@@ -3,7 +3,13 @@
 static SLICE: [(); four()] = [(); 4];
 
 const fn four() -> usize {
+    let _ = BAR;
+    let _ = FOO;
     2 + 2
+}
+
+fn main() {
+    assert_eq!(SLICE.len(), 4);
 }
 
 // The order counts, we want to translate `BAR` first to steal `FOO`.

@@ -1,4 +1,3 @@
-//@ obol-args=--mir optimized
 pub struct Foo<F>(F);
 
 impl<F> Foo<F> {

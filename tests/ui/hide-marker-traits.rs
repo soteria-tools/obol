@@ -1,4 +1,3 @@
-//@ obol-args=--hide-marker-traits
 //! Reproduces a crash when substituting variables with the `--hide-marker-traits` option.
 trait Idx {}
 

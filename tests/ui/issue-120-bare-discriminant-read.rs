@@ -1,5 +1,3 @@
-//@ obol-args=--extract-opaque-bodies
-//@ obol-args=--mir optimized
 //@ rustc-args=-C opt-level=3
 #![feature(core_intrinsics)]
 #![allow(internal_features)]

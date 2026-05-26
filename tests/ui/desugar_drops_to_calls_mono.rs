@@ -1,7 +1,3 @@
-//@ obol-args=--precise-drops
-//@ obol-args=--desugar-drops
-//@ obol-args=--monomorphize
-
 fn use_string(_: String) {}
 
 fn use_vec(_: Vec<i32>) {}

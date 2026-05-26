@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 enum Never {}
 
 enum MyResult<T, E> {

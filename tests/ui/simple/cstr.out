@@ -1,0 +1,36 @@
+Item GlobalConstFn(AllocId(0, ThreadLocalIndex), Some(Ty { id: 2, kind: RigidTy(Adt(AdtDef(DefId { id: 1, name: "std::ffi::CStr" }), GenericArgs([]))) })) caused errors; ignoring. Any { .. }
+
+// Final ULLBC:
+
+// Full name: std::ffi::CStr
+#[lang_item("CStr")]
+pub struct CStr {
+  inner: [i8],
+}
+
+trait FakeTrait
+
+// Full name: anon_const_0
+const anon_const_0: CStr = anon_const_0()
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: &'_ CStr; // anonymous local
+    let _2: &'_ CStr; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        _2 = &anon_const_0;
+        _1 = move _2;
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+}
+
+
+

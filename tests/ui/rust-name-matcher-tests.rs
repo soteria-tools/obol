@@ -1,8 +1,3 @@
-//@ obol-args=--hide-allocator
-//@ obol-args=--treat-box-as-builtin
-//@ obol-args=--ops-to-function-calls
-//@ obol-args=--index-to-function-calls
-//@ obol-args=--unbind-item-vars
 #![feature(register_tool)]
 #![register_tool(pattern)]
 mod foo {

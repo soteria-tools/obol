@@ -1,0 +1,428 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: std::fmt::Error
+pub struct Error {}
+
+// Full name: std::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+// Full name: std::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn @TraitDecl0),
+}
+
+// Full name: std::fmt::Formatter::<'a>::debug_tuple_field1_finish::<'_>
+pub fn debug_tuple_field1_finish::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ Str, _3: &'_ (dyn @TraitDecl0)) -> Result::<(), Error>
+= <missing>
+
+// Full name: std::ptr::drop_in_place::<&'_ ()>
+#[lang_item("drop_in_place")]
+pub fn drop_in_place::<&'_ ()>(_1: *mut &'_ ())
+{
+    let _0: (); // return
+    let _1: *mut &'_ (); // arg #1
+    let _2: &'_ mut &'_ (); // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        _2 = &mut (*_1);
+        return;
+    }
+}
+
+// Full name: std::fmt::Formatter::<'a>::pad::<'_>
+pub fn pad::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ Str) -> Result::<(), Error>
+= <missing>
+
+pub fn <() as std::fmt::Debug>::fmt(self_1: &'_ (), f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ (); // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+
+    bb0: {
+        _0 = pad::<'_>(move f_2, const "()") -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+pub fn <&T as std::fmt::Debug>::fmt::<'_, ()>(self_1: &'_ &'_ (), f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ &'_ (); // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+    let _3: &'_ (); // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _3 = copy (*self_1);
+        _0 = <() as std::fmt::Debug>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<&'_ ()>
+fn Debug::<&'_ ()>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let <&() as Debug>::fmt_4: *const (); // local
+    let entry_array_5: [*const (); 4 : usize]; // local
+    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(<&() as Debug>::fmt_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_in_place::<&'_ ()>, *const ()>(const drop_in_place::<&'_ ()>);
+        size_2 = transmute<usize, *const ()>(const 8 : usize);
+        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        <&() as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, ()>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, ()>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <&() as Debug>::fmt_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<&'_ ()>
+static Debug::<&'_ ()>: *const () = Debug::<&'_ ()>()
+
+// Full name: std::array::TryFromSliceError
+pub struct TryFromSliceError {
+  0: (),
+}
+
+pub fn <std::array::TryFromSliceError as std::fmt::Debug>::fmt(self_1: &'_ TryFromSliceError, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ TryFromSliceError; // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+    let _3: &'_ (dyn @TraitDecl0); // anonymous local
+    let _4: &'_ &'_ (); // anonymous local
+    let _5: &'_ (); // anonymous local
+
+    bb0: {
+        storage_live(_4);
+        storage_live(_3);
+        storage_live(_5);
+        _5 = &((*self_1)).0;
+        _4 = &_5;
+        _3 = unsize_cast<&'_ &'_ (), &'_ (dyn @TraitDecl0), Debug::<&'_ ()>>(copy _4);
+        _0 = debug_tuple_field1_finish::<'_>(move f_2, const "TryFromSliceError", move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_5);
+        storage_dead(_3);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::result::Result::<&'_ [u8; 4 : usize], TryFromSliceError>
+pub enum Result::<&'_ [u8; 4 : usize], TryFromSliceError> {
+  Ok(0: &'_ [u8; 4 : usize]),
+  Err(0: TryFromSliceError),
+}
+
+// Full name: std::result::Result::<[u8; 4 : usize], TryFromSliceError>
+pub enum Result::<[u8; 4 : usize], TryFromSliceError> {
+  Ok(0: [u8; 4 : usize]),
+  Err(0: TryFromSliceError),
+}
+
+// Full name: std::option::Option::<&'_ [u8; 4 : usize]>
+#[lang_item("Option")]
+pub enum Option::<&'_ [u8; 4 : usize]> {
+  None,
+  Some(0: &'_ [u8; 4 : usize]),
+}
+
+// Full name: std::array::<impl std::convert::TryFrom<&[T]> for [T; N]>::try_from::<'_, u8, 4 : usize>
+pub fn try_from::<'_, u8, 4 : usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4 : usize], TryFromSliceError>
+{
+    let _0: Result::<[u8; 4 : usize], TryFromSliceError>; // return
+    let slice_1: &'_ [u8]; // arg #1
+    let self_2: Result::<&'_ [u8; 4 : usize], TryFromSliceError>; // local
+    let self_3: Option::<&'_ [u8; 4 : usize]>; // local
+    let _4: bool; // anonymous local
+    let _5: usize; // anonymous local
+    let ptr_6: *const [u8; 4 : usize]; // local
+    let self_7: *const u8; // local
+    let _8: &'_ [u8; 4 : usize]; // anonymous local
+    let _9: *const [u8]; // anonymous local
+    let v_10: &'_ [u8; 4 : usize]; // local
+    let v_11: [u8; 4 : usize]; // local
+    let _12: &'_ [u8; 4 : usize]; // anonymous local
+    let _13: Option::<&'_ [u8; 4 : usize]>; // anonymous local
+    let _14: TryFromSliceError; // anonymous local
+    let _15: Result::<&'_ [u8; 4 : usize], TryFromSliceError>; // anonymous local
+    let _16: TryFromSliceError; // anonymous local
+
+    bb0: {
+        storage_live(self_2);
+        storage_live(self_3);
+        storage_live(_8);
+        storage_live(_9);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = copy slice_1.metadata;
+        _4 = move _5 == const 4 : usize;
+        if move _4 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_dead(_5);
+        storage_live(ptr_6);
+        storage_live(self_7);
+        _9 = &raw const (*slice_1) with_metadata(copy slice_1.metadata);
+        self_7 = cast<*const [u8], *const u8>(copy _9);
+        ptr_6 = cast<*const [u8], *const [u8; 4 : usize]>(copy _9);
+        storage_dead(self_7);
+        _8 = &(*ptr_6);
+        self_3 = Option::<&'_ [u8; 4 : usize]>::Some { 0: copy _8 };
+        storage_dead(ptr_6);
+        storage_dead(_4);
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_live(v_10);
+        v_10 = copy (self_3 as variant Option::<&'_ [u8; 4 : usize]>::Some).0;
+        self_2 = Result::<&'_ [u8; 4 : usize], TryFromSliceError>::Ok { 0: copy v_10 };
+        storage_dead(v_10);
+        storage_dead(self_3);
+        storage_live(v_11);
+        storage_live(_12);
+        _12 = copy (self_2 as variant Result::<&'_ [u8; 4 : usize], TryFromSliceError>::Ok).0;
+        v_11 = copy (*_12);
+        _0 = Result::<[u8; 4 : usize], TryFromSliceError>::Ok { 0: copy v_11 };
+        goto bb3;
+    }
+
+    bb2: {
+        storage_dead(_5);
+        storage_live(_13);
+        _13 = Option::<&'_ [u8; 4 : usize]>::None {  };
+        self_3 = move _13;
+        storage_dead(_4);
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_live(v_10);
+        storage_live(_14);
+        _14 = TryFromSliceError { 0: const () };
+        storage_live(_15);
+        _15 = Result::<&'_ [u8; 4 : usize], TryFromSliceError>::Err { 0: move _14 };
+        self_2 = move _15;
+        storage_dead(v_10);
+        storage_dead(self_3);
+        storage_live(v_11);
+        storage_live(_12);
+        storage_live(_16);
+        _16 = TryFromSliceError { 0: const () };
+        _0 = Result::<[u8; 4 : usize], TryFromSliceError>::Err { 0: move _16 };
+        goto bb3;
+    }
+
+    bb3: {
+        storage_dead(_12);
+        storage_dead(v_11);
+        storage_dead(self_2);
+        return;
+    }
+}
+
+// Full name: <T as std::convert::TryInto<U>>::try_into::<&'_ [u8], [u8; 4 : usize]>
+pub fn try_into::<&'_ [u8], [u8; 4 : usize]>(self_1: &'_ [u8]) -> Result::<[u8; 4 : usize], TryFromSliceError>
+{
+    let _0: Result::<[u8; 4 : usize], TryFromSliceError>; // return
+    let self_1: &'_ [u8]; // arg #1
+
+    bb0: {
+        _0 = try_from::<'_, u8, 4 : usize>(move self_1) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::ptr::drop_in_place::<TryFromSliceError>
+#[lang_item("drop_in_place")]
+pub fn drop_in_place::<TryFromSliceError>(_1: *mut TryFromSliceError)
+{
+    let _0: (); // return
+    let _1: *mut TryFromSliceError; // arg #1
+    let _2: &'_ mut TryFromSliceError; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        _2 = &mut (*_1);
+        return;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<TryFromSliceError>
+fn Debug::<TryFromSliceError>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let <TryFromSliceError as Debug>::fmt_4: *const (); // local
+    let entry_array_5: [*const (); 4 : usize]; // local
+    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(<TryFromSliceError as Debug>::fmt_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_in_place::<TryFromSliceError>, *const ()>(const drop_in_place::<TryFromSliceError>);
+        size_2 = transmute<usize, *const ()>(const 0 : usize);
+        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        <TryFromSliceError as Debug>::fmt_4 = cast<<std::array::TryFromSliceError as std::fmt::Debug>::fmt, *const ()>(const <std::array::TryFromSliceError as std::fmt::Debug>::fmt);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <TryFromSliceError as Debug>::fmt_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<TryFromSliceError>
+static Debug::<TryFromSliceError>: *const () = Debug::<TryFromSliceError>()
+
+// Full name: std::result::unwrap_failed
+fn unwrap_failed(_1: &'_ Str, _2: &'_ (dyn @TraitDecl0)) -> !
+= <missing>
+
+// Full name: std::result::Result::<T, E>::unwrap::<[u8; 4 : usize], TryFromSliceError>
+pub fn unwrap::<[u8; 4 : usize], TryFromSliceError>(self_1: Result::<[u8; 4 : usize], TryFromSliceError>) -> [u8; 4 : usize]
+{
+    let t_0: [u8; 4 : usize]; // return
+    let self_1: Result::<[u8; 4 : usize], TryFromSliceError>; // arg #1
+    let _2: isize; // anonymous local
+    let e_3: TryFromSliceError; // local
+    let _4: !; // anonymous local
+    let _5: &'_ (dyn @TraitDecl0); // anonymous local
+    let _6: &'_ TryFromSliceError; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_4);
+        storage_live(_6);
+        _2 = @discriminant(self_1);
+        switch move _2 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+    }
+
+    bb1: {
+        t_0 = move (self_1 as variant Result::<[u8; 4 : usize], TryFromSliceError>::Ok).0;
+        return;
+    }
+
+    bb2: {
+        storage_live(e_3);
+        e_3 = move (self_1 as variant Result::<[u8; 4 : usize], TryFromSliceError>::Err).0;
+        storage_live(_5);
+        _6 = &e_3;
+        _5 = unsize_cast<&'_ TryFromSliceError, &'_ (dyn @TraitDecl0), Debug::<TryFromSliceError>>(copy _6);
+        _4 = unwrap_failed(const "called `Result::unwrap()` on an `Err` value", move _5) -> bb4 (unwind: bb5);
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        undefined_behavior;
+    }
+
+    bb5: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::trait_error
+pub fn trait_error(s_1: &'_ [u8])
+{
+    let _0: (); // return
+    let s_1: &'_ [u8]; // arg #1
+    let _array_2: [u8; 4 : usize]; // local
+    let _3: Result::<[u8; 4 : usize], TryFromSliceError>; // anonymous local
+    let _4: &'_ [u8]; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_array_2);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = &(*s_1) with_metadata(copy s_1.metadata);
+        _3 = try_into::<&'_ [u8], [u8; 4 : usize]>(move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        _array_2 = unwrap::<[u8; 4 : usize], TryFromSliceError>(move _3) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_3);
+        _0 = ();
+        storage_dead(_array_2);
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+
+

@@ -1,0 +1,224 @@
+
+// Final ULLBC:
+
+// Full name: std::fmt::Error
+pub struct Error {}
+
+// Full name: std::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+trait FakeTrait
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn @TraitDecl0),
+}
+
+// Full name: std::ptr::drop_in_place::<u32>
+#[lang_item("drop_in_place")]
+pub fn drop_in_place::<u32>(_1: *mut u32)
+{
+    let _0: (); // return
+    let _1: *mut u32; // arg #1
+    let _2: &'_ mut u32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        _2 = &mut (*_1);
+        return;
+    }
+}
+
+// Full name: std::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+pub fn core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::Debug for u32>::fmt(self_1: &'_ u32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ u32; // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+    let _3: u32; // anonymous local
+    let _4: u32; // anonymous local
+    let _5: u32; // anonymous local
+    let _6: u32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy (((*f_2)).options).flags;
+        _3 = move _4 & const 33554432 : u32;
+        storage_dead(_4);
+        switch copy _3 -> 0 : u32: bb1, otherwise: bb2;
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = copy (((*f_2)).options).flags;
+        _5 = move _6 & const 67108864 : u32;
+        storage_dead(_6);
+        switch copy _5 -> 0 : u32: bb3, otherwise: bb4;
+    }
+
+    bb2: {
+        storage_dead(_3);
+        _0 = core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
+    }
+
+    bb3: {
+        storage_dead(_5);
+        _0 = core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
+    }
+
+    bb4: {
+        storage_dead(_5);
+        _0 = core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
+    }
+
+    bb5: {
+        return;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        unwind_continue;
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<u32>
+fn Debug::<u32>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let core::fmt::num::<impl Debug for u32>::fmt_4: *const (); // local
+    let entry_array_5: [*const (); 4 : usize]; // local
+    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(core::fmt::num::<impl Debug for u32>::fmt_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_in_place::<u32>, *const ()>(const drop_in_place::<u32>);
+        size_2 = transmute<usize, *const ()>(const 4 : usize);
+        align_3 = transmute<usize, *const ()>(const 4 : usize);
+        core::fmt::num::<impl Debug for u32>::fmt_4 = cast<core::fmt::num::<impl std::fmt::Debug for u32>::fmt, *const ()>(const core::fmt::num::<impl std::fmt::Debug for u32>::fmt);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move core::fmt::num::<impl Debug for u32>::fmt_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<u32>
+static Debug::<u32>: *const () = Debug::<u32>()
+
+// Full name: std::result::Result::<u32, u32>
+pub enum Result::<u32, u32> {
+  Ok(0: u32),
+  Err(0: u32),
+}
+
+// Full name: std::result::unwrap_failed
+fn unwrap_failed(_1: &'_ Str, _2: &'_ (dyn @TraitDecl0)) -> !
+= <missing>
+
+pub fn std::result::Result::<T, E>::unwrap::<u32, u32>(self_1: Result::<u32, u32>) -> u32
+{
+    let t_0: u32; // return
+    let self_1: Result::<u32, u32>; // arg #1
+    let _2: isize; // anonymous local
+    let e_3: u32; // local
+    let _4: !; // anonymous local
+    let _5: &'_ (dyn @TraitDecl0); // anonymous local
+    let _6: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_4);
+        storage_live(_6);
+        _2 = @discriminant(self_1);
+        switch move _2 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+    }
+
+    bb1: {
+        t_0 = move (self_1 as variant Result::<u32, u32>::Ok).0;
+        return;
+    }
+
+    bb2: {
+        storage_live(e_3);
+        e_3 = move (self_1 as variant Result::<u32, u32>::Err).0;
+        storage_live(_5);
+        _6 = &e_3;
+        _5 = unsize_cast<&'_ u32, &'_ (dyn @TraitDecl0), Debug::<u32>>(copy _6);
+        _4 = unwrap_failed(const "called `Result::unwrap()` on an `Err` value", move _5) -> bb4 (unwind: bb5);
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        undefined_behavior;
+    }
+
+    bb5: {
+        unwind_continue;
+    }
+}
+
+fn test_crate::unwrap(res_1: Result::<u32, u32>) -> u32
+{
+    let _0: u32; // return
+    let res_1: Result::<u32, u32>; // arg #1
+    let _2: Result::<u32, u32>; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = copy res_1;
+        _0 = std::result::Result::<T, E>::unwrap::<u32, u32>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

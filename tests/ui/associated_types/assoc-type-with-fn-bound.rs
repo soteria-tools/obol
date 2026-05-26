@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 #![feature(unboxed_closures)]
 
 pub trait Trait {

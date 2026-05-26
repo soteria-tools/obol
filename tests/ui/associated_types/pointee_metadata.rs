@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 #![feature(ptr_metadata)]
 
 fn empty_metadata() {

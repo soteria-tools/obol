@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 //! Regression test for issue https://github.com/AeneasVerif/charon/issues/627
 pub trait PrimeField {
     type Repr;

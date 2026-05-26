@@ -1,4 +1,3 @@
-//@ obol-args=--lift-associated-types=*
 pub trait HasOutput {
     type Output;
 }

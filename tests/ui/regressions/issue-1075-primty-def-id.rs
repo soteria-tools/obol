@@ -1,2 +1,2 @@
-//@ obol-args=--extract-opaque-bodies --start-from core::primitive
+//@ obol-arg=--start-from=core::primitive
 fn main() {}

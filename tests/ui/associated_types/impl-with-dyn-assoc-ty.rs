@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 trait DynableTrait {
     type DynableTraitType;
 }

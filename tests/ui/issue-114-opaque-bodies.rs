@@ -1,4 +1,3 @@
-//@ obol-args=--extract-opaque-bodies
 //@ obol-arg=--opaque={impl core::marker::Destruct for alloc::vec::Vec}
 //@ aux-crate=issue-114-opaque-bodies-aux.rs
 

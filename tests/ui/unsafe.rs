@@ -1,5 +1,3 @@
-//@ obol-args=--exclude=core::ptr::metadata::Thin
-
 //! The 5 "unsafe superpowers" (https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#unsafe-superpowers).
 #![feature(core_intrinsics)]
 #![allow(internal_features)]

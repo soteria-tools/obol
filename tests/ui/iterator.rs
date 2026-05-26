@@ -1,4 +1,3 @@
-//@ obol-args=--translate-all-methods
 //! Translate the full iterator trait and a few of standard impls. This is a great testing ground
 //! for type-system features.
 fn main() {

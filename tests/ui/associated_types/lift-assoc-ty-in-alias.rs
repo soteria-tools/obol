@@ -1,5 +1,4 @@
 //@ known-failure
-//@ obol-args=--lift-associated-types=*
 pub trait HasAssoc {
     type Assoc;
 }

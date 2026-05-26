@@ -1752,7 +1752,7 @@ fn panic1()
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = begin_panic::<&'_ Str>(const "explicit panic") -> bb1 (unwind: bb2);
+        _1 = panic(const "explicit panic") -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1769,18 +1769,28 @@ fn panic2()
 {
     let _0: (); // return
     let _1: !; // anonymous local
+    let _2: Arguments::<'_>; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = begin_panic::<&'_ Str>(const "O no!") -> bb1 (unwind: bb2);
+        storage_live(_2);
+        _2 = from_str::<'_>(const "O no!") -> bb1 (unwind: bb2);
     }
 
     bb1: {
-        undefined_behavior;
+        _1 = panic_fmt(move _2) -> bb3 (unwind: bb4);
     }
 
     bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
         unwind_continue;
     }
 }
@@ -1856,6 +1866,7 @@ fn panic5()
     let _0: (); // return
     let _1: bool; // anonymous local
     let _2: !; // anonymous local
+    let _3: Arguments::<'_>; // anonymous local
 
     bb0: {
         _0 = ();
@@ -1872,14 +1883,23 @@ fn panic5()
 
     bb2: {
         storage_live(_2);
-        _2 = begin_panic::<&'_ Str>(const "assert failed") -> bb3 (unwind: bb4);
+        storage_live(_3);
+        _3 = from_str::<'_>(const "assert failed") -> bb3 (unwind: bb4);
     }
 
     bb3: {
-        undefined_behavior;
+        _2 = panic_fmt(move _3) -> bb5 (unwind: bb6);
     }
 
     bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        undefined_behavior;
+    }
+
+    bb6: {
         unwind_continue;
     }
 }

@@ -21,7 +21,7 @@ fn next_u64(self_1: &'_ mut Rng)
 
 // Full name: test_crate::new::{closure#0}::closure
 struct closure {
-  upvar_0: &'_ mut &'_ mut Rng,
+  upvar_0: &'_ mut Rng,
 }
 
 // Full name: test_crate::new
@@ -30,13 +30,13 @@ fn new(rng_1: &'_ mut Rng)
     let _0: (); // return
     let rng_1: &'_ mut Rng; // arg #1
     let _2: closure; // anonymous local
-    let _3: &'_ mut &'_ mut Rng; // anonymous local
+    let _3: &'_ mut Rng; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
         storage_live(_3);
-        _3 = &uniq rng_1;
+        _3 = &uniq (*rng_1);
         _2 = closure { upvar_0: move _3 };
         storage_dead(_3);
         storage_dead(_2);

@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 #![feature(trait_alias)]
 trait Trait<T> {
     type Item;

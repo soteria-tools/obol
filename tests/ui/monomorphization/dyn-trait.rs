@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 //@ obol-args=--start-from=crate::main
 use std::fmt::Display;
 

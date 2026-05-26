@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 pub trait IntoIterator {
     type Item;
 }

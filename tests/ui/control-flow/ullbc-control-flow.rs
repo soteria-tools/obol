@@ -1,4 +1,3 @@
-//@ obol-args=--ullbc --print-ullbc
 //! Test the pre-reconstruction output so we don't accidentally regress passes in ways that are
 //! invisible post-reconstruction.
 pub fn nested_loops_enum(step_out: usize, step_in: usize) -> usize {

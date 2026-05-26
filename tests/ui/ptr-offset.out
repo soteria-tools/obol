@@ -1,0 +1,641 @@
+
+// Final ULLBC:
+
+// Full name: std::fmt::Error
+pub struct Error {}
+
+// Full name: std::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+trait FakeTrait
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn @TraitDecl0),
+}
+
+// Full name: std::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+// Full name: std::ptr::NonNull::<()>
+pub struct NonNull::<()> {
+  pointer: *const (),
+}
+
+// Full name: std::marker::PhantomData::<&'_ ()>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<&'_ ()> {}
+
+// Full name: core::fmt::rt::ArgumentType::<'_>
+enum ArgumentType::<'_> {
+  Placeholder(value: NonNull::<()>, formatter: fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Count(0: u16),
+}
+
+// Full name: core::fmt::rt::Argument::<'_>
+#[lang_item("format_argument")]
+pub struct Argument::<'_> {
+  ty: ArgumentType::<'_>,
+}
+
+// Full name: std::ptr::NonNull::<Argument::<'_>>
+pub struct NonNull::<Argument::<'_>> {
+  pointer: *const Argument::<'_>,
+}
+
+// Full name: std::ptr::NonNull::<u8>
+pub struct NonNull::<u8> {
+  pointer: *const u8,
+}
+
+// Full name: std::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+pub fn from_str::<'_>(s_1: &'_ Str) -> Arguments::<'_>
+{
+    let _0: Arguments::<'_>; // return
+    let s_1: &'_ Str; // arg #1
+    let _2: NonNull::<u8>; // anonymous local
+    let _3: *const u8; // anonymous local
+    let _4: NonNull::<Argument::<'_>>; // anonymous local
+    let _5: usize; // anonymous local
+    let _6: usize; // anonymous local
+    let _7: usize; // anonymous local
+    let _8: *const Str; // anonymous local
+    let _9: &'_ [u8]; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_8);
+        _8 = &raw const (*s_1) with_metadata(copy s_1.metadata);
+        _3 = cast<*const Str, *const u8>(copy _8);
+        storage_dead(_8);
+        _2 = transmute<*const u8, NonNull::<u8>>(copy _3);
+        storage_dead(_3);
+        storage_live(_4);
+        storage_live(_5);
+        storage_live(_6);
+        storage_live(_7);
+        storage_live(_9);
+        _9 = transmute<&'_ Str, &'_ [u8]>(copy s_1);
+        _7 = copy _9.metadata;
+        storage_dead(_9);
+        _6 = move _7 wrap.<< const 1 : i32;
+        storage_dead(_7);
+        _5 = move _6 | const 1 : usize;
+        storage_dead(_6);
+        _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
+        storage_dead(_5);
+        _0 = Arguments::<'_> { template: move _2, args: move _4 };
+        storage_dead(_4);
+        storage_dead(_2);
+        return;
+    }
+}
+
+// Full name: std::intrinsics::abort
+pub fn abort() -> !
+= <intrinsic:abort>
+
+// Full name: std::intrinsics::cold_path
+pub fn cold_path()
+= <intrinsic:cold_path>
+
+// Full name: std::ptr::NonNull::<Str>
+pub struct NonNull::<Str> {
+  pointer: *const Str,
+}
+
+// Full name: std::marker::PhantomData::<&'_ Str>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<&'_ Str> {}
+
+// Full name: std::panic::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<Str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ Str>,
+}
+
+// Full name: std::intrinsics::caller_location
+pub fn caller_location() -> &'_ Location::<'_>
+= <intrinsic:caller_location>
+
+// Full name: std::panic::Location::<'a>::caller::<'_>
+pub fn caller::<'_>() -> &'_ Location::<'_>
+{
+    let _0: &'_ Location::<'_>; // return
+
+    bb0: {
+        _0 = caller_location() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        undefined_behavior;
+    }
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'a>::new::<'_>
+fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+{
+    let _0: PanicInfo::<'_>; // return
+    let message_1: &'_ Arguments::<'_>; // arg #1
+    let location_2: &'_ Location::<'_>; // arg #2
+    let can_unwind_3: bool; // arg #3
+    let force_no_backtrace_4: bool; // arg #4
+
+    bb0: {
+        _0 = PanicInfo::<'_> { message: copy message_1, location: copy location_2, can_unwind: copy can_unwind_3, force_no_backtrace: copy force_no_backtrace_4 };
+        return;
+    }
+}
+
+// Full name: std::rt::panic_fmt::panic_impl
+fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
+= <extern:panic_impl>
+
+// Full name: std::rt::panic_fmt
+#[lang_item("panic_fmt")]
+pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
+{
+    let _0: !; // return
+    let fmt_1: Arguments::<'_>; // arg #1
+    let _2: bool; // anonymous local
+    let _3: !; // anonymous local
+    let pi_4: PanicInfo::<'_>; // local
+    let _5: &'_ Arguments::<'_>; // anonymous local
+    let _6: &'_ Arguments::<'_>; // anonymous local
+    let _7: &'_ Location::<'_>; // anonymous local
+    let _8: &'_ Location::<'_>; // anonymous local
+    let _9: &'_ PanicInfo::<'_>; // anonymous local
+    let _10: &'_ PanicInfo::<'_>; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = const false;
+        if move _2 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_live(_3);
+        _3 = abort() -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        storage_dead(_2);
+        storage_live(pi_4);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = &fmt_1;
+        _5 = &(*_6);
+        storage_live(_7);
+        storage_live(_8);
+        _8 = caller::<'_>() -> bb5 (unwind: bb6);
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        undefined_behavior;
+    }
+
+    bb5: {
+        _7 = &(*_8);
+        pi_4 = new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        storage_dead(_7);
+        storage_dead(_5);
+        storage_dead(_8);
+        storage_dead(_6);
+        storage_live(_9);
+        storage_live(_10);
+        _10 = &pi_4;
+        _9 = &(*_10);
+        _0 = panic_impl(move _9) -> bb9 (unwind: bb10);
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+
+    bb9: {
+        undefined_behavior;
+    }
+
+    bb10: {
+        unwind_continue;
+    }
+}
+
+// Full name: core::panicking::panic_nounwind_fmt::compiletime
+fn compiletime(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) -> !
+{
+    let _0: !; // return
+    let fmt_1: Arguments::<'_>; // arg #1
+    let force_no_backtrace_2: bool; // arg #2
+
+    bb0: {
+        _0 = panic_fmt(move fmt_1) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        undefined_behavior;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: core::panicking::panic_nounwind_fmt
+pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) -> !
+{
+    let _0: !; // return
+    let fmt_1: Arguments::<'_>; // arg #1
+    let force_no_backtrace_2: bool; // arg #2
+    let _3: (Arguments::<'_>, bool); // anonymous local
+    let _4: Arguments::<'_>; // anonymous local
+    let _5: bool; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy fmt_1;
+        storage_live(_5);
+        _5 = copy force_no_backtrace_2;
+        _3 = (move _4, move _5);
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = compiletime(move _3.0, move _3.1) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        undefined_behavior;
+    }
+
+    bb2: {
+        unwind_terminate;
+    }
+}
+
+// Full name: core::panicking::panic
+#[lang_item("panic")]
+pub fn panic(expr_1: &'_ Str) -> !
+{
+    let _0: !; // return
+    let expr_1: &'_ Str; // arg #1
+    let _2: !; // anonymous local
+    let _3: Arguments::<'_>; // anonymous local
+    let _4: &'_ Str; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy expr_1;
+        _3 = from_str::<'_>(move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        _2 = panic_fmt(move _3) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::ptr::const_ptr::<impl *const T>::offset::precondition_check
+fn precondition_check(this_1: *const (), count_2: isize, size_3: usize)
+{
+    let _0: (); // return
+    let this_1: *const (); // arg #1
+    let count_2: isize; // arg #2
+    let size_3: usize; // arg #3
+    let _4: bool; // anonymous local
+    let msg_5: &'_ Str; // local
+    let _6: !; // anonymous local
+    let _7: Arguments::<'_>; // anonymous local
+    let rhs_8: isize; // local
+    let self_9: usize; // local
+    let _10: i64; // anonymous local
+    let b_11: bool; // local
+    let _12: (i64, bool); // anonymous local
+    let _13: i64; // anonymous local
+    let _14: i64; // anonymous local
+    let byte_offset_15: isize; // local
+    let _16: (); // anonymous local
+    let _17: usize; // anonymous local
+    let overflow_18: bool; // local
+    let _19: bool; // anonymous local
+    let _20: bool; // anonymous local
+    let _21: (u64, bool); // anonymous local
+    let _22: u64; // anonymous local
+    let _23: u64; // anonymous local
+    let _24: NonNull::<u8>; // anonymous local
+    let _25: *const u8; // anonymous local
+    let _26: NonNull::<Argument::<'_>>; // anonymous local
+    let _27: usize; // anonymous local
+    let _28: usize; // anonymous local
+    let _29: usize; // anonymous local
+    let _30: *const Str; // anonymous local
+    let _31: &'_ [u8]; // anonymous local
+
+    bb0: {
+        storage_live(msg_5);
+        storage_live(_6);
+        storage_live(byte_offset_15);
+        storage_live(_16);
+        _0 = ();
+        storage_live(_4);
+        storage_live(overflow_18);
+        storage_live(rhs_8);
+        rhs_8 = cast<usize, isize>(copy size_3);
+        storage_live(b_11);
+        storage_live(_10);
+        storage_live(_12);
+        storage_live(_13);
+        _13 = cast<isize, i64>(copy count_2);
+        storage_live(_14);
+        _14 = cast<isize, i64>(copy rhs_8);
+        _12 = move _13 checked.* move _14;
+        storage_dead(_14);
+        storage_dead(_13);
+        _10 = copy _12.0;
+        b_11 = copy _12.1;
+        storage_dead(_12);
+        byte_offset_15 = cast<i64, isize>(copy _10);
+        storage_dead(_10);
+        if copy b_11 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        _16 = cold_path() -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        storage_dead(b_11);
+        storage_dead(rhs_8);
+        storage_live(self_9);
+        self_9 = transmute<*const (), usize>(copy this_1);
+        storage_live(_20);
+        storage_live(_17);
+        _17 = cast<isize, usize>(copy byte_offset_15);
+        storage_live(_21);
+        storage_live(_22);
+        _22 = cast<usize, u64>(copy self_9);
+        storage_live(_23);
+        _23 = cast<usize, u64>(copy _17);
+        _21 = move _22 checked.+ move _23;
+        storage_dead(_23);
+        storage_dead(_22);
+        _20 = copy _21.1;
+        storage_dead(_21);
+        storage_dead(_17);
+        storage_live(_19);
+        _19 = copy byte_offset_15 < const 0 : isize;
+        overflow_18 = copy _20 ^ move _19;
+        storage_dead(_19);
+        storage_dead(_20);
+        storage_dead(self_9);
+        _4 = ~(copy overflow_18);
+        storage_dead(overflow_18);
+        if move _4 -> bb5 else -> bb6;
+    }
+
+    bb3: {
+        storage_dead(b_11);
+        storage_dead(rhs_8);
+        storage_dead(overflow_18);
+        goto bb6;
+    }
+
+    bb4: {
+        undefined_behavior;
+    }
+
+    bb5: {
+        storage_dead(_4);
+        return;
+    }
+
+    bb6: {
+        msg_5 = const "unsafe precondition(s) violated: ptr::offset requires the address calculation to not overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.";
+        storage_live(_7);
+        storage_live(_24);
+        storage_live(_25);
+        storage_live(_30);
+        _30 = &raw const (*msg_5) with_metadata(copy msg_5.metadata);
+        _25 = cast<*const Str, *const u8>(copy _30);
+        storage_dead(_30);
+        _24 = transmute<*const u8, NonNull::<u8>>(copy _25);
+        storage_dead(_25);
+        storage_live(_26);
+        storage_live(_27);
+        storage_live(_28);
+        storage_live(_29);
+        storage_live(_31);
+        _31 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: ptr::offset requires the address calculation to not overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _29 = copy _31.metadata;
+        storage_dead(_31);
+        _28 = move _29 wrap.<< const 1 : i32;
+        storage_dead(_29);
+        _27 = move _28 | const 1 : usize;
+        storage_dead(_28);
+        _26 = transmute<usize, NonNull::<Argument::<'_>>>(move _27);
+        storage_dead(_27);
+        _7 = Arguments::<'_> { template: move _24, args: move _26 };
+        storage_dead(_26);
+        storage_dead(_24);
+        _6 = panic_nounwind_fmt(move _7, const false) -> bb7 (unwind: bb8);
+    }
+
+    bb7: {
+        undefined_behavior;
+    }
+
+    bb8: {
+        undefined_behavior;
+    }
+}
+
+// Full name: std::ptr::const_ptr::<impl *const T>::offset::<i32>
+pub fn offset::<i32>(self_1: *const i32, count_2: isize) -> *const i32
+{
+    let _0: *const i32; // return
+    let self_1: *const i32; // arg #1
+    let count_2: isize; // arg #2
+    let _3: (); // anonymous local
+    let _4: *const (); // anonymous local
+    let _5: bool; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_5);
+        _5 = ub_checks<bool>;
+        if move _5 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_live(_4);
+        _4 = cast<*const i32, *const ()>(copy self_1);
+        _3 = precondition_check(move _4, copy count_2, const 4 : usize) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        _0 = copy self_1 offset copy count_2;
+        return;
+    }
+
+    bb3: {
+        storage_dead(_4);
+        goto bb2;
+    }
+
+    bb4: {
+        undefined_behavior;
+    }
+}
+
+// Full name: core::slice::<impl [T]>::as_ptr::<i32>
+pub fn as_ptr::<i32>(self_1: &'_ [i32]) -> *const i32
+{
+    let _0: *const i32; // return
+    let self_1: &'_ [i32]; // arg #1
+    let _2: *const [i32]; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = &raw const (*self_1) with_metadata(copy self_1.metadata);
+        _0 = cast<*const [i32], *const i32>(copy _2);
+        storage_dead(_2);
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let s_1: [i32; 2 : usize]; // local
+    let ptr_2: *const i32; // local
+    let _3: &'_ [i32]; // anonymous local
+    let _4: &'_ [i32; 2 : usize]; // anonymous local
+    let _5: bool; // anonymous local
+    let _6: i32; // anonymous local
+    let _7: *const i32; // anonymous local
+    let _8: *const i32; // anonymous local
+    let _9: !; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(s_1);
+        s_1 = [const 11 : i32, const 42 : i32];
+        storage_live(ptr_2);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = &s_1;
+        _3 = unsize_cast<&'_ [i32; 2 : usize], &'_ [i32], 2 : usize>(move _4);
+        storage_dead(_4);
+        ptr_2 = as_ptr::<i32>(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_live(_5);
+        storage_live(_6);
+        storage_live(_7);
+        storage_live(_8);
+        _8 = copy ptr_2;
+        _7 = offset::<i32>(move _8, const 1 : isize) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_8);
+        _6 = copy (*_7);
+        _5 = move _6 == const 42 : i32;
+        if move _5 -> bb5 else -> bb6;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        storage_dead(_6);
+        storage_dead(_7);
+        storage_dead(_5);
+        _0 = ();
+        storage_dead(ptr_2);
+        storage_dead(s_1);
+        return;
+    }
+
+    bb6: {
+        storage_dead(_6);
+        storage_dead(_7);
+        storage_live(_9);
+        _9 = panic(const "assertion failed: *ptr.offset(1) == 42") -> bb7 (unwind: bb8);
+    }
+
+    bb7: {
+        undefined_behavior;
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+}
+
+
+

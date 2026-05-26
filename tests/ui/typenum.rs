@@ -1,4 +1,3 @@
-//@ obol-args=--hide-marker-traits
 pub struct UInt<U, B>(U, B);
 pub struct UTerm;
 pub struct B0;

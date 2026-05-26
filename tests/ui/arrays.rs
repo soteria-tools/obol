@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=*
 //! Exercise the translation of arrays, with features supported by Eurydice
 
 pub enum AB {

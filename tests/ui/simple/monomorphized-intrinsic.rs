@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 #![feature(core_intrinsics)]
 #![allow(internal_features)]
 enum E1 {

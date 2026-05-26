@@ -1,4 +1,3 @@
-//@ obol-args=--remove-associated-types=_
 trait T1 {
     type A;
 }

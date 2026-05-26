@@ -1,4 +1,3 @@
-//@ obol-args=--mir optimized
 fn main() {
     let y: &[u8] = const {
         let x: &[u8] = &[0, 1, 2, 3, 4];

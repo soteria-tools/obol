@@ -1,5 +1,3 @@
-//@ obol-args=--precise-drops
-
 trait Modifiable<T> {
     fn modify(&mut self, arg: &T) -> T;
 }

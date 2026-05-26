@@ -1,5 +1,3 @@
-//@ obol-args=--extract-opaque-bodies
-//@ obol-args=--opaque core::ptr::copy_nonoverlapping::precondition_check
 //@ obol-args=--opaque core::alloc::layout::_::new
 //@ obol-args=--opaque core::alloc::layout::_::from_size_align_unchecked
 //@ obol-args=--opaque core::alloc::layout::Layout

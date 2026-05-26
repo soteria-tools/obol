@@ -1,4 +1,3 @@
-//@ obol-args=--lift-associated-types=*
 //! Regression test: associated type lifting caused double-processing of type args.
 pub struct Witness1;
 pub struct Witness2;

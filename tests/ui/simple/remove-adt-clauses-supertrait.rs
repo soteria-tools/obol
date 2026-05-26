@@ -1,5 +1,3 @@
-//@ obol-args=--remove-adt-clauses
-//@ obol-args=--remove-associated-types=*
 // Regression test: when `--remove-adt-clauses` strips a clause to a trait with supertraits, the
 // synthesized `BuiltinOrAuto[RemovedAdtClause]` placeholder must include a recursive
 // `RemovedAdtClause` parent ref for each supertrait, so the placeholder matches the trait's

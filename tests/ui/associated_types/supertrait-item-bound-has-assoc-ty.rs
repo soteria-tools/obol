@@ -1,4 +1,3 @@
-//@ obol-args=--lift-associated-types=_
 pub trait WithTarget {
     type Target;
 }

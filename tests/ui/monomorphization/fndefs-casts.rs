@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 //@ obol-args=--start-from=crate::main
 // Ensures casts of FnDefs monomorphise properly
 

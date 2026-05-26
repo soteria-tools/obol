@@ -1,5 +1,3 @@
-//@ obol-args=--remove-adt-clauses
-//@ obol-args=--remove-associated-types=*
 trait Trait {
     type Type;
 }

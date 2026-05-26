@@ -1,0 +1,156 @@
+
+// Final ULLBC:
+
+// Full name: std::ptr::const_ptr::<impl *const T>::to_raw_parts::<u32>
+pub fn to_raw_parts::<u32>(self_1: *const u32) -> (*const (), ())
+{
+    let _0: (*const (), ()); // return
+    let self_1: *const u32; // arg #1
+    let _2: *const (); // anonymous local
+    let _3: (); // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = cast<*const u32, *const ()>(copy self_1);
+        storage_live(_3);
+        _3 = copy self_1.metadata;
+        _0 = (copy _2, move _3);
+        storage_dead(_3);
+        storage_dead(_2);
+        return;
+    }
+}
+
+// Full name: std::ptr::const_ptr::<impl *const T>::to_raw_parts::<[u32]>
+pub fn to_raw_parts::<[u32]>(self_1: *const [u32]) -> (*const (), usize)
+{
+    let _0: (*const (), usize); // return
+    let self_1: *const [u32]; // arg #1
+    let _2: *const (); // anonymous local
+    let _3: usize; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = cast<*const [u32], *const ()>(copy self_1);
+        storage_live(_3);
+        _3 = copy self_1.metadata;
+        _0 = (copy _2, move _3);
+        storage_dead(_3);
+        storage_dead(_2);
+        return;
+    }
+}
+
+trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 0 : u32;
+        return;
+    }
+}
+
+// Full name: anon_const_1
+fn anon_const_1() -> [u32; 2 : usize]
+{
+    let _0: [u32; 2 : usize]; // return
+    let _1: [u32; 2 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = [const 0 : u32, const 1 : u32];
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: u32 = anon_const_0()
+
+// Full name: anon_const_1
+const anon_const_1: [u32; 2 : usize] = anon_const_1()
+
+// Full name: test_crate::empty_metadata
+fn empty_metadata()
+{
+    let _0: (); // return
+    let _1: (*const (), ()); // anonymous local
+    let _2: *const u32; // anonymous local
+    let _3: &'_ u32; // anonymous local
+    let _4: &'_ u32; // anonymous local
+    let _5: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_4);
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_5);
+        _5 = &anon_const_0;
+        _4 = move _5;
+        _3 = &(*_4);
+        _2 = &raw const (*_3);
+        _1 = to_raw_parts::<u32>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        storage_dead(_3);
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::slice_metadata
+fn slice_metadata()
+{
+    let _0: (); // return
+    let _1: (*const (), usize); // anonymous local
+    let _2: *const [u32]; // anonymous local
+    let _3: *const [u32; 2 : usize]; // anonymous local
+    let _4: &'_ [u32; 2 : usize]; // anonymous local
+    let _5: &'_ [u32; 2 : usize]; // anonymous local
+    let _6: &'_ [u32; 2 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_6);
+        _6 = &anon_const_1;
+        _5 = move _6;
+        _4 = &(*_5);
+        _3 = &raw const (*_4);
+        _2 = unsize_cast<*const [u32; 2 : usize], *const [u32], 2 : usize>(move _3);
+        storage_dead(_3);
+        _1 = to_raw_parts::<[u32]>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        storage_dead(_4);
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

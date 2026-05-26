@@ -1,5 +1,5 @@
 //@ known-failure
-//@ obol-args=--precise-drops
+
 struct KeccakState;
 
 struct PortableHash<const K: usize> {

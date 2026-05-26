@@ -1,4 +1,3 @@
-//@ obol-args=--monomorphize
 //@ obol-args=--start-from=crate::main
 use std::marker::PhantomData;
 use std::ptr::NonNull;

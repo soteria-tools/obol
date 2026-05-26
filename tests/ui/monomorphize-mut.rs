@@ -1,5 +1,3 @@
-//@ obol-arg=--monomorphize-mut
-
 // Various levels of nesting.
 fn option_mut<X, A>(mut x: A) {
     let _ = Some(&mut 0u32);
