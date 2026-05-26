@@ -3,5 +3,65 @@
 
 trait FakeTrait
 
+// Full name: <bool as test_crate::Trait>::method
+pub fn method(self_1: &'_ bool)
+{
+    let _0: (); // return
+    let self_1: &'_ bool; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::do_test::<bool>
+fn do_test::<bool>(x_1: bool)
+{
+    let _0: (); // return
+    let x_1: bool; // arg #1
+    let _2: &'_ bool; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        _2 = &x_1;
+        _0 = method(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        _1 = do_test::<bool>(const true) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
 
 

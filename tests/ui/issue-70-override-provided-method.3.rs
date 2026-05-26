@@ -25,3 +25,8 @@ struct NoOverride<T>(T);
 impl<T: Copy> GenericTrait<Option<T>> for NoOverride<T> {
     fn other_method() {}
 }
+
+fn main() {
+    Override::<u32>::provided(Some(42), Some(42));
+    NoOverride::<u32>::provided(Some(42), Some(42));
+}

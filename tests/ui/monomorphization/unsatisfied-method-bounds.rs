@@ -1,4 +1,3 @@
-//@ obol-args=--start-from=crate::main
 trait MyIterator {
     type Item;
 

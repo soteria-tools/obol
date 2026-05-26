@@ -5,3 +5,7 @@ impl<F> Foo<F> {
         let _closure = |_x: ()| ();
     }
 }
+
+fn main() {
+    Foo::<()>::method::<()>();
+}

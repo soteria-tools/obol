@@ -5,3 +5,7 @@ impl<F> Foo<F> {
         let _promoted = &0;
     }
 }
+
+fn main() {
+    Foo::<fn()>::method::<u32>();
+}

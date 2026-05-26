@@ -17,3 +17,13 @@ fn my_is_some<T>(opt: Option<T>) -> isize {
         None => 0,
     }
 }
+
+fn main() {
+    let x: Option<u32> = Some(42);
+    assert!(is_some(x));
+    assert_eq!(my_is_some(x), 1);
+
+    let y: Option<u32> = None;
+    assert!(!is_some(y));
+    assert_eq!(my_is_some(y), 0);
+}

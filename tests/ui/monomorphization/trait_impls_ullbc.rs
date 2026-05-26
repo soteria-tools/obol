@@ -1,4 +1,3 @@
-//@ obol-args=--start-from=crate::main
 // Ensures monomorphization happens when trait implementations are involved.
 
 use std::mem;

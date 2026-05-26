@@ -1,4 +1,3 @@
-//@ obol-args=--start-from=crate::main
 fn apply_to(f: &impl Fn(u8, u8) -> u8) -> u8 {
     f(10, 20)
 }

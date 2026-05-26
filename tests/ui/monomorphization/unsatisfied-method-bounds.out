@@ -3,5 +3,125 @@
 
 trait FakeTrait
 
+// Full name: test_crate::A
+struct A {}
+
+// Full name: anon_const_0
+fn anon_const_0() -> A
+{
+    let _0: A; // return
+    let _1: A; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = A {  };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: test_crate::B
+struct B {}
+
+// Full name: anon_const_1
+fn anon_const_1() -> B
+{
+    let _0: B; // return
+    let _1: B; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = B {  };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: A = anon_const_0()
+
+// Full name: anon_const_1
+const anon_const_1: B = anon_const_1()
+
+// Full name: test_crate::MyIterator::method::<A>
+fn method::<A>(self_1: &'_ A)
+{
+    let _0: (); // return
+    let self_1: &'_ A; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::MyIterator::method::<B>
+fn method::<B>(self_1: &'_ B)
+{
+    let _0: (); // return
+    let self_1: &'_ B; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+    let _2: &'_ A; // anonymous local
+    let _3: (); // anonymous local
+    let _4: &'_ B; // anonymous local
+    let _5: &'_ B; // anonymous local
+    let _6: &'_ A; // anonymous local
+    let _7: &'_ A; // anonymous local
+    let _8: &'_ B; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        storage_live(_6);
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_7);
+        _7 = &anon_const_0;
+        _6 = move _7;
+        _2 = &(*_6);
+        _1 = method::<A>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        storage_dead(_1);
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_8);
+        _8 = &anon_const_1;
+        _5 = move _8;
+        _4 = &(*_5);
+        _3 = method::<B>(move _4) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_4);
+        storage_dead(_3);
+        _0 = ();
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
 
 

@@ -10,3 +10,9 @@ fn write<T>(x: &mut T, y: &T) {
         ptr::copy_nonoverlapping(y, x, 1);
     }
 }
+
+fn main() {
+    let mut x = 0;
+    write(&mut x, &42);
+    assert_eq!(x, 42);
+}

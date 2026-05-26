@@ -9,3 +9,9 @@ where
         clo()(&0)(&1)
     }
 }
+
+fn main() {
+    let x = 42;
+    let foo = Foo(&x);
+    assert_eq!(Foo::<'_, _>::test_nested_closures(&&x), 42);
+}

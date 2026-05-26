@@ -1,7 +1,53 @@
 
 // Final ULLBC:
 
+// Full name: std::ptr::null::<()>
+pub fn null::<()>() -> *const ()
+{
+    let _0: *const (); // return
+    let _1: *const (); // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = cast<usize, *const ()>(const 0 : usize);
+        _0 = move _1;
+        return;
+    }
+}
+
 trait FakeTrait
+
+// Full name: test_crate::Foo
+struct Foo {
+  0: *const (),
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: Foo; // anonymous local
+    let _2: *const (); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        _2 = null::<()>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        _1 = Foo { 0: move _2 };
+        storage_dead(_2);
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
 
 
 

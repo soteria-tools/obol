@@ -1,4 +1,3 @@
-//@ obol-args=--start-from=crate::main
 use std::fmt::Display;
 
 fn dyn_to_string(x: &dyn Display) -> String {

@@ -9,3 +9,7 @@ pub fn foo<T>() -> usize {
         std::mem::size_of::<T>()
     }
 }
+
+fn main() {
+    let _ = foo::<u8>();
+}

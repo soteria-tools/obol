@@ -3,5 +3,47 @@
 
 trait FakeTrait
 
+// Full name: test_crate::Foo::<bool>
+struct Foo::<bool> {
+  value: bool,
+}
+
+// Full name: test_crate::FooBool
+fn FooBool() -> Foo::<bool>
+{
+    let _0: Foo::<bool>; // return
+
+    bb0: {
+        _0 = Foo::<bool> { value: const false };
+        return;
+    }
+}
+
+// Full name: test_crate::FooBool
+static FooBool: Foo::<bool> = FooBool()
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _b_1: bool; // local
+    let _2: &'_ Foo::<bool>; // anonymous local
+    let _3: &'_ Foo::<bool>; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_b_1);
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &FooBool;
+        _2 = move _3;
+        _b_1 = copy ((*_2)).value;
+        storage_dead(_2);
+        _0 = ();
+        storage_dead(_b_1);
+        return;
+    }
+}
+
 
 

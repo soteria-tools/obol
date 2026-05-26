@@ -1,4 +1,3 @@
-//@ obol-args=--start-from=crate::main
 // Ensures casts of FnDefs monomorphise properly
 
 fn foo<'a, T>(x: &'a T) {}

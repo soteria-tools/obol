@@ -4,3 +4,9 @@ trait Thing {
         let _ = &42;
     }
 }
+
+impl Thing for () {}
+
+fn main() {
+    <() as Thing>::foo();
+}
