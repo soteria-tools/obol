@@ -24,6 +24,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let ret_entries = locals.new_var(Some("vtable".into()), inner_ty.clone());
 
         let entries = if let Some(trait_ref) = principal {
+            // FIXME: in more recent rust_public versions, TraitRef has a vtable_entries
             let trait_ref = rustc_public::rustc_internal::internal(self.t_ctx.tcx, trait_ref);
             self.t_ctx.tcx.vtable_entries(trait_ref)
         } else {
