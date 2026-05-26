@@ -2969,6 +2969,62 @@ pub fn to_string::<Str>(self_1: &'_ Str) -> String
     }
 }
 
+// Full name: anon_const_3
+fn anon_const_3() -> [u8; 5 : usize]
+{
+    let _0: [u8; 5 : usize]; // return
+    let _1: [u8; 5 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = [const 104 : u8, const 101 : u8, const 108 : u8, const 108 : u8, const 111 : u8];
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_3
+const anon_const_3: [u8; 5 : usize] = anon_const_3()
+
+// Full name: test_crate::FOO
+fn FOO() -> &'static Str
+{
+    let _0: &'_ Str; // return
+
+    bb0: {
+        _0 = const "hello";
+        return;
+    }
+}
+
+// Full name: test_crate::FOO
+static FOO: &'static Str = FOO()
+
+// Full name: test_crate::BAR
+fn BAR() -> &'static [u8]
+{
+    let _0: &'_ [u8]; // return
+    let _1: &'_ [u8; 5 : usize]; // anonymous local
+    let _2: &'_ [u8; 5 : usize]; // anonymous local
+    let _3: &'_ [u8; 5 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &anon_const_3;
+        _2 = move _3;
+        _1 = &(*_2);
+        _0 = unsize_cast<&'_ [u8; 5 : usize], &'_ [u8], 5 : usize>(move _1);
+        storage_dead(_2);
+        storage_dead(_1);
+        return;
+    }
+}
+
+// Full name: test_crate::BAR
+static BAR: &'static [u8] = BAR()
+
 // Full name: test_crate::main
 fn main()
 {
@@ -2976,12 +3032,16 @@ fn main()
     let _s_1: String; // local
     let _2: &'_ Str; // anonymous local
     let _3: &'_ Str; // anonymous local
-    let _4: *mut String; // anonymous local
-    let _5: (); // anonymous local
+    let _4: &'_ &'_ Str; // anonymous local
+    let _5: &'_ &'_ [u8]; // anonymous local
+    let _6: *mut String; // anonymous local
+    let _7: (); // anonymous local
+    let _8: &'_ &'_ Str; // anonymous local
+    let _9: &'_ &'_ [u8]; // anonymous local
 
     bb0: {
-        storage_live(_4);
-        storage_live(_5);
+        storage_live(_6);
+        storage_live(_7);
         _0 = ();
         storage_live(_s_1);
         storage_live(_2);
@@ -2994,9 +3054,21 @@ fn main()
     bb1: {
         storage_dead(_2);
         storage_dead(_3);
+        storage_live(_4);
+        storage_live(_8);
+        _8 = &FOO;
+        _4 = move _8;
+        _ = (*_4);
+        storage_dead(_4);
+        storage_live(_5);
+        storage_live(_9);
+        _9 = &BAR;
+        _5 = move _9;
+        _ = (*_5);
+        storage_dead(_5);
         _0 = ();
-        _4 = &raw mut _s_1;
-        _5 = drop_in_place::<String>(move _4) -> bb3 (unwind: bb4);
+        _6 = &raw mut _s_1;
+        _7 = drop_in_place::<String>(move _6) -> bb3 (unwind: bb4);
     }
 
     bb2: {
