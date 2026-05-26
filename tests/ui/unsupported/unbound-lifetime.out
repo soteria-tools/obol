@@ -1,7 +1,15 @@
-error: unexpected argument '--no-serialize' found
+error[E0261]: use of undeclared lifetime name `'a`
+ --> tests/ui/unsupported/unbound-lifetime.rs:5:13
+  |
+5 | fn get(_x: &'a u32) {}
+  |             ^^ undeclared lifetime
+  |
+help: consider introducing lifetime `'a` here
+  |
+5 | fn get<'a>(_x: &'a u32) {}
+  |       ++++
 
-  tip: to pass '--no-serialize' as a value, use '-- --no-serialize'
+error: aborting due to 1 previous error
 
-Usage: obol rustc --print-ullbc [-- <SPREAD>...]
-
-For more information, try '--help'.
+For more information about this error, try `rustc --explain E0261`.
+ERROR Code failed to compile

@@ -1,7 +1,10 @@
-error: unexpected argument '--no-serialize' found
+error[E0433]: failed to resolve: use of unresolved module or unlinked crate `charon`
+  --> tests/ui/simple/conditional-method.rs:17:3
+   |
+17 | #[charon::error] // trigger an error so we get the stderr output
+   |   ^^^^^^ use of unresolved module or unlinked crate `charon`
 
-  tip: to pass '--no-serialize' as a value, use '-- --no-serialize'
+error: aborting due to 1 previous error
 
-Usage: obol rustc --print-ullbc [-- <SPREAD>...]
-
-For more information, try '--help'.
+For more information about this error, try `rustc --explain E0433`.
+ERROR Code failed to compile

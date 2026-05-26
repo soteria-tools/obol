@@ -1,7 +1,42 @@
-error: unexpected argument '--no-serialize' found
 
-  tip: to pass '--no-serialize' as a value, use '-- --no-serialize'
+// Final ULLBC:
 
-Usage: obol rustc --print-ullbc [-- <SPREAD>...]
+trait FakeTrait
 
-For more information, try '--help'.
+// Full name: test_crate::bar
+pub fn bar()
+{
+    let _0: (); // return
+    let _1: *const (); // anonymous local
+    let _2: bool; // anonymous local
+    let _3: *const (); // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        storage_live(_1);
+        _1 = cast<usize, *const ()>(const 43 : usize);
+        storage_live(_3);
+        _3 = cast<usize, *const ()>(const 42 : usize);
+        _2 = move _3 == copy _1;
+        if move _2 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        _0 = ();
+        goto bb3;
+    }
+
+    bb2: {
+        _0 = ();
+        goto bb3;
+    }
+
+    bb3: {
+        storage_dead(_1);
+        return;
+    }
+}
+
+
+

@@ -48,6 +48,11 @@ pub struct CliOpts {
         help = "List of item names to keep opaque during translation"
     )]
     pub opaque: Vec<String>,
+    #[clap(
+        long = "no-serialize",
+        help = "Whether to skip the serialization step."
+    )]
+    pub no_serialize: bool,
     /// Args that are passed to the underlying tool (`rustc` or `cargo` depending on `--cargo`).
     #[arg(last = true)]
     pub spread: Vec<String>,
