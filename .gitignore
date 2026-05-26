@@ -20,3 +20,6 @@ target/
 
 /target
 /bin
+*.llbc
+*.postcard
+.DS_Store

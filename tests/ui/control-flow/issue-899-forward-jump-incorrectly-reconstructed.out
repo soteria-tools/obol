@@ -1,0 +1,144 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::condition
+fn condition(_x_1: u32) -> bool
+{
+    let _0: bool; // return
+    let _x_1: u32; // arg #1
+
+    bb0: {
+        _0 = const true;
+        return;
+    }
+}
+
+// Full name: test_crate::foo
+fn foo()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::bar
+fn bar()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::absorb_full
+fn absorb_full()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+    let _2: bool; // anonymous local
+    let _3: bool; // anonymous local
+    let _4: bool; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        _2 = condition(const 1 : u32) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        if move _2 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_live(_3);
+        _3 = condition(const 2 : u32) -> bb5 (unwind: bb6);
+    }
+
+    bb4: {
+        _1 = ();
+        goto bb7;
+    }
+
+    bb5: {
+        if move _3 -> bb8 else -> bb9;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        storage_dead(_2);
+        storage_dead(_1);
+        storage_live(_4);
+        _4 = condition(const 3 : u32) -> bb10 (unwind: bb11);
+    }
+
+    bb8: {
+        _1 = foo() -> bb12 (unwind: bb13);
+    }
+
+    bb9: {
+        storage_dead(_3);
+        storage_dead(_2);
+        storage_dead(_1);
+        goto bb14;
+    }
+
+    bb10: {
+        if move _4 -> bb15 else -> bb16;
+    }
+
+    bb11: {
+        unwind_continue;
+    }
+
+    bb12: {
+        storage_dead(_3);
+        goto bb7;
+    }
+
+    bb13: {
+        unwind_continue;
+    }
+
+    bb14: {
+        _0 = bar() -> bb17 (unwind: bb18);
+    }
+
+    bb15: {
+        _0 = ();
+        storage_dead(_4);
+        goto bb17;
+    }
+
+    bb16: {
+        storage_dead(_4);
+        goto bb14;
+    }
+
+    bb17: {
+        return;
+    }
+
+    bb18: {
+        unwind_continue;
+    }
+}
+
+
+

@@ -1,0 +1,77 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::Struct
+struct Struct {}
+
+// Full name: <test_crate::Struct as std::clone::Clone>::clone
+pub fn clone(self_1: &'_ Struct) -> Struct
+{
+    let _0: Struct; // return
+    let self_1: &'_ Struct; // arg #1
+
+    bb0: {
+        _0 = Struct {  };
+        return;
+    }
+}
+
+// Full name: test_crate::takes_alias::<Struct>
+fn takes_alias::<Struct>(x_1: Struct)
+{
+    let _0: (); // return
+    let x_1: Struct; // arg #1
+    let _2: Struct; // anonymous local
+    let _3: &'_ Struct; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &x_1;
+        _2 = clone(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::use_alias
+fn use_alias()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+    let _2: Struct; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        _2 = Struct {  };
+        _1 = takes_alias::<Struct>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

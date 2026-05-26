@@ -1,0 +1,242 @@
+
+// Final ULLBC:
+
+// Full name: std::clone::impls::<impl std::clone::Clone for u32>::clone
+pub fn clone(self_1: &'_ u32) -> u32
+{
+    let _0: u32; // return
+    let self_1: &'_ u32; // arg #1
+
+    bb0: {
+        _0 = copy (*self_1);
+        return;
+    }
+}
+
+trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 42 : u32;
+        return;
+    }
+}
+
+// Full name: anon_const_1
+fn anon_const_1() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 42 : u32;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: u32 = anon_const_0()
+
+// Full name: anon_const_1
+const anon_const_1: u32 = anon_const_1()
+
+// Full name: <() as test_crate::Foo>::get_ty
+pub fn get_ty(self_1: &'_ ()) -> &'_ u32
+{
+    let _0: &'_ u32; // return
+    let self_1: &'_ (); // arg #1
+    let _2: &'_ u32; // anonymous local
+    let _3: &'_ u32; // anonymous local
+    let _4: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_2);
+        storage_live(_4);
+        _4 = &anon_const_0;
+        _3 = move _4;
+        _2 = &(*_3);
+        _0 = &(*_2);
+        storage_dead(_2);
+        return;
+    }
+}
+
+// Full name: test_crate::mk_foo
+fn mk_foo()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::use_foo
+fn use_foo()
+{
+    let _0: (); // return
+    let foo_1: (); // local
+    let _2: u32; // anonymous local
+    let _3: &'_ u32; // anonymous local
+    let _4: &'_ u32; // anonymous local
+    let _5: &'_ (); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(foo_1);
+        foo_1 = mk_foo() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &foo_1;
+        _4 = get_ty(move _5) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        _3 = &(*_4);
+        storage_dead(_5);
+        _2 = clone(move _3) -> bb5 (unwind: bb4);
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        storage_dead(_3);
+        storage_dead(_4);
+        storage_dead(_2);
+        _0 = ();
+        storage_dead(foo_1);
+        return;
+    }
+}
+
+// Full name: <() as test_crate::RPITIT>::make_foo
+pub fn make_foo()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::WrapClone::<&'_ u32>
+pub struct WrapClone::<&'_ u32> {
+  0: &'_ u32,
+}
+
+// Full name: test_crate::WrapClone::<&'_ u32>
+pub struct WrapClone::<&'_ u32> {
+  0: &'_ u32,
+}
+
+// Full name: test_crate::wrap::{closure#0}::closure
+struct closure {}
+
+// Full name: test_crate::wrap::<u32>
+pub fn wrap::<u32>() -> closure
+{
+    let _0: closure; // return
+
+    bb0: {
+        _0 = closure {  };
+        return;
+    }
+}
+
+// Full name: test_crate::wrap::{closure#0}::<u32, i32, fn((&'_ u32,)) -> WrapClone::<&'_ u32>, ()>
+fn {closure#0}::<u32, i32, fn((&'_ u32,)) -> WrapClone::<&'_ u32>, ()>(_1: closure, spread_args_2: (&'_ u32,)) -> WrapClone::<&'_ u32>
+{
+    let _0: WrapClone::<&'_ u32>; // return
+    let _1: closure; // arg #1
+    let spread_args_2: (&'_ u32,); // arg #2
+    let x_3: &'_ u32; // local
+    let _4: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(x_3);
+        x_3 = move spread_args_2.0;
+        storage_live(_4);
+        _4 = &(*x_3);
+        _0 = WrapClone::<&'_ u32> { 0: move _4 };
+        storage_dead(_4);
+        return;
+    }
+}
+
+// Full name: test_crate::use_wrap
+pub fn use_wrap()
+{
+    let _0: (); // return
+    let f_1: closure; // local
+    let _2: WrapClone::<&'_ u32>; // anonymous local
+    let _3: closure; // anonymous local
+    let _4: (&'_ u32,); // anonymous local
+    let _5: &'_ u32; // anonymous local
+    let _6: &'_ u32; // anonymous local
+    let _7: &'_ u32; // anonymous local
+    let _8: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_7);
+        _0 = ();
+        storage_live(f_1);
+        f_1 = wrap::<u32>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_live(_2);
+        storage_live(_3);
+        _3 = move f_1;
+        storage_live(_4);
+        storage_live(_5);
+        storage_live(_6);
+        storage_live(_8);
+        _8 = &anon_const_1;
+        _7 = move _8;
+        _6 = &(*_7);
+        _5 = &(*_6);
+        _4 = (move _5,);
+        _2 = {closure#0}::<u32, i32, fn((&'_ u32,)) -> WrapClone::<&'_ u32>, ()>(move _3, move _4) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_dead(_4);
+        storage_dead(_3);
+        storage_dead(_6);
+        storage_dead(_2);
+        _0 = ();
+        storage_dead(f_1);
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+
+

@@ -1,0 +1,137 @@
+
+// Final ULLBC:
+
+// Full name: std::ptr::drop_in_place::<()>
+#[lang_item("drop_in_place")]
+pub fn drop_in_place::<()>(_1: *mut ())
+{
+    let _0: (); // return
+    let _1: *mut (); // arg #1
+    let _2: &'_ mut (); // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        _2 = &mut (*_1);
+        return;
+    }
+}
+
+trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: () = anon_const_0()
+
+// Full name: <() as test_crate::x::Trait>::method
+pub fn method(self_1: &'_ ())
+{
+    let _0: (); // return
+    let self_1: &'_ (); // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: {vtable}::test_crate::x::Trait::<()>
+fn Trait::<()>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let <() as Trait>::method_4: *const (); // local
+    let entry_array_5: [*const (); 4 : usize]; // local
+    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(<() as Trait>::method_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_in_place::<()>, *const ()>(const drop_in_place::<()>);
+        size_2 = transmute<usize, *const ()>(const 0 : usize);
+        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        <() as Trait>::method_4 = cast<method, *const ()>(const method);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <() as Trait>::method_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::test_crate::x::Trait::<()>
+static Trait::<()>: *const () = Trait::<()>()
+
+// Full name: test_crate::use_debug
+fn use_debug(_d_1: &'_ (dyn @TraitDecl0))
+{
+    let _0: (); // return
+    let _d_1: &'_ (dyn @TraitDecl0); // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+    let _2: &'_ (dyn @TraitDecl0); // anonymous local
+    let _3: &'_ (); // anonymous local
+    let _4: &'_ (); // anonymous local
+    let _5: &'_ (); // anonymous local
+    let _6: &'_ (); // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_6);
+        _6 = &anon_const_0;
+        _5 = move _6;
+        _4 = &(*_5);
+        _3 = &(*_4);
+        _2 = unsize_cast<&'_ (), &'_ (dyn @TraitDecl0), Trait::<()>>(move _3);
+        storage_dead(_3);
+        _1 = use_debug(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        storage_dead(_4);
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

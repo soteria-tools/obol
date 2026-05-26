@@ -1,0 +1,153 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::f0
+fn f0()
+{
+    let _0: (); // return
+    let _1: bool; // anonymous local
+    let _2: bool; // anonymous local
+    let x_3: u8; // local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        _1 = const 0 : i32 < const 1 : i32;
+        if move _1 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_live(_2);
+        _2 = const 0 : i32 < const 1 : i32;
+        if move _2 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        _0 = ();
+        goto bb5;
+    }
+
+    bb3: {
+        goto bb6;
+    }
+
+    bb4: {
+        goto bb6;
+    }
+
+    bb5: {
+        storage_dead(_1);
+        return;
+    }
+
+    bb6: {
+        storage_dead(_2);
+        storage_live(x_3);
+        x_3 = const 0 : u8;
+        _0 = ();
+        storage_dead(x_3);
+        goto bb5;
+    }
+}
+
+// Full name: test_crate::f1
+fn f1(serialized_1: &'_ [u8; 1 : usize])
+{
+    let _0: (); // return
+    let serialized_1: &'_ [u8; 1 : usize]; // arg #1
+    let previous_true_hints_seen_2: usize; // local
+    let i_3: i32; // local
+    let _4: bool; // anonymous local
+    let _5: i32; // anonymous local
+    let _6: bool; // anonymous local
+    let _7: bool; // anonymous local
+    let j_8: i32; // local
+    let _9: bool; // anonymous local
+    let _10: i32; // anonymous local
+    let x_11: u8; // local
+
+    bb0: {
+        _0 = ();
+        storage_live(previous_true_hints_seen_2);
+        previous_true_hints_seen_2 = const 0 : usize;
+        storage_live(i_3);
+        i_3 = const 0 : i32;
+        goto bb1;
+    }
+
+    bb1: {
+        storage_live(_4);
+        storage_live(_5);
+        _5 = copy i_3;
+        _4 = move _5 < const 1 : i32;
+        if move _4 -> bb2 else -> bb3;
+    }
+
+    bb2: {
+        storage_dead(_5);
+        storage_live(_6);
+        _6 = const 0 : i32 < const 1 : i32;
+        if move _6 -> bb4 else -> bb5;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        _0 = ();
+        storage_dead(_4);
+        storage_dead(i_3);
+        storage_dead(previous_true_hints_seen_2);
+        return;
+    }
+
+    bb4: {
+        goto bb6;
+    }
+
+    bb5: {
+        storage_live(_7);
+        _7 = const 1 : i32 > const 1 : i32;
+        if move _7 -> bb4 else -> bb7;
+    }
+
+    bb6: {
+        storage_dead(_7);
+        storage_dead(_6);
+        storage_live(j_8);
+        j_8 = const 0 : i32;
+        goto bb8;
+    }
+
+    bb7: {
+        goto bb6;
+    }
+
+    bb8: {
+        storage_live(_9);
+        storage_live(_10);
+        _10 = copy j_8;
+        _9 = move _10 < const 1 : i32;
+        if move _9 -> bb9 else -> bb10;
+    }
+
+    bb9: {
+        storage_dead(_10);
+        storage_live(x_11);
+        x_11 = const 0 : u8;
+        storage_dead(x_11);
+        storage_dead(_9);
+        goto bb8;
+    }
+
+    bb10: {
+        storage_dead(_10);
+        storage_dead(_9);
+        storage_dead(j_8);
+        storage_dead(_4);
+        goto bb1;
+    }
+}
+
+
+

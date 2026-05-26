@@ -1,0 +1,222 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::Foo
+struct Foo {}
+
+fn test_crate::Trait::provided1::<Foo>(self_1: &'_ Foo)
+{
+    let _0: (); // return
+    let self_1: &'_ Foo; // arg #1
+    let _2: (); // anonymous local
+    let _3: &'_ Foo; // anonymous local
+    let _4: (); // anonymous local
+    let _5: &'_ Foo; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &(*self_1);
+        _2 = <test_crate::Foo as test_crate::Trait>::required(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &(*self_1);
+        _4 = provided2::<Foo>(move _5) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::Trait::provided2::<Foo>
+fn provided2::<Foo>(self_1: &'_ Foo)
+{
+    let _0: (); // return
+    let self_1: &'_ Foo; // arg #1
+    let _2: (); // anonymous local
+    let _3: &'_ Foo; // anonymous local
+    let _4: (); // anonymous local
+    let _5: &'_ Foo; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &(*self_1);
+        _2 = <test_crate::Foo as test_crate::Trait>::required(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &(*self_1);
+        _4 = test_crate::Trait::provided1::<Foo>(move _5) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+fn <test_crate::Foo as test_crate::Trait>::required(self_1: &'_ Foo)
+{
+    let _0: (); // return
+    let self_1: &'_ Foo; // arg #1
+    let _2: (); // anonymous local
+    let _3: &'_ Foo; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &(*self_1);
+        _2 = test_crate::Trait::provided1::<Foo>(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::Bar
+struct Bar {}
+
+// Full name: test_crate::Trait::provided2::<Bar>
+fn provided2::<Bar>(self_1: &'_ Bar)
+{
+    let _0: (); // return
+    let self_1: &'_ Bar; // arg #1
+    let _2: (); // anonymous local
+    let _3: &'_ Bar; // anonymous local
+    let _4: (); // anonymous local
+    let _5: &'_ Bar; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &(*self_1);
+        _2 = <test_crate::Bar as test_crate::Trait>::required(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &(*self_1);
+        _4 = <test_crate::Bar as test_crate::Trait>::provided1(move _5) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+fn <test_crate::Bar as test_crate::Trait>::required(self_1: &'_ Bar)
+{
+    let _0: (); // return
+    let self_1: &'_ Bar; // arg #1
+    let _2: (); // anonymous local
+    let _3: &'_ Bar; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &(*self_1);
+        _2 = provided2::<Bar>(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+fn <test_crate::Bar as test_crate::Trait>::provided1(self_1: &'_ Bar)
+{
+    let _0: (); // return
+    let self_1: &'_ Bar; // arg #1
+    let _2: (); // anonymous local
+    let _3: &'_ Bar; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &(*self_1);
+        _2 = provided2::<Bar>(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

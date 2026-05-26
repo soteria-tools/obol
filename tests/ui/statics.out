@@ -1,0 +1,255 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 0 : usize;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: usize = anon_const_0()
+
+// Full name: test_crate::constant
+fn constant()
+{
+    let _0: (); // return
+    let _val_1: usize; // local
+    let _ref_2: &'_ usize; // local
+    let _ref_mut_3: &'_ mut usize; // local
+    let _4: usize; // anonymous local
+    let _5: &'_ usize; // anonymous local
+    let _6: &'_ usize; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        _0 = ();
+        storage_live(_val_1);
+        _val_1 = const 0 : usize;
+        storage_live(_ref_2);
+        storage_live(_6);
+        _6 = &anon_const_0;
+        _5 = move _6;
+        _ref_2 = &(*_5);
+        storage_live(_ref_mut_3);
+        storage_live(_4);
+        _4 = const 0 : usize;
+        _ref_mut_3 = &mut _4;
+        _0 = ();
+        storage_dead(_4);
+        storage_dead(_ref_mut_3);
+        storage_dead(_ref_2);
+        storage_dead(_val_1);
+        return;
+    }
+}
+
+// Full name: test_crate::shared_static::SHARED_STATIC
+fn SHARED_STATIC() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 0 : usize;
+        return;
+    }
+}
+
+// Full name: test_crate::shared_static::SHARED_STATIC
+static SHARED_STATIC: usize = SHARED_STATIC()
+
+// Full name: test_crate::shared_static
+fn shared_static()
+{
+    let _0: (); // return
+    let _val_1: usize; // local
+    let _2: &'_ usize; // anonymous local
+    let _ref_3: &'_ usize; // local
+    let _4: &'_ usize; // anonymous local
+    let _ptr_5: *const usize; // local
+    let _6: &'_ usize; // anonymous local
+    let _7: &'_ usize; // anonymous local
+    let _8: &'_ usize; // anonymous local
+    let _9: &'_ usize; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_val_1);
+        storage_live(_2);
+        storage_live(_7);
+        _7 = &SHARED_STATIC;
+        _2 = move _7;
+        _val_1 = copy (*_2);
+        storage_dead(_2);
+        storage_live(_ref_3);
+        storage_live(_4);
+        storage_live(_8);
+        _8 = &SHARED_STATIC;
+        _4 = move _8;
+        _ref_3 = &(*_4);
+        storage_live(_ptr_5);
+        storage_live(_6);
+        storage_live(_9);
+        _9 = &SHARED_STATIC;
+        _6 = move _9;
+        _ptr_5 = &raw const (*_6);
+        _0 = ();
+        storage_dead(_6);
+        storage_dead(_ptr_5);
+        storage_dead(_4);
+        storage_dead(_ref_3);
+        storage_dead(_val_1);
+        return;
+    }
+}
+
+// Full name: test_crate::mut_static::MUT_STATIC
+fn MUT_STATIC() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 0 : usize;
+        return;
+    }
+}
+
+// Full name: test_crate::mut_static::MUT_STATIC
+static MUT_STATIC: usize = MUT_STATIC()
+
+// Full name: test_crate::mut_static
+fn mut_static()
+{
+    let _0: (); // return
+    let _val_1: usize; // local
+    let _2: *mut usize; // anonymous local
+    let _ref_3: &'_ usize; // local
+    let _4: *mut usize; // anonymous local
+    let _ref_mut_5: &'_ mut usize; // local
+    let _6: *mut usize; // anonymous local
+    let _ptr_7: *const usize; // local
+    let _8: *mut usize; // anonymous local
+    let _ptr_mut_9: *mut usize; // local
+    let _10: *mut usize; // anonymous local
+    let _11: *mut usize; // anonymous local
+    let _12: *mut usize; // anonymous local
+    let _13: *mut usize; // anonymous local
+    let _14: *mut usize; // anonymous local
+    let _15: *mut usize; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_val_1);
+        storage_live(_2);
+        storage_live(_11);
+        _11 = &raw mut MUT_STATIC;
+        _2 = move _11;
+        _val_1 = copy (*_2);
+        storage_dead(_2);
+        storage_live(_ref_3);
+        storage_live(_4);
+        storage_live(_12);
+        _12 = &raw mut MUT_STATIC;
+        _4 = move _12;
+        _ref_3 = &(*_4);
+        storage_live(_ref_mut_5);
+        storage_live(_6);
+        storage_live(_13);
+        _13 = &raw mut MUT_STATIC;
+        _6 = move _13;
+        _ref_mut_5 = &mut (*_6);
+        storage_live(_ptr_7);
+        storage_live(_8);
+        storage_live(_14);
+        _14 = &raw mut MUT_STATIC;
+        _8 = move _14;
+        _ptr_7 = &raw const (*_8);
+        storage_live(_ptr_mut_9);
+        storage_live(_10);
+        storage_live(_15);
+        _15 = &raw mut MUT_STATIC;
+        _10 = move _15;
+        _ptr_mut_9 = &raw mut (*_10);
+        _0 = ();
+        storage_dead(_10);
+        storage_dead(_ptr_mut_9);
+        storage_dead(_8);
+        storage_dead(_ptr_7);
+        storage_dead(_6);
+        storage_dead(_ref_mut_5);
+        storage_dead(_4);
+        storage_dead(_ref_3);
+        storage_dead(_val_1);
+        return;
+    }
+}
+
+// Full name: test_crate::non_copy_static::Foo
+struct Foo {}
+
+// Full name: test_crate::non_copy_static::FOO
+fn FOO() -> Foo
+{
+    let _0: Foo; // return
+
+    bb0: {
+        _0 = Foo {  };
+        return;
+    }
+}
+
+// Full name: test_crate::non_copy_static::FOO
+static FOO: Foo = FOO()
+
+// Full name: test_crate::non_copy_static::Foo::method
+fn method(self_1: &'_ Foo)
+{
+    let _0: (); // return
+    let self_1: &'_ Foo; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::non_copy_static
+fn non_copy_static()
+{
+    let _0: (); // return
+    let _1: &'_ Foo; // anonymous local
+    let _2: &'_ Foo; // anonymous local
+    let _3: &'_ Foo; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &FOO;
+        _2 = move _3;
+        _1 = &(*_2);
+        _0 = method(move _1) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_1);
+        storage_dead(_2);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

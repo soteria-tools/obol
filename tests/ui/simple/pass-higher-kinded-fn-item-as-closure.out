@@ -1,0 +1,55 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::flabada
+pub fn flabada(x_1: &'_ ()) -> &'_ ()
+{
+    let _0: &'_ (); // return
+    let x_1: &'_ (); // arg #1
+
+    bb0: {
+        _0 = copy x_1;
+        return;
+    }
+}
+
+// Full name: test_crate::call::<'_, flabada>
+pub fn call::<'_, flabada>(_1: flabada)
+{
+    let _0: (); // return
+    let _1: flabada; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::flibidi
+pub fn flibidi()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        _1 = call::<'_, flabada>(const flabada) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

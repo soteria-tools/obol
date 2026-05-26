@@ -1,0 +1,259 @@
+
+// Final ULLBC:
+
+pub fn std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq(self_1: &'_ u32, other_2: &'_ u32) -> bool
+{
+    let _0: bool; // return
+    let self_1: &'_ u32; // arg #1
+    let other_2: &'_ u32; // arg #2
+    let _3: u32; // anonymous local
+    let _4: u32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _3 = copy (*self_1);
+        storage_live(_4);
+        _4 = copy (*other_2);
+        _0 = move _3 == move _4;
+        storage_dead(_4);
+        storage_dead(_3);
+        return;
+    }
+}
+
+// Full name: std::option::Option::<u32>
+#[lang_item("Option")]
+pub enum Option::<u32> {
+  None,
+  Some(0: u32),
+}
+
+pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Option::<u32>, other_2: &'_ Option::<u32>) -> bool
+{
+    let _0: bool; // return
+    let self_1: &'_ Option::<u32>; // arg #1
+    let other_2: &'_ Option::<u32>; // arg #2
+    let _3: isize; // anonymous local
+    let _4: isize; // anonymous local
+    let _5: isize; // anonymous local
+    let l_6: &'_ u32; // local
+    let r_7: &'_ u32; // local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_5);
+        storage_live(l_6);
+        storage_live(r_7);
+        _5 = @discriminant((*self_1));
+        switch move _5 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+    }
+
+    bb1: {
+        _4 = @discriminant((*other_2));
+        _0 = copy _4 == const 0 : isize;
+        goto bb4;
+    }
+
+    bb2: {
+        _3 = @discriminant((*other_2));
+        switch move _3 -> 0 : isize: bb5, 1 : isize: bb6, otherwise: bb3;
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        return;
+    }
+
+    bb5: {
+        _0 = const false;
+        goto bb4;
+    }
+
+    bb6: {
+        l_6 = &((*self_1) as variant Option::<u32>::Some).0;
+        r_7 = &((*other_2) as variant Option::<u32>::Some).0;
+        _0 = std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq(move l_6, move r_7) -> bb4 (unwind: bb7);
+    }
+
+    bb7: {
+        unwind_continue;
+    }
+}
+
+trait FakeTrait
+
+fn <test_crate::NoOverride<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+fn test_crate::GenericTrait::provided::<NoOverride::<u32>, Option::<u32>, Option::<u32>>(x_1: Option::<u32>, y_2: Option::<u32>)
+{
+    let _0: (); // return
+    let x_1: Option::<u32>; // arg #1
+    let y_2: Option::<u32>; // arg #2
+    let _3: bool; // anonymous local
+    let _4: &'_ Option::<u32>; // anonymous local
+    let _5: &'_ Option::<u32>; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_3);
+        storage_live(_4);
+        _4 = &y_2;
+        storage_live(_5);
+        _5 = &x_1;
+        _3 = <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(move _4, move _5) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        if move _3 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = <test_crate::NoOverride<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>() -> bb5 (unwind: bb2);
+    }
+
+    bb4: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        goto bb5;
+    }
+
+    bb5: {
+        storage_dead(_3);
+        return;
+    }
+}
+
+fn <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>()
+{
+    let _0: (); // return
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+fn <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::provided::<u32, Option::<u32>>(x_1: Option::<u32>, y_2: Option::<u32>)
+{
+    let _0: (); // return
+    let x_1: Option::<u32>; // arg #1
+    let y_2: Option::<u32>; // arg #2
+    let _3: bool; // anonymous local
+    let _4: &'_ Option::<u32>; // anonymous local
+    let _5: &'_ Option::<u32>; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_3);
+        storage_live(_4);
+        _4 = &y_2;
+        storage_live(_5);
+        _5 = &x_1;
+        _3 = <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(move _4, move _5) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        if move _3 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>() -> bb5 (unwind: bb2);
+    }
+
+    bb4: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        goto bb5;
+    }
+
+    bb5: {
+        storage_dead(_3);
+        return;
+    }
+}
+
+// Full name: test_crate::NoOverride::<u32>
+struct NoOverride::<u32> {
+  0: u32,
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: (); // anonymous local
+    let _2: Option::<u32>; // anonymous local
+    let _3: Option::<u32>; // anonymous local
+    let _4: (); // anonymous local
+    let _5: Option::<u32>; // anonymous local
+    let _6: Option::<u32>; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        storage_live(_2);
+        _2 = Option::<u32>::Some { 0: const 42 : u32 };
+        storage_live(_3);
+        _3 = Option::<u32>::Some { 0: const 42 : u32 };
+        _1 = <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::provided::<u32, Option::<u32>>(move _2, move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        storage_dead(_1);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = Option::<u32>::Some { 0: const 42 : u32 };
+        storage_live(_6);
+        _6 = Option::<u32>::Some { 0: const 42 : u32 };
+        _4 = test_crate::GenericTrait::provided::<NoOverride::<u32>, Option::<u32>, Option::<u32>>(move _5, move _6) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_6);
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+
+

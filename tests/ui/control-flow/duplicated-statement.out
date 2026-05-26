@@ -1,0 +1,83 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::rej_sample
+fn rej_sample(a_1: &'_ [u8]) -> usize
+{
+    let _0: usize; // return
+    let a_1: &'_ [u8]; // arg #1
+    let sampled_2: usize; // local
+    let _3: bool; // anonymous local
+    let _4: u8; // anonymous local
+    let _5: usize; // anonymous local
+    let _6: bool; // anonymous local
+    let _7: u8; // anonymous local
+    let _8: usize; // anonymous local
+    let _9: usize; // anonymous local
+    let _10: usize; // anonymous local
+
+    bb0: {
+        storage_live(_9);
+        storage_live(_10);
+        storage_live(sampled_2);
+        sampled_2 = const 0 : usize;
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = const 0 : usize;
+        _4 = copy (*a_1)[copy _5];
+        _3 = move _4 < const 42 : u8;
+        if move _3 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_dead(_5);
+        storage_dead(_4);
+        storage_live(_6);
+        storage_live(_7);
+        storage_live(_8);
+        _8 = const 1 : usize;
+        _7 = copy (*a_1)[copy _8];
+        _6 = move _7 < const 16 : u8;
+        if move _6 -> bb4 else -> bb5;
+    }
+
+    bb2: {
+        storage_dead(_5);
+        storage_dead(_4);
+        goto bb3;
+    }
+
+    bb3: {
+        _10 = copy sampled_2 panic.+ const 101 : usize;
+        sampled_2 = move _10;
+        goto bb6;
+    }
+
+    bb4: {
+        storage_dead(_8);
+        storage_dead(_7);
+        _9 = copy sampled_2 panic.+ const 100 : usize;
+        sampled_2 = move _9;
+        goto bb6;
+    }
+
+    bb5: {
+        storage_dead(_8);
+        storage_dead(_7);
+        goto bb3;
+    }
+
+    bb6: {
+        storage_dead(_6);
+        storage_dead(_3);
+        _0 = copy sampled_2;
+        storage_dead(sampled_2);
+        return;
+    }
+}
+
+
+

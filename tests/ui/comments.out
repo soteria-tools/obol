@@ -1,0 +1,819 @@
+
+// Final ULLBC:
+
+pub fn <u32 as std::default::Default>::default() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 0 : u32;
+        return;
+    }
+}
+
+// Full name: std::fmt::Error
+pub struct Error {}
+
+// Full name: std::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+trait FakeTrait
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn @TraitDecl0),
+}
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn @TraitDecl0),
+}
+
+// Full name: std::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+// Full name: std::ptr::NonNull::<()>
+pub struct NonNull::<()> {
+  pointer: *const (),
+}
+
+// Full name: std::marker::PhantomData::<&'_ ()>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<&'_ ()> {}
+
+// Full name: core::fmt::rt::ArgumentType::<'_>
+enum ArgumentType::<'_> {
+  Placeholder(value: NonNull::<()>, formatter: fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Count(0: u16),
+}
+
+// Full name: core::fmt::rt::Argument::<'_>
+#[lang_item("format_argument")]
+pub struct Argument::<'_> {
+  ty: ArgumentType::<'_>,
+}
+
+// Full name: std::ptr::NonNull::<Argument::<'_>>
+pub struct NonNull::<Argument::<'_>> {
+  pointer: *const Argument::<'_>,
+}
+
+// Full name: std::ptr::NonNull::<u8>
+pub struct NonNull::<u8> {
+  pointer: *const u8,
+}
+
+// Full name: std::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: std::ptr::drop_in_place::<&'_ u32>
+#[lang_item("drop_in_place")]
+pub fn drop_in_place::<&'_ u32>(_1: *mut &'_ u32)
+{
+    let _0: (); // return
+    let _1: *mut &'_ u32; // arg #1
+    let _2: &'_ mut &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        _2 = &mut (*_1);
+        return;
+    }
+}
+
+pub fn core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::Debug for u32>::fmt(self_1: &'_ u32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ u32; // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+    let _3: u32; // anonymous local
+    let _4: u32; // anonymous local
+    let _5: u32; // anonymous local
+    let _6: u32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy (((*f_2)).options).flags;
+        _3 = move _4 & const 33554432 : u32;
+        storage_dead(_4);
+        switch copy _3 -> 0 : u32: bb1, otherwise: bb2;
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = copy (((*f_2)).options).flags;
+        _5 = move _6 & const 67108864 : u32;
+        storage_dead(_6);
+        switch copy _5 -> 0 : u32: bb3, otherwise: bb4;
+    }
+
+    bb2: {
+        storage_dead(_3);
+        _0 = core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
+    }
+
+    bb3: {
+        storage_dead(_5);
+        _0 = core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
+    }
+
+    bb4: {
+        storage_dead(_5);
+        _0 = core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
+    }
+
+    bb5: {
+        return;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        unwind_continue;
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+}
+
+pub fn <&T as std::fmt::Debug>::fmt::<'_, u32>(self_1: &'_ &'_ u32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ &'_ u32; // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+    let _3: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _3 = copy (*self_1);
+        _0 = core::fmt::num::<impl std::fmt::Debug for u32>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<&'_ u32>
+fn Debug::<&'_ u32>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let <&u32 as Debug>::fmt_4: *const (); // local
+    let entry_array_5: [*const (); 4 : usize]; // local
+    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(<&u32 as Debug>::fmt_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_in_place::<&'_ u32>, *const ()>(const drop_in_place::<&'_ u32>);
+        size_2 = transmute<usize, *const ()>(const 8 : usize);
+        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        <&u32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, u32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, u32>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <&u32 as Debug>::fmt_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<&'_ u32>
+static Debug::<&'_ u32>: *const () = Debug::<&'_ u32>()
+
+// Full name: std::option::Option::<Arguments::<'_>>
+#[lang_item("Option")]
+pub enum Option::<Arguments::<'_>> {
+  None,
+  Some(0: Arguments::<'_>),
+}
+
+// Full name: core::panicking::AssertKind
+pub enum AssertKind {
+  Eq,
+  Ne,
+  Match,
+}
+
+// Full name: core::panicking::assert_failed_inner
+fn assert_failed_inner(_1: AssertKind, _2: &'_ (dyn @TraitDecl0), _3: &'_ (dyn @TraitDecl0), _4: Option::<Arguments::<'_>>) -> !
+= <missing>
+
+// Full name: core::panicking::assert_failed::<u32, u32>
+pub fn assert_failed::<u32, u32>(kind_1: AssertKind, left_2: &'_ u32, right_3: &'_ u32, args_4: Option::<Arguments::<'_>>) -> !
+{
+    let _0: !; // return
+    let kind_1: AssertKind; // arg #1
+    let left_2: &'_ u32; // arg #2
+    let right_3: &'_ u32; // arg #3
+    let args_4: Option::<Arguments::<'_>>; // arg #4
+    let _5: &'_ (dyn @TraitDecl0); // anonymous local
+    let _6: &'_ &'_ u32; // anonymous local
+    let _7: &'_ (dyn @TraitDecl0); // anonymous local
+    let _8: &'_ &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_6);
+        storage_live(_8);
+        storage_live(_5);
+        _6 = &left_2;
+        _5 = unsize_cast<&'_ &'_ u32, &'_ (dyn @TraitDecl0), Debug::<&'_ u32>>(copy _6);
+        storage_live(_7);
+        _8 = &right_3;
+        _7 = unsize_cast<&'_ &'_ u32, &'_ (dyn @TraitDecl0), Debug::<&'_ u32>>(copy _8);
+        _0 = assert_failed_inner(move kind_1, move _5, move _7, move args_4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        undefined_behavior;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: core::slice::<impl [T]>::len::<u32>
+#[lang_item("slice_len_fn")]
+pub fn len::<u32>(self_1: &'_ [u32]) -> usize
+{
+    let _0: usize; // return
+    let self_1: &'_ [u32]; // arg #1
+
+    bb0: {
+        _0 = copy self_1.metadata;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+fn anon_const_0() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 9 : u32;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: u32 = anon_const_0()
+
+// Full name: test_crate::function_call
+fn function_call(_1: u32)
+{
+    let _0: (); // return
+    let _1: u32; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::sum
+pub fn sum(s_1: &'_ [u32]) -> u32
+{
+    let _0: u32; // return
+    let s_1: &'_ [u32]; // arg #1
+    let sum_2: u32; // local
+    let i_3: usize; // local
+    let _4: (); // anonymous local
+    let _5: u32; // anonymous local
+    let _6: u32; // anonymous local
+    let _7: u32; // anonymous local
+    let _8: bool; // anonymous local
+    let _9: usize; // anonymous local
+    let _10: usize; // anonymous local
+    let _11: &'_ [u32]; // anonymous local
+    let _12: u32; // anonymous local
+    let _13: usize; // anonymous local
+    let _14: u32; // anonymous local
+    let _15: usize; // anonymous local
+    let _16: u32; // anonymous local
+    let _17: bool; // anonymous local
+    let _18: u32; // anonymous local
+    let _19: u32; // anonymous local
+    let _20: u32; // anonymous local
+    let _21: (); // anonymous local
+    let _22: u32; // anonymous local
+    let _23: u32; // anonymous local
+    let _24: u32; // anonymous local
+
+    bb0: {
+        storage_live(_7);
+        storage_live(_14);
+        storage_live(_15);
+        storage_live(_20);
+        storage_live(_24);
+        storage_live(sum_2);
+        sum_2 = const 0 : u32;
+        storage_live(i_3);
+        i_3 = const 0 : usize;
+        storage_live(_4);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = copy sum_2;
+        _7 = copy _6 panic.+ const 2 : u32;
+        _5 = move _7;
+        storage_dead(_6);
+        _4 = function_call(move _5) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_5);
+        storage_dead(_4);
+        goto bb3;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_live(_8);
+        storage_live(_9);
+        _9 = copy i_3;
+        storage_live(_10);
+        storage_live(_11);
+        _11 = &(*s_1) with_metadata(copy s_1.metadata);
+        _10 = len::<u32>(move _11) -> bb4 (unwind: bb5);
+    }
+
+    bb4: {
+        storage_dead(_11);
+        _8 = move _9 < move _10;
+        if move _8 -> bb6 else -> bb7;
+    }
+
+    bb5: {
+        unwind_continue;
+    }
+
+    bb6: {
+        storage_dead(_10);
+        storage_dead(_9);
+        storage_live(_12);
+        storage_live(_13);
+        _13 = copy i_3;
+        _12 = copy (*s_1)[copy _13];
+        _14 = copy sum_2 panic.+ copy _12;
+        sum_2 = move _14;
+        storage_dead(_12);
+        storage_dead(_13);
+        _15 = copy i_3 panic.+ const 1 : usize;
+        i_3 = move _15;
+        storage_dead(_8);
+        goto bb3;
+    }
+
+    bb7: {
+        storage_dead(_10);
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_live(_16);
+        storage_live(_17);
+        storage_live(_18);
+        _18 = copy sum_2;
+        _17 = move _18 > const 10 : u32;
+        if move _17 -> bb8 else -> bb9;
+    }
+
+    bb8: {
+        storage_dead(_18);
+        storage_live(_19);
+        _19 = copy sum_2;
+        _20 = copy _19 panic.+ const 100 : u32;
+        _16 = move _20;
+        storage_dead(_19);
+        goto bb10;
+    }
+
+    bb9: {
+        storage_dead(_18);
+        _16 = copy sum_2;
+        goto bb10;
+    }
+
+    bb10: {
+        storage_dead(_17);
+        sum_2 = move _16;
+        storage_dead(_16);
+        storage_live(_21);
+        storage_live(_22);
+        storage_live(_23);
+        _23 = copy sum_2;
+        _24 = copy _23 panic.+ const 2 : u32;
+        _22 = move _24;
+        storage_dead(_23);
+        _21 = function_call(move _22) -> bb11 (unwind: bb12);
+    }
+
+    bb11: {
+        storage_dead(_22);
+        storage_dead(_21);
+        _0 = copy sum_2;
+        storage_dead(i_3);
+        storage_dead(sum_2);
+        return;
+    }
+
+    bb12: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::Foo
+struct Foo {
+  x: u32,
+  y: u32,
+}
+
+pub fn <test_crate::Foo as std::default::Default>::default() -> Foo
+{
+    let _0: Foo; // return
+    let _1: u32; // anonymous local
+    let _2: u32; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = <u32 as std::default::Default>::default() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_live(_2);
+        _2 = <u32 as std::default::Default>::default() -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        _0 = Foo { x: move _1, y: move _2 };
+        storage_dead(_2);
+        storage_dead(_1);
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::Bar
+struct Bar {
+  x: u32,
+  super_long_field_name: u32,
+}
+
+pub fn <test_crate::Bar as std::default::Default>::default() -> Bar
+{
+    let _0: Bar; // return
+    let _1: u32; // anonymous local
+    let _2: u32; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = <u32 as std::default::Default>::default() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_live(_2);
+        _2 = <u32 as std::default::Default>::default() -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        _0 = Bar { x: move _1, super_long_field_name: move _2 };
+        storage_dead(_2);
+        storage_dead(_1);
+        return;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::eat::<Foo>
+fn eat::<Foo>(_1: Foo)
+{
+    let _0: (); // return
+    let _1: Foo; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::eat::<Bar>
+fn eat::<Bar>(_1: Bar)
+{
+    let _0: (); // return
+    let _1: Bar; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::foo
+fn foo()
+{
+    let _0: (); // return
+    let x_1: u32; // local
+    let y_2: u32; // local
+    let _3: Foo; // anonymous local
+    let _4: (); // anonymous local
+    let _5: Foo; // anonymous local
+    let _6: u32; // anonymous local
+    let _7: u32; // anonymous local
+    let x_8: u32; // local
+    let super_long_field_name_9: u32; // local
+    let _10: Bar; // anonymous local
+    let _11: (); // anonymous local
+    let _12: Bar; // anonymous local
+    let _13: u32; // anonymous local
+    let _14: u32; // anonymous local
+    let a_15: [u32; 10 : usize]; // local
+    let _16: (&'_ u32, &'_ u32); // anonymous local
+    let _17: &'_ u32; // anonymous local
+    let _18: usize; // anonymous local
+    let _19: &'_ u32; // anonymous local
+    let left_val_20: &'_ u32; // local
+    let right_val_21: &'_ u32; // local
+    let _22: bool; // anonymous local
+    let _23: u32; // anonymous local
+    let _24: u32; // anonymous local
+    let kind_25: AssertKind; // local
+    let _26: !; // anonymous local
+    let _27: AssertKind; // anonymous local
+    let _28: &'_ u32; // anonymous local
+    let _29: &'_ u32; // anonymous local
+    let _30: &'_ u32; // anonymous local
+    let _31: &'_ u32; // anonymous local
+    let _32: Option::<Arguments::<'_>>; // anonymous local
+    let _33: &'_ u32; // anonymous local
+    let _34: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_33);
+        _0 = ();
+        storage_live(_3);
+        _3 = <test_crate::Foo as std::default::Default>::default() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_live(x_1);
+        x_1 = copy (_3).x;
+        storage_live(y_2);
+        y_2 = copy (_3).y;
+        storage_dead(_3);
+        storage_live(_4);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = copy x_1;
+        storage_live(_7);
+        _7 = copy y_2;
+        _5 = Foo { x: move _6, y: move _7 };
+        storage_dead(_7);
+        storage_dead(_6);
+        _4 = eat::<Foo>(move _5) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_dead(_4);
+        storage_live(_10);
+        _10 = <test_crate::Bar as std::default::Default>::default() -> bb5 (unwind: bb6);
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        storage_live(x_8);
+        x_8 = copy (_10).x;
+        storage_live(super_long_field_name_9);
+        super_long_field_name_9 = copy (_10).super_long_field_name;
+        storage_dead(_10);
+        storage_live(_11);
+        storage_live(_12);
+        storage_live(_13);
+        _13 = copy x_8;
+        storage_live(_14);
+        _14 = copy super_long_field_name_9;
+        _12 = Bar { x: move _13, super_long_field_name: move _14 };
+        storage_dead(_14);
+        storage_dead(_13);
+        _11 = eat::<Bar>(move _12) -> bb7 (unwind: bb8);
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        storage_dead(_12);
+        storage_dead(_11);
+        storage_live(a_15);
+        a_15 = [const 0 : u32; 10 : usize];
+        storage_live(_16);
+        storage_live(_17);
+        storage_live(_18);
+        _18 = const 9 : usize;
+        _17 = &a_15[copy _18];
+        storage_live(_19);
+        storage_live(_34);
+        _34 = &anon_const_0;
+        _33 = move _34;
+        _19 = &(*_33);
+        _16 = (move _17, move _19);
+        storage_dead(_19);
+        storage_dead(_17);
+        storage_live(left_val_20);
+        left_val_20 = copy _16.0;
+        storage_live(right_val_21);
+        right_val_21 = copy _16.1;
+        storage_live(_22);
+        storage_live(_23);
+        _23 = copy (*left_val_20);
+        storage_live(_24);
+        _24 = copy (*right_val_21);
+        _22 = move _23 == move _24;
+        if move _22 -> bb9 else -> bb10;
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+
+    bb9: {
+        storage_dead(_24);
+        storage_dead(_23);
+        storage_dead(_22);
+        storage_dead(right_val_21);
+        storage_dead(left_val_20);
+        storage_dead(_18);
+        storage_dead(_16);
+        _0 = ();
+        storage_dead(a_15);
+        storage_dead(super_long_field_name_9);
+        storage_dead(x_8);
+        storage_dead(y_2);
+        storage_dead(x_1);
+        return;
+    }
+
+    bb10: {
+        storage_dead(_24);
+        storage_dead(_23);
+        storage_live(kind_25);
+        kind_25 = AssertKind::Eq {  };
+        storage_live(_26);
+        storage_live(_27);
+        _27 = move kind_25;
+        storage_live(_28);
+        storage_live(_29);
+        _29 = &(*left_val_20);
+        _28 = &(*_29);
+        storage_live(_30);
+        storage_live(_31);
+        _31 = &(*right_val_21);
+        _30 = &(*_31);
+        storage_live(_32);
+        _32 = Option::<Arguments::<'_>>::None {  };
+        _26 = assert_failed::<u32, u32>(move _27, move _28, move _30, move _32) -> bb11 (unwind: bb12);
+    }
+
+    bb11: {
+        undefined_behavior;
+    }
+
+    bb12: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::thing
+pub fn thing()
+{
+    let _0: (); // return
+    let x_1: u32; // local
+    let _2: u32; // anonymous local
+    let _3: u32; // anonymous local
+    let _4: (); // anonymous local
+    let _5: u32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _0 = ();
+        storage_live(x_1);
+        storage_live(_2);
+        _2 = const 42 : u32 panic.>> const 3 : i32;
+        _3 = copy _2 panic.+ const 12 : u32;
+        x_1 = move _3;
+        storage_dead(_2);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = copy x_1;
+        _4 = function_call(move _5) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        storage_dead(x_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::fake_read
+pub fn fake_read(x_1: u32)
+{
+    let _0: (); // return
+    let x_1: u32; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::fool
+fn fool()
+{
+    let _0: (); // return
+    let _1: &'_ Str; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        _1 = const "\n    // Fooled ya";
+        storage_dead(_1);
+        _0 = ();
+        return;
+    }
+}
+
+
+

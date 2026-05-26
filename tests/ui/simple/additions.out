@@ -1,0 +1,100 @@
+
+// Final ULLBC:
+
+pub fn std::intrinsics::saturating_add::<u8>(a_1: u8, b_2: u8) -> u8
+= <intrinsic:saturating_add>
+
+// Full name: core::num::<impl u8>::wrapping_add
+pub fn wrapping_add(self_1: u8, rhs_2: u8) -> u8
+{
+    let _0: u8; // return
+    let self_1: u8; // arg #1
+    let rhs_2: u8; // arg #2
+
+    bb0: {
+        _0 = copy self_1 wrap.+ copy rhs_2;
+        return;
+    }
+}
+
+// Full name: core::num::<impl u8>::overflowing_add
+pub fn overflowing_add(self_1: u8, rhs_2: u8) -> (u8, bool)
+{
+    let _0: (u8, bool); // return
+    let self_1: u8; // arg #1
+    let rhs_2: u8; // arg #2
+
+    bb0: {
+        _0 = copy self_1 checked.+ copy rhs_2;
+        return;
+    }
+}
+
+pub fn core::num::<impl u8>::saturating_add(self_1: u8, rhs_2: u8) -> u8
+{
+    let _0: u8; // return
+    let self_1: u8; // arg #1
+    let rhs_2: u8; // arg #2
+
+    bb0: {
+        _0 = std::intrinsics::saturating_add::<u8>(move self_1, move rhs_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        undefined_behavior;
+    }
+}
+
+trait FakeTrait
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: u8; // anonymous local
+    let _2: (u8, bool); // anonymous local
+    let _3: u8; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        _1 = wrapping_add(const 255 : u8, const 1 : u8) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_1);
+        storage_live(_2);
+        _2 = overflowing_add(const 255 : u8, const 1 : u8) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_2);
+        storage_live(_3);
+        _3 = core::num::<impl u8>::saturating_add(const 255 : u8, const 1 : u8) -> bb5 (unwind: bb6);
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        storage_dead(_3);
+        _0 = ();
+        return;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+}
+
+
+

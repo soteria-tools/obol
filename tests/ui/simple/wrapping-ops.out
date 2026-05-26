@@ -1,0 +1,103 @@
+
+// Final ULLBC:
+
+// Full name: core::num::<impl u8>::wrapping_add
+pub fn wrapping_add(self_1: u8, rhs_2: u8) -> u8
+{
+    let _0: u8; // return
+    let self_1: u8; // arg #1
+    let rhs_2: u8; // arg #2
+
+    bb0: {
+        _0 = copy self_1 wrap.+ copy rhs_2;
+        return;
+    }
+}
+
+// Full name: core::num::<impl u8>::wrapping_sub
+pub fn wrapping_sub(self_1: u8, rhs_2: u8) -> u8
+{
+    let _0: u8; // return
+    let self_1: u8; // arg #1
+    let rhs_2: u8; // arg #2
+
+    bb0: {
+        _0 = copy self_1 wrap.- copy rhs_2;
+        return;
+    }
+}
+
+// Full name: core::num::<impl u8>::wrapping_mul
+pub fn wrapping_mul(self_1: u8, rhs_2: u8) -> u8
+{
+    let _0: u8; // return
+    let self_1: u8; // arg #1
+    let rhs_2: u8; // arg #2
+
+    bb0: {
+        _0 = copy self_1 wrap.* copy rhs_2;
+        return;
+    }
+}
+
+trait FakeTrait
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: u8; // anonymous local
+    let _2: u8; // anonymous local
+    let _3: u8; // anonymous local
+    let _4: u8; // anonymous local
+    let _5: u8; // anonymous local
+    let _6: u8; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_1);
+        _1 = const 255 : u8 wrap.+ const 1 : u8;
+        storage_dead(_1);
+        storage_live(_2);
+        _2 = const 0 : u8 wrap.- const 1 : u8;
+        storage_dead(_2);
+        storage_live(_3);
+        _3 = const 255 : u8 wrap.* const 2 : u8;
+        storage_dead(_3);
+        storage_live(_4);
+        _4 = wrapping_add(const 255 : u8, const 1 : u8) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        storage_live(_5);
+        _5 = wrapping_sub(const 0 : u8, const 1 : u8) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_5);
+        storage_live(_6);
+        _6 = wrapping_mul(const 255 : u8, const 2 : u8) -> bb5 (unwind: bb6);
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        storage_dead(_6);
+        _0 = ();
+        return;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+}
+
+
+

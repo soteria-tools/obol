@@ -1,0 +1,23 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::Type
+opaque type Type
+
+// Full name: test_crate::use_type
+fn use_type(_x_1: &'_ Type)
+{
+    let _0: (); // return
+    let _x_1: &'_ Type; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+
+

@@ -1,0 +1,83 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 0 : u32;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: u32 = anon_const_0()
+
+// Full name: test_crate::DefaultHasher
+pub struct DefaultHasher {}
+
+// Full name: <u32 as test_crate::Hash>::hash::<DefaultHasher>
+pub fn hash::<DefaultHasher>(self_1: &'_ u32, _state_2: &'_ mut DefaultHasher)
+{
+    let _0: (); // return
+    let self_1: &'_ u32; // arg #1
+    let _state_2: &'_ mut DefaultHasher; // arg #2
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let hasher_1: DefaultHasher; // local
+    let _2: (); // anonymous local
+    let _3: &'_ u32; // anonymous local
+    let _4: &'_ mut DefaultHasher; // anonymous local
+    let _5: &'_ mut DefaultHasher; // anonymous local
+    let _6: &'_ u32; // anonymous local
+    let _7: &'_ u32; // anonymous local
+
+    bb0: {
+        storage_live(_6);
+        _0 = ();
+        storage_live(hasher_1);
+        hasher_1 = DefaultHasher {  };
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_7);
+        _7 = &anon_const_0;
+        _6 = move _7;
+        _3 = &(*_6);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &mut hasher_1;
+        _4 = &two-phase-mut (*_5);
+        _2 = hash::<DefaultHasher>(move _3, move _4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        storage_dead(_3);
+        storage_dead(_5);
+        storage_dead(_2);
+        _0 = ();
+        storage_dead(hasher_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

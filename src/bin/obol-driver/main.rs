@@ -89,18 +89,18 @@ fn run_obol(options: args::CliOpts) -> Result<usize, ObolError> {
         println!("\n// Final ULLBC:\n\n{ctx}\n");
     }
 
-    let crate_data = CrateData::new(ctx);
+    if !options.no_serialize {
+        let crate_data = CrateData::new(ctx);
 
-    let path = options.dest_file.clone().or_else(|| {
-        let crate_name = &crate_data.translated.crate_name;
-        let extension = "ullbc";
-        Some(PathBuf::from(format!("{crate_name}.{extension}")))
-    });
+        let path = options.dest_file.clone().unwrap_or_else(|| {
+            let crate_name = &crate_data.translated.crate_name;
+            let extension = "ullbc";
+            PathBuf::from(format!("{crate_name}.{extension}"))
+        });
 
-    if let Some(path) = path {
         crate_data
             .serialize_to_file(&path, SerializationFormat::Postcard)
-            .expect("Failed to write smir.json to output")
+            .expect("Failed to write smir.json to output");
     }
 
     Ok(error_count)

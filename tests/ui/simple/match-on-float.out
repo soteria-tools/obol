@@ -1,0 +1,51 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let _1: f64; // anonymous local
+    let _2: bool; // anonymous local
+    let _3: bool; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_3);
+        _0 = ();
+        storage_live(_1);
+        _1 = const 0.5 : f64;
+        _3 = const 0.10000000000000001 : f64 == copy _1;
+        if move _3 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        _0 = ();
+        goto bb3;
+    }
+
+    bb2: {
+        _2 = const 0.20000000000000001 : f64 == copy _1;
+        if move _2 -> bb4 else -> bb5;
+    }
+
+    bb3: {
+        storage_dead(_1);
+        return;
+    }
+
+    bb4: {
+        _0 = ();
+        goto bb3;
+    }
+
+    bb5: {
+        _0 = ();
+        goto bb3;
+    }
+}
+
+
+

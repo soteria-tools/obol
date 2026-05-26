@@ -1,0 +1,132 @@
+
+// Final ULLBC:
+
+// Full name: std::ptr::drop_in_place::<i32>
+#[lang_item("drop_in_place")]
+pub fn drop_in_place::<i32>(_1: *mut i32)
+{
+    let _0: (); // return
+    let _1: *mut i32; // arg #1
+    let _2: &'_ mut i32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _0 = ();
+        _2 = &mut (*_1);
+        return;
+    }
+}
+
+trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 42 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: i32 = anon_const_0()
+
+fn <i32 as test_crate::Trait>::comsume(self_1: &'_ i32)
+{
+    let _0: (); // return
+    let self_1: &'_ i32; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: {vtable}::test_crate::Trait::<i32>
+fn Trait::<i32>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let <i32 as Trait>::comsume_4: *const (); // local
+    let entry_array_5: [*const (); 4 : usize]; // local
+    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(<i32 as Trait>::comsume_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_in_place::<i32>, *const ()>(const drop_in_place::<i32>);
+        size_2 = transmute<usize, *const ()>(const 4 : usize);
+        align_3 = transmute<usize, *const ()>(const 4 : usize);
+        <i32 as Trait>::comsume_4 = cast<<i32 as test_crate::Trait>::comsume, *const ()>(const <i32 as test_crate::Trait>::comsume);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as Trait>::comsume_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::test_crate::Trait::<i32>
+static Trait::<i32>: *const () = Trait::<i32>()
+
+fn test_crate::Trait::comsume::<(dyn @TraitDecl0)>(_1: &'_ (dyn @TraitDecl0))
+= <opaque>
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let a_1: &'_ (dyn @TraitDecl0); // local
+    let _2: &'_ i32; // anonymous local
+    let _3: &'_ i32; // anonymous local
+    let _4: (); // anonymous local
+    let _5: &'_ (dyn @TraitDecl0); // anonymous local
+    let _6: &'_ i32; // anonymous local
+    let _7: *const *const (); // anonymous local
+    let _8: &'_ i32; // anonymous local
+
+    bb0: {
+        storage_live(_6);
+        storage_live(_7);
+        _0 = ();
+        storage_live(a_1);
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_8);
+        _8 = &anon_const_0;
+        _6 = move _8;
+        _3 = &(*_6);
+        _2 = &(*_3);
+        a_1 = unsize_cast<&'_ i32, &'_ (dyn @TraitDecl0), Trait::<i32>>(move _2);
+        storage_dead(_2);
+        storage_dead(_3);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &(*a_1) with_metadata(copy a_1.metadata);
+        _7 = copy _5.metadata offset const 3 : usize;
+        _4 = (copy (*_7))(move _5) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_5);
+        storage_dead(_4);
+        _0 = ();
+        storage_dead(a_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

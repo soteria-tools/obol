@@ -1,0 +1,123 @@
+
+// Final ULLBC:
+
+// Full name: test_crate::NotCopy
+struct NotCopy {}
+
+// Full name: std::mem::drop::<NotCopy>
+pub fn drop::<NotCopy>(_x_1: NotCopy)
+{
+    let _0: (); // return
+    let _x_1: NotCopy; // arg #1
+
+    bb0: {
+        _0 = ();
+        return;
+    }
+}
+
+trait FakeTrait
+
+// Full name: test_crate::main::{closure#0}::closure
+struct closure {
+  upvar_0: NotCopy,
+}
+
+// Full name: test_crate::main::{closure#0}::<i32, fn((u8,)) -> u8, (NotCopy,)>
+fn {closure#0}::<i32, fn((u8,)) -> u8, (NotCopy,)>(_1: closure, spread_args_2: (u8,)) -> u8
+{
+    let _0: u8; // return
+    let _1: closure; // arg #1
+    let spread_args_2: (u8,); // arg #2
+    let x_3: u8; // local
+    let _4: (); // anonymous local
+    let _5: NotCopy; // anonymous local
+    let _6: u8; // anonymous local
+    let _7: u8; // anonymous local
+
+    bb0: {
+        storage_live(x_3);
+        storage_live(_7);
+        x_3 = move spread_args_2.0;
+        storage_live(_4);
+        storage_live(_5);
+        _5 = move (_1).upvar_0;
+        _4 = drop::<NotCopy>(move _5) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_5);
+        storage_dead(_4);
+        storage_live(_6);
+        _6 = copy x_3;
+        _7 = copy _6 panic.+ const 1 : u8;
+        _0 = move _7;
+        storage_dead(_6);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::apply_to_zero_once::<closure>
+fn apply_to_zero_once::<closure>(f_1: closure) -> u8
+{
+    let _0: u8; // return
+    let f_1: closure; // arg #1
+    let _2: closure; // anonymous local
+    let _3: (u8,); // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = move f_1;
+        storage_live(_3);
+        _3 = (const 0 : u8,);
+        _0 = {closure#0}::<i32, fn((u8,)) -> u8, (NotCopy,)>(move _2, move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let z_1: NotCopy; // local
+    let _2: u8; // anonymous local
+    let _3: closure; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(z_1);
+        z_1 = NotCopy {  };
+        storage_live(_2);
+        storage_live(_3);
+        _3 = closure { upvar_0: move z_1 };
+        _2 = apply_to_zero_once::<closure>(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        storage_dead(_2);
+        _0 = ();
+        storage_dead(z_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

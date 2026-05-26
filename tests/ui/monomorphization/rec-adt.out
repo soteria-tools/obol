@@ -1,0 +1,68 @@
+
+// Final ULLBC:
+
+// Full name: std::option::Option::<NonNull::<Node::<u8>>>
+#[lang_item("Option")]
+pub enum Option::<NonNull::<Node::<u8>>> {
+  None,
+  Some(0: NonNull::<Node::<u8>>),
+}
+
+// Full name: std::ptr::NonNull::<Node::<u8>>
+pub struct NonNull::<Node::<u8>> {
+  pointer: *const Node::<u8>,
+}
+
+// Full name: test_crate::Node::<u8>
+struct Node::<u8> {
+  next: Option::<NonNull::<Node::<u8>>>,
+  element: u8,
+}
+
+trait FakeTrait
+
+// Full name: test_crate::LinkedList::<u8>
+pub struct LinkedList::<u8> {
+  head: Option::<NonNull::<Node::<u8>>>,
+}
+
+// Full name: test_crate::LinkedList::<T>::new::<u8>
+fn new::<u8>() -> LinkedList::<u8>
+{
+    let _0: LinkedList::<u8>; // return
+    let _1: Option::<NonNull::<Node::<u8>>>; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = Option::<NonNull::<Node::<u8>>>::None {  };
+        _0 = LinkedList::<u8> { head: move _1 };
+        storage_dead(_1);
+        return;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let list_1: LinkedList::<u8>; // local
+
+    bb0: {
+        _0 = ();
+        storage_live(list_1);
+        list_1 = new::<u8>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        _0 = ();
+        storage_dead(list_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

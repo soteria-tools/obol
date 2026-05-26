@@ -1,0 +1,23 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::first
+pub fn first(s_1: &'_ [u32]) -> u32
+{
+    let _0: u32; // return
+    let s_1: &'_ [u32]; // arg #1
+    let _2: usize; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = const 0 : usize;
+        _0 = copy (*s_1)[copy _2];
+        storage_dead(_2);
+        return;
+    }
+}
+
+
+

@@ -1,0 +1,112 @@
+
+// Final ULLBC:
+
+// Full name: test_crate::main::{closure#0}::closure
+struct closure {}
+
+// Full name: test_crate::main::{closure#0}::<i8, fn(()), ()>
+fn {closure#0}::<i8, fn(()), ()>(_1: &'_ closure, spread_args_2: ())
+{
+    let _0: (); // return
+    let _1: &'_ closure; // arg #1
+    let spread_args_2: (); // arg #2
+    let _3: i32; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(_3);
+        _3 = const 1 : i32 panic./ const 1 : i32;
+        storage_dead(_3);
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: std::ops::FnOnce::call_once::<closure, ()>
+pub fn call_once::<closure, ()>(_1: closure, _2: ())
+{
+    let _0: (); // return
+    let _1: closure; // arg #1
+    let _2: (); // arg #2
+    let _3: &'_ mut closure; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _0 = ();
+        _3 = &mut _1;
+        _0 = {closure#0}::<i8, fn(()), ()>(move _3, move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+trait FakeTrait
+
+// Full name: test_crate::main::{closure#0}::closure_as_fn
+fn closure_as_fn()
+{
+    let _0: (); // return
+    let args_1: (); // local
+    let state_2: closure; // local
+
+    bb0: {
+        storage_live(args_1);
+        storage_live(state_2);
+        _0 = ();
+        args_1 = ();
+        state_2 = closure {  };
+        _0 = call_once::<closure, ()>(move state_2, move args_1) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let f_1: fn(); // local
+    let _2: closure; // anonymous local
+    let _3: (); // anonymous local
+    let _4: fn(); // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(f_1);
+        storage_live(_2);
+        _2 = closure {  };
+        f_1 = cast<closure_as_fn, fn()>(const closure_as_fn);
+        storage_dead(_2);
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy f_1;
+        _3 = (move _4)() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_4);
+        storage_dead(_3);
+        _0 = ();
+        storage_dead(f_1);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+
+

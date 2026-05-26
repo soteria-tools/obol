@@ -1,0 +1,26 @@
+
+// Final ULLBC:
+
+trait FakeTrait
+
+// Full name: test_crate::bar::{closure#0}::closure
+struct closure {}
+
+// Full name: test_crate::bar
+fn bar()
+{
+    let _0: (); // return
+    let x_1: closure; // local
+
+    bb0: {
+        _0 = ();
+        storage_live(x_1);
+        x_1 = closure {  };
+        _0 = ();
+        storage_dead(x_1);
+        return;
+    }
+}
+
+
+
