@@ -209,8 +209,8 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "charon"
-version = "0.1.196"
-source = "git+https://github.com/soteria-tools/charon?rev=1ec8d4bb0116abf4486bac234ac01acf84e2a83a#1ec8d4bb0116abf4486bac234ac01acf84e2a83a"
+version = "0.1.209"
+source = "git+https://github.com/soteria-tools/charon?rev=65dcdb566e05472a6bca8074318c05f729e30177#65dcdb566e05472a6bca8074318c05f729e30177"
 dependencies = [
  "annotate-snippets",
  "anstream 0.6.21",
@@ -239,6 +239,7 @@ dependencies = [
  "paste",
  "petgraph",
  "postcard",
+ "rustc-hash",
  "rustc_trait_elaboration",
  "rustc_version",
  "serde",
@@ -595,7 +596,7 @@ checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
 [[package]]
 name = "hax-adt-into"
 version = "0.3.5"
-source = "git+https://github.com/soteria-tools/charon?rev=1ec8d4bb0116abf4486bac234ac01acf84e2a83a#1ec8d4bb0116abf4486bac234ac01acf84e2a83a"
+source = "git+https://github.com/soteria-tools/charon?rev=65dcdb566e05472a6bca8074318c05f729e30177#65dcdb566e05472a6bca8074318c05f729e30177"
 dependencies = [
  "itertools 0.13.0",
  "proc-macro2",
@@ -795,7 +796,7 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 [[package]]
 name = "macros"
 version = "0.1.0"
-source = "git+https://github.com/soteria-tools/charon?rev=1ec8d4bb0116abf4486bac234ac01acf84e2a83a#1ec8d4bb0116abf4486bac234ac01acf84e2a83a"
+source = "git+https://github.com/soteria-tools/charon?rev=65dcdb566e05472a6bca8074318c05f729e30177#65dcdb566e05472a6bca8074318c05f729e30177"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1187,11 +1188,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7a2d987857b319362043e95f5353c0535c1f58eec5336fdfcf626430af7def58"
 
 [[package]]
+name = "rustc-hash"
+version = "2.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "94300abf3f1ae2e2b8ffb7b58043de3d399c73fa6f4b73826402a5c457614dbe"
+
+[[package]]
 name = "rustc_trait_elaboration"
 version = "0.1.0"
-source = "git+https://github.com/soteria-tools/charon?rev=1ec8d4bb0116abf4486bac234ac01acf84e2a83a#1ec8d4bb0116abf4486bac234ac01acf84e2a83a"
+source = "git+https://github.com/soteria-tools/charon?rev=65dcdb566e05472a6bca8074318c05f729e30177#65dcdb566e05472a6bca8074318c05f729e30177"
 dependencies = [
  "itertools 0.13.0",
+ "rustc-hash",
  "tracing",
 ]
 

@@ -352,6 +352,16 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
     }
 
+    pub fn attributes_for(&self, def: rustc_hir::def_id::DefId) -> Vec<rustc_hir::Attribute> {
+        if let Some(ldid) = def.as_local() {
+            self.tcx
+                .hir_attrs(self.tcx.local_def_id_to_hir_id(ldid))
+                .to_vec()
+        } else {
+            self.tcx.attrs_for_def(def).to_vec()
+        }
+    }
+
     pub(crate) fn translate_attr_info(&mut self, span: Span, src: &TransItemSource) -> AttrInfo {
         let Some(def) = src.as_def_id() else {
             return AttrInfo::default();
@@ -371,7 +381,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
 
         let public = self.tcx.visibility(internal).is_public();
-        let attributes = self.tcx.get_all_attrs(internal);
+        let attributes = self.attributes_for(internal);
 
         let mut attributes: Vec<Attribute> = attributes
             .iter()

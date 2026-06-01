@@ -10,7 +10,7 @@ pub enum Option::<NonNull::<Node::<u8>>> {
 
 // Full name: std::ptr::NonNull::<Node::<u8>>
 pub struct NonNull::<Node::<u8>> {
-  pointer: *const Node::<u8>,
+  pointer: *const Node::<u8> is !null,
 }
 
 // Full name: test_crate::Node::<u8>

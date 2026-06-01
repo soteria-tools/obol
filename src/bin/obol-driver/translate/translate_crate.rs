@@ -435,7 +435,7 @@ impl<'tcx> TranslateCtx<'tcx> {
                     return None;
                 }
                 let def_id = item_id.owner_id.def_id.to_def_id();
-                self.tcx.get_all_attrs(def_id).iter().find_map(|a| {
+                self.attributes_for(def_id).iter().find_map(|a| {
                     let rustc_hir::Attribute::Unparsed(attr) = a else {
                         return None;
                     };
@@ -509,7 +509,7 @@ impl<'tcx> TranslateCtx<'tcx> {
                     return Some(instance);
                 }
 
-                let attrib_match = self.tcx.get_all_attrs(def_id).iter().any(|a| match a {
+                let attrib_match = self.attributes_for(def_id).iter().any(|a| match a {
                     rustc_hir::Attribute::Parsed(..) => false,
                     rustc_hir::Attribute::Unparsed(attr) => {
                         let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");

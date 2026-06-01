@@ -11,7 +11,7 @@ pub struct Global {}
 
 // Full name: std::ptr::NonNull::<List::<&'_ mut u32>>
 pub struct NonNull::<List::<&'_ mut u32>> {
-  pointer: *const List::<&'_ mut u32>,
+  pointer: *const List::<&'_ mut u32> is !null,
 }
 
 // Full name: std::ptr::Unique::<List::<&'_ mut u32>>

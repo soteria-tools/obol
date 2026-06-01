@@ -169,36 +169,28 @@ fn main2()
     bb2: {
         storage_live(_7);
         _7 = copy b_3;
-        if move _7 -> bb1 else -> bb5;
+        if move _7 -> bb1 else -> bb6;
     }
 
     bb3: {
         x_1 = const 1 : i32;
-        goto bb6;
+        goto bb5;
     }
 
     bb4: {
         storage_live(_9);
         _9 = copy d_5;
-        if move _9 -> bb3 else -> bb7;
+        if move _9 -> bb3 else -> bb5;
     }
 
     bb5: {
-        goto bb8;
-    }
-
-    bb6: {
         storage_dead(_9);
         storage_dead(_8);
         x_1 = const 2 : i32;
-        goto bb8;
-    }
-
-    bb7: {
         goto bb6;
     }
 
-    bb8: {
+    bb6: {
         storage_dead(_7);
         storage_dead(_6);
         x_1 = const 3 : i32;

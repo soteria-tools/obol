@@ -66,6 +66,7 @@ impl ItemTransCtx<'_, '_> {
     ) -> Result<ItemSource, Error> {
         let signature = FunSig {
             is_unsafe: false,
+            abi: Abi::rust(),
             inputs: vec![],
             output: Ty::mk_unit(),
         };
@@ -202,7 +203,7 @@ impl ItemTransCtx<'_, '_> {
         Ok(FunDecl {
             def_id,
             item_meta,
-            signature,
+            signature: Box::new(signature),
             src,
             generics: GenericParams::empty(),
             is_global_initializer: None,

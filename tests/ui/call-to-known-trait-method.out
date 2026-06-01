@@ -17,12 +17,12 @@ pub struct PhantomData::<u8> {}
 
 // Full name: core::num::niche_types::UsizeNoHighBit
 pub struct UsizeNoHighBit {
-  0: usize,
+  0: usize is 0 : usize..=9223372036854775807 : usize,
 }
 
 // Full name: std::ptr::NonNull::<u8>
 pub struct NonNull::<u8> {
-  pointer: *const u8,
+  pointer: *const u8 is !null,
 }
 
 // Full name: std::ptr::Unique::<u8>

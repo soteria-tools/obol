@@ -8,8 +8,8 @@ struct closure {
   upvar_0: &'_ mut i32,
 }
 
-// Full name: test_crate::foo::{closure#0}::<i16, fn(()), (&'_ mut i32,)>
-fn {closure#0}::<i16, fn(()), (&'_ mut i32,)>(_1: &'_ mut closure, spread_args_2: ())
+// Full name: test_crate::foo::{closure#0}::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>
+fn {closure#0}::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>(_1: &'_ mut closure, spread_args_2: ())
 {
     let _0: (); // return
     let _1: &'_ mut closure; // arg #1
@@ -60,7 +60,7 @@ fn foo()
         _5 = &mut closure_3;
         storage_live(_6);
         _6 = ();
-        _4 = {closure#0}::<i16, fn(()), (&'_ mut i32,)>(move _5, move _6) -> bb1 (unwind: bb2);
+        _4 = {closure#0}::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>(move _5, move _6) -> bb1 (unwind: bb2);
     }
 
     bb1: {

@@ -20,9 +20,9 @@ struct Generic::<i32> {
   value: i32,
 }
 
-// Full name: test_crate::Generic::<&'_ Str>
-struct Generic::<&'_ Str> {
-  value: &'_ Str,
+// Full name: test_crate::Generic::<&'_ str>
+struct Generic::<&'_ str> {
+  value: &'_ str,
 }
 
 // Full name: test_crate::Generic::<T>::new::<i32>
@@ -41,17 +41,17 @@ fn new::<i32>(value_1: i32) -> Generic::<i32>
     }
 }
 
-// Full name: test_crate::Generic::<T>::new::<&'_ Str>
-fn new::<&'_ Str>(value_1: &'_ Str) -> Generic::<&'_ Str>
+// Full name: test_crate::Generic::<T>::new::<&'_ str>
+fn new::<&'_ str>(value_1: &'_ str) -> Generic::<&'_ str>
 {
-    let _0: Generic::<&'_ Str>; // return
-    let value_1: &'_ Str; // arg #1
-    let _2: &'_ Str; // anonymous local
+    let _0: Generic::<&'_ str>; // return
+    let value_1: &'_ str; // arg #1
+    let _2: &'_ str; // anonymous local
 
     bb0: {
         storage_live(_2);
         _2 = move value_1;
-        _0 = Generic::<&'_ Str> { value: move _2 };
+        _0 = Generic::<&'_ str> { value: move _2 };
         storage_dead(_2);
         return;
     }
@@ -78,7 +78,7 @@ fn use_generic()
 {
     let _0: (); // return
     let _int_generic_1: Generic::<i32>; // local
-    let _str_generic_2: Generic::<&'_ Str>; // local
+    let _str_generic_2: Generic::<&'_ str>; // local
     let _3: &'_ i32; // anonymous local
     let _4: &'_ Generic::<i32>; // anonymous local
 
@@ -90,7 +90,7 @@ fn use_generic()
 
     bb1: {
         storage_live(_str_generic_2);
-        _str_generic_2 = new::<&'_ Str>(const "hello") -> bb3 (unwind: bb4);
+        _str_generic_2 = new::<&'_ str>(const "hello") -> bb3 (unwind: bb4);
     }
 
     bb2: {

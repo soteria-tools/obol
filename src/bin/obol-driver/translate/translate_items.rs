@@ -226,7 +226,6 @@ impl ItemTransCtx<'_, '_> {
             kind,
             src: ItemSource::TopLevel,
             layout,
-            repr: None,
             ptr_metadata,
         };
 
@@ -251,7 +250,6 @@ impl ItemTransCtx<'_, '_> {
             kind,
             src: ItemSource::TopLevel,
             layout: Default::default(),
-            repr: None,
             ptr_metadata: PtrMetadata::None,
         };
 
@@ -297,7 +295,12 @@ impl ItemTransCtx<'_, '_> {
 
         let internal = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def.def_id());
         let src = if self.t_ctx.tcx.is_closure_like(internal) {
-            let closure_ty = self.t_ctx.tcx.type_of(internal).instantiate_identity();
+            let closure_ty = self
+                .t_ctx
+                .tcx
+                .type_of(internal)
+                .instantiate_identity()
+                .skip_normalization();
             let closure_ty = rustc_public::rustc_internal::stable(closure_ty).kind();
             let Some(ty::RigidTy::Closure(def, args)) = closure_ty.rigid() else {
                 panic!("Closure-like instance has non-closure type: {closure_ty:?}")
@@ -310,7 +313,7 @@ impl ItemTransCtx<'_, '_> {
         Ok(FunDecl {
             def_id,
             item_meta,
-            signature,
+            signature: Box::new(signature),
             generics: GenericParams::empty(),
             src,
             is_global_initializer: None,
@@ -405,7 +408,6 @@ impl ItemTransCtx<'_, '_> {
             kind,
             src,
             layout: Default::default(),
-            repr: None,
             ptr_metadata,
         };
 
@@ -442,6 +444,7 @@ impl ItemTransCtx<'_, '_> {
             is_unsafe: false,
             inputs: vec![],
             output: output.clone(),
+            abi: Abi::rust(),
         };
 
         use ullbc_ast::*;
@@ -459,7 +462,7 @@ impl ItemTransCtx<'_, '_> {
                     span,
                     StatementKind::Assign(
                         locals.return_place(),
-                        Rvalue::Use(Operand::Const(Box::new(const_val))),
+                        Rvalue::Use(Operand::Const(Box::new(const_val)), WithRetag::No),
                     ),
                 )],
                 terminator: Terminator::new(span, ullbc_ast::TerminatorKind::Return),
@@ -474,7 +477,7 @@ impl ItemTransCtx<'_, '_> {
         Ok(FunDecl {
             def_id,
             item_meta,
-            signature,
+            signature: Box::new(signature),
             generics: GenericParams::empty(),
             src: ItemSource::TopLevel,
             is_global_initializer: Some(global_id),

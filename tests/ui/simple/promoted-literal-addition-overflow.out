@@ -4,17 +4,6 @@
 trait FakeTrait
 
 // Full name: anon_const_0
-fn anon_const_0() -> u32
-{
-    let _0: u32; // return
-
-    bb0: {
-        _0 = const 0 : u32;
-        return;
-    }
-}
-
-// Full name: anon_const_0
 const anon_const_0: u32 = anon_const_0()
 
 // Full name: test_crate::overflow

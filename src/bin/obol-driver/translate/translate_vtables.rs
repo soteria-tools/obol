@@ -191,11 +191,12 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         Ok(FunDecl {
             def_id,
             item_meta,
-            signature: FunSig {
+            signature: Box::new(FunSig {
                 is_unsafe: false,
+                abi: Abi::rust(),
                 inputs: vec![],
                 output: TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty(),
-            },
+            }),
             generics: GenericParams::empty(),
             src: ItemSource::TopLevel,
             is_global_initializer: Some(global),

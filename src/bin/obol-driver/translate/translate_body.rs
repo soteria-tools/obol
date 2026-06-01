@@ -325,7 +325,10 @@ impl BodyTransCtx<'_, '_, '_> {
                 );
                 Some(Statement::new(
                     Span::dummy(),
-                    StatementKind::Assign(place, Rvalue::Use(Operand::Move(nth_field))),
+                    StatementKind::Assign(
+                        place,
+                        Rvalue::Use(Operand::Move(nth_field), WithRetag::No),
+                    ),
                 ))
             });
         self.blocks[BlockId::ZERO].statements.splice(0..0, new_stts);
@@ -759,12 +762,21 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
         tgt_ty: &Ty,
     ) -> Result<Rvalue, Error> {
         match rvalue {
-            mir::Rvalue::Use(operand) => Ok(Rvalue::Use(self.translate_operand(span, operand)?)),
+            mir::Rvalue::Use(operand, with_retag) => {
+                let with_retag = match with_retag {
+                    mir::WithRetag::Yes => WithRetag::Yes,
+                    mir::WithRetag::No => WithRetag::No,
+                };
+                Ok(Rvalue::Use(
+                    self.translate_operand(span, operand)?,
+                    with_retag,
+                ))
+            }
             mir::Rvalue::CopyForDeref(place) => {
                 // According to the documentation, it seems to be an optimisation
                 // for drop elaboration. We treat it as a regular copy.
                 let place = self.translate_place(span, place)?;
-                Ok(Rvalue::Use(Operand::Copy(place)))
+                Ok(Rvalue::Use(Operand::Copy(place), WithRetag::No))
             }
             mir::Rvalue::Repeat(operand, cnst) => {
                 let c = self.translate_tyconst_to_const_expr(span, cnst)?;
@@ -885,9 +897,12 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                     mir::UnOp::Neg => UnOp::Neg(OverflowMode::UB),
                     mir::UnOp::PtrMetadata => match operand {
                         Operand::Copy(p) | Operand::Move(p) => {
-                            return Ok(Rvalue::Use(Operand::Copy(
-                                p.project(ProjectionElem::PtrMetadata, tgt_ty.clone()),
-                            )));
+                            return Ok(Rvalue::Use(
+                                Operand::Copy(
+                                    p.project(ProjectionElem::PtrMetadata, tgt_ty.clone()),
+                                ),
+                                WithRetag::No,
+                            ));
                         }
                         Operand::Const(_) => panic!("const metadata"),
                     },
@@ -992,11 +1007,6 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                     }
                 }
             }
-            mir::Rvalue::ShallowInitBox(op, ty) => {
-                let op = self.translate_operand(span, op)?;
-                let ty = self.translate_ty(span, *ty)?;
-                Ok(Rvalue::ShallowInitBox(op, ty))
-            }
             mir::Rvalue::ThreadLocalRef(def) => {
                 let const_ty = match tgt_ty.kind() {
                     TyKind::Ref(_, ty, _) | TyKind::RawPtr(ty, _) => ty.clone(),
@@ -1036,6 +1046,10 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                     }),
                     _ => unreachable!(),
                 }
+            }
+            // For reborrow traits
+            mir::Rvalue::Reborrow(..) => {
+                raise_error!(self, span, "reborrow traits are not supported")
             }
         }
     }
@@ -1099,8 +1113,6 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                     Some(StatementKind::PlaceMention(place))
                 }
             }
-            // This is for the stacked borrows memory model.
-            mir::StatementKind::Retag(_, _) => None,
             // These two are only there to make borrow-checking accept less code, and are removed
             // in later MIRs.
             mir::StatementKind::FakeRead(..) => None,

@@ -43,8 +43,6 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Op
         storage_live(_3);
         storage_live(_4);
         storage_live(_5);
-        storage_live(l_6);
-        storage_live(r_7);
         _5 = @discriminant((*self_1));
         switch move _5 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
     }
@@ -74,12 +72,20 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Op
     }
 
     bb6: {
+        storage_live(l_6);
         l_6 = &((*self_1) as variant Option::<u32>::Some).0;
+        storage_live(r_7);
         r_7 = &((*other_2) as variant Option::<u32>::Some).0;
-        _0 = std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq(move l_6, move r_7) -> bb4 (unwind: bb7);
+        _0 = std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq(move l_6, move r_7) -> bb7 (unwind: bb8);
     }
 
     bb7: {
+        storage_dead(r_7);
+        storage_dead(l_6);
+        goto bb4;
+    }
+
+    bb8: {
         unwind_continue;
     }
 }

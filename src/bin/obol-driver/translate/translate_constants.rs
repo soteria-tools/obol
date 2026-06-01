@@ -415,21 +415,21 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             (1u128 << (length_bytes * 8)) - 1
                         };
                         let variant_idx = match tag_encoding {
-                            abi::TagEncoding::Direct => adt
-                                .variants_iter()
-                                .find_map(|v| {
-                                    let discr = adt.discriminant_for_variant(v.idx);
-                                    ((discr.val & mask) == tag_value).then_some(v.idx)
+                            abi::TagEncoding::Direct => (0..adt.num_variants())
+                                .find_map(|idx| {
+                                    let idx = ty::VariantIdx::to_val(idx);
+                                    let discr = adt.discriminant_for_variant(idx);
+                                    ((discr.val & mask) == tag_value).then_some(idx)
                                 })
                                 .unwrap(),
                             abi::TagEncoding::Niche {
                                 untagged_variant,
                                 niche_variants,
                                 niche_start,
-                            } => adt
-                                .variants_iter()
-                                .find_map(|v| {
-                                    let discr = adt.discriminant_for_variant(v.idx);
+                            } => (0..adt.num_variants())
+                                .find_map(|idx| {
+                                    let idx = ty::VariantIdx::to_val(idx);
+                                    let discr = adt.discriminant_for_variant(idx);
                                     let niche_variants_start =
                                         niche_variants.start().to_index() as u128;
 
@@ -441,7 +441,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                         }
                                         let tag = (discr.val - niche_variants_start)
                                             .wrapping_add(*niche_start);
-                                        (tag_value == tag).then_some(v.idx)
+                                        (tag_value == tag).then_some(idx)
                                     } else {
                                         // pointer niche: if no provenance, then niche variant,
                                         // otherwise untagged variant
@@ -553,6 +553,14 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         ConstantExprKind::RawMemory(self.as_charon_bytes(span, alloc, offset, size))
                     }
                 }
+            }
+            TyKind::Pattern(inner, _) => {
+                let rtyk = rty.kind();
+                let Some(ty::RigidTy::Pat(rty, _)) = rtyk.rigid() else {
+                    unreachable!("Pattern type should be a rigid pattern type");
+                };
+                self.translate_allocation_at(span, alloc, inner, *rty, offset)?
+                    .kind
             }
 
             TyKind::Adt(TypeDeclRef {

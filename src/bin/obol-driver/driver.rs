@@ -1,11 +1,11 @@
 //! Run the rustc compiler with our custom options and hooks.
-use crate::ObolError;
 use crate::translate::translate_crate;
+use crate::ObolError;
 use charon_lib::transform::TransformCtx;
 use obol_lib::args::CliOpts;
 use rustc_driver::{Callbacks, Compilation};
-use rustc_interface::Config;
 use rustc_interface::interface::Compiler;
+use rustc_interface::Config;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{OutputType, OutputTypes};
 use std::ops::Deref;
@@ -24,7 +24,6 @@ fn run_compiler_with_callbacks(
 fn set_mir_options(config: &mut Config) {
     config.opts.unstable_opts.always_encode_mir = true;
     config.opts.unstable_opts.mir_opt_level = Some(0);
-    config.opts.unstable_opts.mir_emit_retag = true;
     config.opts.unstable_opts.mir_preserve_ub = true;
     let disabled_mir_passes = [
         "RemoveStorageMarkers",

@@ -9,7 +9,7 @@ extern crate rustc_public;
 use super::translate_ctx::*;
 use charon_lib::ast::*;
 use charon_lib::{raise_error, register_error};
-use rustc_public::{CrateDef, mir, rustc_internal, ty};
+use rustc_public::{CrateDef, mir, rustc_internal};
 
 impl ItemTransCtx<'_, '_> {
     pub fn requires_caller_location(&self, instance: mir::mono::Instance) -> bool {
@@ -26,11 +26,33 @@ impl ItemTransCtx<'_, '_> {
         self.t_ctx.tcx.is_closure_like(def)
     }
 
-    fn get_function_ins_outs_sure_function(
+    /// Translate a function's signature
+    pub(crate) fn translate_function_signature(
         &mut self,
         def: mir::mono::Instance,
-    ) -> Result<(Vec<ty::Ty>, ty::Ty), Error> {
-        // Translate the signature
+        span: Span,
+    ) -> Result<FunSig, Error> {
+        let crate_item = rustc_public::CrateItem::try_from(def)?;
+        match crate_item.kind() {
+            rustc_public::ItemKind::Fn | rustc_public::ItemKind::Ctor(_) => {}
+            rustc_public::ItemKind::Static => {
+                let stt: mir::mono::StaticDef = crate_item.try_into()?;
+                let output = self.translate_ty(span, stt.ty())?;
+                return Ok(FunSig {
+                    is_unsafe: false,
+                    abi: Abi::rust(),
+                    inputs: vec![],
+                    output,
+                });
+            }
+            kind => {
+                raise_error!(
+                    self,
+                    span,
+                    "Unexpected item kind in translate signature: {kind:?}"
+                )
+            }
+        }
 
         // Rust may add an implicit call location argument to the function, to improve error
         // tracking; this argument however doesn't exist when calling the function or for the
@@ -45,57 +67,16 @@ impl ItemTransCtx<'_, '_> {
 
         let inputs: Vec<_> = instance_abi.args[0..arg_count]
             .iter()
-            .map(|arg| arg.ty)
-            .collect();
-
-        Ok((inputs, instance_abi.ret.ty))
-    }
-
-    pub(crate) fn get_function_ins_outs(
-        &mut self,
-        span: Span,
-        def: mir::mono::Instance,
-    ) -> Result<(Vec<ty::Ty>, ty::Ty), Error> {
-        let Ok(crate_item) = rustc_public::CrateItem::try_from(def) else {
-            // worth a shot
-            return self.get_function_ins_outs_sure_function(def);
-        };
-        match crate_item.kind() {
-            rustc_public::ItemKind::Fn | rustc_public::ItemKind::Ctor(_) => {
-                self.get_function_ins_outs_sure_function(def)
-            }
-            rustc_public::ItemKind::Static => {
-                let stt: mir::mono::StaticDef = crate_item.try_into()?;
-                Ok((vec![], stt.ty()))
-            }
-            kind => {
-                raise_error!(
-                    self,
-                    span,
-                    "Unexpected item kind in translate signature: {kind:?}"
-                )
-            }
-        }
-    }
-
-    /// Translate a function's signature
-    pub(crate) fn translate_function_signature(
-        &mut self,
-        def: mir::mono::Instance,
-        span: Span,
-    ) -> Result<FunSig, Error> {
-        let (inputs, outputs) = self.get_function_ins_outs(span, def)?;
-
-        let inputs = inputs
-            .into_iter()
-            .map(|ty| self.translate_ty(span, ty))
+            .map(|arg| self.translate_ty(span, arg.ty))
             .try_collect()?;
-        let output = self.translate_ty(span, outputs)?;
+        let output = self.translate_ty(span, instance_abi.ret.ty)?;
 
         Ok(FunSig {
-            is_unsafe: false,
             inputs,
             output,
+            // TODO: not sure how to get those
+            is_unsafe: false,
+            abi: Abi::rust(),
         })
     }
 

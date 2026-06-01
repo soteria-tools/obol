@@ -21,34 +21,26 @@ fn f0()
     bb1: {
         storage_live(_2);
         _2 = const 0 : i32 < const 1 : i32;
-        if move _2 -> bb3 else -> bb4;
+        if move _2 -> bb4 else -> bb4;
     }
 
     bb2: {
         _0 = ();
-        goto bb5;
+        goto bb3;
     }
 
     bb3: {
-        goto bb6;
-    }
-
-    bb4: {
-        goto bb6;
-    }
-
-    bb5: {
         storage_dead(_1);
         return;
     }
 
-    bb6: {
+    bb4: {
         storage_dead(_2);
         storage_live(x_3);
         x_3 = const 0 : u8;
         _0 = ();
         storage_dead(x_3);
-        goto bb5;
+        goto bb3;
     }
 }
 
@@ -89,7 +81,7 @@ fn f1(serialized_1: &'_ [u8; 1 : usize])
         storage_dead(_5);
         storage_live(_6);
         _6 = const 0 : i32 < const 1 : i32;
-        if move _6 -> bb4 else -> bb5;
+        if move _6 -> bb5 else -> bb4;
     }
 
     bb3: {
@@ -102,45 +94,37 @@ fn f1(serialized_1: &'_ [u8; 1 : usize])
     }
 
     bb4: {
-        goto bb6;
+        storage_live(_7);
+        _7 = const 1 : i32 > const 1 : i32;
+        if move _7 -> bb5 else -> bb5;
     }
 
     bb5: {
-        storage_live(_7);
-        _7 = const 1 : i32 > const 1 : i32;
-        if move _7 -> bb4 else -> bb7;
-    }
-
-    bb6: {
         storage_dead(_7);
         storage_dead(_6);
         storage_live(j_8);
         j_8 = const 0 : i32;
-        goto bb8;
-    }
-
-    bb7: {
         goto bb6;
     }
 
-    bb8: {
+    bb6: {
         storage_live(_9);
         storage_live(_10);
         _10 = copy j_8;
         _9 = move _10 < const 1 : i32;
-        if move _9 -> bb9 else -> bb10;
+        if move _9 -> bb7 else -> bb8;
     }
 
-    bb9: {
+    bb7: {
         storage_dead(_10);
         storage_live(x_11);
         x_11 = const 0 : u8;
         storage_dead(x_11);
         storage_dead(_9);
-        goto bb8;
+        goto bb6;
     }
 
-    bb10: {
+    bb8: {
         storage_dead(_10);
         storage_dead(_9);
         storage_dead(j_8);
