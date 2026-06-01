@@ -78,9 +78,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         // translate_name (e.g. while translating generic args), charon's error formatting can
         // look up item_names without panicking. The real name overwrites it below.
         if let (Some(trans_id), Some(def_id)) = (trans_id, item_src.as_def_id()) {
-            self.translated.item_names.entry(trans_id).or_insert_with(|| Name {
-                name: vec![PathElem::Ident(def_id.name().into(), Disambiguator::ZERO)],
-            });
+            self.translated
+                .item_names
+                .entry(trans_id)
+                .or_insert_with(|| Name {
+                    name: vec![PathElem::Ident(def_id.name().into(), Disambiguator::ZERO)],
+                });
         }
 
         // Translate the meta information
@@ -192,6 +195,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         self.translated
             .item_names
             .insert(ItemId::TraitDecl(TraitDeclId::ZERO), fake_name.clone());
+        // Add this dummy file just in case nothing translate, so all dummy spans still have a file to point to.
+        self.translated.files.push(File {
+            id: FileId::ZERO,
+            name: FileName::NotReal("dummy".into()),
+            crate_name: "dummy".into(),
+            contents: None,
+        });
         self.translated.trait_decls.push(TraitDecl {
             def_id: TraitDeclId::ZERO,
             item_meta: ItemMeta {
