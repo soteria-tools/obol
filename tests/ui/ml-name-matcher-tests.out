@@ -109,6 +109,7 @@ pub fn core::slice::index::<impl std::ops::Index<I> for [T]>::index::<bool, Rang
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: anon_const_0

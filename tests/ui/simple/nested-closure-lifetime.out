@@ -1,3 +1,7 @@
+Item core::panicking::assert_failed_inner caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -56,18 +60,19 @@ pub struct FormattingOptions {
   precision: u16,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
 // Full name: std::result::Result::<(), Error>
@@ -78,7 +83,7 @@ pub enum Result::<(), Error> {
 
 // Full name: std::ptr::NonNull::<()>
 pub struct NonNull::<()> {
-  pointer: *const (),
+  pointer: *const () is !null,
 }
 
 // Full name: std::marker::PhantomData::<&'_ ()>
@@ -87,7 +92,7 @@ pub struct PhantomData::<&'_ ()> {}
 
 // Full name: core::fmt::rt::ArgumentType::<'_>
 enum ArgumentType::<'_> {
-  Placeholder(value: NonNull::<()>, formatter: fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Placeholder(value: NonNull::<()>, formatter: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
   Count(0: u16),
 }
 
@@ -99,12 +104,12 @@ pub struct Argument::<'_> {
 
 // Full name: std::ptr::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
-  pointer: *const Argument::<'_>,
+  pointer: *const Argument::<'_> is !null,
 }
 
 // Full name: std::ptr::NonNull::<u8>
 pub struct NonNull::<u8> {
-  pointer: *const u8,
+  pointer: *const u8 is !null,
 }
 
 // Full name: std::fmt::Arguments::<'_>
@@ -114,30 +119,18 @@ pub struct Arguments::<'_> {
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::ptr::drop_in_place::<&'_ &'_ i32>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<&'_ &'_ i32>(_1: *mut &'_ &'_ i32)
+// Full name: std::ptr::drop_glue::<&'_ &'_ i32>
+#[lang_item("drop_glue")]
+fn drop_glue::<&'_ &'_ i32>(_1: &'_ mut &'_ &'_ i32)
 {
     let _0: (); // return
-    let _1: *mut &'_ &'_ i32; // arg #1
-    let _2: &'_ mut &'_ &'_ i32; // anonymous local
+    let _1: &'_ mut &'_ &'_ i32; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
-
-pub fn core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
-
-pub fn core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
-
-pub fn core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
 
 pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
@@ -262,7 +255,7 @@ fn Debug::<&'_ &'_ i32>() -> *const ()
         storage_live(<&&i32 as Debug>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<&'_ &'_ i32>, *const ()>(const drop_in_place::<&'_ &'_ i32>);
+        drop_1 = cast<drop_glue::<&'_ &'_ i32>, *const ()>(const drop_glue::<&'_ &'_ i32>);
         size_2 = transmute<usize, *const ()>(const 8 : usize);
         align_3 = transmute<usize, *const ()>(const 8 : usize);
         <&&i32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, &'_ i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, &'_ i32>);
@@ -290,10 +283,6 @@ pub enum AssertKind {
   Match,
 }
 
-// Full name: core::panicking::assert_failed_inner
-fn assert_failed_inner(_1: AssertKind, _2: &'_ (dyn @TraitDecl0), _3: &'_ (dyn @TraitDecl0), _4: Option::<Arguments::<'_>>) -> !
-= <missing>
-
 // Full name: core::panicking::assert_failed::<&'_ i32, &'_ i32>
 pub fn assert_failed::<&'_ i32, &'_ i32>(kind_1: AssertKind, left_2: &'_ &'_ i32, right_3: &'_ &'_ i32, args_4: Option::<Arguments::<'_>>) -> !
 {
@@ -302,20 +291,20 @@ pub fn assert_failed::<&'_ i32, &'_ i32>(kind_1: AssertKind, left_2: &'_ &'_ i32
     let left_2: &'_ &'_ i32; // arg #2
     let right_3: &'_ &'_ i32; // arg #3
     let args_4: Option::<Arguments::<'_>>; // arg #4
-    let _5: &'_ (dyn @TraitDecl0); // anonymous local
+    let _5: &'_ (dyn FakeTrait); // anonymous local
     let _6: &'_ &'_ &'_ i32; // anonymous local
-    let _7: &'_ (dyn @TraitDecl0); // anonymous local
+    let _7: &'_ (dyn FakeTrait); // anonymous local
     let _8: &'_ &'_ &'_ i32; // anonymous local
 
     bb0: {
-        storage_live(_6);
-        storage_live(_8);
         storage_live(_5);
+        storage_live(_6);
         _6 = &left_2;
-        _5 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn @TraitDecl0), Debug::<&'_ &'_ i32>>(copy _6);
+        _5 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ &'_ i32>>(copy _6);
         storage_live(_7);
+        storage_live(_8);
         _8 = &right_3;
-        _7 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn @TraitDecl0), Debug::<&'_ &'_ i32>>(copy _8);
+        _7 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ &'_ i32>>(copy _8);
         _0 = assert_failed_inner(move kind_1, move _5, move _7, move args_4) -> bb1 (unwind: bb2);
     }
 
@@ -328,36 +317,11 @@ pub fn assert_failed::<&'_ i32, &'_ i32>(kind_1: AssertKind, left_2: &'_ &'_ i32
     }
 }
 
-// Full name: anon_const_1
-fn anon_const_1() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42 : i32;
-        return;
-    }
-}
+// Full name: anon_const_0
+const anon_const_0: &'_ i32 = anon_const_0()
 
 // Full name: anon_const_1
 const anon_const_1: i32 = anon_const_1()
-
-// Full name: anon_const_0
-fn anon_const_0() -> &'_ i32
-{
-    let _0: &'_ i32; // return
-    let _1: &'_ i32; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = &anon_const_1;
-        _0 = move _1;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: &'_ i32 = anon_const_0()
 
 struct test_crate::foo::{closure#0}::{closure#0}::closure {
   upvar_0: &'_ i32,
@@ -367,7 +331,7 @@ struct test_crate::foo::{closure#0}::closure {
   upvar_0: &'_ i32,
 }
 
-fn test_crate::foo::{closure#0}::<i32, i8, fn(()) -> test_crate::foo::{closure#0}::{closure#0}::closure, (&'_ i32,)>(_1: &'_ test_crate::foo::{closure#0}::closure, spread_args_2: ()) -> test_crate::foo::{closure#0}::{closure#0}::closure
+fn test_crate::foo::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> test_crate::foo::{closure#0}::{closure#0}::closure, (&'_ i32,)>(_1: &'_ test_crate::foo::{closure#0}::closure, spread_args_2: ()) -> test_crate::foo::{closure#0}::{closure#0}::closure
 {
     let _0: test_crate::foo::{closure#0}::{closure#0}::closure; // return
     let _1: &'_ test_crate::foo::{closure#0}::closure; // arg #1
@@ -395,7 +359,7 @@ fn foo::<i32>(x_1: &'_ i32) -> test_crate::foo::{closure#0}::{closure#0}::closur
         _3 = &f_2;
         storage_live(_4);
         _4 = ();
-        _0 = test_crate::foo::{closure#0}::<i32, i8, fn(()) -> test_crate::foo::{closure#0}::{closure#0}::closure, (&'_ i32,)>(move _3, move _4) -> bb1 (unwind: bb2);
+        _0 = test_crate::foo::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> test_crate::foo::{closure#0}::{closure#0}::closure, (&'_ i32,)>(move _3, move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -410,7 +374,7 @@ fn foo::<i32>(x_1: &'_ i32) -> test_crate::foo::{closure#0}::{closure#0}::closur
     }
 }
 
-fn test_crate::foo::{closure#0}::{closure#0}::<i32, i8, fn(()) -> &'_ i32, (&'_ i32,)>(_1: &'_ test_crate::foo::{closure#0}::{closure#0}::closure, spread_args_2: ()) -> &'_ i32
+fn test_crate::foo::{closure#0}::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> &'_ i32, (&'_ i32,)>(_1: &'_ test_crate::foo::{closure#0}::{closure#0}::closure, spread_args_2: ()) -> &'_ i32
 {
     let _0: &'_ i32; // return
     let _1: &'_ test_crate::foo::{closure#0}::{closure#0}::closure; // arg #1
@@ -475,7 +439,7 @@ fn main()
         _8 = &f_2;
         storage_live(_9);
         _9 = ();
-        _7 = test_crate::foo::{closure#0}::{closure#0}::<i32, i8, fn(()) -> &'_ i32, (&'_ i32,)>(move _8, move _9) -> bb3 (unwind: bb4);
+        _7 = test_crate::foo::{closure#0}::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> &'_ i32, (&'_ i32,)>(move _8, move _9) -> bb3 (unwind: bb4);
     }
 
     bb2: {

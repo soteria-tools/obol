@@ -78,6 +78,7 @@ pub fn min::<u64>(self_1: u64, other_2: u64) -> u64
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::main

@@ -129,6 +129,7 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<i32>(self_1: &'_ Op
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: anon_const_0

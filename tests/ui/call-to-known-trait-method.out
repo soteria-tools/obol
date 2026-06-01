@@ -60,6 +60,7 @@ pub struct String {
   vec: Vec::<u8, Global>,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::Struct::<bool>

@@ -14,12 +14,13 @@ pub struct FormattingOptions {
   precision: u16,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
 // Full name: std::result::Result::<(), Error>
@@ -30,7 +31,7 @@ pub enum Result::<(), Error> {
 
 // Full name: std::ptr::NonNull::<()>
 pub struct NonNull::<()> {
-  pointer: *const (),
+  pointer: *const () is !null,
 }
 
 // Full name: std::marker::PhantomData::<&'_ ()>
@@ -39,7 +40,7 @@ pub struct PhantomData::<&'_ ()> {}
 
 // Full name: core::fmt::rt::ArgumentType::<'_>
 enum ArgumentType::<'_> {
-  Placeholder(value: NonNull::<()>, formatter: fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Placeholder(value: NonNull::<()>, formatter: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
   Count(0: u16),
 }
 
@@ -51,12 +52,12 @@ pub struct Argument::<'_> {
 
 // Full name: std::ptr::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
-  pointer: *const Argument::<'_>,
+  pointer: *const Argument::<'_> is !null,
 }
 
 // Full name: std::ptr::NonNull::<u8>
 pub struct NonNull::<u8> {
-  pointer: *const u8,
+  pointer: *const u8 is !null,
 }
 
 // Full name: std::fmt::Arguments::<'_>

@@ -7,6 +7,7 @@ pub enum Result::<bool, ()> {
   Err(0: ()),
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: <bool as test_crate::MyTryFrom<&bool>>::from::<'_>

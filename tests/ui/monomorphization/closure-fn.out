@@ -7,8 +7,8 @@ struct closure {
   upvar_1: &'_ u8,
 }
 
-// Full name: test_crate::main::{closure#0}::<i8, fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>
-fn {closure#0}::<i8, fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(_1: &'_ closure, spread_args_2: (u8, u8)) -> u8
+// Full name: test_crate::main::{closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>
+fn {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(_1: &'_ closure, spread_args_2: (u8, u8)) -> u8
 {
     let _0: u8; // return
     let _1: &'_ closure; // arg #1
@@ -76,7 +76,7 @@ pub fn call_once::<closure, (u8, u8)>(_1: closure, _2: (u8, u8)) -> u8
     bb0: {
         storage_live(_3);
         _3 = &mut _1;
-        _0 = {closure#0}::<i8, fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -88,6 +88,7 @@ pub fn call_once::<closure, (u8, u8)>(_1: closure, _2: (u8, u8)) -> u8
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::apply_to::<closure>
@@ -103,7 +104,7 @@ fn apply_to::<closure>(f_1: &'_ closure) -> u8
         _2 = &(*f_1);
         storage_live(_3);
         _3 = (const 10 : u8, const 20 : u8);
-        _0 = {closure#0}::<i8, fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
+        _0 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -130,7 +131,7 @@ fn apply_to_mut::<closure>(f_1: &'_ mut closure) -> u8
         _2 = &mut (*f_1);
         storage_live(_3);
         _3 = (const 10 : u8, const 20 : u8);
-        _0 = {closure#0}::<i8, fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
+        _0 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -211,7 +212,7 @@ fn main()
         _7 = &f_3;
         storage_live(_8);
         _8 = (const 10 : u8, const 20 : u8);
-        _6 = {closure#0}::<i8, fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _7, move _8) -> bb1 (unwind: bb2);
+        _6 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _7, move _8) -> bb1 (unwind: bb2);
     }
 
     bb1: {

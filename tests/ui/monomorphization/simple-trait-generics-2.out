@@ -1,61 +1,34 @@
 
 // Final ULLBC:
 
-// Full name: std::ptr::drop_in_place::<i32>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<i32>(_1: *mut i32)
+// Full name: std::ptr::drop_glue::<i32>
+#[lang_item("drop_glue")]
+fn drop_glue::<i32>(_1: &'_ mut i32)
 {
     let _0: (); // return
-    let _1: *mut i32; // arg #1
-    let _2: &'_ mut i32; // anonymous local
+    let _1: &'_ mut i32; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
 
-// Full name: std::ptr::drop_in_place::<u32>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<u32>(_1: *mut u32)
+// Full name: std::ptr::drop_glue::<u32>
+#[lang_item("drop_glue")]
+fn drop_glue::<u32>(_1: &'_ mut u32)
 {
     let _0: (); // return
-    let _1: *mut u32; // arg #1
-    let _2: &'_ mut u32; // anonymous local
+    let _1: &'_ mut u32; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
-
-// Full name: anon_const_0
-fn anon_const_0() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42 : i32;
-        return;
-    }
-}
-
-// Full name: anon_const_1
-fn anon_const_1() -> u32
-{
-    let _0: u32; // return
-
-    bb0: {
-        _0 = const 100 : u32;
-        return;
-    }
-}
 
 // Full name: anon_const_0
 const anon_const_0: i32 = anon_const_0()
@@ -92,7 +65,7 @@ fn Trait::<i32, bool>() -> *const ()
         storage_live(<i32 as Trait<bool>>::comsume_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<i32>, *const ()>(const drop_in_place::<i32>);
+        drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4 : usize);
         align_3 = transmute<usize, *const ()>(const 4 : usize);
         <i32 as Trait<bool>>::comsume_4 = cast<<i32 as test_crate::Trait<bool>>::comsume, *const ()>(const <i32 as test_crate::Trait<bool>>::comsume);
@@ -132,7 +105,7 @@ fn Trait::<u32, usize>() -> *const ()
         storage_live(<u32 as Trait<usize>>::comsume_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<u32>, *const ()>(const drop_in_place::<u32>);
+        drop_1 = cast<drop_glue::<u32>, *const ()>(const drop_glue::<u32>);
         size_2 = transmute<usize, *const ()>(const 4 : usize);
         align_3 = transmute<usize, *const ()>(const 4 : usize);
         <u32 as Trait<usize>>::comsume_4 = cast<<u32 as test_crate::Trait<usize>>::comsume, *const ()>(const <u32 as test_crate::Trait<usize>>::comsume);
@@ -149,26 +122,26 @@ static Trait::<i32, bool>: *const () = Trait::<i32, bool>()
 // Full name: {vtable}::test_crate::Trait::<u32, usize>
 static Trait::<u32, usize>: *const () = Trait::<u32, usize>()
 
-fn test_crate::Trait::comsume::<(dyn @TraitDecl0), bool>(_1: &'_ (dyn @TraitDecl0)) -> bool
+fn test_crate::Trait::comsume::<(dyn FakeTrait), bool>(_1: &'_ (dyn FakeTrait)) -> bool
 = <opaque>
 
-fn test_crate::Trait::comsume::<(dyn @TraitDecl0), usize>(_1: &'_ (dyn @TraitDecl0)) -> usize
+fn test_crate::Trait::comsume::<(dyn FakeTrait), usize>(_1: &'_ (dyn FakeTrait)) -> usize
 = <opaque>
 
 // Full name: test_crate::main
 fn main()
 {
     let _0: (); // return
-    let a_1: &'_ (dyn @TraitDecl0); // local
+    let a_1: &'_ (dyn FakeTrait); // local
     let _2: &'_ i32; // anonymous local
     let _3: &'_ i32; // anonymous local
     let _4: bool; // anonymous local
-    let _5: &'_ (dyn @TraitDecl0); // anonymous local
-    let b_6: &'_ (dyn @TraitDecl0); // local
+    let _5: &'_ (dyn FakeTrait); // anonymous local
+    let b_6: &'_ (dyn FakeTrait); // local
     let _7: &'_ u32; // anonymous local
     let _8: &'_ u32; // anonymous local
     let _9: usize; // anonymous local
-    let _10: &'_ (dyn @TraitDecl0); // anonymous local
+    let _10: &'_ (dyn FakeTrait); // anonymous local
     let _11: &'_ u32; // anonymous local
     let _12: &'_ i32; // anonymous local
     let _13: *const *const (); // anonymous local
@@ -190,7 +163,7 @@ fn main()
         _12 = move _15;
         _3 = &(*_12);
         _2 = &(*_3);
-        a_1 = unsize_cast<&'_ i32, &'_ (dyn @TraitDecl0), Trait::<i32, bool>>(move _2);
+        a_1 = unsize_cast<&'_ i32, &'_ (dyn FakeTrait), Trait::<i32, bool>>(move _2);
         storage_dead(_2);
         storage_dead(_3);
         storage_live(_4);
@@ -211,7 +184,7 @@ fn main()
         _11 = move _16;
         _8 = &(*_11);
         _7 = &(*_8);
-        b_6 = unsize_cast<&'_ u32, &'_ (dyn @TraitDecl0), Trait::<u32, usize>>(move _7);
+        b_6 = unsize_cast<&'_ u32, &'_ (dyn FakeTrait), Trait::<u32, usize>>(move _7);
         storage_dead(_7);
         storage_dead(_8);
         storage_live(_9);

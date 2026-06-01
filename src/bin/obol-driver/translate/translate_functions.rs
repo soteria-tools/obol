@@ -32,25 +32,36 @@ impl ItemTransCtx<'_, '_> {
         def: mir::mono::Instance,
         span: Span,
     ) -> Result<FunSig, Error> {
-        let crate_item = rustc_public::CrateItem::try_from(def)?;
-        match crate_item.kind() {
-            rustc_public::ItemKind::Fn | rustc_public::ItemKind::Ctor(_) => {}
-            rustc_public::ItemKind::Static => {
-                let stt: mir::mono::StaticDef = crate_item.try_into()?;
-                let output = self.translate_ty(span, stt.ty())?;
-                return Ok(FunSig {
-                    is_unsafe: false,
-                    abi: Abi::rust(),
-                    inputs: vec![],
-                    output,
-                });
-            }
-            kind => {
-                raise_error!(
-                    self,
-                    span,
-                    "Unexpected item kind in translate signature: {kind:?}"
-                )
+        // For Shim/Intrinsic/Virtual instances, CrateItem::try_from always fails; skip the
+        // item-kind check and fall through to fn_abi-based signature translation.
+        // For InstanceKind::Item, still run the check so ctors (Item without body) keep
+        // failing early rather than calling fn_abi, which returns un-monomorphized types.
+        if !matches!(
+            def.kind,
+            mir::mono::InstanceKind::Shim
+                | mir::mono::InstanceKind::Intrinsic
+                | mir::mono::InstanceKind::Virtual { .. }
+        ) {
+            let crate_item = rustc_public::CrateItem::try_from(def)?;
+            match crate_item.kind() {
+                rustc_public::ItemKind::Fn | rustc_public::ItemKind::Ctor(_) => {}
+                rustc_public::ItemKind::Static => {
+                    let stt: mir::mono::StaticDef = crate_item.try_into()?;
+                    let output = self.translate_ty(span, stt.ty())?;
+                    return Ok(FunSig {
+                        is_unsafe: false,
+                        abi: Abi::rust(),
+                        inputs: vec![],
+                        output,
+                    });
+                }
+                kind => {
+                    raise_error!(
+                        self,
+                        span,
+                        "Unexpected item kind in translate signature: {kind:?}"
+                    )
+                }
             }
         }
 

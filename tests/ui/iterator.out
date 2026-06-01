@@ -1,3 +1,9 @@
+Item std::rt::panic_fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::panicking::assert_failed_inner caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::panicking::panic_nounwind_fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -12,13 +18,14 @@ pub enum Result::<(), Error> {
 
 // Full name: std::ptr::NonNull::<()>
 pub struct NonNull::<()> {
-  pointer: *const (),
+  pointer: *const () is !null,
 }
 
 // Full name: std::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: std::fmt::FormattingOptions
@@ -31,12 +38,12 @@ pub struct FormattingOptions {
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
 // Full name: core::fmt::rt::ArgumentType::<'_>
 enum ArgumentType::<'_> {
-  Placeholder(value: NonNull::<()>, formatter: fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Placeholder(value: NonNull::<()>, formatter: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
   Count(0: u16),
 }
 
@@ -48,30 +55,12 @@ pub struct Argument::<'_> {
 
 // Full name: std::ptr::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
-  pointer: *const Argument::<'_>,
+  pointer: *const Argument::<'_> is !null,
 }
 
 // Full name: std::ptr::NonNull::<u8>
 pub struct NonNull::<u8> {
-  pointer: *const u8,
-}
-
-// Full name: std::ptr::NonNull::<Str>
-pub struct NonNull::<Str> {
-  pointer: *const Str,
-}
-
-// Full name: std::marker::PhantomData::<&'_ Str>
-#[lang_item("phantom_data")]
-pub struct PhantomData::<&'_ Str> {}
-
-// Full name: std::panic::Location::<'_>
-#[lang_item("panic_location")]
-pub struct Location::<'_> {
-  filename: NonNull::<Str>,
-  line: u32,
-  col: u32,
-  _filename: PhantomData::<&'_ Str>,
+  pointer: *const u8 is !null,
 }
 
 // Full name: std::fmt::Arguments::<'_>
@@ -81,198 +70,13 @@ pub struct Arguments::<'_> {
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: core::panic::panic_info::PanicInfo::<'_>
-#[lang_item("panic_info")]
-pub struct PanicInfo::<'_> {
-  message: &'_ Arguments::<'_>,
-  location: &'_ Location::<'_>,
-  can_unwind: bool,
-  force_no_backtrace: bool,
-}
-
-// Full name: std::rt::panic_fmt::panic_impl
-fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
-= <extern:panic_impl>
-
-fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
-{
-    let _0: PanicInfo::<'_>; // return
-    let message_1: &'_ Arguments::<'_>; // arg #1
-    let location_2: &'_ Location::<'_>; // arg #2
-    let can_unwind_3: bool; // arg #3
-    let force_no_backtrace_4: bool; // arg #4
-
-    bb0: {
-        _0 = PanicInfo::<'_> { message: copy message_1, location: copy location_2, can_unwind: copy can_unwind_3, force_no_backtrace: copy force_no_backtrace_4 };
-        return;
-    }
-}
-
-// Full name: std::intrinsics::caller_location
-pub fn caller_location() -> &'_ Location::<'_>
-= <intrinsic:caller_location>
-
-// Full name: std::panic::Location::<'a>::caller::<'_>
-pub fn caller::<'_>() -> &'_ Location::<'_>
-{
-    let _0: &'_ Location::<'_>; // return
-
-    bb0: {
-        _0 = caller_location() -> bb1 (unwind: bb2);
-    }
-
-    bb1: {
-        return;
-    }
-
-    bb2: {
-        undefined_behavior;
-    }
-}
-
-// Full name: std::intrinsics::abort
-pub fn abort() -> !
-= <intrinsic:abort>
-
-// Full name: std::rt::panic_fmt
-#[lang_item("panic_fmt")]
-pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
-{
-    let _0: !; // return
-    let fmt_1: Arguments::<'_>; // arg #1
-    let _2: bool; // anonymous local
-    let _3: !; // anonymous local
-    let pi_4: PanicInfo::<'_>; // local
-    let _5: &'_ Arguments::<'_>; // anonymous local
-    let _6: &'_ Arguments::<'_>; // anonymous local
-    let _7: &'_ Location::<'_>; // anonymous local
-    let _8: &'_ Location::<'_>; // anonymous local
-    let _9: &'_ PanicInfo::<'_>; // anonymous local
-    let _10: &'_ PanicInfo::<'_>; // anonymous local
-
-    bb0: {
-        storage_live(_2);
-        _2 = const false;
-        if move _2 -> bb1 else -> bb2;
-    }
-
-    bb1: {
-        storage_live(_3);
-        _3 = abort() -> bb3 (unwind: bb4);
-    }
-
-    bb2: {
-        storage_dead(_2);
-        storage_live(pi_4);
-        storage_live(_5);
-        storage_live(_6);
-        _6 = &fmt_1;
-        _5 = &(*_6);
-        storage_live(_7);
-        storage_live(_8);
-        _8 = caller::<'_>() -> bb5 (unwind: bb6);
-    }
-
-    bb3: {
-        undefined_behavior;
-    }
-
-    bb4: {
-        undefined_behavior;
-    }
-
-    bb5: {
-        _7 = &(*_8);
-        pi_4 = core::panic::panic_info::PanicInfo::<'a>::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
-    }
-
-    bb6: {
-        unwind_continue;
-    }
-
-    bb7: {
-        storage_dead(_7);
-        storage_dead(_5);
-        storage_dead(_8);
-        storage_dead(_6);
-        storage_live(_9);
-        storage_live(_10);
-        _10 = &pi_4;
-        _9 = &(*_10);
-        _0 = panic_impl(move _9) -> bb9 (unwind: bb10);
-    }
-
-    bb8: {
-        unwind_continue;
-    }
-
-    bb9: {
-        undefined_behavior;
-    }
-
-    bb10: {
-        unwind_continue;
-    }
-}
-
-// Full name: core::panicking::panic_nounwind_fmt::compiletime
-fn compiletime(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) -> !
-{
-    let _0: !; // return
-    let fmt_1: Arguments::<'_>; // arg #1
-    let force_no_backtrace_2: bool; // arg #2
-
-    bb0: {
-        _0 = panic_fmt(move fmt_1) -> bb1 (unwind: bb2);
-    }
-
-    bb1: {
-        undefined_behavior;
-    }
-
-    bb2: {
-        unwind_continue;
-    }
-}
-
-// Full name: core::panicking::panic_nounwind_fmt
-pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) -> !
-{
-    let _0: !; // return
-    let fmt_1: Arguments::<'_>; // arg #1
-    let force_no_backtrace_2: bool; // arg #2
-    let _3: (Arguments::<'_>, bool); // anonymous local
-    let _4: Arguments::<'_>; // anonymous local
-    let _5: bool; // anonymous local
-
-    bb0: {
-        storage_live(_3);
-        storage_live(_4);
-        _4 = copy fmt_1;
-        storage_live(_5);
-        _5 = copy force_no_backtrace_2;
-        _3 = (move _4, move _5);
-        storage_dead(_5);
-        storage_dead(_4);
-        _0 = compiletime(move _3.0, move _3.1) -> bb1 (unwind: bb2);
-    }
-
-    bb1: {
-        undefined_behavior;
-    }
-
-    bb2: {
-        unwind_terminate;
-    }
-}
-
 fn <std::ops::index_range::IndexRange as std::slice::SliceIndex<[T]>>::get_unchecked_mut::precondition_check(end_1: usize, len_2: usize)
 {
     let _0: (); // return
     let end_1: usize; // arg #1
     let len_2: usize; // arg #2
     let _3: bool; // anonymous local
-    let msg_4: &'_ Str; // local
+    let msg_4: &'_ str; // local
     let _5: !; // anonymous local
     let _6: Arguments::<'_>; // anonymous local
     let _7: NonNull::<u8>; // anonymous local
@@ -281,7 +85,7 @@ fn <std::ops::index_range::IndexRange as std::slice::SliceIndex<[T]>>::get_unche
     let _10: usize; // anonymous local
     let _11: usize; // anonymous local
     let _12: usize; // anonymous local
-    let _13: *const Str; // anonymous local
+    let _13: *const str; // anonymous local
     let _14: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -305,7 +109,7 @@ fn <std::ops::index_range::IndexRange as std::slice::SliceIndex<[T]>>::get_unche
         storage_live(_8);
         storage_live(_13);
         _13 = &raw const (*msg_4) with_metadata(copy msg_4.metadata);
-        _8 = cast<*const Str, *const u8>(copy _13);
+        _8 = cast<*const str, *const u8>(copy _13);
         storage_dead(_13);
         _7 = transmute<*const u8, NonNull::<u8>>(copy _8);
         storage_dead(_8);
@@ -314,7 +118,7 @@ fn <std::ops::index_range::IndexRange as std::slice::SliceIndex<[T]>>::get_unche
         storage_live(_11);
         storage_live(_12);
         storage_live(_14);
-        _14 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::get_unchecked_mut requires that the index is within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::get_unchecked_mut requires that the index is within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
         _11 = move _12 wrap.<< const 1 : i32;
@@ -338,18 +142,15 @@ fn <std::ops::index_range::IndexRange as std::slice::SliceIndex<[T]>>::get_unche
     }
 }
 
-// Full name: std::ptr::drop_in_place::<[i32]>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<[i32]>(_1: *mut [i32])
+// Full name: std::ptr::drop_glue::<[i32]>
+#[lang_item("drop_glue")]
+fn drop_glue::<[i32]>(_1: &'_ mut [i32])
 {
     let _0: (); // return
-    let _1: *mut [i32]; // arg #1
-    let _2: &'_ mut [i32]; // anonymous local
+    let _1: &'_ mut [i32]; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1) with_metadata(copy _1.metadata);
         return;
     }
 }
@@ -361,6 +162,7 @@ struct IndexRange {
 }
 
 // Full name: std::mem::MaybeDangling::<i32>
+#[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<i32> {
   0: i32,
 }
@@ -394,22 +196,22 @@ fn <[std::mem::MaybeUninit<T>] as std::array::iter::iter_inner::PartialDrop>::pa
     let _11: usize; // anonymous local
     let _12: *mut MaybeUninit::<i32>; // anonymous local
     let _13: *mut MaybeUninit::<i32>; // anonymous local
-    let _14: *mut [i32]; // anonymous local
+    let to_drop_14: *mut [i32]; // local
     let _15: *mut [MaybeUninit::<i32>]; // anonymous local
-    let _16: bool; // anonymous local
+    let _16: &'_ mut [i32]; // anonymous local
+    let _17: bool; // anonymous local
 
     bb0: {
-        storage_live(self_3);
-        storage_live(_4);
         storage_live(_6);
         storage_live(len_10);
         _0 = ();
+        storage_live(self_3);
+        storage_live(_4);
         storage_live(slice_5);
         slice_5 = &raw mut (*self_1) with_metadata(copy self_1.metadata);
-        storage_live(offset_9);
-        storage_live(_16);
-        _16 = ub_checks<bool>;
-        if move _16 -> bb1 else -> bb2;
+        storage_live(_17);
+        _17 = ub_checks<bool>;
+        if move _17 -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -421,14 +223,15 @@ fn <[std::mem::MaybeUninit<T>] as std::array::iter::iter_inner::PartialDrop>::pa
     }
 
     bb2: {
+        storage_live(offset_9);
         offset_9 = copy (alive_2).start;
         storage_live(_11);
         _11 = copy (alive_2).end;
         len_10 = move _11 ub.- copy offset_9;
         storage_dead(_11);
         storage_live(_12);
-        storage_live(_13);
         _12 = cast<*mut [MaybeUninit::<i32>], *mut MaybeUninit::<i32>>(copy slice_5);
+        storage_live(_13);
         _13 = copy _12 offset copy offset_9;
         _4 = *mut  (copy _13, copy len_10);
         storage_dead(_13);
@@ -436,6 +239,8 @@ fn <[std::mem::MaybeUninit<T>] as std::array::iter::iter_inner::PartialDrop>::pa
         storage_dead(offset_9);
         storage_dead(slice_5);
         self_3 = &mut (*_4) with_metadata(copy _4.metadata);
+        storage_dead(_4);
+        storage_live(to_drop_14);
         switch copy len_10 -> 0 : usize: bb5, otherwise: bb6;
     }
 
@@ -450,20 +255,23 @@ fn <[std::mem::MaybeUninit<T>] as std::array::iter::iter_inner::PartialDrop>::pa
     }
 
     bb5: {
+        storage_dead(to_drop_14);
+        storage_dead(self_3);
         return;
     }
 
     bb6: {
-        storage_live(_14);
         storage_live(_15);
         _15 = &raw mut (*self_3) with_metadata(copy self_3.metadata);
-        _14 = cast<*mut [MaybeUninit::<i32>], *mut [i32]>(copy _15);
-        storage_dead(_15);
-        _0 = drop_in_place::<[i32]>(move _14) -> bb7 (unwind: bb8);
+        to_drop_14 = cast<*mut [MaybeUninit::<i32>], *mut [i32]>(copy _15);
+        storage_live(_16);
+        _16 = &mut (*to_drop_14) with_metadata(copy to_drop_14.metadata);
+        _0 = drop_glue::<[i32]>(move _16) -> bb7 (unwind: bb8);
     }
 
     bb7: {
-        storage_dead(_14);
+        storage_dead(_16);
+        storage_dead(_15);
         goto bb5;
     }
 
@@ -480,13 +288,14 @@ fn <[std::mem::MaybeUninit<T>; N] as std::array::iter::iter_inner::PartialDrop>:
     let slice_3: &'_ mut [MaybeUninit::<i32>]; // local
 
     bb0: {
-        storage_live(slice_3);
         _0 = ();
+        storage_live(slice_3);
         slice_3 = unsize_cast<&'_ mut [MaybeUninit::<i32>; 7 : usize], &'_ mut [MaybeUninit::<i32>], 7 : usize>(copy self_1);
         _0 = <[std::mem::MaybeUninit<T>] as std::array::iter::iter_inner::PartialDrop>::partial_drop::<i32>(move slice_3, move alive_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
+        storage_dead(slice_3);
         return;
     }
 
@@ -540,7 +349,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
     let this_1: usize; // arg #1
     let len_2: usize; // arg #2
     let _3: bool; // anonymous local
-    let msg_4: &'_ Str; // local
+    let msg_4: &'_ str; // local
     let _5: !; // anonymous local
     let _6: Arguments::<'_>; // anonymous local
     let _7: NonNull::<u8>; // anonymous local
@@ -549,7 +358,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
     let _10: usize; // anonymous local
     let _11: usize; // anonymous local
     let _12: usize; // anonymous local
-    let _13: *const Str; // anonymous local
+    let _13: *const str; // anonymous local
     let _14: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -573,7 +382,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
         storage_live(_8);
         storage_live(_13);
         _13 = &raw const (*msg_4) with_metadata(copy msg_4.metadata);
-        _8 = cast<*const Str, *const u8>(copy _13);
+        _8 = cast<*const str, *const u8>(copy _13);
         storage_dead(_13);
         _7 = transmute<*const u8, NonNull::<u8>>(copy _8);
         storage_dead(_8);
@@ -582,7 +391,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
         storage_live(_11);
         storage_live(_12);
         storage_live(_14);
-        _14 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::get_unchecked requires that the index is within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::get_unchecked requires that the index is within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
         _11 = move _12 wrap.<< const 1 : i32;
@@ -625,7 +434,7 @@ fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_
     let _0: (); // return
     let lhs_1: usize; // arg #1
     let rhs_2: usize; // arg #2
-    let msg_3: &'_ Str; // local
+    let msg_3: &'_ str; // local
     let _4: !; // anonymous local
     let _5: Arguments::<'_>; // anonymous local
     let _6: bool; // anonymous local
@@ -638,7 +447,7 @@ fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_
     let _13: usize; // anonymous local
     let _14: usize; // anonymous local
     let _15: usize; // anonymous local
-    let _16: *const Str; // anonymous local
+    let _16: *const str; // anonymous local
     let _17: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -666,7 +475,7 @@ fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_
         storage_live(_11);
         storage_live(_16);
         _16 = &raw const (*msg_3) with_metadata(copy msg_3.metadata);
-        _11 = cast<*const Str, *const u8>(copy _16);
+        _11 = cast<*const str, *const u8>(copy _16);
         storage_dead(_16);
         _10 = transmute<*const u8, NonNull::<u8>>(copy _11);
         storage_dead(_11);
@@ -675,7 +484,7 @@ fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_
         storage_live(_14);
         storage_live(_15);
         storage_live(_17);
-        _17 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_add cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_add cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
         _14 = move _15 wrap.<< const 1 : i32;
@@ -739,8 +548,6 @@ fn std::array::iter::iter_inner::PolymorphicIter::<[std::mem::MaybeUninit<T>]>::
     bb0: {
         storage_live(_3);
         storage_live(_10);
-        storage_live(x_11);
-        storage_live(self_14);
         storage_live(_15);
         storage_live(_19);
         storage_live(self_2);
@@ -794,11 +601,13 @@ fn std::array::iter::iter_inner::PolymorphicIter::<[std::mem::MaybeUninit<T>]>::
         storage_live(f_22);
         _3 = &((*self_1)).data with_metadata(copy self_1.metadata);
         f_22 = copy _3;
+        storage_live(x_11);
         x_11 = move (self_2 as variant Option::<usize>::Some).0;
         storage_live(_12);
         storage_live(_21);
         _21 = copy _3;
         storage_live(self_13);
+        storage_live(self_14);
         self_13 = copy _3;
         storage_live(_24);
         _24 = ub_checks<bool>;
@@ -847,10 +656,12 @@ fn std::array::iter::iter_inner::PolymorphicIter::<[std::mem::MaybeUninit<T>]>::
         self_20 = cast<*const MaybeUninit::<i32>, *const i32>(copy self_14);
         _12 = copy (*self_20);
         storage_dead(self_20);
+        storage_dead(self_14);
         storage_dead(self_13);
         storage_dead(_21);
         _0 = Option::<i32>::Some { 0: move _12 };
         storage_dead(_12);
+        storage_dead(x_11);
         goto bb5;
     }
 
@@ -860,6 +671,7 @@ fn std::array::iter::iter_inner::PolymorphicIter::<[std::mem::MaybeUninit<T>]>::
 }
 
 // Full name: std::mem::MaybeDangling::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>>
+#[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>> {
   0: PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>,
 }
@@ -887,8 +699,8 @@ pub fn std::array::iter::<impl std::iter::IntoIterator for [T; N]>::into_iter::<
 
     bb0: {
         storage_live(_2);
-        storage_live(_3);
         _2 = transmute<[i32; 7 : usize], [MaybeUninit::<i32>; 7 : usize]>(copy self_1);
+        storage_live(_3);
         storage_live(_4);
         _4 = IndexRange { start: const 0 : usize, end: const 7 : usize };
         _3 = PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]> { alive: copy _4, data: copy _2 };
@@ -900,6 +712,8 @@ pub fn std::array::iter::<impl std::iter::IntoIterator for [T; N]>::into_iter::<
         storage_dead(_6);
         _0 = IntoIter::<i32, 7 : usize> { inner: move _5 };
         storage_dead(_5);
+        storage_dead(_3);
+        storage_dead(_2);
         return;
     }
 }
@@ -921,6 +735,7 @@ pub fn <std::array::IntoIter<T, N> as std::iter::Iterator>::next::<i32, 7 : usiz
     }
 
     bb1: {
+        storage_dead(_2);
         return;
     }
 
@@ -929,24 +744,21 @@ pub fn <std::array::IntoIter<T, N> as std::iter::Iterator>::next::<i32, 7 : usiz
     }
 }
 
-// Full name: std::ptr::drop_in_place::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>>(_1: *mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>)
+// Full name: std::ptr::drop_glue::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>>
+#[lang_item("drop_glue")]
+fn drop_glue::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>>(_1: &'_ mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>)
 {
     let _0: (); // return
-    let _1: *mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>; // arg #1
+    let _1: &'_ mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>; // arg #1
     let _2: &'_ mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>; // anonymous local
-    let _3: &'_ mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>; // anonymous local
-    let _4: (); // anonymous local
+    let _3: (); // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_3);
-        storage_live(_4);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = &mut (*_2);
-        _4 = <std::array::iter::iter_inner::PolymorphicIter<DATA> as std::ops::Drop>::drop::<[MaybeUninit::<i32>; 7 : usize]>(move _3) -> bb1 (unwind: bb2);
+        _3 = <std::array::iter::iter_inner::PolymorphicIter<DATA> as std::ops::Drop>::drop::<[MaybeUninit::<i32>; 7 : usize]>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -962,7 +774,7 @@ pub fn <std::array::IntoIter<T, N> as std::ops::Drop>::drop::<i32, 7 : usize>(se
 {
     let _0: (); // return
     let self_1: &'_ mut IntoIter::<i32, 7 : usize>; // arg #1
-    let _2: *mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>; // anonymous local
+    let _2: &'_ mut PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>; // anonymous local
 
     bb0: {
         _0 = ();
@@ -971,8 +783,8 @@ pub fn <std::array::IntoIter<T, N> as std::ops::Drop>::drop::<i32, 7 : usize>(se
 
     bb1: {
         storage_live(_2);
-        _2 = &raw mut ((((*self_1)).inner).value).0;
-        _0 = drop_in_place::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>>(move _2) -> bb3 (unwind: bb4);
+        _2 = &mut ((((*self_1)).inner).value).0;
+        _0 = drop_glue::<PolymorphicIter::<[MaybeUninit::<i32>; 7 : usize]>>(move _2) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -1069,33 +881,21 @@ pub fn min::<usize>(self_1: usize, other_2: usize) -> usize
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::ptr::drop_in_place::<&'_ i32>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<&'_ i32>(_1: *mut &'_ i32)
+// Full name: std::ptr::drop_glue::<&'_ i32>
+#[lang_item("drop_glue")]
+fn drop_glue::<&'_ i32>(_1: &'_ mut &'_ i32)
 {
     let _0: (); // return
-    let _1: *mut &'_ i32; // arg #1
-    let _2: &'_ mut &'_ i32; // anonymous local
+    let _1: &'_ mut &'_ i32; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
-
-pub fn core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
-
-pub fn core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
-
-pub fn core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
 
 pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
@@ -1198,7 +998,7 @@ fn Debug::<&'_ i32>() -> *const ()
         storage_live(<&i32 as Debug>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<&'_ i32>, *const ()>(const drop_in_place::<&'_ i32>);
+        drop_1 = cast<drop_glue::<&'_ i32>, *const ()>(const drop_glue::<&'_ i32>);
         size_2 = transmute<usize, *const ()>(const 8 : usize);
         align_3 = transmute<usize, *const ()>(const 8 : usize);
         <&i32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
@@ -1229,7 +1029,7 @@ pub fn <I as std::iter::IntoIterator>::into_iter::<IntoIter::<i32, 7 : usize>>(s
 
 // Full name: std::ptr::NonNull::<i32>
 pub struct NonNull::<i32> {
-  pointer: *const i32,
+  pointer: *const i32 is !null,
 }
 
 // Full name: std::marker::PhantomData::<&'_ i32>
@@ -1294,7 +1094,7 @@ fn core::num::<impl usize>::unchecked_sub::precondition_check(lhs_1: usize, rhs_
     let _0: (); // return
     let lhs_1: usize; // arg #1
     let rhs_2: usize; // arg #2
-    let msg_3: &'_ Str; // local
+    let msg_3: &'_ str; // local
     let _4: !; // anonymous local
     let _5: Arguments::<'_>; // anonymous local
     let _6: bool; // anonymous local
@@ -1307,7 +1107,7 @@ fn core::num::<impl usize>::unchecked_sub::precondition_check(lhs_1: usize, rhs_
     let _13: usize; // anonymous local
     let _14: usize; // anonymous local
     let _15: usize; // anonymous local
-    let _16: *const Str; // anonymous local
+    let _16: *const str; // anonymous local
     let _17: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -1335,7 +1135,7 @@ fn core::num::<impl usize>::unchecked_sub::precondition_check(lhs_1: usize, rhs_
         storage_live(_11);
         storage_live(_16);
         _16 = &raw const (*msg_3) with_metadata(copy msg_3.metadata);
-        _11 = cast<*const Str, *const u8>(copy _16);
+        _11 = cast<*const str, *const u8>(copy _16);
         storage_dead(_16);
         _10 = transmute<*const u8, NonNull::<u8>>(copy _11);
         storage_dead(_11);
@@ -1344,7 +1144,7 @@ fn core::num::<impl usize>::unchecked_sub::precondition_check(lhs_1: usize, rhs_
         storage_live(_14);
         storage_live(_15);
         storage_live(_17);
-        _17 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_sub cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_sub cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
         _14 = move _15 wrap.<< const 1 : i32;
@@ -1429,10 +1229,6 @@ pub enum AssertKind {
   Match,
 }
 
-// Full name: core::panicking::assert_failed_inner
-fn assert_failed_inner(_1: AssertKind, _2: &'_ (dyn @TraitDecl0), _3: &'_ (dyn @TraitDecl0), _4: Option::<Arguments::<'_>>) -> !
-= <missing>
-
 // Full name: core::panicking::assert_failed::<i32, i32>
 pub fn assert_failed::<i32, i32>(kind_1: AssertKind, left_2: &'_ i32, right_3: &'_ i32, args_4: Option::<Arguments::<'_>>) -> !
 {
@@ -1441,20 +1237,20 @@ pub fn assert_failed::<i32, i32>(kind_1: AssertKind, left_2: &'_ i32, right_3: &
     let left_2: &'_ i32; // arg #2
     let right_3: &'_ i32; // arg #3
     let args_4: Option::<Arguments::<'_>>; // arg #4
-    let _5: &'_ (dyn @TraitDecl0); // anonymous local
+    let _5: &'_ (dyn FakeTrait); // anonymous local
     let _6: &'_ &'_ i32; // anonymous local
-    let _7: &'_ (dyn @TraitDecl0); // anonymous local
+    let _7: &'_ (dyn FakeTrait); // anonymous local
     let _8: &'_ &'_ i32; // anonymous local
 
     bb0: {
-        storage_live(_6);
-        storage_live(_8);
         storage_live(_5);
+        storage_live(_6);
         _6 = &left_2;
-        _5 = unsize_cast<&'_ &'_ i32, &'_ (dyn @TraitDecl0), Debug::<&'_ i32>>(copy _6);
+        _5 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ i32>>(copy _6);
         storage_live(_7);
+        storage_live(_8);
         _8 = &right_3;
-        _7 = unsize_cast<&'_ &'_ i32, &'_ (dyn @TraitDecl0), Debug::<&'_ i32>>(copy _8);
+        _7 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ i32>>(copy _8);
         _0 = assert_failed_inner(move kind_1, move _5, move _7, move args_4) -> bb1 (unwind: bb2);
     }
 
@@ -1480,14 +1276,14 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
     let _7: usize; // anonymous local
     let _8: u32; // anonymous local
     let _9: *const (); // anonymous local
-    let s_10: &'_ Str; // local
+    let s_10: &'_ str; // local
     let _11: NonNull::<u8>; // anonymous local
     let _12: *const u8; // anonymous local
     let _13: NonNull::<Argument::<'_>>; // anonymous local
     let _14: usize; // anonymous local
     let _15: usize; // anonymous local
     let _16: usize; // anonymous local
-    let _17: *const Str; // anonymous local
+    let _17: *const str; // anonymous local
     let _18: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -1531,7 +1327,7 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
         storage_live(_12);
         storage_live(_17);
         _17 = &raw const (*s_10) with_metadata(copy s_10.metadata);
-        _12 = cast<*const Str, *const u8>(copy _17);
+        _12 = cast<*const str, *const u8>(copy _17);
         storage_dead(_17);
         _11 = transmute<*const u8, NonNull::<u8>>(copy _12);
         storage_dead(_12);
@@ -1540,7 +1336,7 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
         storage_live(_15);
         storage_live(_16);
         storage_live(_18);
-        _18 = transmute<&'_ Str, &'_ [u8]>(const "is_aligned_to: align is not a power-of-two");
+        _18 = transmute<&'_ str, &'_ [u8]>(const "is_aligned_to: align is not a power-of-two");
         _16 = copy _18.metadata;
         storage_dead(_18);
         _15 = move _16 wrap.<< const 1 : i32;
@@ -1565,24 +1361,21 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
     }
 }
 
-// Full name: std::ptr::drop_in_place::<IntoIter::<i32, 7 : usize>>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<IntoIter::<i32, 7 : usize>>(_1: *mut IntoIter::<i32, 7 : usize>)
+// Full name: std::ptr::drop_glue::<IntoIter::<i32, 7 : usize>>
+#[lang_item("drop_glue")]
+fn drop_glue::<IntoIter::<i32, 7 : usize>>(_1: &'_ mut IntoIter::<i32, 7 : usize>)
 {
     let _0: (); // return
-    let _1: *mut IntoIter::<i32, 7 : usize>; // arg #1
+    let _1: &'_ mut IntoIter::<i32, 7 : usize>; // arg #1
     let _2: &'_ mut IntoIter::<i32, 7 : usize>; // anonymous local
-    let _3: &'_ mut IntoIter::<i32, 7 : usize>; // anonymous local
-    let _4: (); // anonymous local
+    let _3: (); // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_3);
-        storage_live(_4);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = &mut (*_2);
-        _4 = <std::array::IntoIter<T, N> as std::ops::Drop>::drop::<i32, 7 : usize>(move _3) -> bb1 (unwind: bb2);
+        _3 = <std::array::IntoIter<T, N> as std::ops::Drop>::drop::<i32, 7 : usize>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1596,10 +1389,11 @@ pub fn drop_in_place::<IntoIter::<i32, 7 : usize>>(_1: *mut IntoIter::<i32, 7 : 
 
 // Full name: std::ptr::NonNull::<[i32]>
 pub struct NonNull::<[i32]> {
-  pointer: *const [i32],
+  pointer: *const [i32] is !null,
 }
 
-fn std::slice::Iter::<'a, T>::new::<'_, i32>(slice_1: &'_ [i32]) -> Iter::<'_, i32>
+// Full name: std::slice::Iter::<'a, T>::new::<'_, i32>
+fn new::<'_, i32>(slice_1: &'_ [i32]) -> Iter::<'_, i32>
 {
     let _0: Iter::<'_, i32>; // return
     let slice_1: &'_ [i32]; // arg #1
@@ -1610,21 +1404,26 @@ fn std::slice::Iter::<'a, T>::new::<'_, i32>(slice_1: &'_ [i32]) -> Iter::<'_, i
     let _6: *mut i32; // anonymous local
     let self_7: *mut i32; // local
     let _8: *const [i32]; // anonymous local
-    let _9: *const i32; // anonymous local
-    let _10: PhantomData::<&'_ i32>; // anonymous local
+    let _9: *mut i32; // anonymous local
+    let _10: *mut [i32]; // anonymous local
+    let _11: PhantomData::<&'_ i32>; // anonymous local
 
     bb0: {
-        storage_live(len_2);
-        storage_live(ptr_3);
         storage_live(end_or_len_5);
-        storage_live(_8);
+        storage_live(len_2);
         len_2 = copy slice_1.metadata;
+        storage_live(ptr_3);
         storage_live(self_4);
+        storage_live(_8);
         _8 = &raw const (*slice_1) with_metadata(copy slice_1.metadata);
-        self_4 = NonNull::<[i32]> { pointer: copy _8 };
+        self_4 = transmute<*const [i32], NonNull::<[i32]>>(copy _8);
+        storage_dead(_8);
         storage_live(_9);
-        _9 = cast<*const [i32], *const i32>(copy _8);
-        ptr_3 = NonNull::<i32> { pointer: copy _9 };
+        storage_live(_10);
+        _10 = transmute<NonNull::<[i32]>, *mut [i32]>(copy self_4);
+        _9 = cast<*mut [i32], *mut i32>(copy _10);
+        storage_dead(_10);
+        ptr_3 = transmute<*mut i32, NonNull::<i32>>(copy _9);
         storage_dead(_9);
         storage_dead(self_4);
         if const false -> bb1 else -> bb2;
@@ -1638,7 +1437,7 @@ fn std::slice::Iter::<'a, T>::new::<'_, i32>(slice_1: &'_ [i32]) -> Iter::<'_, i
     bb2: {
         storage_live(_6);
         storage_live(self_7);
-        self_7 = cast<*const [i32], *mut i32>(copy _8);
+        self_7 = transmute<NonNull::<i32>, *mut i32>(copy ptr_3);
         _6 = copy self_7 offset copy len_2;
         storage_dead(self_7);
         end_or_len_5 = cast<*mut i32, *const i32>(copy _6);
@@ -1647,9 +1446,11 @@ fn std::slice::Iter::<'a, T>::new::<'_, i32>(slice_1: &'_ [i32]) -> Iter::<'_, i
     }
 
     bb3: {
-        storage_live(_10);
-        _10 = PhantomData::<&'_ i32> {  };
-        _0 = Iter::<'_, i32> { ptr: copy ptr_3, end_or_len: copy end_or_len_5, _marker: move _10 };
+        storage_live(_11);
+        _11 = PhantomData::<&'_ i32> {  };
+        _0 = Iter::<'_, i32> { ptr: copy ptr_3, end_or_len: copy end_or_len_5, _marker: move _11 };
+        storage_dead(ptr_3);
+        storage_dead(len_2);
         return;
     }
 }
@@ -1669,104 +1470,112 @@ pub fn <std::slice::Iter<'a, T> as std::iter::Iterator>::next::<'_, i32>(self_1:
     let _10: (); // anonymous local
     let _11: *mut i32; // anonymous local
     let _12: *mut i32; // anonymous local
-    let _13: *const i32; // anonymous local
+    let _13: *mut i32; // anonymous local
     let _14: *const i32; // anonymous local
-    let _15: *const i32; // anonymous local
-    let _16: bool; // anonymous local
+    let _15: bool; // anonymous local
+    let _16: Option::<&'_ i32>; // anonymous local
     let _17: Option::<&'_ i32>; // anonymous local
-    let _18: Option::<&'_ i32>; // anonymous local
 
     bb0: {
-        storage_live(ptr_2);
-        storage_live(end_or_len_3);
-        storage_live(len_4);
         storage_live(addr_5);
-        storage_live(_7);
-        storage_live(_9);
         storage_live(_10);
+        storage_live(_11);
+        storage_live(ptr_2);
         ptr_2 = copy ((*self_1)).ptr;
+        storage_live(end_or_len_3);
         end_or_len_3 = copy ((*self_1)).end_or_len;
         if const false -> bb1 else -> bb2;
     }
 
     bb1: {
+        storage_live(len_4);
         len_4 = transmute<*const i32, usize>(copy end_or_len_3);
         switch copy len_4 -> 0 : usize: bb3, otherwise: bb4;
     }
 
     bb2: {
         storage_live(_6);
+        storage_live(_7);
         _7 = transmute<*const i32, NonNull::<i32>>(copy end_or_len_3);
-        storage_live(_11);
         _11 = transmute<NonNull::<i32>, *mut i32>(copy ptr_2);
         storage_live(_12);
         _12 = transmute<NonNull::<i32>, *mut i32>(copy _7);
         _6 = copy _11 == copy _12;
         storage_dead(_12);
-        storage_dead(_11);
         if move _6 -> bb5 else -> bb6;
     }
 
     bb3: {
-        storage_live(_17);
-        _17 = Option::<&'_ i32>::None {  };
-        _0 = move _17;
-        goto bb10;
+        storage_live(_16);
+        _16 = Option::<&'_ i32>::None {  };
+        _0 = move _16;
+        storage_dead(len_4);
+        goto bb7;
     }
 
     bb4: {
-        storage_live(_16);
-        _16 = ub_checks<bool>;
-        if move _16 -> bb7 else -> bb8;
+        storage_live(_15);
+        _15 = ub_checks<bool>;
+        if move _15 -> bb8 else -> bb9;
     }
 
     bb5: {
-        storage_live(_18);
-        _18 = Option::<&'_ i32>::None {  };
-        _0 = move _18;
+        storage_dead(_7);
+        storage_live(_17);
+        _17 = Option::<&'_ i32>::None {  };
+        _0 = move _17;
         storage_dead(_6);
-        goto bb10;
+        goto bb7;
     }
 
     bb6: {
+        storage_dead(_7);
         storage_dead(_6);
         storage_live(_8);
         storage_live(_13);
-        storage_live(_14);
-        _14 = transmute<NonNull::<i32>, *const i32>(copy ptr_2);
-        _13 = copy _14 offset const 1 : usize;
-        storage_dead(_14);
-        _8 = NonNull::<i32> { pointer: copy _13 };
+        _13 = copy _11 offset const 1 : usize;
+        _8 = transmute<*mut i32, NonNull::<i32>>(copy _13);
         storage_dead(_13);
         ((*self_1)).ptr = move _8;
         storage_dead(_8);
-        goto bb9;
+        goto bb10;
     }
 
     bb7: {
-        _10 = core::num::<impl usize>::unchecked_sub::precondition_check(copy len_4, const 1 : usize) -> bb8 (unwind: bb11);
+        storage_dead(end_or_len_3);
+        storage_dead(ptr_2);
+        goto bb11;
     }
 
     bb8: {
-        addr_5 = copy len_4 ub.- const 1 : usize;
-        ((*self_1)).end_or_len = transmute<usize, *const i32>(copy addr_5);
-        goto bb9;
+        _10 = core::num::<impl usize>::unchecked_sub::precondition_check(copy len_4, const 1 : usize) -> bb9 (unwind: bb12);
     }
 
     bb9: {
-        storage_live(_15);
-        _15 = transmute<NonNull::<i32>, *const i32>(copy ptr_2);
-        _9 = &(*_15);
-        storage_dead(_15);
-        _0 = Option::<&'_ i32>::Some { 0: copy _9 };
+        addr_5 = copy len_4 ub.- const 1 : usize;
+        ((*self_1)).end_or_len = transmute<usize, *const i32>(copy addr_5);
+        storage_dead(len_4);
         goto bb10;
     }
 
     bb10: {
-        return;
+        storage_live(_9);
+        storage_live(_14);
+        _14 = transmute<NonNull::<i32>, *const i32>(copy ptr_2);
+        _9 = &(*_14);
+        storage_dead(_14);
+        _0 = Option::<&'_ i32>::Some { 0: copy _9 };
+        storage_dead(_9);
+        storage_dead(end_or_len_3);
+        storage_dead(ptr_2);
+        goto bb11;
     }
 
     bb11: {
+        return;
+    }
+
+    bb12: {
         undefined_behavior;
     }
 }
@@ -1781,7 +1590,7 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
     let _5: bool; // anonymous local
     let ptr_6: *const (); // local
     let _7: bool; // anonymous local
-    let msg_8: &'_ Str; // local
+    let msg_8: &'_ str; // local
     let _9: !; // anonymous local
     let _10: Arguments::<'_>; // anonymous local
     let _11: bool; // anonymous local
@@ -1794,7 +1603,7 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
     let _18: usize; // anonymous local
     let _19: usize; // anonymous local
     let _20: usize; // anonymous local
-    let _21: *const Str; // anonymous local
+    let _21: *const str; // anonymous local
     let _22: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -1862,7 +1671,7 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
         storage_live(_16);
         storage_live(_21);
         _21 = &raw const (*msg_8) with_metadata(copy msg_8.metadata);
-        _16 = cast<*const Str, *const u8>(copy _21);
+        _16 = cast<*const str, *const u8>(copy _21);
         storage_dead(_21);
         _15 = transmute<*const u8, NonNull::<u8>>(copy _16);
         storage_dead(_16);
@@ -1871,7 +1680,7 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
         storage_live(_19);
         storage_live(_20);
         storage_live(_22);
-        _22 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::from_raw_parts requires the pointer to be aligned and non-null, and the total size of the slice not to exceed `isize::MAX`\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _22 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::from_raw_parts requires the pointer to be aligned and non-null, and the total size of the slice not to exceed `isize::MAX`\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _20 = copy _22.metadata;
         storage_dead(_22);
         _19 = move _20 wrap.<< const 1 : i32;
@@ -1913,7 +1722,7 @@ fn core::slice::<impl [T]>::split_at_unchecked::precondition_check(mid_1: usize,
     let mid_1: usize; // arg #1
     let len_2: usize; // arg #2
     let _3: bool; // anonymous local
-    let msg_4: &'_ Str; // local
+    let msg_4: &'_ str; // local
     let _5: !; // anonymous local
     let _6: Arguments::<'_>; // anonymous local
     let _7: NonNull::<u8>; // anonymous local
@@ -1922,7 +1731,7 @@ fn core::slice::<impl [T]>::split_at_unchecked::precondition_check(mid_1: usize,
     let _10: usize; // anonymous local
     let _11: usize; // anonymous local
     let _12: usize; // anonymous local
-    let _13: *const Str; // anonymous local
+    let _13: *const str; // anonymous local
     let _14: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -1946,7 +1755,7 @@ fn core::slice::<impl [T]>::split_at_unchecked::precondition_check(mid_1: usize,
         storage_live(_8);
         storage_live(_13);
         _13 = &raw const (*msg_4) with_metadata(copy msg_4.metadata);
-        _8 = cast<*const Str, *const u8>(copy _13);
+        _8 = cast<*const str, *const u8>(copy _13);
         storage_dead(_13);
         _7 = transmute<*const u8, NonNull::<u8>>(copy _8);
         storage_dead(_8);
@@ -1955,7 +1764,7 @@ fn core::slice::<impl [T]>::split_at_unchecked::precondition_check(mid_1: usize,
         storage_live(_11);
         storage_live(_12);
         storage_live(_14);
-        _14 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::split_at_unchecked requires the index to be within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::split_at_unchecked requires the index to be within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
         _11 = move _12 wrap.<< const 1 : i32;
@@ -2004,15 +1813,13 @@ pub fn split_at_unchecked::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32],
     let _19: bool; // anonymous local
 
     bb0: {
-        storage_live(len_3);
-        storage_live(ptr_4);
         storage_live(_5);
-        storage_live(_6);
-        storage_live(_7);
         storage_live(_10);
         storage_live(_11);
         storage_live(_14);
+        storage_live(len_3);
         len_3 = copy self_1.metadata;
+        storage_live(ptr_4);
         _10 = &raw const (*self_1) with_metadata(copy self_1.metadata);
         ptr_4 = cast<*const [i32], *const i32>(copy _10);
         storage_live(_17);
@@ -2025,6 +1832,7 @@ pub fn split_at_unchecked::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32],
     }
 
     bb2: {
+        storage_live(_6);
         storage_live(_18);
         _18 = ub_checks<bool>;
         if move _18 -> bb4 else -> bb5;
@@ -2045,6 +1853,7 @@ pub fn split_at_unchecked::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32],
         _13 = *const (copy ptr_4, copy mid_2);
         _6 = &(*_13) with_metadata(copy _13.metadata);
         storage_dead(_13);
+        storage_live(_7);
         storage_live(data_8);
         data_8 = copy ptr_4 offset copy mid_2;
         storage_live(len_9);
@@ -2077,6 +1886,10 @@ pub fn split_at_unchecked::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32],
         storage_dead(len_9);
         storage_dead(data_8);
         _0 = (copy _6, copy _7);
+        storage_dead(_7);
+        storage_dead(_6);
+        storage_dead(ptr_4);
+        storage_dead(len_3);
         return;
     }
 
@@ -2102,14 +1915,14 @@ pub fn split_at::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32], &'_ [i32]
     let _6: bool; // anonymous local
     let _7: usize; // anonymous local
     let _8: (&'_ [i32], &'_ [i32]); // anonymous local
-    let s_9: &'_ Str; // local
+    let s_9: &'_ str; // local
     let _10: NonNull::<u8>; // anonymous local
     let _11: *const u8; // anonymous local
     let _12: NonNull::<Argument::<'_>>; // anonymous local
     let _13: usize; // anonymous local
     let _14: usize; // anonymous local
     let _15: usize; // anonymous local
-    let _16: *const Str; // anonymous local
+    let _16: *const str; // anonymous local
     let _17: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -2138,7 +1951,7 @@ pub fn split_at::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32], &'_ [i32]
         storage_live(_11);
         storage_live(_16);
         _16 = &raw const (*s_9) with_metadata(copy s_9.metadata);
-        _11 = cast<*const Str, *const u8>(copy _16);
+        _11 = cast<*const str, *const u8>(copy _16);
         storage_dead(_16);
         _10 = transmute<*const u8, NonNull::<u8>>(copy _11);
         storage_dead(_11);
@@ -2147,7 +1960,7 @@ pub fn split_at::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32], &'_ [i32]
         storage_live(_14);
         storage_live(_15);
         storage_live(_17);
-        _17 = transmute<&'_ Str, &'_ [u8]>(const "mid > len");
+        _17 = transmute<&'_ str, &'_ [u8]>(const "mid > len");
         _15 = copy _17.metadata;
         storage_dead(_17);
         _14 = move _15 wrap.<< const 1 : i32;
@@ -2202,9 +2015,6 @@ pub fn <std::slice::Chunks<'a, T> as std::iter::Iterator>::next::<'_, i32>(self_
     let _12: Option::<&'_ [i32]>; // anonymous local
 
     bb0: {
-        storage_live(chunksz_2);
-        storage_live(fst_5);
-        storage_live(snd_6);
         storage_live(self_8);
         storage_live(_9);
         storage_live(_10);
@@ -2224,6 +2034,7 @@ pub fn <std::slice::Chunks<'a, T> as std::iter::Iterator>::next::<'_, i32>(self_
 
     bb2: {
         storage_dead(_11);
+        storage_live(chunksz_2);
         storage_live(v1_3);
         _9 = copy ((*self_1)).v;
         v1_3 = copy _9.metadata;
@@ -2249,11 +2060,16 @@ pub fn <std::slice::Chunks<'a, T> as std::iter::Iterator>::next::<'_, i32>(self_
     }
 
     bb6: {
+        storage_live(fst_5);
         fst_5 = copy _7.0;
+        storage_live(snd_6);
         snd_6 = copy _7.1;
         storage_dead(_7);
         ((*self_1)).v = copy snd_6;
         _0 = Option::<&'_ [i32]>::Some { 0: copy fst_5 };
+        storage_dead(snd_6);
+        storage_dead(fst_5);
+        storage_dead(chunksz_2);
         goto bb3;
     }
 
@@ -2282,8 +2098,6 @@ pub fn <std::slice::ChunksExact<'a, T> as std::iter::Iterator>::next::<'_, i32>(
     bb0: {
         storage_live(_4);
         storage_live(self_5);
-        storage_live(x_11);
-        storage_live(x_12);
         storage_live(self_2);
         self_5 = copy ((*self_1)).v;
         storage_live(mid_3);
@@ -2323,6 +2137,8 @@ pub fn <std::slice::ChunksExact<'a, T> as std::iter::Iterator>::next::<'_, i32>(
         storage_live(f_10);
         _4 = &uniq ((*self_1)).v;
         f_10 = copy _4;
+        storage_live(x_11);
+        storage_live(x_12);
         x_11 = move (self_2 as variant Option::<(&'_ [i32], &'_ [i32])>::Some).0.0;
         x_12 = move (self_2 as variant Option::<(&'_ [i32], &'_ [i32])>::Some).0.1;
         storage_live(_9);
@@ -2330,6 +2146,8 @@ pub fn <std::slice::ChunksExact<'a, T> as std::iter::Iterator>::next::<'_, i32>(
         (*_4) = copy x_12;
         _0 = Option::<&'_ [i32]>::Some { 0: copy x_11 };
         storage_dead(_9);
+        storage_dead(x_11);
+        storage_dead(x_12);
         goto bb5;
     }
 
@@ -2351,7 +2169,7 @@ pub fn iter::<i32>(self_1: &'_ [i32]) -> Iter::<'_, i32>
     let self_1: &'_ [i32]; // arg #1
 
     bb0: {
-        _0 = std::slice::Iter::<'a, T>::new::<'_, i32>(move self_1) -> bb1 (unwind: bb2);
+        _0 = new::<'_, i32>(move self_1) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2371,14 +2189,14 @@ pub fn chunks::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> Chunks::<'_, i32
     let chunk_size_2: usize; // arg #2
     let _3: !; // anonymous local
     let _4: Arguments::<'_>; // anonymous local
-    let s_5: &'_ Str; // local
+    let s_5: &'_ str; // local
     let _6: NonNull::<u8>; // anonymous local
     let _7: *const u8; // anonymous local
     let _8: NonNull::<Argument::<'_>>; // anonymous local
     let _9: usize; // anonymous local
     let _10: usize; // anonymous local
     let _11: usize; // anonymous local
-    let _12: *const Str; // anonymous local
+    let _12: *const str; // anonymous local
     let _13: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -2394,7 +2212,7 @@ pub fn chunks::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> Chunks::<'_, i32
         storage_live(_7);
         storage_live(_12);
         _12 = &raw const (*s_5) with_metadata(copy s_5.metadata);
-        _7 = cast<*const Str, *const u8>(copy _12);
+        _7 = cast<*const str, *const u8>(copy _12);
         storage_dead(_12);
         _6 = transmute<*const u8, NonNull::<u8>>(copy _7);
         storage_dead(_7);
@@ -2403,7 +2221,7 @@ pub fn chunks::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> Chunks::<'_, i32
         storage_live(_10);
         storage_live(_11);
         storage_live(_13);
-        _13 = transmute<&'_ Str, &'_ [u8]>(const "chunk size must be non-zero");
+        _13 = transmute<&'_ str, &'_ [u8]>(const "chunk size must be non-zero");
         _11 = copy _13.metadata;
         storage_dead(_13);
         _10 = move _11 wrap.<< const 1 : i32;
@@ -2447,14 +2265,14 @@ pub fn chunks_exact::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> ChunksExac
     let fst_8: &'_ [i32]; // local
     let snd_9: &'_ [i32]; // local
     let _10: (&'_ [i32], &'_ [i32]); // anonymous local
-    let s_11: &'_ Str; // local
+    let s_11: &'_ str; // local
     let _12: NonNull::<u8>; // anonymous local
     let _13: *const u8; // anonymous local
     let _14: NonNull::<Argument::<'_>>; // anonymous local
     let _15: usize; // anonymous local
     let _16: usize; // anonymous local
     let _17: usize; // anonymous local
-    let _18: *const Str; // anonymous local
+    let _18: *const str; // anonymous local
     let _19: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -2470,7 +2288,7 @@ pub fn chunks_exact::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> ChunksExac
         storage_live(_13);
         storage_live(_18);
         _18 = &raw const (*s_11) with_metadata(copy s_11.metadata);
-        _13 = cast<*const Str, *const u8>(copy _18);
+        _13 = cast<*const str, *const u8>(copy _18);
         storage_dead(_18);
         _12 = transmute<*const u8, NonNull::<u8>>(copy _13);
         storage_dead(_13);
@@ -2479,7 +2297,7 @@ pub fn chunks_exact::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> ChunksExac
         storage_live(_16);
         storage_live(_17);
         storage_live(_19);
-        _19 = transmute<&'_ Str, &'_ [u8]>(const "chunk size must be non-zero");
+        _19 = transmute<&'_ str, &'_ [u8]>(const "chunk size must be non-zero");
         _17 = copy _19.metadata;
         storage_dead(_19);
         _16 = move _17 wrap.<< const 1 : i32;
@@ -2496,13 +2314,11 @@ pub fn chunks_exact::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> ChunksExac
     }
 
     bb2: {
-        storage_live(rem_5);
         storage_live(_6);
-        storage_live(fst_len_7);
-        storage_live(fst_8);
-        storage_live(snd_9);
+        storage_live(rem_5);
         _6 = copy self_1.metadata;
         rem_5 = copy _6 panic.% copy chunk_size_2;
+        storage_live(fst_len_7);
         fst_len_7 = copy _6 wrap.- copy rem_5;
         storage_live(_10);
         _10 = split_at_unchecked::<i32>(move self_1, move fst_len_7) -> bb5 (unwind: bb6);
@@ -2517,15 +2333,17 @@ pub fn chunks_exact::<i32>(self_1: &'_ [i32], chunk_size_2: usize) -> ChunksExac
     }
 
     bb5: {
+        storage_live(fst_8);
         fst_8 = copy _10.0;
+        storage_live(snd_9);
         snd_9 = copy _10.1;
         storage_dead(_10);
         _0 = ChunksExact::<'_, i32> { v: copy fst_8, rem: copy snd_9, chunk_size: copy chunk_size_2 };
         storage_dead(snd_9);
         storage_dead(fst_8);
         storage_dead(fst_len_7);
-        storage_dead(_6);
         storage_dead(rem_5);
+        storage_dead(_6);
         return;
     }
 
@@ -2667,14 +2485,14 @@ fn main()
 
     bb7: {
         _64 = &raw mut iter_6;
-        _65 = drop_in_place::<IntoIter::<i32, 7 : usize>>(move _64) -> bb4 (unwind: bb11);
+        _65 = drop_glue::<IntoIter::<i32, 7 : usize>>(move _64) -> bb4 (unwind: bb11);
     }
 
     bb8: {
         storage_dead(_9);
         storage_dead(_7);
         _66 = &raw mut iter_6;
-        _67 = drop_in_place::<IntoIter::<i32, 7 : usize>>(move _66) -> bb12 (unwind: bb4);
+        _67 = drop_glue::<IntoIter::<i32, 7 : usize>>(move _66) -> bb12 (unwind: bb4);
     }
 
     bb9: {

@@ -13,6 +13,7 @@ pub fn clone(self_1: &'_ u32) -> u32
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: anon_const_0

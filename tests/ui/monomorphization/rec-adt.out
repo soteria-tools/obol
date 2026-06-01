@@ -19,6 +19,7 @@ struct Node::<u8> {
   element: u8,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::LinkedList::<u8>

@@ -4,22 +4,20 @@
 // Full name: test_crate::HouseCat
 struct HouseCat {}
 
-// Full name: std::ptr::drop_in_place::<HouseCat>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<HouseCat>(_1: *mut HouseCat)
+// Full name: std::ptr::drop_glue::<HouseCat>
+#[lang_item("drop_glue")]
+fn drop_glue::<HouseCat>(_1: &'_ mut HouseCat)
 {
     let _0: (); // return
-    let _1: *mut HouseCat; // arg #1
-    let _2: &'_ mut HouseCat; // anonymous local
+    let _1: &'_ mut HouseCat; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: <test_crate::HouseCat as test_crate::Pettable>::pet
@@ -53,7 +51,7 @@ fn Pettable::<HouseCat>() -> *const ()
         storage_live(<HouseCat as Pettable>::pet_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<HouseCat>, *const ()>(const drop_in_place::<HouseCat>);
+        drop_1 = cast<drop_glue::<HouseCat>, *const ()>(const drop_glue::<HouseCat>);
         size_2 = transmute<usize, *const ()>(const 0 : usize);
         align_3 = transmute<usize, *const ()>(const 1 : usize);
         <HouseCat as Pettable>::pet_4 = cast<pet, *const ()>(const pet);
@@ -115,7 +113,7 @@ fn Cat::<HouseCat>() -> *const ()
         storage_live(<HouseCat as Cat>::meow_6);
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
-        drop_1 = cast<drop_in_place::<HouseCat>, *const ()>(const drop_in_place::<HouseCat>);
+        drop_1 = cast<drop_glue::<HouseCat>, *const ()>(const drop_glue::<HouseCat>);
         size_2 = transmute<usize, *const ()>(const 0 : usize);
         align_3 = transmute<usize, *const ()>(const 1 : usize);
         <HouseCat as Feline>::hunt_4 = cast<hunt, *const ()>(const hunt);
@@ -136,13 +134,13 @@ fn main()
 {
     let _0: (); // return
     let cat_1: HouseCat; // local
-    let dyn_cat_2: &'_ (dyn @TraitDecl0); // local
+    let dyn_cat_2: &'_ (dyn FakeTrait); // local
     let _3: &'_ HouseCat; // anonymous local
     let _4: &'_ HouseCat; // anonymous local
-    let dyn_feline_5: &'_ (dyn @TraitDecl0); // local
-    let _6: &'_ (dyn @TraitDecl0); // anonymous local
-    let dyn_pettable_7: &'_ (dyn @TraitDecl0); // local
-    let _8: &'_ (dyn @TraitDecl0); // anonymous local
+    let dyn_feline_5: &'_ (dyn FakeTrait); // local
+    let _6: &'_ (dyn FakeTrait); // anonymous local
+    let dyn_pettable_7: &'_ (dyn FakeTrait); // local
+    let _8: &'_ (dyn FakeTrait); // anonymous local
 
     bb0: {
         _0 = ();
@@ -153,18 +151,18 @@ fn main()
         storage_live(_4);
         _4 = &cat_1;
         _3 = &(*_4);
-        dyn_cat_2 = unsize_cast<&'_ HouseCat, &'_ (dyn @TraitDecl0), Cat::<HouseCat>>(move _3);
+        dyn_cat_2 = unsize_cast<&'_ HouseCat, &'_ (dyn FakeTrait), Cat::<HouseCat>>(move _3);
         storage_dead(_3);
         storage_dead(_4);
         storage_live(dyn_feline_5);
         storage_live(_6);
         _6 = &(*dyn_cat_2) with_metadata(copy dyn_cat_2.metadata);
-        dyn_feline_5 = unsize_cast<&'_ (dyn @TraitDecl0), &'_ (dyn @TraitDecl0),  at []>(move _6);
+        dyn_feline_5 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait),  at []>(move _6);
         storage_dead(_6);
         storage_live(dyn_pettable_7);
         storage_live(_8);
         _8 = &(*dyn_cat_2) with_metadata(copy dyn_cat_2.metadata);
-        dyn_pettable_7 = unsize_cast<&'_ (dyn @TraitDecl0), &'_ (dyn @TraitDecl0),  at [5]>(move _8);
+        dyn_pettable_7 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait),  at [5]>(move _8);
         storage_dead(_8);
         _0 = ();
         storage_dead(dyn_pettable_7);

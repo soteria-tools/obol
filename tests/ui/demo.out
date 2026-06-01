@@ -1,6 +1,7 @@
 
 // Final ULLBC:
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::mul2_add1

@@ -1,35 +1,21 @@
 
 // Final ULLBC:
 
-// Full name: std::ptr::drop_in_place::<()>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<()>(_1: *mut ())
+// Full name: std::ptr::drop_glue::<()>
+#[lang_item("drop_glue")]
+fn drop_glue::<()>(_1: &'_ mut ())
 {
     let _0: (); // return
-    let _1: *mut (); // arg #1
-    let _2: &'_ mut (); // anonymous local
+    let _1: &'_ mut (); // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
-
-// Full name: anon_const_0
-fn anon_const_0()
-{
-    let _0: (); // return
-
-    bb0: {
-        _0 = ();
-        _0 = ();
-        return;
-    }
-}
 
 // Full name: anon_const_0
 const anon_const_0: () = anon_const_0()
@@ -65,7 +51,7 @@ fn Broken::<()>() -> *const ()
         storage_live(<() as Broken>::broken_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<()>, *const ()>(const drop_in_place::<()>);
+        drop_1 = cast<drop_glue::<()>, *const ()>(const drop_glue::<()>);
         size_2 = transmute<usize, *const ()>(const 0 : usize);
         align_3 = transmute<usize, *const ()>(const 1 : usize);
         <() as Broken>::broken_4 = cast<broken::<()>, *const ()>(const broken::<()>);
@@ -83,7 +69,7 @@ static Broken::<()>: *const () = Broken::<()>()
 fn main()
 {
     let _0: (); // return
-    let _m_1: &'_ (dyn @TraitDecl0); // local
+    let _m_1: &'_ (dyn FakeTrait); // local
     let _2: &'_ (); // anonymous local
     let _3: &'_ (); // anonymous local
     let _4: &'_ (); // anonymous local
@@ -100,7 +86,7 @@ fn main()
         _4 = move _5;
         _3 = &(*_4);
         _2 = &(*_3);
-        _m_1 = unsize_cast<&'_ (), &'_ (dyn @TraitDecl0), Broken::<()>>(move _2);
+        _m_1 = unsize_cast<&'_ (), &'_ (dyn FakeTrait), Broken::<()>>(move _2);
         storage_dead(_2);
         storage_dead(_3);
         _0 = ();

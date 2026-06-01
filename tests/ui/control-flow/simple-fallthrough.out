@@ -8,6 +8,7 @@ pub enum Option::<u32> {
   Some(0: u32),
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::do_something

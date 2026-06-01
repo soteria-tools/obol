@@ -27,6 +27,7 @@ pub fn null::<u32>() -> *const u32
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::call_unsafe_fn

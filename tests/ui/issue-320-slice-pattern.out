@@ -2,6 +2,7 @@ Item core::panicking::panic caused errors; ignoring. Error { span: Span { data: 
 
 // Final ULLBC:
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: anon_const_0

@@ -8,6 +8,7 @@ pub enum Option::<u8> {
   Some(0: u8),
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::init_option

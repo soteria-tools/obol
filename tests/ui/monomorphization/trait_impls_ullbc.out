@@ -23,6 +23,7 @@ pub fn eq(self_1: &'_ bool, other_2: &'_ bool) -> bool
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::do_test::<bool>

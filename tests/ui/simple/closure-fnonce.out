@@ -16,6 +16,7 @@ pub fn drop::<NotCopy>(_x_1: NotCopy)
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::main::{closure#0}::closure

@@ -8,6 +8,7 @@ pub enum Option::<(&'_ u8,)> {
   Some(0: (&'_ u8,)),
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::f

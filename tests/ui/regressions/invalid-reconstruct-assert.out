@@ -1,3 +1,4 @@
+Item core::panicking::panic_nounwind_fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -40,12 +41,13 @@ pub struct FormattingOptions {
   precision: u16,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
 // Full name: std::result::Result::<(), Error>
@@ -56,7 +58,7 @@ pub enum Result::<(), Error> {
 
 // Full name: std::ptr::NonNull::<()>
 pub struct NonNull::<()> {
-  pointer: *const (),
+  pointer: *const () is !null,
 }
 
 // Full name: std::marker::PhantomData::<&'_ ()>
@@ -65,7 +67,7 @@ pub struct PhantomData::<&'_ ()> {}
 
 // Full name: core::fmt::rt::ArgumentType::<'_>
 enum ArgumentType::<'_> {
-  Placeholder(value: NonNull::<()>, formatter: fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Placeholder(value: NonNull::<()>, formatter: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
   Count(0: u16),
 }
 
@@ -77,12 +79,12 @@ pub struct Argument::<'_> {
 
 // Full name: std::ptr::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
-  pointer: *const Argument::<'_>,
+  pointer: *const Argument::<'_> is !null,
 }
 
 // Full name: std::ptr::NonNull::<u8>
 pub struct NonNull::<u8> {
-  pointer: *const u8,
+  pointer: *const u8 is !null,
 }
 
 // Full name: std::fmt::Arguments::<'_>
@@ -92,215 +94,11 @@ pub struct Arguments::<'_> {
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::ptr::NonNull::<Str>
-pub struct NonNull::<Str> {
-  pointer: *const Str,
-}
-
-// Full name: std::marker::PhantomData::<&'_ Str>
-#[lang_item("phantom_data")]
-pub struct PhantomData::<&'_ Str> {}
-
-// Full name: std::panic::Location::<'_>
-#[lang_item("panic_location")]
-pub struct Location::<'_> {
-  filename: NonNull::<Str>,
-  line: u32,
-  col: u32,
-  _filename: PhantomData::<&'_ Str>,
-}
-
-// Full name: core::panic::panic_info::PanicInfo::<'_>
-#[lang_item("panic_info")]
-pub struct PanicInfo::<'_> {
-  message: &'_ Arguments::<'_>,
-  location: &'_ Location::<'_>,
-  can_unwind: bool,
-  force_no_backtrace: bool,
-}
-
-// Full name: std::rt::panic_fmt::panic_impl
-fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
-= <extern:panic_impl>
-
-// Full name: core::panic::panic_info::PanicInfo::<'a>::new::<'_>
-fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
-{
-    let _0: PanicInfo::<'_>; // return
-    let message_1: &'_ Arguments::<'_>; // arg #1
-    let location_2: &'_ Location::<'_>; // arg #2
-    let can_unwind_3: bool; // arg #3
-    let force_no_backtrace_4: bool; // arg #4
-
-    bb0: {
-        _0 = PanicInfo::<'_> { message: copy message_1, location: copy location_2, can_unwind: copy can_unwind_3, force_no_backtrace: copy force_no_backtrace_4 };
-        return;
-    }
-}
-
-// Full name: std::intrinsics::caller_location
-pub fn caller_location() -> &'_ Location::<'_>
-= <intrinsic:caller_location>
-
-// Full name: std::panic::Location::<'a>::caller::<'_>
-pub fn caller::<'_>() -> &'_ Location::<'_>
-{
-    let _0: &'_ Location::<'_>; // return
-
-    bb0: {
-        _0 = caller_location() -> bb1 (unwind: bb2);
-    }
-
-    bb1: {
-        return;
-    }
-
-    bb2: {
-        undefined_behavior;
-    }
-}
-
-// Full name: std::intrinsics::abort
-pub fn abort() -> !
-= <intrinsic:abort>
-
-// Full name: std::rt::panic_fmt
-#[lang_item("panic_fmt")]
-pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
-{
-    let _0: !; // return
-    let fmt_1: Arguments::<'_>; // arg #1
-    let _2: bool; // anonymous local
-    let _3: !; // anonymous local
-    let pi_4: PanicInfo::<'_>; // local
-    let _5: &'_ Arguments::<'_>; // anonymous local
-    let _6: &'_ Arguments::<'_>; // anonymous local
-    let _7: &'_ Location::<'_>; // anonymous local
-    let _8: &'_ Location::<'_>; // anonymous local
-    let _9: &'_ PanicInfo::<'_>; // anonymous local
-    let _10: &'_ PanicInfo::<'_>; // anonymous local
-
-    bb0: {
-        storage_live(_2);
-        _2 = const false;
-        if move _2 -> bb1 else -> bb2;
-    }
-
-    bb1: {
-        storage_live(_3);
-        _3 = abort() -> bb3 (unwind: bb4);
-    }
-
-    bb2: {
-        storage_dead(_2);
-        storage_live(pi_4);
-        storage_live(_5);
-        storage_live(_6);
-        _6 = &fmt_1;
-        _5 = &(*_6);
-        storage_live(_7);
-        storage_live(_8);
-        _8 = caller::<'_>() -> bb5 (unwind: bb6);
-    }
-
-    bb3: {
-        undefined_behavior;
-    }
-
-    bb4: {
-        undefined_behavior;
-    }
-
-    bb5: {
-        _7 = &(*_8);
-        pi_4 = new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
-    }
-
-    bb6: {
-        unwind_continue;
-    }
-
-    bb7: {
-        storage_dead(_7);
-        storage_dead(_5);
-        storage_dead(_8);
-        storage_dead(_6);
-        storage_live(_9);
-        storage_live(_10);
-        _10 = &pi_4;
-        _9 = &(*_10);
-        _0 = panic_impl(move _9) -> bb9 (unwind: bb10);
-    }
-
-    bb8: {
-        unwind_continue;
-    }
-
-    bb9: {
-        undefined_behavior;
-    }
-
-    bb10: {
-        unwind_continue;
-    }
-}
-
-// Full name: core::panicking::panic_nounwind_fmt::compiletime
-fn compiletime(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) -> !
-{
-    let _0: !; // return
-    let fmt_1: Arguments::<'_>; // arg #1
-    let force_no_backtrace_2: bool; // arg #2
-
-    bb0: {
-        _0 = panic_fmt(move fmt_1) -> bb1 (unwind: bb2);
-    }
-
-    bb1: {
-        undefined_behavior;
-    }
-
-    bb2: {
-        unwind_continue;
-    }
-}
-
-// Full name: core::panicking::panic_nounwind_fmt
-pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) -> !
-{
-    let _0: !; // return
-    let fmt_1: Arguments::<'_>; // arg #1
-    let force_no_backtrace_2: bool; // arg #2
-    let _3: (Arguments::<'_>, bool); // anonymous local
-    let _4: Arguments::<'_>; // anonymous local
-    let _5: bool; // anonymous local
-
-    bb0: {
-        storage_live(_3);
-        storage_live(_4);
-        _4 = copy fmt_1;
-        storage_live(_5);
-        _5 = copy force_no_backtrace_2;
-        _3 = (move _4, move _5);
-        storage_dead(_5);
-        storage_dead(_4);
-        _0 = compiletime(move _3.0, move _3.1) -> bb1 (unwind: bb2);
-    }
-
-    bb1: {
-        undefined_behavior;
-    }
-
-    bb2: {
-        unwind_terminate;
-    }
-}
-
 fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
 {
     let _0: (); // return
     let cond_1: bool; // arg #1
-    let msg_2: &'_ Str; // local
+    let msg_2: &'_ str; // local
     let _3: !; // anonymous local
     let _4: Arguments::<'_>; // anonymous local
     let _5: NonNull::<u8>; // anonymous local
@@ -309,7 +107,7 @@ fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
     let _8: usize; // anonymous local
     let _9: usize; // anonymous local
     let _10: usize; // anonymous local
-    let _11: *const Str; // anonymous local
+    let _11: *const str; // anonymous local
     let _12: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -330,7 +128,7 @@ fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
         storage_live(_6);
         storage_live(_11);
         _11 = &raw const (*msg_2) with_metadata(copy msg_2.metadata);
-        _6 = cast<*const Str, *const u8>(copy _11);
+        _6 = cast<*const str, *const u8>(copy _11);
         storage_dead(_11);
         _5 = transmute<*const u8, NonNull::<u8>>(copy _6);
         storage_dead(_6);
@@ -339,7 +137,7 @@ fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
         storage_live(_9);
         storage_live(_10);
         storage_live(_12);
-        _12 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: hint::assert_unchecked must never be called when the condition is false\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _12 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: hint::assert_unchecked must never be called when the condition is false\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _10 = copy _12.metadata;
         storage_dead(_12);
         _9 = move _10 wrap.<< const 1 : i32;
@@ -363,18 +161,15 @@ fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
     }
 }
 
-// Full name: std::ptr::drop_in_place::<usize>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<usize>(_1: *mut usize)
+// Full name: std::ptr::drop_glue::<usize>
+#[lang_item("drop_glue")]
+fn drop_glue::<usize>(_1: &'_ mut usize)
 {
     let _0: (); // return
-    let _1: *mut usize; // arg #1
-    let _2: &'_ mut usize; // anonymous local
+    let _1: &'_ mut usize; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
@@ -390,15 +185,19 @@ pub fn drop::<usize>(self_1: &'_ mut DropOnPanic::<usize>)
     let _0: (); // return
     let self_1: &'_ mut DropOnPanic::<usize>; // arg #1
     let self_2: *mut usize; // local
+    let _3: &'_ mut usize; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(self_2);
         self_2 = copy ((*self_1)).inner;
-        _0 = drop_in_place::<usize>(move self_2) -> bb1 (unwind: bb2);
+        storage_live(_3);
+        _3 = &mut (*self_2);
+        _0 = drop_glue::<usize>(move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
+        storage_dead(_3);
         storage_dead(self_2);
         return;
     }
@@ -408,24 +207,21 @@ pub fn drop::<usize>(self_1: &'_ mut DropOnPanic::<usize>)
     }
 }
 
-// Full name: std::ptr::drop_in_place::<DropOnPanic::<usize>>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<DropOnPanic::<usize>>(_1: *mut DropOnPanic::<usize>)
+// Full name: std::ptr::drop_glue::<DropOnPanic::<usize>>
+#[lang_item("drop_glue")]
+fn drop_glue::<DropOnPanic::<usize>>(_1: &'_ mut DropOnPanic::<usize>)
 {
     let _0: (); // return
-    let _1: *mut DropOnPanic::<usize>; // arg #1
+    let _1: &'_ mut DropOnPanic::<usize>; // arg #1
     let _2: &'_ mut DropOnPanic::<usize>; // anonymous local
-    let _3: &'_ mut DropOnPanic::<usize>; // anonymous local
-    let _4: (); // anonymous local
+    let _3: (); // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_3);
-        storage_live(_4);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = &mut (*_2);
-        _4 = drop::<usize>(move _3) -> bb1 (unwind: bb2);
+        _3 = drop::<usize>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -438,6 +234,7 @@ pub fn drop_in_place::<DropOnPanic::<usize>>(_1: *mut DropOnPanic::<usize>)
 }
 
 // Full name: std::mem::MaybeDangling::<usize>
+#[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<usize> {
   0: usize,
 }
@@ -488,22 +285,20 @@ pub fn std::hint::select_unpredictable::<usize>(condition_1: bool, true_val_2: u
     let _18: MaybeDangling::<usize>; // anonymous local
     let _19: *mut MaybeUninit::<usize>; // anonymous local
     let _20: *mut MaybeUninit::<usize>; // anonymous local
-    let _21: (); // anonymous local
-    let self_22: *const usize; // local
-    let self_23: *const ManuallyDrop::<usize>; // local
-    let t_24: *mut usize; // local
-    let _25: *mut DropOnPanic::<usize>; // anonymous local
-    let _26: (); // anonymous local
+    let _21: &'_ mut usize; // anonymous local
+    let _22: (); // anonymous local
+    let self_23: *const usize; // local
+    let self_24: *const ManuallyDrop::<usize>; // local
+    let t_25: *mut usize; // local
+    let _26: *mut DropOnPanic::<usize>; // anonymous local
+    let _27: (); // anonymous local
 
     bb0: {
-        storage_live(true_ptr_6);
-        storage_live(false_ptr_7);
-        storage_live(guard_8);
         storage_live(drop_9);
         storage_live(_11);
-        storage_live(_21);
-        storage_live(_25);
+        storage_live(_22);
         storage_live(_26);
+        storage_live(_27);
         storage_live(true_val_4);
         storage_live(_15);
         storage_live(_16);
@@ -520,14 +315,17 @@ pub fn std::hint::select_unpredictable::<usize>(condition_1: bool, true_val_2: u
         storage_dead(_18);
         false_val_5 = MaybeUninit::<usize> { value: move _17 };
         storage_dead(_17);
+        storage_live(true_ptr_6);
         storage_live(_19);
         _19 = &raw mut true_val_4;
         true_ptr_6 = cast<*mut MaybeUninit::<usize>, *mut usize>(copy _19);
         storage_dead(_19);
+        storage_live(false_ptr_7);
         storage_live(_20);
         _20 = &raw mut false_val_5;
         false_ptr_7 = cast<*mut MaybeUninit::<usize>, *mut usize>(copy _20);
         storage_dead(_20);
+        storage_live(guard_8);
         guard_8 = std::intrinsics::select_unpredictable::<*mut usize>(copy condition_1, copy true_ptr_6, copy false_ptr_7) -> bb1 (unwind: bb2);
     }
 
@@ -542,7 +340,9 @@ pub fn std::hint::select_unpredictable::<usize>(condition_1: bool, true_val_2: u
     bb3: {
         storage_live(guard_10);
         guard_10 = DropOnPanic::<usize> { inner: copy guard_8 };
-        _11 = drop_in_place::<usize>(move drop_9) -> bb5 (unwind: bb6);
+        storage_live(_21);
+        _21 = &mut (*drop_9);
+        _11 = drop_glue::<usize>(move _21) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -550,9 +350,10 @@ pub fn std::hint::select_unpredictable::<usize>(condition_1: bool, true_val_2: u
     }
 
     bb5: {
-        storage_live(t_24);
-        t_24 = move (guard_10).inner;
-        storage_dead(t_24);
+        storage_dead(_21);
+        storage_live(t_25);
+        t_25 = move (guard_10).inner;
+        storage_dead(t_25);
         storage_live(self_12);
         storage_live(_13);
         _13 = move true_val_4;
@@ -562,14 +363,14 @@ pub fn std::hint::select_unpredictable::<usize>(condition_1: bool, true_val_2: u
     }
 
     bb6: {
-        _25 = &raw mut guard_10;
-        _26 = drop_in_place::<DropOnPanic::<usize>>(move _25) -> bb9 (unwind: bb10);
+        _26 = &raw mut guard_10;
+        _27 = drop_glue::<DropOnPanic::<usize>>(move _26) -> bb9 (unwind: bb10);
     }
 
     bb7: {
         storage_dead(_14);
         storage_dead(_13);
-        _21 = assert_inhabited::<usize>() -> bb11 (unwind: bb12);
+        _22 = assert_inhabited::<usize>() -> bb11 (unwind: bb12);
     }
 
     bb8: {
@@ -585,15 +386,18 @@ pub fn std::hint::select_unpredictable::<usize>(condition_1: bool, true_val_2: u
     }
 
     bb11: {
-        storage_live(self_22);
         storage_live(self_23);
-        self_23 = &raw const (self_12).value;
-        self_22 = cast<*const ManuallyDrop::<usize>, *const usize>(copy self_23);
+        storage_live(self_24);
+        self_24 = &raw const (self_12).value;
+        self_23 = cast<*const ManuallyDrop::<usize>, *const usize>(copy self_24);
+        storage_dead(self_24);
+        _0 = copy (*self_23);
         storage_dead(self_23);
-        _0 = copy (*self_22);
-        storage_dead(self_22);
         storage_dead(self_12);
         storage_dead(guard_10);
+        storage_dead(guard_8);
+        storage_dead(false_ptr_7);
+        storage_dead(true_ptr_6);
         storage_dead(false_val_5);
         storage_dead(true_val_4);
         return;
@@ -616,7 +420,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
     let this_1: usize; // arg #1
     let len_2: usize; // arg #2
     let _3: bool; // anonymous local
-    let msg_4: &'_ Str; // local
+    let msg_4: &'_ str; // local
     let _5: !; // anonymous local
     let _6: Arguments::<'_>; // anonymous local
     let _7: NonNull::<u8>; // anonymous local
@@ -625,7 +429,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
     let _10: usize; // anonymous local
     let _11: usize; // anonymous local
     let _12: usize; // anonymous local
-    let _13: *const Str; // anonymous local
+    let _13: *const str; // anonymous local
     let _14: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -649,7 +453,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
         storage_live(_8);
         storage_live(_13);
         _13 = &raw const (*msg_4) with_metadata(copy msg_4.metadata);
-        _8 = cast<*const Str, *const u8>(copy _13);
+        _8 = cast<*const str, *const u8>(copy _13);
         storage_dead(_13);
         _7 = transmute<*const u8, NonNull::<u8>>(copy _8);
         storage_dead(_8);
@@ -658,7 +462,7 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
         storage_live(_11);
         storage_live(_12);
         storage_live(_14);
-        _14 = transmute<&'_ Str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::get_unchecked requires that the index is within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::get_unchecked requires that the index is within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
         _11 = move _12 wrap.<< const 1 : i32;
@@ -686,21 +490,10 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
 struct closure {}
 
 // Full name: anon_const_4
-fn anon_const_4() -> u32
-{
-    let _0: u32; // return
-
-    bb0: {
-        _0 = const 3 : u32;
-        return;
-    }
-}
-
-// Full name: anon_const_4
 const anon_const_4: u32 = anon_const_4()
 
-// Full name: test_crate::main::{closure#0}::<i16, fn((&'_ u32,)) -> Ordering, ()>
-fn {closure#0}::<i16, fn((&'_ u32,)) -> Ordering, ()>(_1: &'_ mut closure, spread_args_2: (&'_ u32,)) -> Ordering
+// Full name: test_crate::main::{closure#0}::<i16, extern "rust-call" fn((&'_ u32,)) -> Ordering, ()>
+fn {closure#0}::<i16, extern "rust-call" fn((&'_ u32,)) -> Ordering, ()>(_1: &'_ mut closure, spread_args_2: (&'_ u32,)) -> Ordering
 {
     let _0: Ordering; // return
     let _1: &'_ mut closure; // arg #1
@@ -793,11 +586,8 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
 
     bb0: {
         storage_live(base_5);
-        storage_live(half_8);
-        storage_live(mid_10);
         storage_live(_15);
         storage_live(_21);
-        storage_live(result_25);
         storage_live(_30);
         storage_live(_36);
         storage_live(_38);
@@ -840,10 +630,12 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
 
     bb5: {
         storage_dead(_7);
+        storage_live(half_8);
         storage_live(_9);
         _9 = copy size_3;
         half_8 = move _9 ub./ const 2 : usize;
         storage_dead(_9);
+        storage_live(mid_10);
         storage_live(_11);
         _11 = copy base_5;
         mid_10 = move _11 wrap.+ copy half_8;
@@ -891,7 +683,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         _15 = &(*_29);
         storage_dead(_29);
         _14 = (copy _15,);
-        cmp_12 = {closure#0}::<i16, fn((&'_ u32,)) -> Ordering, ()>(move _13, move _14) -> bb13 (unwind: bb14);
+        cmp_12 = {closure#0}::<i16, extern "rust-call" fn((&'_ u32,)) -> Ordering, ()>(move _13, move _14) -> bb13 (unwind: bb14);
     }
 
     bb9: {
@@ -907,7 +699,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         storage_dead(_35);
         storage_dead(index_22);
         _20 = (copy _21,);
-        cmp_18 = {closure#0}::<i16, fn((&'_ u32,)) -> Ordering, ()>(move _19, move _20) -> bb17 (unwind: bb14);
+        cmp_18 = {closure#0}::<i16, extern "rust-call" fn((&'_ u32,)) -> Ordering, ()>(move _19, move _20) -> bb17 (unwind: bb14);
     }
 
     bb11: {
@@ -957,6 +749,8 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         storage_dead(_16);
         size_3 = copy size_3 wrap.- copy half_8;
         storage_dead(cmp_12);
+        storage_dead(mid_10);
+        storage_dead(half_8);
         storage_dead(_6);
         goto bb4;
     }
@@ -973,6 +767,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
     }
 
     bb20: {
+        storage_live(result_25);
         storage_live(_26);
         storage_live(_27);
         _27 = copy _39 == const -1 : i8;
@@ -1006,6 +801,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         assert(copy cond_28 == true) else undefined_behavior;
         storage_dead(cond_28);
         _0 = Result::<usize, usize>::Err { 0: copy result_25 };
+        storage_dead(result_25);
         goto bb26;
     }
 

@@ -154,6 +154,7 @@ pub fn std::array::<impl std::ops::Index<I> for [T; N]>::index::<i32, Range::<us
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::main

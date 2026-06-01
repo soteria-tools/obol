@@ -13,6 +13,7 @@ pub fn cast::<u32, [u8; 4 : usize]>(self_1: *const u32) -> *const [u8; 4 : usize
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: <&'a u32 as test_crate::Convert<&'a [u8; 4]>>::method::<'_>

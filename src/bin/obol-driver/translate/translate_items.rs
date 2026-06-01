@@ -33,16 +33,36 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let mut ctx = std::panic::AssertUnwindSafe(&mut ctx);
                 std::panic::catch_unwind(move || ctx.translate_item_aux(item_src, trans_id))
             };
+            // Strip PathElem::Instantiated from the name before error reporting, since those
+            // reference types that may not yet be in item_names, causing a panic in
+            // report_external_dep_error. The name is always inserted first in translate_item_aux.
+            let sanitize_name = |ctx: &mut TranslateCtx<'_>| {
+                if let Some(trans_id) = trans_id
+                    && let Some(n) = ctx.translated.item_names.get(&trans_id)
+                {
+                    let safe_name = Name {
+                        name: n
+                            .name
+                            .iter()
+                            .filter(|e| !matches!(e, PathElem::Instantiated(_)))
+                            .cloned()
+                            .collect(),
+                    };
+                    ctx.translated.item_names.insert(trans_id, safe_name);
+                }
+            };
             match res {
                 Ok(Ok(())) => return,
                 // Translation error
                 Ok(Err(msg)) => {
                     println!("Item {name} caused errors; ignoring. {msg:?}");
+                    sanitize_name(&mut ctx);
                     register_error!(ctx, span, "Item `{name}` caused errors; ignoring.")
                 }
                 // Panic
                 Err(msg) => {
                     println!("Item {name} caused errors; ignoring. {msg:?}");
+                    sanitize_name(&mut ctx);
                     register_error!(ctx, span, "Thread panicked when extracting item `{name}`.")
                 }
             };
@@ -157,12 +177,16 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
     }
 
     pub fn translate_fake_dyn_trait(&mut self) {
+        let fake_name = Name {
+            name: vec![PathElem::Ident("FakeTrait".into(), Disambiguator::ZERO)],
+        };
+        self.translated
+            .item_names
+            .insert(ItemId::TraitDecl(TraitDeclId::ZERO), fake_name.clone());
         self.translated.trait_decls.push(TraitDecl {
             def_id: TraitDeclId::ZERO,
             item_meta: ItemMeta {
-                name: Name {
-                    name: vec![PathElem::Ident("FakeTrait".into(), Disambiguator::ZERO)],
-                },
+                name: fake_name,
                 span: Span::dummy(),
                 source_text: None,
                 attr_info: AttrInfo::default(),

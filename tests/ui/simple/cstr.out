@@ -8,6 +8,7 @@ pub struct CStr {
   inner: [i8],
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: anon_const_0

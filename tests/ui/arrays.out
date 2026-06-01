@@ -340,6 +340,7 @@ pub fn len::<u8>(self_1: &'_ [u8]) -> usize
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: anon_const_0

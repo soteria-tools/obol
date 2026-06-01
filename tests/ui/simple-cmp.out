@@ -30,6 +30,7 @@ pub fn cmp(self_1: &'_ i32, other_2: &'_ i32) -> Ordering
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::main

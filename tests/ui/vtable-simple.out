@@ -13,34 +13,21 @@ pub fn clone(self_1: &'_ i32) -> i32
     }
 }
 
-// Full name: std::ptr::drop_in_place::<i32>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<i32>(_1: *mut i32)
+// Full name: std::ptr::drop_glue::<i32>
+#[lang_item("drop_glue")]
+fn drop_glue::<i32>(_1: &'_ mut i32)
 {
     let _0: (); // return
-    let _1: *mut i32; // arg #1
-    let _2: &'_ mut i32; // anonymous local
+    let _1: &'_ mut i32; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
-
-// Full name: anon_const_0
-fn anon_const_0() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42 : i32;
-        return;
-    }
-}
 
 // Full name: anon_const_0
 const anon_const_0: i32 = anon_const_0()
@@ -90,7 +77,7 @@ fn Modifiable::<i32, i32>() -> *const ()
         storage_live(<i32 as Modifiable<i32>>::modify_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<i32>, *const ()>(const drop_in_place::<i32>);
+        drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4 : usize);
         align_3 = transmute<usize, *const ()>(const 4 : usize);
         <i32 as Modifiable<i32>>::modify_4 = cast<<i32 as test_crate::Modifiable<T>>::modify::<i32>, *const ()>(const <i32 as test_crate::Modifiable<T>>::modify::<i32>);
@@ -104,7 +91,7 @@ fn Modifiable::<i32, i32>() -> *const ()
 // Full name: {vtable}::test_crate::Modifiable::<i32, i32>
 static Modifiable::<i32, i32>: *const () = Modifiable::<i32, i32>()
 
-fn test_crate::Modifiable::modify::<(dyn @TraitDecl0), i32>(_1: &'_ mut (dyn @TraitDecl0), _2: &'_ i32) -> i32
+fn test_crate::Modifiable::modify::<(dyn FakeTrait), i32>(_1: &'_ mut (dyn FakeTrait), _2: &'_ i32) -> i32
 = <opaque>
 
 // Full name: test_crate::modify_trait_object::<i32>
@@ -112,11 +99,11 @@ fn modify_trait_object::<i32>(arg_1: &'_ i32) -> i32
 {
     let _0: i32; // return
     let arg_1: &'_ i32; // arg #1
-    let x_2: &'_ mut (dyn @TraitDecl0); // local
+    let x_2: &'_ mut (dyn FakeTrait); // local
     let _3: &'_ mut i32; // anonymous local
     let _4: &'_ mut i32; // anonymous local
     let _5: i32; // anonymous local
-    let _6: &'_ mut (dyn @TraitDecl0); // anonymous local
+    let _6: &'_ mut (dyn FakeTrait); // anonymous local
     let _7: &'_ i32; // anonymous local
     let _8: *const *const (); // anonymous local
 
@@ -129,7 +116,7 @@ fn modify_trait_object::<i32>(arg_1: &'_ i32) -> i32
         _5 = const 199 : i32;
         _4 = &mut _5;
         _3 = &mut (*_4);
-        x_2 = unsize_cast<&'_ mut i32, &'_ mut (dyn @TraitDecl0), Modifiable::<i32, i32>>(move _3);
+        x_2 = unsize_cast<&'_ mut i32, &'_ mut (dyn FakeTrait), Modifiable::<i32, i32>>(move _3);
         storage_dead(_3);
         storage_dead(_4);
         storage_live(_6);

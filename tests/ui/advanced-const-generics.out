@@ -1,3 +1,4 @@
+Item std::fmt::Formatter::<'a>::write_str caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -11,12 +12,13 @@ pub struct FormattingOptions {
   precision: u16,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
 // Full name: std::result::Result::<(), Error>
@@ -24,10 +26,6 @@ pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
-
-// Full name: std::fmt::Formatter::<'a>::write_str::<'_>
-pub fn write_str::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ Str) -> Result::<(), Error>
-= <missing>
 
 // Full name: test_crate::Foo
 enum Foo {
@@ -72,8 +70,8 @@ pub fn eq(self_1: &'_ Foo, other_2: &'_ Foo) -> bool
     }
 }
 
-// Full name: <test_crate::Foo as std::cmp::Eq>::assert_receiver_is_total_eq
-pub fn assert_receiver_is_total_eq(self_1: &'_ Foo)
+// Full name: <test_crate::Foo as std::cmp::Eq>::assert_fields_are_eq
+pub fn assert_fields_are_eq(self_1: &'_ Foo)
 {
     let _0: (); // return
     let self_1: &'_ Foo; // arg #1
@@ -92,10 +90,10 @@ pub fn fmt(self_1: &'_ Foo, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
     let self_1: &'_ Foo; // arg #1
     let f_2: &'_ mut Formatter::<'_>; // arg #2
     let _3: &'_ mut Formatter::<'_>; // anonymous local
-    let _4: &'_ Str; // anonymous local
+    let _4: &'_ str; // anonymous local
     let _5: isize; // anonymous local
-    let _6: &'_ Str; // anonymous local
-    let _7: &'_ Str; // anonymous local
+    let _6: &'_ str; // anonymous local
+    let _7: &'_ str; // anonymous local
 
     bb0: {
         storage_live(_5);
@@ -127,7 +125,7 @@ pub fn fmt(self_1: &'_ Foo, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
     }
 
     bb4: {
-        _0 = write_str::<'_>(move _3, move _4) -> bb5 (unwind: bb6);
+        _0 = write_str(move _3, move _4) -> bb5 (unwind: bb6);
     }
 
     bb5: {

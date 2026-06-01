@@ -90,6 +90,7 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Op
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 fn <test_crate::NoOverride<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>()

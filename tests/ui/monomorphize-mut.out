@@ -39,6 +39,7 @@ struct ListNode::<&'_ mut u32> {
   next: Box::<List::<&'_ mut u32>, Global>,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::Foo1::<&'_ mut u32>

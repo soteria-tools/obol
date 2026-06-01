@@ -21,6 +21,7 @@ pub fn from_fn::<u8, closure>(f_1: closure) -> FromFn::<closure>
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::sparse_transitions::<'_>

@@ -1,3 +1,7 @@
+Item std::result::unwrap_failed caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -11,26 +15,24 @@ pub struct FormattingOptions {
   precision: u16,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::ptr::drop_in_place::<u32>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<u32>(_1: *mut u32)
+// Full name: std::ptr::drop_glue::<u32>
+#[lang_item("drop_glue")]
+fn drop_glue::<u32>(_1: &'_ mut u32)
 {
     let _0: (); // return
-    let _1: *mut u32; // arg #1
-    let _2: &'_ mut u32; // anonymous local
+    let _1: &'_ mut u32; // arg #1
 
     bb0: {
-        storage_live(_2);
         _0 = ();
-        _2 = &mut (*_1);
         return;
     }
 }
@@ -40,15 +42,6 @@ pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
-
-pub fn core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
-
-pub fn core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
-
-pub fn core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-= <missing>
 
 pub fn core::fmt::num::<impl std::fmt::Debug for u32>::fmt(self_1: &'_ u32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
@@ -129,7 +122,7 @@ fn Debug::<u32>() -> *const ()
         storage_live(core::fmt::num::<impl Debug for u32>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
-        drop_1 = cast<drop_in_place::<u32>, *const ()>(const drop_in_place::<u32>);
+        drop_1 = cast<drop_glue::<u32>, *const ()>(const drop_glue::<u32>);
         size_2 = transmute<usize, *const ()>(const 4 : usize);
         align_3 = transmute<usize, *const ()>(const 4 : usize);
         core::fmt::num::<impl Debug for u32>::fmt_4 = cast<core::fmt::num::<impl std::fmt::Debug for u32>::fmt, *const ()>(const core::fmt::num::<impl std::fmt::Debug for u32>::fmt);
@@ -149,10 +142,6 @@ pub enum Result::<u32, u32> {
   Err(0: u32),
 }
 
-// Full name: std::result::unwrap_failed
-fn unwrap_failed(_1: &'_ Str, _2: &'_ (dyn @TraitDecl0)) -> !
-= <missing>
-
 pub fn std::result::Result::<T, E>::unwrap::<u32, u32>(self_1: Result::<u32, u32>) -> u32
 {
     let t_0: u32; // return
@@ -160,13 +149,12 @@ pub fn std::result::Result::<T, E>::unwrap::<u32, u32>(self_1: Result::<u32, u32
     let _2: isize; // anonymous local
     let e_3: u32; // local
     let _4: !; // anonymous local
-    let _5: &'_ (dyn @TraitDecl0); // anonymous local
+    let _5: &'_ (dyn FakeTrait); // anonymous local
     let _6: &'_ u32; // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_4);
-        storage_live(_6);
         _2 = @discriminant(self_1);
         switch move _2 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
     }
@@ -180,8 +168,9 @@ pub fn std::result::Result::<T, E>::unwrap::<u32, u32>(self_1: Result::<u32, u32
         storage_live(e_3);
         e_3 = move (self_1 as variant Result::<u32, u32>::Err).0;
         storage_live(_5);
+        storage_live(_6);
         _6 = &e_3;
-        _5 = unsize_cast<&'_ u32, &'_ (dyn @TraitDecl0), Debug::<u32>>(copy _6);
+        _5 = unsize_cast<&'_ u32, &'_ (dyn FakeTrait), Debug::<u32>>(copy _6);
         _4 = unwrap_failed(const "called `Result::unwrap()` on an `Err` value", move _5) -> bb4 (unwind: bb5);
     }
 

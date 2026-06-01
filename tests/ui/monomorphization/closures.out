@@ -16,6 +16,7 @@ pub fn drop::<Thing>(_x_1: Thing)
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 struct test_crate::main::{closure#0}::closure {

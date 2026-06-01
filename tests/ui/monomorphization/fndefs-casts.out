@@ -1,7 +1,41 @@
-Item std::ops::Fn::call caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Shim` cannot be converted" }
 
 // Final ULLBC:
 
+// Full name: test_crate::foo::<u32>
+fn foo::<u32>(x_1: &'_ u32)
+{
+    let _0: (); // return
+    let x_1: &'_ u32; // arg #1
+
+    bb0: {
+        _0 = ();
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: std::ops::Fn::call::<foo::<u32>, (&'_ u32,)>
+pub fn call::<foo::<u32>, (&'_ u32,)>(_1: &'_ foo::<u32>, _2: (&'_ u32,))
+{
+    let _0: (); // return
+    let _1: &'_ foo::<u32>; // arg #1
+    let _2: (&'_ u32,); // arg #2
+
+    bb0: {
+        _0 = ();
+        _0 = foo::<u32>(move _2.0) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: anon_const_0
@@ -28,19 +62,6 @@ fn foo::<char>(x_1: &'_ char)
 {
     let _0: (); // return
     let x_1: &'_ char; // arg #1
-
-    bb0: {
-        _0 = ();
-        _0 = ();
-        return;
-    }
-}
-
-// Full name: test_crate::foo::<u32>
-fn foo::<u32>(x_1: &'_ u32)
-{
-    let _0: (); // return
-    let x_1: &'_ u32; // arg #1
 
     bb0: {
         _0 = ();

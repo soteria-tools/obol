@@ -1,6 +1,8 @@
-Item std::intrinsics::saturating_add caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Intrinsic` cannot be converted" }
 
 // Final ULLBC:
+
+pub fn std::intrinsics::saturating_add::<u8>(a_1: u8, b_2: u8) -> u8
+= <intrinsic:saturating_add>
 
 // Full name: core::num::<impl u8>::wrapping_add
 pub fn wrapping_add(self_1: u8, rhs_2: u8) -> u8
@@ -47,6 +49,7 @@ pub fn core::num::<impl u8>::saturating_add(self_1: u8, rhs_2: u8) -> u8
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::main

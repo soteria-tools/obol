@@ -79,6 +79,7 @@ pub fn unwrap::<Ordering>(self_1: Option::<Ordering>) -> Ordering
     }
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: <i32 as test_crate::Ord>::cmp

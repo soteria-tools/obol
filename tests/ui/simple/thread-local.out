@@ -1,11 +1,123 @@
 Item std::thread::local::panic_access_error caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
-Item test_crate::FOO::{constant#0}::{closure#1} caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Shim` cannot be converted" }
+Item core::panicking::panic caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item core::panicking::panic_nounwind_fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
+Item std::rt::panic_fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
+
+// Full name: std::sys::thread_local::native::lazy::State::<!>
+enum State::<!> {
+  Uninitialized,
+  Alive,
+  Destroyed(0: !),
+}
+
+// Full name: std::cell::UnsafeCell::<State::<!>>
+#[lang_item("unsafe_cell")]
+pub struct UnsafeCell::<State::<!>> {
+  value: State::<!>,
+}
+
+// Full name: std::cell::Cell::<State::<!>>
+pub struct Cell::<State::<!>> {
+  value: UnsafeCell::<State::<!>>,
+}
+
+// Full name: std::mem::MaybeDangling::<u32>
+#[lang_item("maybe_dangling")]
+pub struct MaybeDangling::<u32> {
+  0: u32,
+}
+
+// Full name: std::mem::ManuallyDrop::<u32>
+#[lang_item("manually_drop")]
+pub struct ManuallyDrop::<u32> {
+  value: MaybeDangling::<u32>,
+}
+
+// Full name: std::mem::MaybeUninit::<u32>
+#[lang_item("maybe_uninit")]
+pub union MaybeUninit::<u32> {
+  uninit: (),
+  value: ManuallyDrop::<u32>,
+}
+
+// Full name: std::cell::UnsafeCell::<MaybeUninit::<u32>>
+#[lang_item("unsafe_cell")]
+pub struct UnsafeCell::<MaybeUninit::<u32>> {
+  value: MaybeUninit::<u32>,
+}
 
 // Full name: std::convert::Infallible
 pub enum Infallible {
 }
+
+// Full name: std::fmt::Error
+pub struct Error {}
+
+// Full name: std::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn FakeTrait),
+}
+
+// Full name: std::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+// Full name: std::ptr::NonNull::<()>
+pub struct NonNull::<()> {
+  pointer: *const () is !null,
+}
+
+// Full name: std::marker::PhantomData::<&'_ ()>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<&'_ ()> {}
+
+// Full name: core::fmt::rt::ArgumentType::<'_>
+enum ArgumentType::<'_> {
+  Placeholder(value: NonNull::<()>, formatter: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Count(0: u16),
+}
+
+// Full name: core::fmt::rt::Argument::<'_>
+#[lang_item("format_argument")]
+pub struct Argument::<'_> {
+  ty: ArgumentType::<'_>,
+}
+
+// Full name: std::ptr::NonNull::<Argument::<'_>>
+pub struct NonNull::<Argument::<'_>> {
+  pointer: *const Argument::<'_> is !null,
+}
+
+// Full name: std::ptr::NonNull::<u8>
+pub struct NonNull::<u8> {
+  pointer: *const u8 is !null,
+}
+
+// Full name: std::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: std::intrinsics::ctpop::<usize>
+pub fn ctpop::<usize>(x_1: usize) -> u32
+= <intrinsic:ctpop>
 
 // Full name: std::thread::AccessError
 pub struct AccessError {}
@@ -22,11 +134,286 @@ pub enum ControlFlow::<Result::<Infallible, AccessError>, &'_ u32> {
   Break(0: Result::<Infallible, AccessError>),
 }
 
-// Full name: std::option::Option::<&'_ u32>
-#[lang_item("Option")]
-pub enum Option::<&'_ u32> {
-  None,
-  Some(0: &'_ u32),
+// Full name: std::thread::local_impl::LazyStorage::<u32, !>
+pub struct LazyStorage::<u32, !> {
+  value: UnsafeCell::<MaybeUninit::<u32>>,
+  state: Cell::<State::<!>>,
+}
+
+// Full name: test_crate::FOO::{constant#0}::{closure#1}::__RUST_STD_INTERNAL_VAL
+fn __RUST_STD_INTERNAL_VAL() -> LazyStorage::<u32, !>
+{
+    let _0: LazyStorage::<u32, !>; // return
+    let _1: UnsafeCell::<MaybeUninit::<u32>>; // anonymous local
+    let _2: State::<!>; // anonymous local
+    let _3: UnsafeCell::<State::<!>>; // anonymous local
+    let _4: Cell::<State::<!>>; // anonymous local
+    let _5: LazyStorage::<u32, !>; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = UnsafeCell::<MaybeUninit::<u32>> { value: const RawMemory(--, --, --, --) };
+        storage_live(_2);
+        _2 = State::<!>::Uninitialized {  };
+        storage_live(_3);
+        _3 = UnsafeCell::<State::<!>> { value: move _2 };
+        storage_live(_4);
+        _4 = Cell::<State::<!>> { value: move _3 };
+        storage_live(_5);
+        _5 = LazyStorage::<u32, !> { value: move _1, state: move _4 };
+        _0 = move _5;
+        return;
+    }
+}
+
+// Full name: test_crate::FOO::{constant#0}::{closure#1}::__RUST_STD_INTERNAL_VAL
+static __RUST_STD_INTERNAL_VAL: LazyStorage::<u32, !> = __RUST_STD_INTERNAL_VAL()
+
+// Full name: test_crate::FOO::__rust_std_internal_init_fn
+fn __rust_std_internal_init_fn() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 0 : u32;
+        return;
+    }
+}
+
+struct test_crate::FOO::{constant#0}::{closure#1}::closure {}
+
+// Full name: <! as std::sys::thread_local::native::lazy::DestroyedState>::register_dtor::<u32>
+pub fn register_dtor::<u32>(_1: &'_ LazyStorage::<u32, !>)
+{
+    let _0: (); // return
+    let _1: &'_ LazyStorage::<u32, !>; // arg #1
+
+    bb0: {
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: std::ptr::const_ptr::<impl *const T>::is_aligned_to::<()>
+pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
+{
+    let _0: bool; // return
+    let self_1: *const (); // arg #1
+    let align_2: usize; // arg #2
+    let _3: !; // anonymous local
+    let _4: Arguments::<'_>; // anonymous local
+    let _5: usize; // anonymous local
+    let _6: usize; // anonymous local
+    let _7: usize; // anonymous local
+    let _8: u32; // anonymous local
+    let _9: *const (); // anonymous local
+    let s_10: &'_ str; // local
+    let _11: NonNull::<u8>; // anonymous local
+    let _12: *const u8; // anonymous local
+    let _13: NonNull::<Argument::<'_>>; // anonymous local
+    let _14: usize; // anonymous local
+    let _15: usize; // anonymous local
+    let _16: usize; // anonymous local
+    let _17: *const str; // anonymous local
+    let _18: &'_ [u8]; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_8);
+        _8 = ctpop::<usize>(copy align_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        switch copy _8 -> 1 : u32: bb3, otherwise: bb4;
+    }
+
+    bb2: {
+        undefined_behavior;
+    }
+
+    bb3: {
+        storage_dead(_8);
+        storage_live(_5);
+        storage_live(_6);
+        storage_live(_9);
+        _9 = cast<*const (), *const ()>(copy self_1);
+        _6 = transmute<*const (), usize>(copy _9);
+        storage_dead(_9);
+        storage_live(_7);
+        _7 = copy align_2 wrap.- const 1 : usize;
+        _5 = move _6 & move _7;
+        storage_dead(_7);
+        storage_dead(_6);
+        _0 = move _5 == const 0 : usize;
+        storage_dead(_5);
+        return;
+    }
+
+    bb4: {
+        storage_dead(_8);
+        storage_live(_4);
+        storage_live(s_10);
+        s_10 = const "is_aligned_to: align is not a power-of-two";
+        storage_live(_11);
+        storage_live(_12);
+        storage_live(_17);
+        _17 = &raw const (*s_10) with_metadata(copy s_10.metadata);
+        _12 = cast<*const str, *const u8>(copy _17);
+        storage_dead(_17);
+        _11 = transmute<*const u8, NonNull::<u8>>(copy _12);
+        storage_dead(_12);
+        storage_live(_13);
+        storage_live(_14);
+        storage_live(_15);
+        storage_live(_16);
+        storage_live(_18);
+        _18 = transmute<&'_ str, &'_ [u8]>(const "is_aligned_to: align is not a power-of-two");
+        _16 = copy _18.metadata;
+        storage_dead(_18);
+        _15 = move _16 wrap.<< const 1 : i32;
+        storage_dead(_16);
+        _14 = move _15 | const 1 : usize;
+        storage_dead(_15);
+        _13 = transmute<usize, NonNull::<Argument::<'_>>>(move _14);
+        storage_dead(_14);
+        _4 = Arguments::<'_> { template: move _11, args: move _13 };
+        storage_dead(_13);
+        storage_dead(_11);
+        storage_dead(s_10);
+        _3 = panic_fmt(move _4) -> bb5 (unwind: bb6);
+    }
+
+    bb5: {
+        undefined_behavior;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::ptr::replace::precondition_check
+fn precondition_check(addr_1: *const (), align_2: usize, is_zst_3: bool)
+{
+    let _0: (); // return
+    let addr_1: *const (); // arg #1
+    let align_2: usize; // arg #2
+    let is_zst_3: bool; // arg #3
+    let _4: bool; // anonymous local
+    let msg_5: &'_ str; // local
+    let _6: !; // anonymous local
+    let _7: Arguments::<'_>; // anonymous local
+    let _8: bool; // anonymous local
+    let _9: bool; // anonymous local
+    let _10: usize; // anonymous local
+    let _11: NonNull::<u8>; // anonymous local
+    let _12: *const u8; // anonymous local
+    let _13: NonNull::<Argument::<'_>>; // anonymous local
+    let _14: usize; // anonymous local
+    let _15: usize; // anonymous local
+    let _16: usize; // anonymous local
+    let _17: *const str; // anonymous local
+    let _18: &'_ [u8]; // anonymous local
+
+    bb0: {
+        storage_live(msg_5);
+        storage_live(_6);
+        _0 = ();
+        storage_live(_4);
+        storage_live(_8);
+        _8 = is_aligned_to::<()>(copy addr_1, move align_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        if move _8 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        unwind_terminate;
+    }
+
+    bb3: {
+        if copy is_zst_3 -> bb5 else -> bb6;
+    }
+
+    bb4: {
+        storage_dead(_8);
+        goto bb7;
+    }
+
+    bb5: {
+        storage_dead(_8);
+        goto bb8;
+    }
+
+    bb6: {
+        storage_live(_9);
+        storage_live(_10);
+        _10 = transmute<*const (), usize>(copy addr_1);
+        _9 = move _10 == const 0 : usize;
+        storage_dead(_10);
+        _4 = ~(move _9);
+        storage_dead(_9);
+        storage_dead(_8);
+        if move _4 -> bb8 else -> bb7;
+    }
+
+    bb7: {
+        msg_5 = const "unsafe precondition(s) violated: ptr::replace requires that the pointer argument is aligned and non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.";
+        storage_live(_7);
+        storage_live(_11);
+        storage_live(_12);
+        storage_live(_17);
+        _17 = &raw const (*msg_5) with_metadata(copy msg_5.metadata);
+        _12 = cast<*const str, *const u8>(copy _17);
+        storage_dead(_17);
+        _11 = transmute<*const u8, NonNull::<u8>>(copy _12);
+        storage_dead(_12);
+        storage_live(_13);
+        storage_live(_14);
+        storage_live(_15);
+        storage_live(_16);
+        storage_live(_18);
+        _18 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: ptr::replace requires that the pointer argument is aligned and non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
+        _16 = copy _18.metadata;
+        storage_dead(_18);
+        _15 = move _16 wrap.<< const 1 : i32;
+        storage_dead(_16);
+        _14 = move _15 | const 1 : usize;
+        storage_dead(_15);
+        _13 = transmute<usize, NonNull::<Argument::<'_>>>(move _14);
+        storage_dead(_14);
+        _7 = Arguments::<'_> { template: move _11, args: move _13 };
+        storage_dead(_13);
+        storage_dead(_11);
+        _6 = panic_nounwind_fmt(move _7, const false) -> bb9 (unwind: bb10);
+    }
+
+    bb8: {
+        storage_dead(_4);
+        return;
+    }
+
+    bb9: {
+        undefined_behavior;
+    }
+
+    bb10: {
+        undefined_behavior;
+    }
+}
+
+// Full name: std::ptr::drop_glue::<u32>
+#[lang_item("drop_glue")]
+fn drop_glue::<u32>(_1: &'_ mut u32)
+{
+    let _0: (); // return
+    let _1: &'_ mut u32; // arg #1
+
+    bb0: {
+        _0 = ();
+        return;
+    }
 }
 
 // Full name: std::option::Option::<u32>
@@ -41,6 +428,431 @@ pub enum Option::<u32> {
 pub enum Option::<&'_ mut Option::<u32>> {
   None,
   Some(0: &'_ mut Option::<u32>),
+}
+
+// Full name: std::ops::FnOnce::call_once::<__rust_std_internal_init_fn, ()>
+pub fn call_once::<__rust_std_internal_init_fn, ()>(_1: __rust_std_internal_init_fn, _2: ()) -> u32
+{
+    let _0: u32; // return
+    let _1: __rust_std_internal_init_fn; // arg #1
+    let _2: (); // arg #2
+
+    bb0: {
+        _0 = __rust_std_internal_init_fn() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::thread::local_impl::LazyStorage::<T, D>::get_or_init_slow::<u32, !, __rust_std_internal_init_fn>
+fn get_or_init_slow::<u32, !, __rust_std_internal_init_fn>(self_1: &'_ LazyStorage::<u32, !>, i_2: Option::<&'_ mut Option::<u32>>, f_3: __rust_std_internal_init_fn) -> *const u32
+{
+    let _0: *const u32; // return
+    let self_1: &'_ LazyStorage::<u32, !>; // arg #1
+    let i_2: Option::<&'_ mut Option::<u32>>; // arg #2
+    let f_3: __rust_std_internal_init_fn; // arg #3
+    let _4: State::<!>; // anonymous local
+    let _5: isize; // anonymous local
+    let self_6: *mut MaybeUninit::<u32>; // local
+    let v_7: u32; // local
+    let self_8: Option::<u32>; // local
+    let f_9: __rust_std_internal_init_fn; // local
+    let old_value_10: MaybeUninit::<u32>; // local
+    let self_11: *mut MaybeUninit::<u32>; // local
+    let src_12: MaybeUninit::<u32>; // local
+    let _13: (); // anonymous local
+    let _14: State::<!>; // anonymous local
+    let val_15: State::<!>; // local
+    let _16: isize; // anonymous local
+    let _17: !; // anonymous local
+    let self_18: *mut MaybeUninit::<u32>; // local
+    let _19: *mut State::<!>; // anonymous local
+    let _20: *const UnsafeCell::<State::<!>>; // anonymous local
+    let _21: *const UnsafeCell::<MaybeUninit::<u32>>; // anonymous local
+    let _22: isize; // anonymous local
+    let x_23: &'_ mut Option::<u32>; // local
+    let _24: Option::<u32>; // anonymous local
+    let _25: isize; // anonymous local
+    let _26: __rust_std_internal_init_fn; // anonymous local
+    let _27: *const UnsafeCell::<MaybeUninit::<u32>>; // anonymous local
+    let _28: ManuallyDrop::<u32>; // anonymous local
+    let _29: MaybeDangling::<u32>; // anonymous local
+    let _30: (); // anonymous local
+    let _31: *const (); // anonymous local
+    let _32: *mut State::<!>; // anonymous local
+    let _33: *const UnsafeCell::<State::<!>>; // anonymous local
+    let to_drop_34: *mut u32; // local
+    let _35: *mut MaybeUninit::<u32>; // anonymous local
+    let _36: &'_ mut u32; // anonymous local
+    let _37: *const UnsafeCell::<MaybeUninit::<u32>>; // anonymous local
+    let _38: bool; // anonymous local
+    let _39: *const u32; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        storage_live(v_7);
+        storage_live(_13);
+        storage_live(_16);
+        storage_live(_17);
+        storage_live(_21);
+        storage_live(_27);
+        storage_live(_30);
+        storage_live(_37);
+        storage_live(_4);
+        storage_live(_19);
+        storage_live(_20);
+        _20 = &raw const (((*self_1)).state).value;
+        _19 = cast<*const UnsafeCell::<State::<!>>, *mut State::<!>>(copy _20);
+        storage_dead(_20);
+        _4 = copy (*_19);
+        storage_dead(_19);
+        _5 = @discriminant(_4);
+        switch move _5 -> 0 : isize: bb1, 1 : isize: bb2, 2 : isize: bb3, otherwise: bb4;
+    }
+
+    bb1: {
+        storage_dead(_4);
+        storage_live(self_8);
+        storage_live(_22);
+        _22 = @discriminant(i_2);
+        switch move _22 -> 0 : isize: bb5, 1 : isize: bb6, otherwise: bb4;
+    }
+
+    bb2: {
+        storage_live(self_6);
+        _21 = &raw const ((*self_1)).value;
+        self_6 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *mut MaybeUninit::<u32>>(copy _21);
+        _0 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *const u32>(copy _21);
+        storage_dead(self_6);
+        goto bb7;
+    }
+
+    bb3: {
+        storage_live(_39);
+        _39 = cast<usize, *const u32>(const 0 : usize);
+        _0 = move _39;
+        goto bb7;
+    }
+
+    bb4: {
+        undefined_behavior;
+    }
+
+    bb5: {
+        self_8 = Option::<u32>::None {  };
+        storage_dead(_22);
+        storage_live(f_9);
+        f_9 = move f_3;
+        storage_live(_25);
+        goto bb8;
+    }
+
+    bb6: {
+        storage_live(x_23);
+        x_23 = copy (i_2 as variant Option::<&'_ mut Option::<u32>>::Some).0;
+        storage_live(_24);
+        _24 = Option::<u32>::None {  };
+        self_8 = copy (*x_23);
+        (*x_23) = move _24;
+        storage_dead(_24);
+        storage_dead(x_23);
+        storage_dead(_22);
+        storage_live(f_9);
+        f_9 = move f_3;
+        storage_live(_25);
+        _25 = @discriminant(self_8);
+        switch move _25 -> 0 : isize: bb8, 1 : isize: bb9, otherwise: bb4;
+    }
+
+    bb7: {
+        storage_dead(_4);
+        goto bb10;
+    }
+
+    bb8: {
+        storage_live(_26);
+        _26 = move f_9;
+        v_7 = call_once::<__rust_std_internal_init_fn, ()>(move _26, const ()) -> bb11 (unwind: bb12);
+    }
+
+    bb9: {
+        v_7 = move (self_8 as variant Option::<u32>::Some).0;
+        goto bb13;
+    }
+
+    bb10: {
+        return;
+    }
+
+    bb11: {
+        storage_dead(_26);
+        goto bb13;
+    }
+
+    bb12: {
+        unwind_continue;
+    }
+
+    bb13: {
+        storage_dead(_25);
+        storage_dead(f_9);
+        storage_dead(self_8);
+        storage_live(old_value_10);
+        storage_live(self_11);
+        _27 = &raw const ((*self_1)).value;
+        self_11 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *mut MaybeUninit::<u32>>(copy _27);
+        storage_live(src_12);
+        storage_live(_28);
+        storage_live(_29);
+        _29 = MaybeDangling::<u32> { 0: copy v_7 };
+        _28 = ManuallyDrop::<u32> { value: move _29 };
+        storage_dead(_29);
+        src_12 = MaybeUninit::<u32> { value: move _28 };
+        storage_dead(_28);
+        storage_live(_38);
+        _38 = ub_checks<bool>;
+        if move _38 -> bb14 else -> bb15;
+    }
+
+    bb14: {
+        storage_live(_31);
+        _31 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *const ()>(copy _27);
+        _30 = precondition_check(move _31, const 4 : usize, const false) -> bb16 (unwind: bb17);
+    }
+
+    bb15: {
+        if const false -> bb18 else -> bb19;
+    }
+
+    bb16: {
+        storage_dead(_31);
+        goto bb15;
+    }
+
+    bb17: {
+        undefined_behavior;
+    }
+
+    bb18: {
+        old_value_10 = copy src_12;
+        goto bb20;
+    }
+
+    bb19: {
+        old_value_10 = copy (*self_11);
+        (*self_11) = copy src_12;
+        goto bb20;
+    }
+
+    bb20: {
+        storage_dead(src_12);
+        storage_dead(self_11);
+        storage_live(_14);
+        storage_live(val_15);
+        val_15 = State::<!>::Alive {  };
+        storage_live(_32);
+        storage_live(_33);
+        _33 = &raw const (((*self_1)).state).value;
+        _32 = cast<*const UnsafeCell::<State::<!>>, *mut State::<!>>(copy _33);
+        storage_dead(_33);
+        _14 = copy (*_32);
+        (*_32) = copy val_15;
+        storage_dead(_32);
+        storage_dead(val_15);
+        _16 = @discriminant(_14);
+        switch move _16 -> 0 : isize: bb21, 1 : isize: bb22, 2 : isize: bb23, otherwise: bb4;
+    }
+
+    bb21: {
+        _13 = register_dtor::<u32>(copy self_1) -> bb24 (unwind: bb25);
+    }
+
+    bb22: {
+        storage_live(to_drop_34);
+        storage_live(_35);
+        _35 = &raw mut old_value_10;
+        to_drop_34 = cast<*mut MaybeUninit::<u32>, *mut u32>(copy _35);
+        storage_dead(_35);
+        storage_live(_36);
+        _36 = &mut (*to_drop_34);
+        _13 = drop_glue::<u32>(move _36) -> bb26 (unwind: bb27);
+    }
+
+    bb23: {
+        _17 = panic(const "internal error: entered unreachable code") -> bb28 (unwind: bb29);
+    }
+
+    bb24: {
+        storage_dead(_14);
+        storage_live(self_18);
+        _37 = &raw const ((*self_1)).value;
+        self_18 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *mut MaybeUninit::<u32>>(copy _37);
+        _0 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *const u32>(copy _37);
+        storage_dead(self_18);
+        storage_dead(old_value_10);
+        goto bb10;
+    }
+
+    bb25: {
+        unwind_continue;
+    }
+
+    bb26: {
+        storage_dead(_36);
+        storage_dead(to_drop_34);
+        goto bb24;
+    }
+
+    bb27: {
+        unwind_continue;
+    }
+
+    bb28: {
+        undefined_behavior;
+    }
+
+    bb29: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::thread::local_impl::LazyStorage::<T, D>::get_or_init::<u32, !, __rust_std_internal_init_fn>
+pub fn get_or_init::<u32, !, __rust_std_internal_init_fn>(self_1: &'_ LazyStorage::<u32, !>, i_2: Option::<&'_ mut Option::<u32>>, f_3: __rust_std_internal_init_fn) -> *const u32
+{
+    let _0: *const u32; // return
+    let self_1: &'_ LazyStorage::<u32, !>; // arg #1
+    let i_2: Option::<&'_ mut Option::<u32>>; // arg #2
+    let f_3: __rust_std_internal_init_fn; // arg #3
+    let _4: State::<!>; // anonymous local
+    let _5: isize; // anonymous local
+    let self_6: *mut MaybeUninit::<u32>; // local
+    let _7: __rust_std_internal_init_fn; // anonymous local
+    let _8: bool; // anonymous local
+    let _9: *mut State::<!>; // anonymous local
+    let _10: *const UnsafeCell::<State::<!>>; // anonymous local
+    let _11: *const UnsafeCell::<MaybeUninit::<u32>>; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        storage_live(_8);
+        storage_live(_11);
+        storage_live(_4);
+        storage_live(_9);
+        storage_live(_10);
+        _10 = &raw const (((*self_1)).state).value;
+        _9 = cast<*const UnsafeCell::<State::<!>>, *mut State::<!>>(copy _10);
+        storage_dead(_10);
+        _4 = copy (*_9);
+        storage_dead(_9);
+        _5 = @discriminant(_4);
+        switch move _5 -> 1 : isize: bb1, otherwise: bb2;
+    }
+
+    bb1: {
+        storage_live(self_6);
+        _11 = &raw const ((*self_1)).value;
+        self_6 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *mut MaybeUninit::<u32>>(copy _11);
+        _0 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *const u32>(copy _11);
+        storage_dead(self_6);
+        storage_dead(_4);
+        goto bb3;
+    }
+
+    bb2: {
+        storage_dead(_4);
+        storage_live(_7);
+        _8 = const false;
+        _7 = move f_3;
+        _0 = get_or_init_slow::<u32, !, __rust_std_internal_init_fn>(move self_1, move i_2, move _7) -> bb4 (unwind: bb5);
+    }
+
+    bb3: {
+        return;
+    }
+
+    bb4: {
+        storage_dead(_7);
+        goto bb3;
+    }
+
+    bb5: {
+        if copy _8 -> bb6 else -> bb6;
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::FOO::{constant#0}::{closure#1}::<i8, extern "rust-call" fn((Option::<&'_ mut Option::<u32>>,)) -> *const u32, ()>
+fn {closure#1}::<i8, extern "rust-call" fn((Option::<&'_ mut Option::<u32>>,)) -> *const u32, ()>(_1: &'_ test_crate::FOO::{constant#0}::{closure#1}::closure, spread_args_2: (Option::<&'_ mut Option::<u32>>,)) -> *const u32
+{
+    let _0: *const u32; // return
+    let _1: &'_ test_crate::FOO::{constant#0}::{closure#1}::closure; // arg #1
+    let spread_args_2: (Option::<&'_ mut Option::<u32>>,); // arg #2
+    let __rust_std_internal_init_3: Option::<&'_ mut Option::<u32>>; // local
+    let _4: &'_ LazyStorage::<u32, !>; // anonymous local
+    let _5: &'_ LazyStorage::<u32, !>; // anonymous local
+    let _6: Option::<&'_ mut Option::<u32>>; // anonymous local
+
+    bb0: {
+        storage_live(__rust_std_internal_init_3);
+        __rust_std_internal_init_3 = move spread_args_2.0;
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &__RUST_STD_INTERNAL_VAL;
+        _4 = &(*_5);
+        storage_live(_6);
+        _6 = move __rust_std_internal_init_3;
+        _0 = get_or_init::<u32, !, __rust_std_internal_init_fn>(move _4, move _6, const __rust_std_internal_init_fn) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_6);
+        storage_dead(_5);
+        storage_dead(_4);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::ops::FnOnce::call_once::<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>
+pub fn call_once::<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>(_1: test_crate::FOO::{constant#0}::{closure#1}::closure, _2: (Option::<&'_ mut Option::<u32>>,)) -> *const u32
+{
+    let _0: *const u32; // return
+    let _1: test_crate::FOO::{constant#0}::{closure#1}::closure; // arg #1
+    let _2: (Option::<&'_ mut Option::<u32>>,); // arg #2
+    let _3: &'_ mut test_crate::FOO::{constant#0}::{closure#1}::closure; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _3 = &mut _1;
+        _0 = {closure#1}::<i8, extern "rust-call" fn((Option::<&'_ mut Option::<u32>>,)) -> *const u32, ()>(move _3, move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: std::option::Option::<&'_ u32>
+#[lang_item("Option")]
+pub enum Option::<&'_ u32> {
+  None,
+  Some(0: &'_ u32),
 }
 
 // Full name: std::option::Option::<&'_ mut Option::<u32>>
@@ -265,21 +1077,31 @@ pub fn with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ Loca
     }
 }
 
-trait FakeTrait
-
 // Full name: anon_const_0
 const anon_const_0: LocalKey::<u32> = anon_const_0()
 
-struct test_crate::FOO::{constant#0}::{closure#1}::closure {}
-
-// Full name: test_crate::FOO::__rust_std_internal_init_fn
-fn __rust_std_internal_init_fn() -> u32
+// Full name: test_crate::FOO::{constant#0}::{closure#1}::closure_as_fn
+fn closure_as_fn(arg1_1: Option::<&'_ mut Option::<u32>>) -> *const u32
 {
-    let _0: u32; // return
+    let _0: *const u32; // return
+    let arg1_1: Option::<&'_ mut Option::<u32>>; // arg #1
+    let args_2: (Option::<&'_ mut Option::<u32>>,); // local
+    let state_3: test_crate::FOO::{constant#0}::{closure#1}::closure; // local
 
     bb0: {
-        _0 = const 0 : u32;
+        storage_live(args_2);
+        storage_live(state_3);
+        args_2 = (move arg1_1,);
+        state_3 = test_crate::FOO::{constant#0}::{closure#1}::closure {  };
+        _0 = call_once::<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>(move state_3, move args_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
         return;
+    }
+
+    bb2: {
+        unwind_continue;
     }
 }
 

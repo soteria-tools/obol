@@ -1,3 +1,4 @@
+Item std::io::_print caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -11,12 +12,13 @@ pub struct FormattingOptions {
   precision: u16,
 }
 
+// Full name: FakeTrait
 trait FakeTrait
 
 // Full name: std::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
-  buf: &'_ mut (dyn @TraitDecl0),
+  buf: &'_ mut (dyn FakeTrait),
 }
 
 // Full name: std::result::Result::<(), Error>
@@ -27,7 +29,7 @@ pub enum Result::<(), Error> {
 
 // Full name: std::ptr::NonNull::<()>
 pub struct NonNull::<()> {
-  pointer: *const (),
+  pointer: *const () is !null,
 }
 
 // Full name: std::marker::PhantomData::<&'_ ()>
@@ -36,7 +38,7 @@ pub struct PhantomData::<&'_ ()> {}
 
 // Full name: core::fmt::rt::ArgumentType::<'_>
 enum ArgumentType::<'_> {
-  Placeholder(value: NonNull::<()>, formatter: fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Placeholder(value: NonNull::<()>, formatter: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
   Count(0: u16),
 }
 
@@ -48,12 +50,12 @@ pub struct Argument::<'_> {
 
 // Full name: std::ptr::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
-  pointer: *const Argument::<'_>,
+  pointer: *const Argument::<'_> is !null,
 }
 
 // Full name: std::ptr::NonNull::<u8>
 pub struct NonNull::<u8> {
-  pointer: *const u8,
+  pointer: *const u8 is !null,
 }
 
 // Full name: std::fmt::Arguments::<'_>
@@ -64,17 +66,17 @@ pub struct Arguments::<'_> {
 }
 
 // Full name: std::fmt::Arguments::<'a>::from_str::<'_>
-pub fn from_str::<'_>(s_1: &'_ Str) -> Arguments::<'_>
+pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
-    let s_1: &'_ Str; // arg #1
+    let s_1: &'_ str; // arg #1
     let _2: NonNull::<u8>; // anonymous local
     let _3: *const u8; // anonymous local
     let _4: NonNull::<Argument::<'_>>; // anonymous local
     let _5: usize; // anonymous local
     let _6: usize; // anonymous local
     let _7: usize; // anonymous local
-    let _8: *const Str; // anonymous local
+    let _8: *const str; // anonymous local
     let _9: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -82,7 +84,7 @@ pub fn from_str::<'_>(s_1: &'_ Str) -> Arguments::<'_>
         storage_live(_3);
         storage_live(_8);
         _8 = &raw const (*s_1) with_metadata(copy s_1.metadata);
-        _3 = cast<*const Str, *const u8>(copy _8);
+        _3 = cast<*const str, *const u8>(copy _8);
         storage_dead(_8);
         _2 = transmute<*const u8, NonNull::<u8>>(copy _3);
         storage_dead(_3);
@@ -91,7 +93,7 @@ pub fn from_str::<'_>(s_1: &'_ Str) -> Arguments::<'_>
         storage_live(_6);
         storage_live(_7);
         storage_live(_9);
-        _9 = transmute<&'_ Str, &'_ [u8]>(copy s_1);
+        _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
         _6 = move _7 wrap.<< const 1 : i32;
@@ -109,10 +111,6 @@ pub fn from_str::<'_>(s_1: &'_ Str) -> Arguments::<'_>
 
 // Full name: test_crate::Foo
 struct Foo {}
-
-// Full name: std::io::_print
-pub fn _print(_1: Arguments::<'_>)
-= <missing>
 
 // Full name: <test_crate::Foo as std::ops::Drop>::drop
 pub fn drop(self_1: &'_ mut Foo)
@@ -149,24 +147,21 @@ pub fn drop(self_1: &'_ mut Foo)
     }
 }
 
-// Full name: std::ptr::drop_in_place::<Foo>
-#[lang_item("drop_in_place")]
-pub fn drop_in_place::<Foo>(_1: *mut Foo)
+// Full name: std::ptr::drop_glue::<Foo>
+#[lang_item("drop_glue")]
+fn drop_glue::<Foo>(_1: &'_ mut Foo)
 {
     let _0: (); // return
-    let _1: *mut Foo; // arg #1
+    let _1: &'_ mut Foo; // arg #1
     let _2: &'_ mut Foo; // anonymous local
-    let _3: &'_ mut Foo; // anonymous local
-    let _4: (); // anonymous local
+    let _3: (); // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_3);
-        storage_live(_4);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = &mut (*_2);
-        _4 = drop(move _3) -> bb1 (unwind: bb2);
+        _3 = drop(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -205,7 +200,7 @@ fn main()
         _0 = ();
         storage_dead(f_ref_4);
         _5 = &raw mut f_1;
-        _6 = drop_in_place::<Foo>(move _5) -> bb1 (unwind: bb2);
+        _6 = drop_glue::<Foo>(move _5) -> bb1 (unwind: bb2);
     }
 
     bb1: {
