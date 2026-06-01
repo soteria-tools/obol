@@ -491,6 +491,13 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                 let ty_r = def_b.variants()[0].fields()[idx].ty_with_args(&args2);
                 self.deref_middle_tys(ty_l, ty_r)
             }
+            // A pattern type (e.g. `*const T is !null` from NonNull) — unwrap to the
+            // underlying type and recurse.
+            (ty::RigidTy::Pat(inner_l, _), ty::RigidTy::Pat(inner_r, _)) => {
+                self.deref_middle_tys(*inner_l, *inner_r)
+            }
+            (ty::RigidTy::Pat(inner, _), _) => self.deref_middle_tys(*inner, r),
+            (_, ty::RigidTy::Pat(inner, _)) => self.deref_middle_tys(l, *inner),
             _ => None,
         }
     }

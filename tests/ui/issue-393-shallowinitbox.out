@@ -1,4 +1,3 @@
-Couldn't deref middle for Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 5, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 11, kind: RigidTy(Array(Ty { id: 5, kind: RigidTy(Uint(U8)) }, TyConst { kind: Value(Ty { id: 16, kind: RigidTy(Uint(Usize)) }, Allocation { bytes: [Some(1), Some(0), Some(0), Some(0), Some(0), Some(0), Some(0), Some(0)], provenance: ProvenanceMap { ptrs: [] }, align: 8, mutability: Mut }), id: TyConstId(0, ThreadLocalIndex) })) }), Type(Ty { id: 14, kind: RigidTy(Adt(AdtDef(DefId { id: 4, name: "std::alloc::Global" }), GenericArgs([]))) })]))) } => Ty { id: 25, kind: RigidTy(Adt(AdtDef(DefId { id: 5, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 41, kind: RigidTy(Slice(Ty { id: 5, kind: RigidTy(Uint(U8)) })) }), Type(Ty { id: 14, kind: RigidTy(Adt(AdtDef(DefId { id: 4, name: "std::alloc::Global" }), GenericArgs([]))) })]))) }
 
 // Final ULLBC:
 
@@ -2124,7 +2123,7 @@ pub fn box_assume_init_into_vec_unsafe::<u8, 1 : usize>(b_1: Box::<MaybeUninit::
         storage_live(_2);
         storage_live(_3);
         _3 = transmute<Box::<MaybeUninit::<[u8; 1 : usize]>, Global>, Box::<[u8; 1 : usize], Global>>(copy b_1);
-        _2 = unsize_cast<Box::<[u8; 1 : usize], Global>, Box::<[u8], Global>, ?>(move _3);
+        _2 = unsize_cast<Box::<[u8; 1 : usize], Global>, Box::<[u8], Global>, 1 : usize>(move _3);
         storage_dead(_3);
         self_18 = move ((_2).0).pointer;
         storage_live(_6);

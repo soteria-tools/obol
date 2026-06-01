@@ -1,4 +1,3 @@
-Couldn't deref middle for Ty { id: 87, kind: RigidTy(Adt(AdtDef(DefId { id: 72, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 2, kind: RigidTy(Ref(Region { kind: ReErased }, Ty { id: 4, kind: RigidTy(Str) }, Not)) }), Type(Ty { id: 89, kind: RigidTy(Adt(AdtDef(DefId { id: 73, name: "std::alloc::Global" }), GenericArgs([]))) })]))) } => Ty { id: 82, kind: RigidTy(Adt(AdtDef(DefId { id: 72, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 80, kind: RigidTy(Dynamic([Binder { value: Trait(ExistentialTraitRef { def_id: TraitDef(DefId { id: 66, name: "std::any::Any" }), generic_args: GenericArgs([]) }), bound_vars: [] }, Binder { value: AutoTrait(TraitDef(DefId { id: 71, name: "std::marker::Send" })), bound_vars: [] }], Region { kind: ReErased })) }), Type(Ty { id: 89, kind: RigidTy(Adt(AdtDef(DefId { id: 73, name: "std::alloc::Global" }), GenericArgs([]))) })]))) }
 Item Global(AllocId(10, ThreadLocalIndex), Some(Ty { id: 0, kind: RigidTy(Tuple([])) })) caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "TypeId globals are not supported" }
 
 // Final ULLBC:
@@ -1308,7 +1307,7 @@ pub fn take_box::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> *mut (dyn Fake
     }
 
     bb6: {
-        _5 = unsize_cast<Box::<&'_ str, Global>, Box::<(dyn FakeTrait), Global>, ?>(move _6);
+        _5 = unsize_cast<Box::<&'_ str, Global>, Box::<(dyn FakeTrait), Global>, Any::<&'_ str>>(move _6);
         storage_dead(_6);
         data_10 = move ((_5).0).pointer;
         storage_dead(_5);

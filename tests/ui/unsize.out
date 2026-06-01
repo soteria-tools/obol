@@ -1,7 +1,3 @@
-Couldn't deref middle for Ty { id: 16, kind: RigidTy(Adt(AdtDef(DefId { id: 2, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 14, kind: RigidTy(Array(Ty { id: 2, kind: RigidTy(Int(I32)) }, TyConst { kind: Value(Ty { id: 22, kind: RigidTy(Uint(Usize)) }, Allocation { bytes: [Some(2), Some(0), Some(0), Some(0), Some(0), Some(0), Some(0), Some(0)], provenance: ProvenanceMap { ptrs: [] }, align: 8, mutability: Mut }), id: TyConstId(0, ThreadLocalIndex) })) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) } => Ty { id: 4, kind: RigidTy(Adt(AdtDef(DefId { id: 2, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 23, kind: RigidTy(Slice(Ty { id: 2, kind: RigidTy(Int(I32)) })) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) }
-Couldn't deref middle for Ty { id: 17, kind: RigidTy(Adt(AdtDef(DefId { id: 4, name: "std::rc::Rc" }), GenericArgs([Type(Ty { id: 14, kind: RigidTy(Array(Ty { id: 2, kind: RigidTy(Int(I32)) }, TyConst { kind: Value(Ty { id: 22, kind: RigidTy(Uint(Usize)) }, Allocation { bytes: [Some(2), Some(0), Some(0), Some(0), Some(0), Some(0), Some(0), Some(0)], provenance: ProvenanceMap { ptrs: [] }, align: 8, mutability: Mut }), id: TyConstId(0, ThreadLocalIndex) })) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) } => Ty { id: 6, kind: RigidTy(Adt(AdtDef(DefId { id: 4, name: "std::rc::Rc" }), GenericArgs([Type(Ty { id: 23, kind: RigidTy(Slice(Ty { id: 2, kind: RigidTy(Int(I32)) })) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) }
-Couldn't deref middle for Ty { id: 20, kind: RigidTy(Adt(AdtDef(DefId { id: 2, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 18, kind: RigidTy(Adt(AdtDef(DefId { id: 5, name: "std::string::String" }), GenericArgs([]))) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) } => Ty { id: 11, kind: RigidTy(Adt(AdtDef(DefId { id: 2, name: "std::boxed::Box" }), GenericArgs([Type(Ty { id: 25, kind: RigidTy(Dynamic([Binder { value: Trait(ExistentialTraitRef { def_id: TraitDef(DefId { id: 6, name: "std::fmt::Display" }), generic_args: GenericArgs([]) }), bound_vars: [] }], Region { kind: ReErased })) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) }
-Couldn't deref middle for Ty { id: 21, kind: RigidTy(Adt(AdtDef(DefId { id: 4, name: "std::rc::Rc" }), GenericArgs([Type(Ty { id: 18, kind: RigidTy(Adt(AdtDef(DefId { id: 5, name: "std::string::String" }), GenericArgs([]))) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) } => Ty { id: 13, kind: RigidTy(Adt(AdtDef(DefId { id: 4, name: "std::rc::Rc" }), GenericArgs([Type(Ty { id: 25, kind: RigidTy(Dynamic([Binder { value: Trait(ExistentialTraitRef { def_id: TraitDef(DefId { id: 6, name: "std::fmt::Display" }), generic_args: GenericArgs([]) }), bound_vars: [] }], Region { kind: ReErased })) }), Type(Ty { id: 24, kind: RigidTy(Adt(AdtDef(DefId { id: 3, name: "std::alloc::Global" }), GenericArgs([]))) })]))) }
 
 // Final ULLBC:
 
@@ -3805,7 +3801,7 @@ fn foo()
     }
 
     bb1: {
-        _5 = unsize_cast<Box::<[i32; 2 : usize], Global>, Box::<[i32], Global>, ?>(move _6);
+        _5 = unsize_cast<Box::<[i32; 2 : usize], Global>, Box::<[i32], Global>, 2 : usize>(move _6);
         storage_dead(_7);
         storage_dead(_6);
         _23 = &raw mut _5;
@@ -3830,7 +3826,7 @@ fn foo()
     }
 
     bb5: {
-        _8 = unsize_cast<Rc::<[i32; 2 : usize], Global>, Rc::<[i32], Global>, ?>(move _9);
+        _8 = unsize_cast<Rc::<[i32; 2 : usize], Global>, Rc::<[i32], Global>, 2 : usize>(move _9);
         storage_dead(_10);
         storage_dead(_9);
         _25 = &raw mut _8;
@@ -3880,7 +3876,7 @@ fn foo()
     }
 
     bb12: {
-        _15 = unsize_cast<Box::<String, Global>, Box::<(dyn FakeTrait), Global>, ?>(move _16);
+        _15 = unsize_cast<Box::<String, Global>, Box::<(dyn FakeTrait), Global>, Display::<String>>(move _16);
         storage_dead(_17);
         storage_dead(_16);
         _29 = &raw mut _15;
@@ -3907,7 +3903,7 @@ fn foo()
     }
 
     bb16: {
-        _19 = unsize_cast<Rc::<String, Global>, Rc::<(dyn FakeTrait), Global>, ?>(move _20);
+        _19 = unsize_cast<Rc::<String, Global>, Rc::<(dyn FakeTrait), Global>, Display::<String>>(move _20);
         storage_dead(_21);
         storage_dead(_20);
         _31 = &raw mut _19;
