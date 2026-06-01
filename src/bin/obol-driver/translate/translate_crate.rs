@@ -7,6 +7,7 @@ extern crate rustc_public_bridge;
 
 use crate::translate::my_gen_args::MyGenericArgs;
 use obol_lib::args::CliOpts;
+use rustc_hir::attrs::AttributeKind;
 
 use super::translate_ctx::*;
 
@@ -436,15 +437,11 @@ impl<'tcx> TranslateCtx<'tcx> {
                 }
                 let def_id = item_id.owner_id.def_id.to_def_id();
                 self.attributes_for(def_id).iter().find_map(|a| {
-                    let rustc_hir::Attribute::Unparsed(attr) = a else {
-                        return None;
-                    };
-                    let path = attr.path.segments.iter().map(|i| i.to_string()).join("::");
-                    if path != "rustc_test_marker" {
-                        return None;
+                    if let rustc_hir::Attribute::Parsed(AttributeKind::RustcTestMarker(sym)) = a {
+                        Some(sym.as_str().to_owned())
+                    } else {
+                        None
                     }
-                    // The value is the test path string, e.g. "my_test" or "submod::my_test"
-                    a.value_lit().map(|lit| lit.symbol.as_str().to_owned())
                 })
             })
             .collect()
