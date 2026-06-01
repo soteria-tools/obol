@@ -128,6 +128,20 @@ pub fn call::<(dyn FakeTrait), (&'_ mut u32,)>(_1: &'_ (dyn FakeTrait), _2: &'_ 
 = <opaque>
 
 // Full name: anon_const_0
+fn anon_const_0() -> closure
+{
+    let _0: closure; // return
+    let _1: closure; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = closure {  };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_0
 const anon_const_0: closure = anon_const_0()
 
 // Full name: test_crate::takes_fn

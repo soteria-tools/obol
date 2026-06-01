@@ -3,6 +3,13 @@ use std::path::PathBuf;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Default, Clone, clap::ValueEnum, Serialize, Deserialize, PartialEq, Eq)]
+pub enum OutputFormat {
+    #[default]
+    Postcard,
+    Json,
+}
+
 pub const OBOL_ARGS: &str = "OBOL_ARGS";
 
 #[derive(Debug, clap::Parser)]
@@ -53,6 +60,9 @@ pub struct CliOpts {
         help = "Whether to skip the serialization step."
     )]
     pub no_serialize: bool,
+    /// Output serialization format (postcard or json).
+    #[clap(long = "format", default_value = "postcard")]
+    pub format: OutputFormat,
     /// Args that are passed to the underlying tool (`rustc` or `cargo` depending on `--cargo`).
     #[arg(last = true)]
     pub spread: Vec<String>,

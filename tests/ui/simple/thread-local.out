@@ -1377,9 +1377,6 @@ pub fn with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ Loca
     }
 }
 
-// Full name: anon_const_0
-const anon_const_0: LocalKey::<u32> = anon_const_0()
-
 // Full name: test_crate::FOO::{constant#0}::{closure#1}::closure_as_fn
 fn closure_as_fn(arg1_1: Option::<&'_ mut Option::<u32>>) -> *const u32
 {
@@ -1404,6 +1401,26 @@ fn closure_as_fn(arg1_1: Option::<&'_ mut Option::<u32>>) -> *const u32
         unwind_continue;
     }
 }
+
+// Full name: anon_const_0
+fn anon_const_0() -> LocalKey::<u32>
+{
+    let _0: LocalKey::<u32>; // return
+    let _1: fn(Option::<&'_ mut Option::<u32>>) -> *const u32; // anonymous local
+    let _2: LocalKey::<u32>; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = cast<closure_as_fn<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>, fn(Option::<&'_ mut Option::<u32>>) -> *const u32>(const closure_as_fn<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>);
+        storage_live(_2);
+        _2 = LocalKey::<u32> { inner: move _1 };
+        _0 = move _2;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: LocalKey::<u32> = anon_const_0()
 
 // Full name: test_crate::main
 fn main()

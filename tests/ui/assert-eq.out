@@ -1,0 +1,282 @@
+
+// Final ULLBC:
+
+// Full name: std::fmt::Error
+pub struct Error {}
+
+// Full name: std::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: std::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn FakeTrait),
+}
+
+// Full name: core::fmt::rt::Argument::<'_>
+#[lang_item("format_argument")]
+pub opaque type Argument::<'_>
+
+// Full name: std::ptr::NonNull::<Argument::<'_>>
+pub struct NonNull::<Argument::<'_>> {
+  pointer: *const Argument::<'_> is !null,
+}
+
+// Full name: std::ptr::NonNull::<u8>
+pub struct NonNull::<u8> {
+  pointer: *const u8 is !null,
+}
+
+// Full name: std::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: std::ptr::drop_glue::<&'_ i32>
+#[lang_item("drop_glue")]
+fn drop_glue::<&'_ i32>(_1: &'_ mut &'_ i32)
+{
+    let _0: (); // return
+    let _1: &'_ mut &'_ i32; // arg #1
+
+    bb0: {
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: std::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <opaque>
+
+pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+{
+    let _0: Result::<(), Error>; // return
+    let self_1: &'_ &'_ i32; // arg #1
+    let f_2: &'_ mut Formatter::<'_>; // arg #2
+    let _3: &'_ i32; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        _3 = copy (*self_1);
+        _0 = core::fmt::num::<impl std::fmt::Debug for i32>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<&'_ i32>
+fn Debug::<&'_ i32>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let <&i32 as Debug>::fmt_4: *const (); // local
+    let entry_array_5: [*const (); 4 : usize]; // local
+    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(<&i32 as Debug>::fmt_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_glue::<&'_ i32>, *const ()>(const drop_glue::<&'_ i32>);
+        size_2 = transmute<usize, *const ()>(const 8 : usize);
+        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        <&i32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <&i32 as Debug>::fmt_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::std::fmt::Debug::<&'_ i32>
+static Debug::<&'_ i32>: *const () = Debug::<&'_ i32>()
+
+// Full name: std::option::Option::<Arguments::<'_>>
+#[lang_item("Option")]
+pub enum Option::<Arguments::<'_>> {
+  None,
+  Some(0: Arguments::<'_>),
+}
+
+// Full name: core::panicking::AssertKind
+pub enum AssertKind {
+  Eq,
+  Ne,
+  Match,
+}
+
+// Full name: core::panicking::assert_failed_inner
+fn assert_failed_inner(_1: AssertKind, _2: &'_ (dyn FakeTrait), _3: &'_ (dyn FakeTrait), _4: Option::<Arguments::<'_>>) -> !
+= <missing>
+
+// Full name: core::panicking::assert_failed::<i32, i32>
+pub fn assert_failed::<i32, i32>(kind_1: AssertKind, left_2: &'_ i32, right_3: &'_ i32, args_4: Option::<Arguments::<'_>>) -> !
+{
+    let _0: !; // return
+    let kind_1: AssertKind; // arg #1
+    let left_2: &'_ i32; // arg #2
+    let right_3: &'_ i32; // arg #3
+    let args_4: Option::<Arguments::<'_>>; // arg #4
+    let _5: &'_ (dyn FakeTrait); // anonymous local
+    let _6: &'_ &'_ i32; // anonymous local
+    let _7: &'_ (dyn FakeTrait); // anonymous local
+    let _8: &'_ &'_ i32; // anonymous local
+
+    bb0: {
+        storage_live(_5);
+        storage_live(_6);
+        _6 = &left_2;
+        _5 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ i32>>(copy _6);
+        storage_live(_7);
+        storage_live(_8);
+        _8 = &right_3;
+        _7 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ i32>>(copy _8);
+        _0 = assert_failed_inner(move kind_1, move _5, move _7, move args_4) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        undefined_behavior;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: anon_const_0
+fn anon_const_0() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 42 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: i32 = anon_const_0()
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let x_1: i32; // local
+    let _2: (&'_ i32, &'_ i32); // anonymous local
+    let _3: &'_ i32; // anonymous local
+    let _4: &'_ i32; // anonymous local
+    let left_val_5: &'_ i32; // local
+    let right_val_6: &'_ i32; // local
+    let _7: bool; // anonymous local
+    let _8: i32; // anonymous local
+    let _9: i32; // anonymous local
+    let kind_10: AssertKind; // local
+    let _11: !; // anonymous local
+    let _12: AssertKind; // anonymous local
+    let _13: &'_ i32; // anonymous local
+    let _14: &'_ i32; // anonymous local
+    let _15: &'_ i32; // anonymous local
+    let _16: &'_ i32; // anonymous local
+    let _17: Option::<Arguments::<'_>>; // anonymous local
+    let _18: &'_ i32; // anonymous local
+    let _19: &'_ i32; // anonymous local
+
+    bb0: {
+        storage_live(_18);
+        _0 = ();
+        storage_live(x_1);
+        x_1 = const 42 : i32;
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &x_1;
+        storage_live(_4);
+        storage_live(_19);
+        _19 = &anon_const_0;
+        _18 = move _19;
+        _4 = &(*_18);
+        _2 = (move _3, move _4);
+        storage_dead(_4);
+        storage_dead(_3);
+        storage_live(left_val_5);
+        left_val_5 = copy _2.0;
+        storage_live(right_val_6);
+        right_val_6 = copy _2.1;
+        storage_live(_7);
+        storage_live(_8);
+        _8 = copy (*left_val_5);
+        storage_live(_9);
+        _9 = copy (*right_val_6);
+        _7 = move _8 == move _9;
+        if move _7 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_dead(_7);
+        storage_dead(right_val_6);
+        storage_dead(left_val_5);
+        storage_dead(_2);
+        _0 = ();
+        storage_dead(x_1);
+        return;
+    }
+
+    bb2: {
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_live(kind_10);
+        kind_10 = AssertKind::Eq {  };
+        storage_live(_11);
+        storage_live(_12);
+        _12 = move kind_10;
+        storage_live(_13);
+        storage_live(_14);
+        _14 = &(*left_val_5);
+        _13 = &(*_14);
+        storage_live(_15);
+        storage_live(_16);
+        _16 = &(*right_val_6);
+        _15 = &(*_16);
+        storage_live(_17);
+        _17 = Option::<Arguments::<'_>>::None {  };
+        _11 = assert_failed::<i32, i32>(move _12, move _13, move _15, move _17) -> bb3 (unwind: bb4);
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+}
+
+
+

@@ -262,6 +262,20 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 }
 
 // Full name: anon_const_4
+fn anon_const_4() -> [u8; 55 : usize]
+{
+    let _0: [u8; 55 : usize]; // return
+    let _1: [u8; 55 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = [const 16 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 101 : u8, const 110 : u8, const 100 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 192 : u8, const 34 : u8, const 32 : u8, const 111 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 102 : u8, const 111 : u8, const 114 : u8, const 32 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 108 : u8, const 101 : u8, const 110 : u8, const 103 : u8, const 116 : u8, const 104 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_4
 const anon_const_4: [u8; 55 : usize] = anon_const_4()
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
@@ -384,6 +398,20 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 
     bb2: {
         unwind_continue;
+    }
+}
+
+// Full name: anon_const_5
+fn anon_const_5() -> [u8; 40 : usize]
+{
+    let _0: [u8; 40 : usize]; // return
+    let _1: [u8; 40 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = [const 22 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 115 : u8, const 116 : u8, const 97 : u8, const 114 : u8, const 116 : u8, const 115 : u8, const 32 : u8, const 97 : u8, const 116 : u8, const 32 : u8, const 192 : u8, const 13 : u8, const 32 : u8, const 98 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 101 : u8, const 110 : u8, const 100 : u8, const 115 : u8, const 32 : u8, const 97 : u8, const 116 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _0 = move _1;
+        return;
     }
 }
 
@@ -633,6 +661,20 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 
     bb2: {
         unwind_continue;
+    }
+}
+
+// Full name: anon_const_3
+fn anon_const_3() -> [u8; 57 : usize]
+{
+    let _0: [u8; 57 : usize]; // return
+    let _1: [u8; 57 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = [const 18 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 115 : u8, const 116 : u8, const 97 : u8, const 114 : u8, const 116 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 192 : u8, const 34 : u8, const 32 : u8, const 111 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 102 : u8, const 111 : u8, const 114 : u8, const 32 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 108 : u8, const 101 : u8, const 110 : u8, const 103 : u8, const 116 : u8, const 104 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _0 = move _1;
+        return;
     }
 }
 
@@ -979,6 +1021,34 @@ pub fn core::slice::index::<impl std::ops::Index<I> for [T]>::index::<bool, Rang
 
     bb2: {
         unwind_continue;
+    }
+}
+
+// Full name: anon_const_0
+fn anon_const_0() -> Option::<i32>
+{
+    let _0: Option::<i32>; // return
+    let _1: Option::<i32>; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = Option::<i32>::Some { 0: const 0 : i32 };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_1
+fn anon_const_1() -> [bool; 1 : usize]
+{
+    let _0: [bool; 1 : usize]; // return
+    let _1: [bool; 1 : usize]; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = [const false];
+        _0 = move _1;
+        return;
     }
 }
 

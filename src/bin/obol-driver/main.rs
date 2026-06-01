@@ -18,7 +18,7 @@ use std::{env, fmt, panic, path::PathBuf};
 use charon_lib::{
     export::CrateData, logger, options::SerializationFormat, transform::TransformCtx,
 };
-use obol_lib::args::{self};
+use obol_lib::args::{self, OutputFormat};
 
 pub enum ObolError {
     /// Number of errors encountered during translation.
@@ -67,8 +67,6 @@ fn run_passes(ctx: &mut TransformCtx) {
         CowBox::Borrowed(&finish_translation::insert_assign_return_unit::Transform),
         // Insert `StorageLive` for locals that don't have one (that's allowed in MIR).
         CowBox::Borrowed(&finish_translation::insert_storage_lives::Transform),
-        // Inline promoted and inline consts, as well as dummy auto-generated panic functions.
-        simplify_output::inline_selected_functions::Transform::new(ctx),
         // Inline all asserts that correspond to dynamic checks into statements.
         // The following pass will then merge the generated gotos as part of this substitution,
         // and [reconstruct_fallible_operations] can then use the inlined asserts to
@@ -138,15 +136,23 @@ fn run_obol(options: args::CliOpts) -> Result<usize, ObolError> {
     if !options.no_serialize {
         let crate_data = CrateData::new(ctx);
 
+        let serial_fmt = match options.format {
+            OutputFormat::Json => SerializationFormat::Json,
+            OutputFormat::Postcard => SerializationFormat::Postcard,
+        };
+
         let path = options.dest_file.clone().unwrap_or_else(|| {
             let crate_name = &crate_data.translated.crate_name;
-            let extension = "ullbc";
+            let extension = match serial_fmt {
+                SerializationFormat::Json => "ullbc",
+                SerializationFormat::Postcard => "ullbc.postcard",
+            };
             PathBuf::from(format!("{crate_name}.{extension}"))
         });
 
         crate_data
-            .serialize_to_file(&path, SerializationFormat::Postcard)
-            .expect("Failed to write smir.json to output");
+            .serialize_to_file(&path, serial_fmt)
+            .expect("Failed to write output");
     }
 
     Ok(error_count)

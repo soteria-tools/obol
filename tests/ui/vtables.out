@@ -3289,6 +3289,127 @@ pub fn to_string::<str>(self_1: &'_ str) -> String
 }
 
 // Full name: anon_const_4
+fn anon_const_4() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 100 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_5
+fn anon_const_5() -> i64
+{
+    let _0: i64; // return
+
+    bb0: {
+        _0 = const 200 : i64;
+        return;
+    }
+}
+
+// Full name: anon_const_6
+fn anon_const_6() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 42 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_10
+fn anon_const_10() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 100 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_11
+fn anon_const_11() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 42 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_12
+fn anon_const_12() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 42 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_13
+fn anon_const_13() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 100 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_14
+fn anon_const_14() -> i64
+{
+    let _0: i64; // return
+
+    bb0: {
+        _0 = const 200 : i64;
+        return;
+    }
+}
+
+// Full name: anon_const_15
+fn anon_const_15() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 42 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_16
+fn anon_const_16() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 10 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_17
+fn anon_const_17() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 10 : i32;
+        return;
+    }
+}
+
+// Full name: anon_const_4
 const anon_const_4: i32 = anon_const_4()
 
 // Full name: anon_const_5
