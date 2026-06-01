@@ -32,17 +32,11 @@ impl ItemTransCtx<'_, '_> {
         def: mir::mono::Instance,
         span: Span,
     ) -> Result<FunSig, Error> {
-        // For Shim/Intrinsic/Virtual instances, CrateItem::try_from always fails; skip the
-        // item-kind check and fall through to fn_abi-based signature translation.
-        // For InstanceKind::Item, still run the check so ctors (Item without body) keep
-        // failing early rather than calling fn_abi, which returns un-monomorphized types.
-        if !matches!(
-            def.kind,
-            mir::mono::InstanceKind::Shim
-                | mir::mono::InstanceKind::Intrinsic
-                | mir::mono::InstanceKind::Virtual { .. }
-        ) {
-            let crate_item = rustc_public::CrateItem::try_from(def)?;
+        // CrateItem::try_from fails for Shim/Intrinsic/Virtual instances (which have no
+        // CrateItem) and for InstanceKind::Item items that have no MIR body (e.g. extern
+        // functions, constructors).  In all cases, skip the item-kind check and fall through
+        // to fn_abi-based signature translation below.
+        if let Ok(crate_item) = rustc_public::CrateItem::try_from(def) {
             match crate_item.kind() {
                 rustc_public::ItemKind::Fn | rustc_public::ItemKind::Ctor(_) => {}
                 rustc_public::ItemKind::Static => {

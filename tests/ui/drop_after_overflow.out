@@ -1,4 +1,3 @@
-Item std::io::_print caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -111,6 +110,10 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 
 // Full name: test_crate::Foo
 struct Foo {}
+
+// Full name: std::io::_print
+pub fn _print(_1: Arguments::<'_>)
+= <missing>
 
 // Full name: <test_crate::Foo as std::ops::Drop>::drop
 pub fn drop(self_1: &'_ mut Foo)

@@ -1,5 +1,6 @@
 extern crate rustc_abi;
 extern crate rustc_apfloat;
+extern crate rustc_middle;
 extern crate rustc_public;
 extern crate rustc_public_bridge;
 
@@ -137,6 +138,18 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> Result<ConstantExpr, Error> {
         let size = rty.layout()?.shape().size.bytes();
         if size == 0 {
+            let remaining = alloc.bytes.len().saturating_sub(offset);
+            if remaining > 0 {
+                // The type is a DST (e.g. CStr / [T]) whose layout size is 0 because it is
+                // unsized; the allocation still contains actual bytes.  Fall back to raw memory
+                // rather than the ZST path which cannot handle slice-backed types.
+                let bytes = self.as_charon_bytes(span, alloc, offset, remaining);
+                let maybe_uninit = self.maybe_uninit_bytes(span, remaining)?;
+                return Ok(ConstantExpr {
+                    kind: ConstantExprKind::RawMemory(bytes),
+                    ty: maybe_uninit,
+                });
+            }
             return self.translate_zst_constant(span, ty, rty);
         }
         let bytes = &alloc.bytes.as_slice()[offset..offset + size];
@@ -678,8 +691,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 ConstantExprKind::Adt(variant, fields)
             }
             _ => {
-                panic!("Gave up on const for ZST type: {:?}", ty);
-                // ConstantExprKind::RawMemory(vec![])
+                raise_error!(self, span, "Unsupported ZST constant type: {:?}", ty)
             }
         };
         Ok(ConstantExpr {
@@ -701,6 +713,14 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             ty::TyConstKind::ZSTValue(rty) => {
                 let ty = self.translate_ty(span, *rty)?;
                 self.translate_zst_constant(span, ty.kind(), *rty)
+            }
+            ty::TyConstKind::Unevaluated(..) | ty::TyConstKind::Param(..) => {
+                raise_error!(
+                    self,
+                    span,
+                    "Unsupported constant kind: {:?}",
+                    v.kind()
+                )
             }
             _ => {
                 raise_error!(

@@ -1,4 +1,3 @@
-Item std::fmt::Formatter::<'a>::write_str caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -26,6 +25,10 @@ pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
+
+// Full name: std::fmt::Formatter::<'a>::write_str::<'_>
+pub fn write_str::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ str) -> Result::<(), Error>
+= <missing>
 
 // Full name: test_crate::Foo
 enum Foo {
@@ -125,7 +128,7 @@ pub fn fmt(self_1: &'_ Foo, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
     }
 
     bb4: {
-        _0 = write_str(move _3, move _4) -> bb5 (unwind: bb6);
+        _0 = write_str::<'_>(move _3, move _4) -> bb5 (unwind: bb6);
     }
 
     bb5: {

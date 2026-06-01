@@ -1,4 +1,3 @@
-Item GlobalConstFn(AllocId(0, ThreadLocalIndex), Some(Ty { id: 2, kind: RigidTy(Adt(AdtDef(DefId { id: 1, name: "std::ffi::CStr" }), GenericArgs([]))) })) caused errors; ignoring. Any { .. }
 
 // Final ULLBC:
 
@@ -6,6 +5,25 @@ Item GlobalConstFn(AllocId(0, ThreadLocalIndex), Some(Ty { id: 2, kind: RigidTy(
 #[lang_item("CStr")]
 pub struct CStr {
   inner: [i8],
+}
+
+// Full name: std::mem::MaybeDangling::<[u8; 4 : usize]>
+#[lang_item("maybe_dangling")]
+pub struct MaybeDangling::<[u8; 4 : usize]> {
+  0: [u8; 4 : usize],
+}
+
+// Full name: std::mem::ManuallyDrop::<[u8; 4 : usize]>
+#[lang_item("manually_drop")]
+pub struct ManuallyDrop::<[u8; 4 : usize]> {
+  value: MaybeDangling::<[u8; 4 : usize]>,
+}
+
+// Full name: std::mem::MaybeUninit::<[u8; 4 : usize]>
+#[lang_item("maybe_uninit")]
+pub union MaybeUninit::<[u8; 4 : usize]> {
+  uninit: (),
+  value: ManuallyDrop::<[u8; 4 : usize]>,
 }
 
 // Full name: FakeTrait

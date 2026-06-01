@@ -1,7 +1,3 @@
-Item core::panicking::assert_failed_inner caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
-Item core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
-Item core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
-Item core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
@@ -96,6 +92,15 @@ fn drop_glue::<&'_ u32>(_1: &'_ mut &'_ u32)
         return;
     }
 }
+
+pub fn core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
+
+pub fn core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+= <missing>
 
 pub fn core::fmt::num::<impl std::fmt::Debug for u32>::fmt(self_1: &'_ u32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
@@ -225,6 +230,10 @@ pub enum AssertKind {
   Ne,
   Match,
 }
+
+// Full name: core::panicking::assert_failed_inner
+fn assert_failed_inner(_1: AssertKind, _2: &'_ (dyn FakeTrait), _3: &'_ (dyn FakeTrait), _4: Option::<Arguments::<'_>>) -> !
+= <missing>
 
 // Full name: core::panicking::assert_failed::<u32, u32>
 pub fn assert_failed::<u32, u32>(kind_1: AssertKind, left_2: &'_ u32, right_3: &'_ u32, args_4: Option::<Arguments::<'_>>) -> !

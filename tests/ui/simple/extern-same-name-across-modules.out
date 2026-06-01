@@ -1,11 +1,11 @@
-Item test_crate::same_name caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
-Item test_crate::first::same_name caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
-Item test_crate::second::nested::same_name caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Item kind `Item` cannot be converted" }
 
 // Final ULLBC:
 
 // Full name: FakeTrait
 trait FakeTrait
+
+fn test_crate::same_name(_1: i32) -> i32
+= <extern:same_name>
 
 // Full name: test_crate::call_root
 fn call_root() -> i32
@@ -25,6 +25,9 @@ fn call_root() -> i32
     }
 }
 
+fn test_crate::first::same_name(_1: i32) -> i32
+= <extern:same_name>
+
 pub fn test_crate::first::call() -> i32
 {
     let _0: i32; // return
@@ -41,6 +44,9 @@ pub fn test_crate::first::call() -> i32
         undefined_behavior;
     }
 }
+
+fn test_crate::second::nested::same_name(_1: i32) -> i32
+= <extern:same_name>
 
 pub fn test_crate::second::nested::call() -> i32
 {

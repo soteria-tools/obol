@@ -6,7 +6,7 @@ extern crate rustc_span;
 use log::trace;
 use rustc_public::{CrateDef, mir, ty};
 
-use charon_lib::{ast::*, register_error};
+use charon_lib::{ast::*, raise_error, register_error};
 
 use crate::translate::{
     translate_body::BodyTransCtx,
@@ -74,6 +74,15 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         item_src: &TransItemSource,
         trans_id: Option<ItemId>,
     ) -> Result<(), Error> {
+        // Pre-insert a single-segment fallback name so that if register_error! fires inside
+        // translate_name (e.g. while translating generic args), charon's error formatting can
+        // look up item_names without panicking. The real name overwrites it below.
+        if let (Some(trans_id), Some(def_id)) = (trans_id, item_src.as_def_id()) {
+            self.translated.item_names.entry(trans_id).or_insert_with(|| Name {
+                name: vec![PathElem::Ident(def_id.name().into(), Disambiguator::ZERO)],
+            });
+        }
+
         // Translate the meta information
         let name = self.translate_name(item_src)?;
         if let Some(trans_id) = trans_id {
@@ -378,7 +387,7 @@ impl ItemTransCtx<'_, '_> {
                 (GlobalKind::AnonConst, initializer)
             }
             mir::alloc::GlobalAlloc::TypeId { .. } => {
-                panic!("Obol does not support translating TypeId globals")
+                raise_error!(self, span, "TypeId globals are not supported")
             }
             mir::alloc::GlobalAlloc::VTable(..) => {
                 panic!("Shouldn't reach a VTable global")

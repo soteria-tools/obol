@@ -1,6 +1,6 @@
-Thread errored when extracting body of test_crate::main: Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 12, col: 16 }, end: Loc { line: 12, col: 21 } }, generated_from_span: None }, msg: "Unexpected constant expression kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
-Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unexpected constant expression kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
-Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unexpected constant expression kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
+Thread errored when extracting body of test_crate::main: Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 12, col: 16 }, end: Loc { line: 12, col: 21 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
+Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
+Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
 
 // Final ULLBC:
 
@@ -105,7 +105,7 @@ fn four() -> usize
 
 // Full name: test_crate::main
 fn main()
-= error("Unexpected constant expression kind: Unevaluated(ConstDef(DefId { id: 1, name: "test_crate::SLICE::{constant#0}" }), GenericArgs([]))")
+= error("Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: "test_crate::SLICE::{constant#0}" }), GenericArgs([]))")
 
 
 
