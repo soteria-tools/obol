@@ -1,0 +1,65 @@
+
+// Final ULLBC:
+
+// Full name: std::any::TypeId
+#[lang_item("type_id")]
+pub struct TypeId {
+  data: [*const (); 2usize],
+}
+
+// Full name: std::any::TypeId::of::<u32>
+pub fn of::<u32>() -> TypeId
+{
+    let _0: TypeId; // return
+
+    bb0: {
+        _0 = const TypeId(u32);
+        return;
+    }
+}
+
+// Full name: std::intrinsics::type_id::<u32>
+pub fn type_id::<u32>() -> TypeId
+= <intrinsic:type_id>
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: test_crate::type_id_u32
+pub fn type_id_u32() -> TypeId
+{
+    let _0: TypeId; // return
+
+    bb0: {
+        _0 = of::<u32>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::type_id_intrinsic_u32
+pub fn type_id_intrinsic_u32() -> TypeId
+{
+    let _0: TypeId; // return
+
+    bb0: {
+        _0 = type_id::<u32>() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        undefined_behavior;
+    }
+}
+
+
+

@@ -397,7 +397,8 @@ impl ItemTransCtx<'_, '_> {
                 (GlobalKind::AnonConst, initializer)
             }
             mir::alloc::GlobalAlloc::TypeId { .. } => {
-                raise_error!(self, span, "TypeId globals are not supported")
+                let initializer = self.register_global_const_fn(span, def.clone(), ty);
+                (GlobalKind::AnonConst, initializer)
             }
             mir::alloc::GlobalAlloc::VTable(..) => {
                 panic!("Shouldn't reach a VTable global")
@@ -458,31 +459,14 @@ impl ItemTransCtx<'_, '_> {
     }
 
     fn make_trivial_return_function(
-        mut self,
+        self,
         def_id: FunDeclId,
         item_meta: ItemMeta,
         span: Span,
-        alloc: ty::Allocation,
-        ty: Option<ty::Ty>,
+        const_expr: ConstantExpr,
+        output: Ty,
         global_id: GlobalDeclId,
     ) -> Result<FunDecl, Error> {
-        let (output, const_val) = match ty {
-            Some(ty) => {
-                let output = self.translate_ty(span, ty)?;
-                let const_val = self.translate_allocation(span, &alloc, &output, ty)?;
-                (output, const_val)
-            }
-            None => {
-                let size = alloc.bytes.len();
-                let maybe_uninit = self.maybe_uninit_bytes(span, size)?;
-                let bytes = self.as_charon_bytes(span, &alloc, 0, size);
-                let const_val = ConstantExpr {
-                    kind: ConstantExprKind::RawMemory(bytes),
-                    ty: maybe_uninit.clone(),
-                };
-                (maybe_uninit, const_val)
-            }
-        };
         let signature = FunSig {
             is_unsafe: false,
             inputs: vec![],
@@ -505,7 +489,7 @@ impl ItemTransCtx<'_, '_> {
                     span,
                     StatementKind::Assign(
                         locals.return_place(),
-                        Rvalue::Use(Operand::Const(Box::new(const_val)), WithRetag::No),
+                        Rvalue::Use(Operand::Const(Box::new(const_expr)), WithRetag::No),
                     ),
                 )],
                 terminator: Terminator::new(span, ullbc_ast::TerminatorKind::Return),
@@ -533,27 +517,42 @@ impl ItemTransCtx<'_, '_> {
         def_id: FunDeclId,
         item_meta: ItemMeta,
         def: mir::alloc::AllocId,
-        ty: Option<ty::Ty>,
+        rty: Option<ty::Ty>,
     ) -> Result<FunDecl, Error> {
         let alloc: mir::alloc::GlobalAlloc = def.clone().into();
 
-        let (span, alloc) = match alloc {
+        let (span, const_expr, ty) = match alloc {
             mir::alloc::GlobalAlloc::Static(def) => {
                 let span = self.translate_span_from_smir(&def.span());
                 let alloc = def.eval_initializer()?;
-                (span, alloc)
+                let (const_expr, ty) = self.translate_alloc_to_const(span, &alloc, rty)?;
+                (span, const_expr, ty)
             }
             mir::alloc::GlobalAlloc::Memory(mem) => {
                 let span = Span::dummy();
-                (span, mem)
+                let (const_expr, ty) = self.translate_alloc_to_const(span, &mem, rty)?;
+                (span, const_expr, ty)
+            }
+            mir::alloc::GlobalAlloc::TypeId { ty: type_id_ty } => {
+                let span = Span::dummy();
+                let Some(output_ty) = rty else {
+                    raise_error!(self, span, "TypeId global missing type annotation")
+                };
+                let output = self.translate_ty(span, output_ty)?;
+                let translated_ty = self.translate_ty(span, type_id_ty)?;
+                let const_val = ConstantExpr {
+                    kind: ConstantExprKind::TypeId(translated_ty),
+                    ty: output.clone(),
+                };
+                (span, const_val, output)
             }
             _ => {
                 panic!("Cannot translate global const fn: {def:?}")
             }
         };
-        let global_id = self.register_global_decl_id(span, def, ty);
+        let global_id = self.register_global_decl_id(span, def, rty);
 
-        self.make_trivial_return_function(def_id, item_meta, span, alloc, ty, global_id)
+        self.make_trivial_return_function(def_id, item_meta, span, const_expr, ty, global_id)
     }
 
     pub fn translate_global_from_static(
@@ -591,7 +590,8 @@ impl ItemTransCtx<'_, '_> {
         let span = def.span();
         let span = self.translate_span_from_smir(&span);
         let alloc = def.eval_initializer()?;
+        let (const_expr, ty) = self.translate_alloc_to_const(span, &alloc, Some(def.ty()))?;
         let global_id = self.register_global_from_static(span, def);
-        self.make_trivial_return_function(def_id, item_meta, span, alloc, Some(def.ty()), global_id)
+        self.make_trivial_return_function(def_id, item_meta, span, const_expr, ty, global_id)
     }
 }

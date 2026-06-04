@@ -703,12 +703,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 self.translate_zst_constant(span, ty.kind(), *rty)
             }
             ty::TyConstKind::Unevaluated(..) | ty::TyConstKind::Param(..) => {
-                raise_error!(
-                    self,
-                    span,
-                    "Unsupported constant kind: {:?}",
-                    v.kind()
-                )
+                raise_error!(self, span, "Unsupported constant kind: {:?}", v.kind())
             }
             _ => {
                 raise_error!(
@@ -717,6 +712,31 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     "Unexpected constant expression kind: {:?}",
                     v.kind()
                 )
+            }
+        }
+    }
+
+    pub fn translate_alloc_to_const(
+        &mut self,
+        span: Span,
+        alloc: &ty::Allocation,
+        ty: Option<ty::Ty>,
+    ) -> Result<(ConstantExpr, Ty), Error> {
+        match ty {
+            Some(ty) => {
+                let output = self.translate_ty(span, ty)?;
+                let const_val = self.translate_allocation(span, &alloc, &output, ty)?;
+                Ok((const_val, output))
+            }
+            None => {
+                let size = alloc.bytes.len();
+                let maybe_uninit = self.maybe_uninit_bytes(span, size)?;
+                let bytes = self.as_charon_bytes(span, &alloc, 0, size);
+                let const_val = ConstantExpr {
+                    kind: ConstantExprKind::RawMemory(bytes),
+                    ty: maybe_uninit.clone(),
+                };
+                Ok((const_val, maybe_uninit))
             }
         }
     }

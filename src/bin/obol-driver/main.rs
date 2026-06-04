@@ -11,6 +11,7 @@ extern crate rustc_public;
 extern crate rustc_session;
 
 pub mod driver;
+pub mod transform;
 pub mod translate;
 
 use std::{env, fmt, panic, path::PathBuf};
@@ -86,6 +87,9 @@ fn run_passes(ctx: &mut TransformCtx) {
         CowBox::Borrowed(&resugar::reconstruct_fallible_operations::Transform),
         // Reconstruct the asserts
         CowBox::Borrowed(&resugar::reconstruct_asserts::Transform),
+        // Replace TypeId construction constants with ConstantExprKind::TypeId(T) before
+        // simplify_constants desugars them into statement sequences.
+        transform::uneval_typeid::Transform::new(ctx),
         // Desugar the constants to other values/operands as much as possible.
         CowBox::Borrowed(&simplify_output::simplify_constants::Transform),
         // Remove locals of type `()` which show up a lot.

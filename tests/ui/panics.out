@@ -1,4 +1,3 @@
-Item Global(AllocId(10, ThreadLocalIndex), Some(Ty { id: 0, kind: RigidTy(Tuple([])) })) caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "TypeId globals are not supported" }
 
 // Final ULLBC:
 
@@ -109,21 +108,9 @@ pub fn type_id::<&'_ str>(self_1: &'_ &'_ str) -> TypeId
 {
     let _0: TypeId; // return
     let self_1: &'_ &'_ str; // arg #1
-    let _2: *const (); // anonymous local
-    let _3: *const (); // anonymous local
-    let _4: [*const (); 2usize]; // anonymous local
-    let _5: TypeId; // anonymous local
 
     bb0: {
-        storage_live(_2);
-        _2 = &raw const anon_const_10;
-        storage_live(_3);
-        _3 = &raw const anon_const_10;
-        storage_live(_4);
-        _4 = [move _2, move _3];
-        storage_live(_5);
-        _5 = TypeId { data: move _4 };
-        _0 = move _5;
+        _0 = const TypeId(&'_ str);
         return;
     }
 }
