@@ -24,11 +24,9 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let ret_entries = locals.new_var(Some("vtable".into()), inner_ty.clone());
 
         let entries = if let Some(trait_ref) = principal {
-            // FIXME: in more recent rust_public versions, TraitRef has a vtable_entries
-            let trait_ref = rustc_public::rustc_internal::internal(self.t_ctx.tcx, trait_ref);
-            self.t_ctx.tcx.vtable_entries(trait_ref)
+            trait_ref.vtable_entries()
         } else {
-            mty::TyCtxt::COMMON_VTABLE_ENTRIES
+            rustc_public::rustc_internal::stable(mty::TyCtxt::COMMON_VTABLE_ENTRIES)
         };
 
         //
@@ -63,11 +61,11 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             Operand::Move(local)
         };
 
-        use mty::VtblEntry::*;
+        use ty::VtblEntry::*;
         let layout = ty.layout()?.shape();
         let entries: Vec<Operand> =
             entries
-                .iter()
+                .into_iter()
                 .filter_map(|vtable_entry| match vtable_entry {
                     MetadataDropInPlace => {
                         let drop = Instance::resolve_drop_in_place(ty.clone());
@@ -103,7 +101,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         })),
                     )),
                     Method(instance) => {
-                        let instance = rustc_public::rustc_internal::stable(instance);
                         let name = instance.trimmed_name();
                         let fun = self.register_fun_decl_id(Span::dummy(), instance);
                         let fn_ptr = FnPtr {
@@ -119,7 +116,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         ))
                     }
                     TraitVPtr(super_trait) => {
-                        let super_trait = rustc_public::rustc_internal::stable(super_trait);
                         let vtable = self.register_vtable(Span::dummy(), ty, Some(super_trait));
                         Some(Operand::Copy(Place {
                             kind: PlaceKind::Global(GlobalDeclRef {

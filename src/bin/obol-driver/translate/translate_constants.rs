@@ -702,7 +702,31 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let ty = self.translate_ty(span, *rty)?;
                 self.translate_zst_constant(span, ty.kind(), *rty)
             }
-            ty::TyConstKind::Unevaluated(..) | ty::TyConstKind::Param(..) => {
+            ty::TyConstKind::Unevaluated(..) => {
+                // An unevaluated const (e.g. an array length or const-generic argument that
+                // refers to another `const` item). We evaluate it by normalizing the internal
+                // `ty::Const` (which triggers const evaluation), then translate the resulting
+                // value.
+                let internal = rustc_public::rustc_internal::internal(self.t_ctx.tcx, v);
+                let typing_env = rustc_middle::ty::TypingEnv::fully_monomorphized();
+                // We use the `try_` variant since `normalize_erasing_regions` ICEs if
+                // normalization fails (e.g. when the const is too generic to evaluate). obol
+                // only ever sees monomorphic code, so this should always succeed in practice,
+                // but we degrade to a translation error rather than crashing if it doesn't.
+                let Ok(normalized) = self.t_ctx.tcx.try_normalize_erasing_regions(
+                    typing_env,
+                    rustc_middle::ty::Unnormalized::new_wip(internal),
+                ) else {
+                    raise_error!(self, span, "Could not evaluate constant: {:?}", v.kind())
+                };
+                let evaluated = rustc_public::rustc_internal::stable(normalized);
+                if matches!(evaluated.kind(), ty::TyConstKind::Unevaluated(..)) {
+                    // Normalization made no progress; bail out to avoid looping.
+                    raise_error!(self, span, "Could not evaluate constant: {:?}", v.kind())
+                }
+                self.translate_tyconst_to_const_expr(span, &evaluated)
+            }
+            ty::TyConstKind::Param(..) => {
                 raise_error!(self, span, "Unsupported constant kind: {:?}", v.kind())
             }
             _ => {
