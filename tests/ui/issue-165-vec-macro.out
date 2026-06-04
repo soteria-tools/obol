@@ -832,30 +832,6 @@ pub struct ManuallyDrop::<[Foo; 1usize]> {
   value: MaybeDangling::<[Foo; 1usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8usize]> {
-  0: [u8; 8usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8usize]> {
-  value: MaybeDangling::<[u8; 8usize]>,
-}
-
-// Full name: std::mem::MaybeDangling::<[u8; 16usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 16usize]> {
-  0: [u8; 16usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 16usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 16usize]> {
-  value: MaybeDangling::<[u8; 16usize]>,
-}
-
 // Full name: std::mem::MaybeUninit::<[i32; 1usize]>
 #[lang_item("maybe_uninit")]
 pub union MaybeUninit::<[i32; 1usize]> {
@@ -868,20 +844,6 @@ pub union MaybeUninit::<[i32; 1usize]> {
 pub union MaybeUninit::<[Foo; 1usize]> {
   uninit: (),
   value: ManuallyDrop::<[Foo; 1usize]>,
-}
-
-// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
-#[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 8usize]> {
-  uninit: (),
-  value: ManuallyDrop::<[u8; 8usize]>,
-}
-
-// Full name: std::mem::MaybeUninit::<[u8; 16usize]>
-#[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 16usize]> {
-  uninit: (),
-  value: ManuallyDrop::<[u8; 16usize]>,
 }
 
 fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_2: usize)
@@ -2586,8 +2548,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let _35: bool; // anonymous local
     let _36: bool; // anonymous local
     let _37: Option::<NonNull::<u8>>; // anonymous local
-    let _38: Result::<NonNull::<u8>, AllocError>; // anonymous local
-    let _39: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
+    let _38: AllocError; // anonymous local
+    let _39: Result::<NonNull::<u8>, AllocError>; // anonymous local
+    let _40: AllocError; // anonymous local
+    let _41: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
 
     bb0: {
         storage_live(raw_ptr_6);
@@ -2717,8 +2681,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         _37 = Option::<NonNull::<u8>>::None {  };
         self_9 = move _37;
         storage_live(_38);
-        _38 = Result::<NonNull::<u8>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0) };
-        self_8 = move _38;
+        _38 = AllocError {  };
+        storage_live(_39);
+        _39 = Result::<NonNull::<u8>, AllocError>::Err { 0: move _38 };
+        self_8 = move _39;
         storage_dead(self_9);
         storage_dead(self_8);
         storage_live(_32);
@@ -2726,9 +2692,11 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         _32 = @discriminant(_10);
         _33 = copy _32 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
-        storage_live(_39);
-        _39 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        _0 = move _39;
+        storage_live(_40);
+        _40 = AllocError {  };
+        storage_live(_41);
+        _41 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: move _40 };
+        _0 = move _41;
         storage_dead(_33);
         storage_dead(_32);
         storage_dead(_7);
@@ -2875,10 +2843,13 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     let _59: bool; // anonymous local
     let _60: bool; // anonymous local
     let _61: bool; // anonymous local
-    let _62: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
-    let _63: Option::<NonNull::<u8>>; // anonymous local
-    let _64: Result::<NonNull::<u8>, AllocError>; // anonymous local
-    let _65: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
+    let _62: AllocError; // anonymous local
+    let _63: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
+    let _64: Option::<NonNull::<u8>>; // anonymous local
+    let _65: AllocError; // anonymous local
+    let _66: Result::<NonNull::<u8>, AllocError>; // anonymous local
+    let _67: AllocError; // anonymous local
+    let _68: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
 
     bb0: {
         storage_live(_16);
@@ -3024,8 +2995,10 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         _50 = copy _49 == const 1isize;
         assert(move _50 == true) else undefined_behavior;
         storage_live(_62);
-        _62 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        _0 = move _62;
+        _62 = AllocError {  };
+        storage_live(_63);
+        _63 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: move _62 };
+        _0 = move _63;
         storage_dead(_50);
         storage_dead(_49);
         storage_dead(_22);
@@ -3038,12 +3011,14 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
 
     bb18: {
         storage_dead(_33);
-        storage_live(_63);
-        _63 = Option::<NonNull::<u8>>::None {  };
-        self_15 = move _63;
         storage_live(_64);
-        _64 = Result::<NonNull::<u8>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0) };
-        self_14 = move _64;
+        _64 = Option::<NonNull::<u8>>::None {  };
+        self_15 = move _64;
+        storage_live(_65);
+        _65 = AllocError {  };
+        storage_live(_66);
+        _66 = Result::<NonNull::<u8>, AllocError>::Err { 0: move _65 };
+        self_14 = move _66;
         storage_dead(self_15);
         storage_dead(self_14);
         storage_live(_38);
@@ -3051,9 +3026,11 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         _38 = @discriminant(_16);
         _39 = copy _38 == const 1isize;
         assert(move _39 == true) else undefined_behavior;
-        storage_live(_65);
-        _65 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        _0 = move _65;
+        storage_live(_67);
+        _67 = AllocError {  };
+        storage_live(_68);
+        _68 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: move _67 };
+        _0 = move _68;
         storage_dead(_39);
         storage_dead(_38);
         storage_dead(_13);
@@ -4036,13 +4013,15 @@ fn try_allocate_in::<Global>(capacity_1: usize, init_2: AllocInit, alloc_3: Glob
     let _40: *mut [u8]; // anonymous local
     let elem_layout_41: usize; // local
     let elem_layout_42: Alignment; // local
-    let _43: Result::<Layout, LayoutError>; // anonymous local
+    let _43: LayoutError; // anonymous local
     let _44: Result::<Layout, LayoutError>; // anonymous local
-    let _45: TryReserveErrorKind; // anonymous local
-    let _46: TryReserveError; // anonymous local
-    let _47: PhantomData::<u8>; // anonymous local
-    let _48: UsizeNoHighBit; // anonymous local
+    let _45: LayoutError; // anonymous local
+    let _46: Result::<Layout, LayoutError>; // anonymous local
+    let _47: TryReserveErrorKind; // anonymous local
+    let _48: TryReserveError; // anonymous local
     let _49: PhantomData::<u8>; // anonymous local
+    let _50: UsizeNoHighBit; // anonymous local
+    let _51: PhantomData::<u8>; // anonymous local
 
     bb0: {
         storage_live(layout_6);
@@ -4097,8 +4076,10 @@ fn try_allocate_in::<Global>(capacity_1: usize, init_2: AllocInit, alloc_3: Glob
     bb3: {
         storage_dead(b_26);
         storage_live(_43);
-        _43 = Result::<Layout, LayoutError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        self_24 = move _43;
+        _43 = LayoutError {  };
+        storage_live(_44);
+        _44 = Result::<Layout, LayoutError>::Err { 0: move _43 };
+        self_24 = move _44;
         goto bb7;
     }
 
@@ -4127,9 +4108,11 @@ fn try_allocate_in::<Global>(capacity_1: usize, init_2: AllocInit, alloc_3: Glob
     }
 
     bb6: {
-        storage_live(_44);
-        _44 = Result::<Layout, LayoutError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        self_24 = move _44;
+        storage_live(_45);
+        _45 = LayoutError {  };
+        storage_live(_46);
+        _46 = Result::<Layout, LayoutError>::Err { 0: move _45 };
+        self_24 = move _46;
         storage_dead(_32);
         goto bb7;
     }
@@ -4138,11 +4121,11 @@ fn try_allocate_in::<Global>(capacity_1: usize, init_2: AllocInit, alloc_3: Glob
         storage_dead(self_24);
         storage_dead(size_30);
         storage_dead(elem_layout_41);
-        storage_live(_45);
-        _45 = TryReserveErrorKind::CapacityOverflow {  };
-        storage_live(_46);
-        _46 = TryReserveError { kind: move _45 };
-        _0 = Result::<RawVecInner::<Global>, TryReserveError>::Err { 0: move _46 };
+        storage_live(_47);
+        _47 = TryReserveErrorKind::CapacityOverflow {  };
+        storage_live(_48);
+        _48 = TryReserveError { kind: move _47 };
+        _0 = Result::<RawVecInner::<Global>, TryReserveError>::Err { 0: move _48 };
         storage_dead(_5);
         goto bb10;
     }
@@ -4155,13 +4138,13 @@ fn try_allocate_in::<Global>(capacity_1: usize, init_2: AllocInit, alloc_3: Glob
         storage_live(_37);
         storage_live(_38);
         _38 = transmute<Alignment, NonNull::<u8>>(copy elem_layout_42);
-        storage_live(_47);
-        _47 = PhantomData::<u8> {  };
-        _37 = Unique::<u8> { pointer: copy _38, _marker: move _47 };
+        storage_live(_49);
+        _49 = PhantomData::<u8> {  };
+        _37 = Unique::<u8> { pointer: copy _38, _marker: move _49 };
         storage_dead(_38);
-        storage_live(_48);
-        _48 = UsizeNoHighBit { 0: const 0usize };
-        _8 = RawVecInner::<Global> { ptr: copy _37, cap: move _48, alloc: copy alloc_9 };
+        storage_live(_50);
+        _50 = UsizeNoHighBit { 0: const 0usize };
+        _8 = RawVecInner::<Global> { ptr: copy _37, cap: move _50, alloc: copy alloc_9 };
         storage_dead(_37);
         storage_dead(alloc_9);
         _0 = Result::<RawVecInner::<Global>, TryReserveError>::Ok { 0: move _8 };
@@ -4231,9 +4214,9 @@ fn try_allocate_in::<Global>(capacity_1: usize, init_2: AllocInit, alloc_3: Glob
         storage_dead(_40);
         pointer_20 = transmute<*mut u8, NonNull::<u8>>(copy _39);
         storage_dead(_39);
-        storage_live(_49);
-        _49 = PhantomData::<u8> {  };
-        _19 = Unique::<u8> { pointer: copy pointer_20, _marker: move _49 };
+        storage_live(_51);
+        _51 = PhantomData::<u8> {  };
+        _19 = Unique::<u8> { pointer: copy pointer_20, _marker: move _51 };
         storage_dead(pointer_20);
         storage_live(_21);
         _21 = transmute<usize, UsizeNoHighBit>(copy capacity_1);
@@ -4423,10 +4406,12 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
     let elem_layout_44: usize; // local
     let elem_layout_45: Alignment; // local
     let _46: bool; // anonymous local
-    let _47: Result::<Layout, LayoutError>; // anonymous local
+    let _47: LayoutError; // anonymous local
     let _48: Result::<Layout, LayoutError>; // anonymous local
-    let _49: TryReserveErrorKind; // anonymous local
-    let _50: TryReserveError; // anonymous local
+    let _49: LayoutError; // anonymous local
+    let _50: Result::<Layout, LayoutError>; // anonymous local
+    let _51: TryReserveErrorKind; // anonymous local
+    let _52: TryReserveError; // anonymous local
 
     bb0: {
         storage_live(new_layout_7);
@@ -4480,8 +4465,10 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
     bb3: {
         storage_dead(b_24);
         storage_live(_47);
-        _47 = Result::<Layout, LayoutError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        self_22 = move _47;
+        _47 = LayoutError {  };
+        storage_live(_48);
+        _48 = Result::<Layout, LayoutError>::Err { 0: move _47 };
+        self_22 = move _48;
         goto bb7;
     }
 
@@ -4516,19 +4503,21 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
     }
 
     bb6: {
-        storage_live(_48);
-        _48 = Result::<Layout, LayoutError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        self_22 = move _48;
+        storage_live(_49);
+        _49 = LayoutError {  };
+        storage_live(_50);
+        _50 = Result::<Layout, LayoutError>::Err { 0: move _49 };
+        self_22 = move _50;
         storage_dead(_30);
         goto bb7;
     }
 
     bb7: {
-        storage_live(_49);
-        _49 = TryReserveErrorKind::CapacityOverflow {  };
-        storage_live(_50);
-        _50 = TryReserveError { kind: move _49 };
-        self_5 = Result::<Layout, TryReserveError>::Err { 0: move _50 };
+        storage_live(_51);
+        _51 = TryReserveErrorKind::CapacityOverflow {  };
+        storage_live(_52);
+        _52 = TryReserveError { kind: move _51 };
+        self_5 = Result::<Layout, TryReserveError>::Err { 0: move _52 };
         storage_dead(self_22);
         storage_dead(size_28);
         storage_dead(elem_layout_44);
@@ -4939,7 +4928,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
         ((*self_1)).cap = move _41;
         storage_dead(_41);
         storage_live(_53);
-        _53 = Result::<(), TryReserveError>::Ok { 0: const RawMemory(0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, --, --, --, --, --, --, --, --) };
+        _53 = Result::<(), TryReserveError>::Ok { 0: const () };
         _0 = move _53;
         storage_dead(cap_15);
         storage_dead(cap_11);

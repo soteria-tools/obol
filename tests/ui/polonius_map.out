@@ -3571,18 +3571,6 @@ pub struct ManuallyDrop::<[u8; 2usize]> {
   value: MaybeDangling::<[u8; 2usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8usize]> {
-  0: [u8; 8usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8usize]> {
-  value: MaybeDangling::<[u8; 8usize]>,
-}
-
 // Full name: std::mem::MaybeDangling::<[u8; 4usize]>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<[u8; 4usize]> {
@@ -3595,16 +3583,16 @@ pub struct ManuallyDrop::<[u8; 4usize]> {
   value: MaybeDangling::<[u8; 4usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 16usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 16usize]> {
-  0: [u8; 16usize],
+pub struct MaybeDangling::<[u8; 8usize]> {
+  0: [u8; 8usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 16usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 16usize]> {
-  value: MaybeDangling::<[u8; 16usize]>,
+pub struct ManuallyDrop::<[u8; 8usize]> {
+  value: MaybeDangling::<[u8; 8usize]>,
 }
 
 // Full name: std::mem::MaybeDangling::<[u8; 1usize]>
@@ -3617,13 +3605,6 @@ pub struct MaybeDangling::<[u8; 1usize]> {
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<[u8; 1usize]> {
   value: MaybeDangling::<[u8; 1usize]>,
-}
-
-// Full name: std::mem::MaybeUninit::<[u8; 16usize]>
-#[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 16usize]> {
-  uninit: (),
-  value: ManuallyDrop::<[u8; 16usize]>,
 }
 
 // Full name: std::mem::MaybeUninit::<[u8; 8usize]>
@@ -9598,8 +9579,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let _35: bool; // anonymous local
     let _36: bool; // anonymous local
     let _37: Option::<NonNull::<u8>>; // anonymous local
-    let _38: Result::<NonNull::<u8>, AllocError>; // anonymous local
-    let _39: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
+    let _38: AllocError; // anonymous local
+    let _39: Result::<NonNull::<u8>, AllocError>; // anonymous local
+    let _40: AllocError; // anonymous local
+    let _41: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
 
     bb0: {
         storage_live(raw_ptr_6);
@@ -9729,8 +9712,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         _37 = Option::<NonNull::<u8>>::None {  };
         self_9 = move _37;
         storage_live(_38);
-        _38 = Result::<NonNull::<u8>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0) };
-        self_8 = move _38;
+        _38 = AllocError {  };
+        storage_live(_39);
+        _39 = Result::<NonNull::<u8>, AllocError>::Err { 0: move _38 };
+        self_8 = move _39;
         storage_dead(self_9);
         storage_dead(self_8);
         storage_live(_32);
@@ -9738,9 +9723,11 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         _32 = @discriminant(_10);
         _33 = copy _32 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
-        storage_live(_39);
-        _39 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
-        _0 = move _39;
+        storage_live(_40);
+        _40 = AllocError {  };
+        storage_live(_41);
+        _41 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: move _40 };
+        _0 = move _41;
         storage_dead(_33);
         storage_dead(_32);
         storage_dead(_7);
@@ -11058,7 +11045,7 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
         storage_dead(_95);
         storage_dead(_94);
         storage_live(_103);
-        _103 = Result::<(), TryReserveError>::Ok { 0: const RawMemory(0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, --, --, --, --, --, --, --, --) };
+        _103 = Result::<(), TryReserveError>::Ok { 0: const () };
         _0 = move _103;
         _99 = &raw mut new_table_7;
         _100 = drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>(move _99) -> bb20 (unwind: bb21);
@@ -11351,7 +11338,7 @@ fn reserve_rehash_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Gl
     bb12: {
         storage_dead(_17);
         storage_live(_27);
-        _27 = Result::<(), TryReserveError>::Ok { 0: const RawMemory(0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, --, --, --, --, --, --, --, --) };
+        _27 = Result::<(), TryReserveError>::Ok { 0: const () };
         _0 = move _27;
         goto bb16;
     }

@@ -175,25 +175,6 @@ pub enum Option::<&'_ [u8; 4usize]> {
   Some(0: &'_ [u8; 4usize]),
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8usize]> {
-  0: [u8; 8usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8usize]> {
-  value: MaybeDangling::<[u8; 8usize]>,
-}
-
-// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
-#[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 8usize]> {
-  uninit: (),
-  value: ManuallyDrop::<[u8; 8usize]>,
-}
-
 // Full name: std::array::<impl std::convert::TryFrom<&[T]> for [T; N]>::try_from::<'_, u8, 4usize>
 pub fn try_from::<'_, u8, 4usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4usize], TryFromSliceError>
 {
@@ -211,8 +192,9 @@ pub fn try_from::<'_, u8, 4usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4usize], T
     let v_11: [u8; 4usize]; // local
     let _12: &'_ [u8; 4usize]; // anonymous local
     let _13: Option::<&'_ [u8; 4usize]>; // anonymous local
-    let _14: Result::<&'_ [u8; 4usize], TryFromSliceError>; // anonymous local
-    let _15: TryFromSliceError; // anonymous local
+    let _14: TryFromSliceError; // anonymous local
+    let _15: Result::<&'_ [u8; 4usize], TryFromSliceError>; // anonymous local
+    let _16: TryFromSliceError; // anonymous local
 
     bb0: {
         storage_live(self_2);
@@ -262,13 +244,15 @@ pub fn try_from::<'_, u8, 4usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4usize], T
         storage_dead(_4);
         storage_dead(_9);
         storage_live(_14);
-        _14 = Result::<&'_ [u8; 4usize], TryFromSliceError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0) };
-        self_2 = move _14;
+        _14 = TryFromSliceError { 0: const () };
+        storage_live(_15);
+        _15 = Result::<&'_ [u8; 4usize], TryFromSliceError>::Err { 0: move _14 };
+        self_2 = move _15;
         storage_dead(self_3);
         storage_live(_12);
-        storage_live(_15);
-        _15 = TryFromSliceError { 0: const () };
-        _0 = Result::<[u8; 4usize], TryFromSliceError>::Err { 0: move _15 };
+        storage_live(_16);
+        _16 = TryFromSliceError { 0: const () };
+        _0 = Result::<[u8; 4usize], TryFromSliceError>::Err { 0: move _16 };
         goto bb3;
     }
 

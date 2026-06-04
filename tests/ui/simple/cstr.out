@@ -1,3 +1,4 @@
+Item GlobalConstFn(AllocId(0, ThreadLocalIndex), Some(Ty { id: 2, kind: RigidTy(Adt(AdtDef(DefId { id: 1, name: "std::ffi::CStr" }), GenericArgs([]))) })) caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Unsupported ZST constant type: Slice(Ty(HashConsed(Literal(Int(I8)))))" }
 
 // Final ULLBC:
 
@@ -7,38 +8,8 @@ pub struct CStr {
   inner: [i8],
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 4usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 4usize]> {
-  0: [u8; 4usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 4usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 4usize]> {
-  value: MaybeDangling::<[u8; 4usize]>,
-}
-
-// Full name: std::mem::MaybeUninit::<[u8; 4usize]>
-#[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 4usize]> {
-  uninit: (),
-  value: ManuallyDrop::<[u8; 4usize]>,
-}
-
 // Full name: FakeTrait
 trait FakeTrait
-
-// Full name: anon_const_0
-fn anon_const_0() -> CStr
-{
-    let _0: CStr; // return
-
-    bb0: {
-        _0 = const RawMemory(0x31, 0x32, 0x33,  0x0);
-        return;
-    }
-}
 
 // Full name: anon_const_0
 const anon_const_0: CStr = anon_const_0()
