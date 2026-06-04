@@ -125,9 +125,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         ty: &TyKind,
         rty: ty::Ty,
     ) -> Result<ConstantExpr, Error> {
-        self.translate_allocation_at(span, alloc, ty, rty, 0)
+        self.translate_allocation_at(span, alloc, ty, rty, 0, None)
     }
 
+    /// Translate a value out of an allocation, starting at byte `offset`.
+    ///
+    /// `unsized_len` is the number of trailing bytes that make up the unsized data of an unsized
+    /// value (`str`, `[T]`, or a struct whose last field is unsized, such as `CStr`). It is only
+    /// relevant when `ty` is unsized, since in that case the layout only describes the sized
+    /// prefix and the length of the data can't be recovered from the type. For a top-level
+    /// unsized constant the caller can pass `None`, in which case we use the rest of the
+    /// allocation.
     pub fn translate_allocation_at(
         &mut self,
         span: Span,
@@ -135,9 +143,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         ty: &TyKind,
         rty: ty::Ty,
         offset: usize,
+        unsized_len: Option<usize>,
     ) -> Result<ConstantExpr, Error> {
-        let size = rty.layout()?.shape().size.bytes();
-        if size == 0 {
+        let layout = rty.layout()?.shape();
+        let size = layout.size.bytes();
+        // For an unsized value the trailing data extends to the end of the allocation unless the
+        // caller told us where it stops (e.g. when it is a field of a larger unsized value).
+        let unsized_len = layout
+            .is_unsized()
+            .then(|| unsized_len.unwrap_or(alloc.bytes.len() - offset));
+        if size == 0 && unsized_len.is_none() {
             return self.translate_zst_constant(span, ty, rty);
         }
         let bytes = &alloc.bytes.as_slice()[offset..offset + size];
@@ -216,6 +231,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                     subty.kind(),
                                     *rsubty,
                                     elem_off,
+                                    None,
                                 )
                             })
                             .try_collect()?;
@@ -332,15 +348,20 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 };
                 let fields = (0..generics.types.len())
                     .map(|i| {
-                        let field_offset = offsets[i].bytes();
+                        let field_offset = offsets[i].bytes() as usize;
                         let field_rty = rtys[i];
                         let field_ty = generics.types.get(TypeVarId::from_usize(i)).unwrap();
+                        // Only the last field of an unsized tuple is itself unsized.
+                        let field_len = unsized_len
+                            .filter(|_| i + 1 == generics.types.len())
+                            .map(|l| l - field_offset);
                         self.translate_allocation_at(
                             span,
                             alloc,
                             field_ty.kind(),
                             field_rty,
                             field_offset + offset,
+                            field_len,
                         )
                     })
                     .try_collect()?;
@@ -483,15 +504,21 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
 
                 let consts = (0..offsets.len())
                     .map(|field| {
-                        let field_offset = offsets[field].bytes();
+                        let field_offset = offsets[field].bytes() as usize;
                         let field_rty = rfields[field];
                         let field_ty = self.translate_ty(span, field_rty)?;
+                        // Only an unsized struct's last field is itself unsized; enums are
+                        // always sized so `unsized_len` is `None` for them.
+                        let field_len = unsized_len
+                            .filter(|_| field + 1 == offsets.len())
+                            .map(|l| l - field_offset);
                         self.translate_allocation_at(
                             span,
                             alloc,
                             field_ty.kind(),
                             field_rty,
                             field_offset + offset,
+                            field_len,
                         )
                     })
                     .try_collect()?;
@@ -510,7 +537,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let elems = (0..count as usize)
                     .map(|i| {
                         let elem_off = stride * i + offset;
-                        self.translate_allocation_at(span, alloc, subty, *subrty, elem_off)
+                        self.translate_allocation_at(span, alloc, subty, *subrty, elem_off, None)
                     })
                     .try_collect()?;
                 ConstantExprKind::Array(elems)
@@ -560,7 +587,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 let Some(ty::RigidTy::Pat(rty, _)) = rtyk.rigid() else {
                     unreachable!("Pattern type should be a rigid pattern type");
                 };
-                self.translate_allocation_at(span, alloc, inner, *rty, offset)?
+                self.translate_allocation_at(span, alloc, inner, *rty, offset, unsized_len)?
                     .kind
             }
 
@@ -570,13 +597,36 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }) => {
                 unreachable!("We never create builtin boxes");
             }
-            TyKind::DynTrait(..)
-            | TyKind::Slice(..)
-            | TyKind::Adt(TypeDeclRef {
+            // An unsized `str` held directly in a constant: its data is the raw UTF-8 bytes.
+            TyKind::Adt(TypeDeclRef {
                 id: TypeId::Builtin(BuiltinTy::Str),
                 ..
             }) => {
-                unreachable!("Translating unsized constant?");
+                let len = unsized_len.expect("str constant without a length");
+                let data = &alloc.bytes.as_slice()[offset..offset + len];
+                let as_str = unsafe { String::from_utf8_unchecked(Self::as_init(data)?) };
+                ConstantExprKind::Literal(Literal::Str(as_str))
+            }
+            // An unsized `[T]` held directly in a constant.
+            TyKind::Slice(subty) => {
+                let len = unsized_len.expect("slice constant without a length");
+                let rtyk = rty.kind();
+                let ty::RigidTy::Slice(subrty) = rtyk.rigid().unwrap() else {
+                    unreachable!("Unexpected rigid type for slice: {rty:?}");
+                };
+                let elem_size = subrty.layout()?.shape().size.bytes() as usize;
+                let count = if elem_size == 0 { 0 } else { len / elem_size };
+                let elems = (0..count)
+                    .map(|i| {
+                        let elem_off = offset + elem_size * i;
+                        self.translate_allocation_at(span, alloc, subty, *subrty, elem_off, None)
+                    })
+                    .try_collect()?;
+                ConstantExprKind::Array(elems)
+            }
+            // A bare `dyn Trait` value can't be held by-value in a constant.
+            TyKind::DynTrait(..) => {
+                unreachable!("Translating unsized dyn constant?");
             }
             TyKind::Error(..)
             | TyKind::Never

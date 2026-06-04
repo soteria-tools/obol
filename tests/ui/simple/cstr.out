@@ -1,4 +1,3 @@
-Item GlobalConstFn(AllocId(0, ThreadLocalIndex), Some(Ty { id: 2, kind: RigidTy(Adt(AdtDef(DefId { id: 1, name: "std::ffi::CStr" }), GenericArgs([]))) })) caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 0, col: 0 }, end: Loc { line: 0, col: 0 } }, generated_from_span: None }, msg: "Unsupported ZST constant type: Slice(Ty(HashConsed(Literal(Int(I8)))))" }
 
 // Final ULLBC:
 
@@ -10,6 +9,20 @@ pub struct CStr {
 
 // Full name: FakeTrait
 trait FakeTrait
+
+// Full name: anon_const_0
+fn anon_const_0() -> CStr
+{
+    let _0: CStr; // return
+    let _1: CStr; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = CStr { inner: const [49i8, 50i8, 51i8, 0i8] };
+        _0 = move _1;
+        return;
+    }
+}
 
 // Full name: anon_const_0
 const anon_const_0: CStr = anon_const_0()
