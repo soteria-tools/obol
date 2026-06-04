@@ -16,8 +16,8 @@ pub fn incr(s_1: &'_ mut [u32])
         storage_live(_3);
         _0 = ();
         storage_live(_2);
-        _2 = const 0 : usize;
-        _3 = copy (*s_1)[copy _2] panic.+ const 1 : u32;
+        _2 = const 0usize;
+        _3 = copy (*s_1)[copy _2] panic.+ const 1u32;
         (*s_1)[copy _2] = move _3;
         storage_dead(_2);
         _0 = ();

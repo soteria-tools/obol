@@ -63,13 +63,13 @@ fn main()
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = wrapping_add(const 255 : u8, const 1 : u8) -> bb1 (unwind: bb2);
+        _1 = wrapping_add(const 255u8, const 1u8) -> bb1 (unwind: bb2);
     }
 
     bb1: {
         storage_dead(_1);
         storage_live(_2);
-        _2 = overflowing_add(const 255 : u8, const 1 : u8) -> bb3 (unwind: bb4);
+        _2 = overflowing_add(const 255u8, const 1u8) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -79,7 +79,7 @@ fn main()
     bb3: {
         storage_dead(_2);
         storage_live(_3);
-        _3 = core::num::<impl u8>::saturating_add(const 255 : u8, const 1 : u8) -> bb5 (unwind: bb6);
+        _3 = core::num::<impl u8>::saturating_add(const 255u8, const 1u8) -> bb5 (unwind: bb6);
     }
 
     bb4: {

@@ -377,7 +377,7 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 
     bb1: {
-        switch copy _5 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _5 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -409,9 +409,9 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Alignment::new_unchecked requires a power of two\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -466,7 +466,7 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
     }
 
     bb1: {
-        switch copy _8 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _8 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -494,7 +494,7 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
         storage_live(_10);
         storage_live(_11);
         _11 = transmute<Alignment, usize>(copy alignment_7);
-        _10 = const 9223372036854775808 : usize ub.- move _11;
+        _10 = const 9223372036854775808usize ub.- move _11;
         storage_dead(_11);
         _3 = copy size_1 <= move _10;
         storage_dead(_10);
@@ -520,9 +520,9 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
         _19 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Layout::from_size_align_unchecked requires that align is a power of 2 and the rounded-up allocation size does not exceed isize::MAX\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _17 = copy _19.metadata;
         storage_dead(_19);
-        _16 = move _17 wrap.<< const 1 : i32;
+        _16 = move _17 wrap.<< const 1i32;
         storage_dead(_17);
-        _15 = move _16 | const 1 : usize;
+        _15 = move _16 | const 1usize;
         storage_dead(_16);
         _14 = transmute<usize, NonNull::<Argument::<'_>>>(move _15);
         storage_dead(_15);
@@ -578,7 +578,7 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         storage_live(_7);
         storage_live(_8);
         _8 = transmute<Alignment, usize>(copy alignment_2);
-        _7 = const 9223372036854775808 : usize ub.- move _8;
+        _7 = const 9223372036854775808usize ub.- move _8;
         storage_dead(_8);
         _3 = copy size_1 <= move _7;
         storage_dead(_7);
@@ -609,9 +609,9 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         _16 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Layout::from_size_alignment_unchecked requires that the rounded-up allocation size does not exceed isize::MAX\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _14 = copy _16.metadata;
         storage_dead(_16);
-        _13 = move _14 wrap.<< const 1 : i32;
+        _13 = move _14 wrap.<< const 1i32;
         storage_dead(_14);
-        _12 = move _13 | const 1 : usize;
+        _12 = move _13 | const 1usize;
         storage_dead(_13);
         _11 = transmute<usize, NonNull::<Argument::<'_>>>(move _12);
         storage_dead(_12);
@@ -675,12 +675,12 @@ pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
         storage_live(_26);
         storage_live(_27);
         storage_live(_28);
-        _26 = copy code_1 < const 128 : u32;
+        _26 = copy code_1 < const 128u32;
         if move _26 -> bb1 else -> bb2;
     }
 
     bb1: {
-        len_3 = const 1 : usize;
+        len_3 = const 1usize;
         storage_dead(_28);
         storage_dead(_27);
         storage_dead(_26);
@@ -689,17 +689,17 @@ pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
     }
 
     bb2: {
-        _27 = copy code_1 < const 2048 : u32;
+        _27 = copy code_1 < const 2048u32;
         if move _27 -> bb3 else -> bb4;
     }
 
     bb3: {
-        len_3 = const 2 : usize;
+        len_3 = const 2usize;
         goto bb6;
     }
 
     bb4: {
-        _28 = copy code_1 < const 65536 : u32;
+        _28 = copy code_1 < const 65536u32;
         if move _28 -> bb7 else -> bb8;
     }
 
@@ -714,64 +714,64 @@ pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
         storage_live(last1_4);
         storage_live(_5);
         storage_live(_6);
-        _6 = copy code_1 & const 63 : u32;
+        _6 = copy code_1 & const 63u32;
         _5 = cast<u32, u8>(move _6);
         storage_dead(_6);
-        last1_4 = move _5 | const 128 : u8;
+        last1_4 = move _5 | const 128u8;
         storage_dead(_5);
         storage_live(last2_7);
         storage_live(_8);
         storage_live(_9);
         storage_live(_10);
-        _10 = copy code_1 wrap.>> const 6 : i32;
-        _9 = move _10 & const 63 : u32;
+        _10 = copy code_1 wrap.>> const 6i32;
+        _9 = move _10 & const 63u32;
         storage_dead(_10);
         _8 = cast<u32, u8>(move _9);
         storage_dead(_9);
-        last2_7 = move _8 | const 128 : u8;
+        last2_7 = move _8 | const 128u8;
         storage_dead(_8);
         storage_live(last3_11);
         storage_live(_12);
         storage_live(_13);
         storage_live(_14);
-        _14 = copy code_1 wrap.>> const 12 : i32;
-        _13 = move _14 & const 63 : u32;
+        _14 = copy code_1 wrap.>> const 12i32;
+        _13 = move _14 & const 63u32;
         storage_dead(_14);
         _12 = cast<u32, u8>(move _13);
         storage_dead(_13);
-        last3_11 = move _12 | const 128 : u8;
+        last3_11 = move _12 | const 128u8;
         storage_dead(_12);
         storage_live(last4_15);
         storage_live(_16);
         storage_live(_17);
         storage_live(_18);
-        _18 = copy code_1 wrap.>> const 18 : i32;
-        _17 = move _18 & const 63 : u32;
+        _18 = copy code_1 wrap.>> const 18i32;
+        _17 = move _18 & const 63u32;
         storage_dead(_18);
         _16 = cast<u32, u8>(move _17);
         storage_dead(_17);
-        last4_15 = move _16 | const 240 : u8;
+        last4_15 = move _16 | const 240u8;
         storage_dead(_16);
         storage_live(_19);
         _19 = copy len_3;
-        switch copy _19 -> 2 : usize: bb9, otherwise: bb10;
+        switch copy _19 -> 2usize: bb9, otherwise: bb10;
     }
 
     bb7: {
-        len_3 = const 3 : usize;
+        len_3 = const 3usize;
         goto bb6;
     }
 
     bb8: {
-        len_3 = const 4 : usize;
+        len_3 = const 4usize;
         goto bb6;
     }
 
     bb9: {
         storage_dead(_19);
-        (*dst_2) = copy last2_7 | const 192 : u8;
+        (*dst_2) = copy last2_7 | const 192u8;
         storage_live(_20);
-        _20 = copy dst_2 offset const 1 : usize;
+        _20 = copy dst_2 offset const 1usize;
         (*_20) = copy last1_4;
         storage_dead(_20);
         goto bb11;
@@ -779,7 +779,7 @@ pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
 
     bb10: {
         storage_dead(_19);
-        switch copy len_3 -> 3 : usize: bb12, otherwise: bb13;
+        switch copy len_3 -> 3usize: bb12, otherwise: bb13;
     }
 
     bb11: {
@@ -791,13 +791,13 @@ pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
     }
 
     bb12: {
-        (*dst_2) = copy last3_11 | const 224 : u8;
+        (*dst_2) = copy last3_11 | const 224u8;
         storage_live(_21);
-        _21 = copy dst_2 offset const 1 : usize;
+        _21 = copy dst_2 offset const 1usize;
         (*_21) = copy last2_7;
         storage_dead(_21);
         storage_live(_22);
-        _22 = copy dst_2 offset const 2 : usize;
+        _22 = copy dst_2 offset const 2usize;
         (*_22) = copy last1_4;
         storage_dead(_22);
         goto bb11;
@@ -806,15 +806,15 @@ pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
     bb13: {
         (*dst_2) = copy last4_15;
         storage_live(_23);
-        _23 = copy dst_2 offset const 1 : usize;
+        _23 = copy dst_2 offset const 1usize;
         (*_23) = copy last3_11;
         storage_dead(_23);
         storage_live(_24);
-        _24 = copy dst_2 offset const 2 : usize;
+        _24 = copy dst_2 offset const 2usize;
         (*_24) = copy last2_7;
         storage_dead(_24);
         storage_live(_25);
-        _25 = copy dst_2 offset const 3 : usize;
+        _25 = copy dst_2 offset const 3usize;
         (*_25) = copy last1_4;
         storage_dead(_25);
         storage_dead(last4_15);
@@ -985,9 +985,9 @@ fn std::vec::Vec::<T, A>::set_len::precondition_check(new_len_1: usize, capacity
         _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Vec::set_len requires that new_len <= capacity()\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
-        _11 = move _12 wrap.<< const 1 : i32;
+        _11 = move _12 wrap.<< const 1i32;
         storage_dead(_12);
-        _10 = move _11 | const 1 : usize;
+        _10 = move _11 | const 1usize;
         storage_dead(_11);
         _9 = transmute<usize, NonNull::<Argument::<'_>>>(move _10);
         storage_dead(_10);
@@ -1022,7 +1022,7 @@ pub struct Unique::<u8> {
 
 // Full name: core::num::niche_types::UsizeNoHighBit
 pub struct UsizeNoHighBit {
-  0: usize is 0 : usize..=9223372036854775807 : usize,
+  0: usize is 0usize..=9223372036854775807usize,
 }
 
 // Full name: alloc::raw_vec::RawVecInner::<Global>
@@ -1075,9 +1075,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -1141,7 +1141,7 @@ pub fn kind(self_1: &'_ TryReserveError) -> TryReserveErrorKind
     bb0: {
         storage_live(_2);
         _2 = @discriminant(((*self_1)).kind);
-        switch move _2 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _2 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
@@ -1248,7 +1248,7 @@ fn handle_error(e_1: TryReserveError) -> !
     bb1: {
         storage_dead(_3);
         _4 = @discriminant(_2);
-        switch move _4 -> 0 : isize: bb3, 1 : isize: bb4, otherwise: bb5;
+        switch move _4 -> 0isize: bb3, 1isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -1353,9 +1353,9 @@ fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_
         _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_mul cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
-        _14 = move _15 wrap.<< const 1 : i32;
+        _14 = move _15 wrap.<< const 1i32;
         storage_dead(_15);
-        _13 = move _14 | const 1 : usize;
+        _13 = move _14 | const 1usize;
         storage_dead(_14);
         _12 = transmute<usize, NonNull::<Argument::<'_>>>(move _13);
         storage_dead(_13);
@@ -1408,7 +1408,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
         storage_live(_14);
         storage_live(self_15);
         self_3 = copy (elem_layout_2).size;
-        switch copy self_3 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy self_3 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -1422,7 +1422,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
         self_5 = copy ((*self_1)).cap;
         _4 = transmute<UsizeNoHighBit, usize>(copy self_5);
         storage_dead(self_5);
-        switch copy _4 -> 0 : usize: bb4, otherwise: bb5;
+        switch copy _4 -> 0usize: bb4, otherwise: bb5;
     }
 
     bb3: {
@@ -1550,7 +1550,7 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         _0 = ();
         storage_live(_5);
         _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -1573,9 +1573,9 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: NonNull::new_unchecked requires that the pointer is non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -1612,42 +1612,42 @@ pub enum ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>> {
   Break(0: Result::<Infallible, AllocError>),
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 16usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 16 : usize]> {
-  0: [u8; 16 : usize],
+pub struct MaybeDangling::<[u8; 16usize]> {
+  0: [u8; 16usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 16 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 16usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 16 : usize]> {
-  value: MaybeDangling::<[u8; 16 : usize]>,
+pub struct ManuallyDrop::<[u8; 16usize]> {
+  value: MaybeDangling::<[u8; 16usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 16usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 16 : usize]> {
+pub union MaybeUninit::<[u8; 16usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 16 : usize]>,
+  value: ManuallyDrop::<[u8; 16usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8 : usize]> {
-  0: [u8; 8 : usize],
+pub struct MaybeDangling::<[u8; 8usize]> {
+  0: [u8; 8usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 8 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8 : usize]> {
-  value: MaybeDangling::<[u8; 8 : usize]>,
+pub struct ManuallyDrop::<[u8; 8usize]> {
+  value: MaybeDangling::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 8 : usize]> {
+pub union MaybeUninit::<[u8; 8usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 8 : usize]>,
+  value: ManuallyDrop::<[u8; 8usize]>,
 }
 
 // Full name: std::alloc::Global::alloc_impl_runtime
@@ -1658,7 +1658,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let zeroed_2: bool; // arg #2
     let size_3: usize; // local
     let _4: NonNull::<[u8]>; // anonymous local
-    let data_5: NonNull::<u8>; // local
+    let self_5: NonNull::<u8>; // local
     let raw_ptr_6: *mut u8; // local
     let _7: ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>; // anonymous local
     let self_8: Result::<NonNull::<u8>, AllocError>; // local
@@ -1668,7 +1668,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let _12: NonNull::<[u8]>; // anonymous local
     let _13: Alignment; // anonymous local
     let ptr_14: *mut [u8]; // local
-    let data_15: *mut u8; // local
+    let self_15: *mut u8; // local
     let _16: (); // anonymous local
     let _17: *mut (); // anonymous local
     let _18: (); // anonymous local
@@ -1682,7 +1682,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let v_26: NonNull::<u8>; // local
     let v_27: NonNull::<u8>; // local
     let ptr_28: *mut [u8]; // local
-    let data_29: *mut u8; // local
+    let self_29: *mut u8; // local
     let _30: (); // anonymous local
     let _31: *mut (); // anonymous local
     let _32: isize; // anonymous local
@@ -1706,19 +1706,19 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_30);
         storage_live(size_3);
         size_3 = copy (layout_1).size;
-        switch copy size_3 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy size_3 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
         storage_live(_4);
-        storage_live(data_5);
+        storage_live(self_5);
         _13 = copy (layout_1).align;
-        data_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
+        self_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
         storage_live(ptr_14);
-        storage_live(data_15);
-        data_15 = transmute<Alignment, *mut u8>(copy _13);
-        ptr_14 = *mut  (copy data_15, const 0 : usize);
-        storage_dead(data_15);
+        storage_live(self_15);
+        self_15 = transmute<Alignment, *mut u8>(copy _13);
+        ptr_14 = *mut  (copy self_15, const 0usize);
+        storage_dead(self_15);
         storage_live(_34);
         _34 = ub_checks<bool>;
         if move _34 -> bb3 else -> bb4;
@@ -1737,7 +1737,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb4: {
         _4 = transmute<*mut [u8], NonNull::<[u8]>>(copy ptr_14);
         storage_dead(ptr_14);
-        storage_dead(data_5);
+        storage_dead(self_5);
         _0 = Result::<NonNull::<[u8]>, AllocError>::Ok { 0: move _4 };
         storage_dead(_4);
         goto bb9;
@@ -1813,7 +1813,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(self_9);
         storage_live(_23);
         _23 = transmute<*mut u8, usize>(copy raw_ptr_6);
-        switch copy _23 -> 0 : usize: bb20, otherwise: bb21;
+        switch copy _23 -> 0usize: bb20, otherwise: bb21;
     }
 
     bb20: {
@@ -1829,7 +1829,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_32);
         storage_live(_33);
         _32 = @discriminant(_10);
-        _33 = copy _32 == const 1 : isize;
+        _33 = copy _32 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
         storage_live(_39);
         _39 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
@@ -1873,10 +1873,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_dead(_7);
         storage_live(_12);
         storage_live(ptr_28);
-        storage_live(data_29);
-        data_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
-        ptr_28 = *mut  (copy data_29, copy size_3);
-        storage_dead(data_29);
+        storage_live(self_29);
+        self_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
+        ptr_28 = *mut  (copy self_29, copy size_3);
+        storage_dead(self_29);
         storage_live(_36);
         _36 = ub_checks<bool>;
         if move _36 -> bb26 else -> bb27;
@@ -1953,7 +1953,7 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
     }
 
     bb1: {
-        switch copy _8 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _8 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -1969,11 +1969,11 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
         _6 = transmute<*const (), usize>(copy _9);
         storage_dead(_9);
         storage_live(_7);
-        _7 = copy align_2 wrap.- const 1 : usize;
+        _7 = copy align_2 wrap.- const 1usize;
         _5 = move _6 & move _7;
         storage_dead(_7);
         storage_dead(_6);
-        _0 = move _5 == const 0 : usize;
+        _0 = move _5 == const 0usize;
         storage_dead(_5);
         return;
     }
@@ -1999,9 +1999,9 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
         _18 = transmute<&'_ str, &'_ [u8]>(const "is_aligned_to: align is not a power-of-two");
         _16 = copy _18.metadata;
         storage_dead(_18);
-        _15 = move _16 wrap.<< const 1 : i32;
+        _15 = move _16 wrap.<< const 1i32;
         storage_dead(_16);
-        _14 = move _15 | const 1 : usize;
+        _14 = move _15 | const 1usize;
         storage_dead(_15);
         _13 = transmute<usize, NonNull::<Argument::<'_>>>(move _14);
         storage_dead(_14);
@@ -2078,7 +2078,7 @@ fn std::ptr::write_bytes::precondition_check(addr_1: *const (), align_2: usize, 
         storage_live(_9);
         storage_live(_10);
         _10 = transmute<*const (), usize>(copy addr_1);
-        _9 = move _10 == const 0 : usize;
+        _9 = move _10 == const 0usize;
         storage_dead(_10);
         _4 = ~(move _9);
         storage_dead(_9);
@@ -2105,9 +2105,9 @@ fn std::ptr::write_bytes::precondition_check(addr_1: *const (), align_2: usize, 
         _18 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: ptr::write_bytes requires that the destination pointer is aligned and non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _16 = copy _18.metadata;
         storage_dead(_18);
-        _15 = move _16 wrap.<< const 1 : i32;
+        _15 = move _16 wrap.<< const 1i32;
         storage_dead(_16);
-        _14 = move _15 | const 1 : usize;
+        _14 = move _15 | const 1usize;
         storage_dead(_15);
         _13 = transmute<usize, NonNull::<Argument::<'_>>>(move _14);
         storage_dead(_14);
@@ -2323,7 +2323,7 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
         storage_live(_13);
         _0 = ();
         storage_live(_6);
-        switch copy count_5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy count_5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -2332,7 +2332,7 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     }
 
     bb2: {
-        zero_size_7 = copy size_3 == const 0 : usize;
+        zero_size_7 = copy size_3 == const 0usize;
         goto bb3;
     }
 
@@ -2370,7 +2370,7 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
         storage_live(_16);
         storage_live(_17);
         _17 = transmute<*const (), usize>(copy src_1);
-        _16 = move _17 == const 0 : usize;
+        _16 = move _17 == const 0usize;
         storage_dead(_17);
         _8 = ~(move _16);
         storage_dead(_16);
@@ -2424,9 +2424,9 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
         _28 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: ptr::copy_nonoverlapping requires that both pointer arguments are aligned and non-null and the specified memory ranges do not overlap\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _26 = copy _28.metadata;
         storage_dead(_28);
-        _25 = move _26 wrap.<< const 1 : i32;
+        _25 = move _26 wrap.<< const 1i32;
         storage_dead(_26);
-        _24 = move _25 | const 1 : usize;
+        _24 = move _25 | const 1usize;
         storage_dead(_25);
         _23 = transmute<usize, NonNull::<Argument::<'_>>>(move _24);
         storage_dead(_24);
@@ -2462,7 +2462,7 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
         storage_live(_19);
         storage_live(_20);
         _20 = transmute<*mut (), usize>(copy dst_2);
-        _19 = move _20 == const 0 : usize;
+        _19 = move _20 == const 0usize;
         storage_dead(_20);
         _10 = ~(move _19);
         storage_dead(_19);
@@ -2546,9 +2546,9 @@ fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
         _12 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: hint::assert_unchecked must never be called when the condition is false\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _10 = copy _12.metadata;
         storage_dead(_12);
-        _9 = move _10 wrap.<< const 1 : i32;
+        _9 = move _10 wrap.<< const 1i32;
         storage_dead(_10);
-        _8 = move _9 | const 1 : usize;
+        _8 = move _9 | const 1usize;
         storage_dead(_9);
         _7 = transmute<usize, NonNull::<Argument::<'_>>>(move _8);
         storage_dead(_8);
@@ -2614,7 +2614,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     let _41: *const (); // anonymous local
     let _42: bool; // anonymous local
     let ptr_43: *mut [u8]; // local
-    let data_44: *mut u8; // local
+    let self_44: *mut u8; // local
     let _45: (); // anonymous local
     let _46: *mut (); // anonymous local
     let _47: isize; // anonymous local
@@ -2653,7 +2653,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         storage_live(_54);
         storage_live(old_size_6);
         old_size_6 = copy (old_layout_3).size;
-        switch copy old_size_6 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy old_size_6 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -2719,7 +2719,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     bb9: {
         storage_live(_47);
         _47 = @discriminant(self_23);
-        switch move _47 -> 0 : isize: bb15, 1 : isize: bb16, otherwise: bb17;
+        switch move _47 -> 0isize: bb15, 1isize: bb16, otherwise: bb17;
     }
 
     bb10: {
@@ -2740,7 +2740,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         storage_live(self_15);
         storage_live(_33);
         _33 = transmute<*mut u8, usize>(copy raw_ptr_12);
-        switch copy _33 -> 0 : usize: bb18, otherwise: bb19;
+        switch copy _33 -> 0usize: bb18, otherwise: bb19;
     }
 
     bb14: {
@@ -2778,7 +2778,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         storage_live(_49);
         storage_live(_50);
         _49 = @discriminant(_24);
-        _50 = copy _49 == const 1 : isize;
+        _50 = copy _49 == const 1isize;
         assert(move _50 == true) else undefined_behavior;
         storage_live(_62);
         _62 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
@@ -2806,7 +2806,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         storage_live(_38);
         storage_live(_39);
         _38 = @discriminant(_16);
-        _39 = copy _38 == const 1 : isize;
+        _39 = copy _38 == const 1isize;
         assert(move _39 == true) else undefined_behavior;
         storage_live(_65);
         _65 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
@@ -2832,7 +2832,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         _55 = transmute<NonNull::<u8>, *const ()>(copy ptr_2);
         storage_live(_56);
         _56 = transmute<NonNull::<u8>, *mut ()>(copy _51);
-        _54 = std::ptr::copy_nonoverlapping::precondition_check(move _55, move _56, const 1 : usize, const 1 : usize, copy old_size_6) -> bb25 (unwind: bb26);
+        _54 = std::ptr::copy_nonoverlapping::precondition_check(move _55, move _56, const 1usize, const 1usize, copy old_size_6) -> bb25 (unwind: bb26);
     }
 
     bb21: {
@@ -2913,10 +2913,10 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     bb32: {
         storage_live(_21);
         storage_live(ptr_43);
-        storage_live(data_44);
-        data_44 = transmute<NonNull::<u8>, *mut u8>(copy ptr_17);
-        ptr_43 = *mut  (copy data_44, copy new_size_10);
-        storage_dead(data_44);
+        storage_live(self_44);
+        self_44 = transmute<NonNull::<u8>, *mut u8>(copy ptr_17);
+        ptr_43 = *mut  (copy self_44, copy new_size_10);
+        storage_dead(self_44);
         storage_live(_61);
         _61 = ub_checks<bool>;
         if move _61 -> bb35 else -> bb36;
@@ -2926,12 +2926,12 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         storage_live(_41);
         _41 = cast<*mut u8, *const ()>(copy self_19);
         storage_live(_42);
-        _42 = copy count_20 == const 0 : usize;
-        _40 = std::ptr::write_bytes::precondition_check(move _41, const 1 : usize, move _42) -> bb37 (unwind: bb38);
+        _42 = copy count_20 == const 0usize;
+        _40 = std::ptr::write_bytes::precondition_check(move _41, const 1usize, move _42) -> bb37 (unwind: bb38);
     }
 
     bb34: {
-        _18 = write_bytes::<u8>(move self_19, const 0 : u8, move count_20) -> bb39 (unwind: bb40);
+        _18 = write_bytes::<u8>(move self_19, const 0u8, move count_20) -> bb39 (unwind: bb40);
     }
 
     bb35: {
@@ -3149,7 +3149,7 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
         storage_live(_32);
         storage_live(_33);
         _33 = transmute<Alignment, usize>(copy elem_layout_45);
-        _32 = const 9223372036854775808 : usize ub.- move _33;
+        _32 = const 9223372036854775808usize ub.- move _33;
         storage_dead(_33);
         _30 = copy size_28 <= move _32;
         storage_dead(_32);
@@ -3225,7 +3225,7 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
         storage_live(_38);
         storage_live(_40);
         _38 = @discriminant(residual_6);
-        _40 = copy _38 == const 1 : isize;
+        _40 = copy _38 == const 1isize;
         assert(move _40 == true) else undefined_behavior;
         storage_live(e_39);
         e_39 = copy (residual_6 as variant Result::<Infallible, TryReserveError>::Err).0;
@@ -3240,7 +3240,7 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
 
     bb8: {
         _10 = @discriminant(_9);
-        switch move _10 -> 1 : isize: bb11, 0 : isize: bb12, otherwise: bb13;
+        switch move _10 -> 1isize: bb11, 0isize: bb12, otherwise: bb13;
     }
 
     bb9: {
@@ -3325,7 +3325,7 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
 
     bb21: {
         _18 = @discriminant(memory_8);
-        switch move _18 -> 0 : isize: bb22, 1 : isize: bb23, otherwise: bb13;
+        switch move _18 -> 0isize: bb22, 1isize: bb23, otherwise: bb13;
     }
 
     bb22: {
@@ -3447,7 +3447,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
         storage_live(ptr_21);
         storage_live(_25);
         size_5 = copy (elem_layout_4).size;
-        switch copy size_5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy size_5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -3506,7 +3506,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
         self_14 = copy ((*self_1)).cap;
         _13 = transmute<UsizeNoHighBit, usize>(copy self_14);
         storage_dead(self_14);
-        v1_12 = move _13 wrap.* const 2 : usize;
+        v1_12 = move _13 wrap.* const 2usize;
         storage_dead(_13);
         cap_11 = max::<usize>(move v1_12, move required_cap_10) -> bb8 (unwind: bb9);
     }
@@ -3534,7 +3534,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
         storage_live(_30);
         storage_live(_33);
         _30 = @discriminant(residual_9);
-        _33 = copy _30 == const 1 : isize;
+        _33 = copy _30 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
         storage_live(e_31);
         e_31 = copy (residual_9 as variant Result::<Infallible, TryReserveErrorKind>::Err).0;
@@ -3558,7 +3558,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
         storage_dead(v1_12);
         storage_live(cap_15);
         storage_live(v1_16);
-        switch copy size_5 -> 1 : usize: bb10, otherwise: bb11;
+        switch copy size_5 -> 1usize: bb10, otherwise: bb11;
     }
 
     bb9: {
@@ -3566,13 +3566,13 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
     }
 
     bb10: {
-        v1_16 = const 8 : usize;
+        v1_16 = const 8usize;
         goto bb12;
     }
 
     bb11: {
         storage_live(_34);
-        _34 = copy size_5 <= const 1024 : usize;
+        _34 = copy size_5 <= const 1024usize;
         if move _34 -> bb13 else -> bb14;
     }
 
@@ -3581,12 +3581,12 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
     }
 
     bb13: {
-        v1_16 = const 4 : usize;
+        v1_16 = const 4usize;
         goto bb17;
     }
 
     bb14: {
-        v1_16 = const 1 : usize;
+        v1_16 = const 1usize;
         goto bb17;
     }
 
@@ -3612,7 +3612,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
         storage_dead(_19);
         storage_live(_35);
         _35 = @discriminant(self_18);
-        switch move _35 -> 0 : isize: bb20, 1 : isize: bb21, otherwise: bb22;
+        switch move _35 -> 0isize: bb20, 1isize: bb21, otherwise: bb22;
     }
 
     bb19: {
@@ -3670,7 +3670,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
         storage_live(_44);
         storage_live(_46);
         _44 = @discriminant(residual_20);
-        _46 = copy _44 == const 1 : isize;
+        _46 = copy _44 == const 1isize;
         assert(move _46 == true) else undefined_behavior;
         storage_live(e_45);
         e_45 = copy (residual_20 as variant Result::<Infallible, TryReserveError>::Err).0;
@@ -3713,7 +3713,7 @@ fn do_reserve_and_handle::<Global>(slf_1: &'_ mut RawVecInner::<Global>, len_2: 
 
     bb1: {
         _6 = @discriminant(_5);
-        switch move _6 -> 1 : isize: bb3, 0 : isize: bb4, otherwise: bb5;
+        switch move _6 -> 1isize: bb3, 0isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -3776,18 +3776,18 @@ pub fn reserve::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, additional_2: us
         storage_live(_13);
         _13 = Alignment { _inner_repr_trick: move _12 };
         storage_live(_14);
-        _14 = Layout { size: const 1 : usize, align: move _13 };
+        _14 = Layout { size: const 1usize, align: move _13 };
         elem_layout_5 = move _14;
         storage_live(_6);
         storage_live(_8);
         storage_live(self_9);
         storage_live(elem_size_10);
         elem_size_10 = copy (elem_layout_5).size;
-        switch copy elem_size_10 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy elem_size_10 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
-        self_9 = const 18446744073709551615 : usize;
+        self_9 = const 18446744073709551615usize;
         goto bb3;
     }
 
@@ -3867,24 +3867,24 @@ pub fn push(self_1: &'_ mut String, ch_2: char)
         storage_live(len_3);
         len_3 = copy (((*self_1)).vec).len;
         storage_live(_11);
-        _11 = copy len_3 <= const 9223372036854775807 : usize;
+        _11 = copy len_3 <= const 9223372036854775807usize;
         assert(move _11 == true) else undefined_behavior;
         storage_dead(_11);
         code_12 = cast<char, u32>(copy ch_2);
         storage_live(_13);
         storage_live(_14);
         storage_live(_15);
-        _13 = copy code_12 < const 128 : u32;
+        _13 = copy code_12 < const 128u32;
         if move _13 -> bb1 else -> bb2;
     }
 
     bb1: {
-        ch_len_4 = const 1 : usize;
+        ch_len_4 = const 1usize;
         goto bb3;
     }
 
     bb2: {
-        _14 = copy code_12 < const 2048 : u32;
+        _14 = copy code_12 < const 2048u32;
         if move _14 -> bb4 else -> bb5;
     }
 
@@ -3900,12 +3900,12 @@ pub fn push(self_1: &'_ mut String, ch_2: char)
     }
 
     bb4: {
-        ch_len_4 = const 2 : usize;
+        ch_len_4 = const 2usize;
         goto bb3;
     }
 
     bb5: {
-        _15 = copy code_12 < const 65536 : u32;
+        _15 = copy code_12 < const 65536u32;
         if move _15 -> bb8 else -> bb9;
     }
 
@@ -3928,12 +3928,12 @@ pub fn push(self_1: &'_ mut String, ch_2: char)
     }
 
     bb8: {
-        ch_len_4 = const 3 : usize;
+        ch_len_4 = const 3usize;
         goto bb3;
     }
 
     bb9: {
-        ch_len_4 = const 4 : usize;
+        ch_len_4 = const 4usize;
         goto bb3;
     }
 
@@ -4035,11 +4035,11 @@ fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *co
         storage_live(len_5);
         len_5 = copy ((*self_1)).len;
         storage_live(_10);
-        _10 = copy len_5 <= const 9223372036854775807 : usize;
+        _10 = copy len_5 <= const 9223372036854775807usize;
         assert(move _10 == true) else undefined_behavior;
         storage_dead(_10);
         storage_live(_6);
-        _6 = copy count_3 > const 0 : usize;
+        _6 = copy count_3 > const 0usize;
         if move _6 -> bb3 else -> bb4;
     }
 
@@ -4076,7 +4076,7 @@ fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *co
         _13 = cast<*const [u8], *const ()>(copy other_2);
         storage_live(_14);
         _14 = cast<*mut u8, *mut ()>(copy dst_8);
-        _12 = std::ptr::copy_nonoverlapping::precondition_check(move _13, move _14, const 1 : usize, const 1 : usize, copy count_3) -> bb7 (unwind: bb8);
+        _12 = std::ptr::copy_nonoverlapping::precondition_check(move _13, move _14, const 1usize, const 1usize, copy count_3) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -4146,7 +4146,7 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
         storage_live(_12);
         storage_live(_13);
         _13 = transmute<*mut (), usize>(copy data_1);
-        _12 = move _13 == const 0 : usize;
+        _12 = move _13 == const 0usize;
         storage_dead(_13);
         _5 = ~(move _12);
         storage_dead(_12);
@@ -4163,7 +4163,7 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
         storage_dead(ptr_6);
         storage_live(_7);
         storage_live(max_len_14);
-        switch copy size_2 -> 0 : usize: bb7, otherwise: bb8;
+        switch copy size_2 -> 0usize: bb7, otherwise: bb8;
     }
 
     bb6: {
@@ -4172,12 +4172,12 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
     }
 
     bb7: {
-        max_len_14 = const 18446744073709551615 : usize;
+        max_len_14 = const 18446744073709551615usize;
         goto bb10;
     }
 
     bb8: {
-        max_len_14 = const 9223372036854775807 : usize ub./ copy size_2;
+        max_len_14 = const 9223372036854775807usize ub./ copy size_2;
         goto bb10;
     }
 
@@ -4200,9 +4200,9 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
         _22 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::from_raw_parts requires the pointer to be aligned and non-null, and the total size of the slice not to exceed `isize::MAX`\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _20 = copy _22.metadata;
         storage_dead(_22);
-        _19 = move _20 wrap.<< const 1 : i32;
+        _19 = move _20 wrap.<< const 1i32;
         storage_dead(_20);
-        _18 = move _19 | const 1 : usize;
+        _18 = move _19 | const 1usize;
         storage_dead(_19);
         _17 = transmute<usize, NonNull::<Argument::<'_>>>(move _18);
         storage_dead(_18);
@@ -4295,9 +4295,9 @@ fn std::ptr::const_ptr::<impl *const T>::offset_from_unsigned::precondition_chec
         _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: ptr::offset_from_unsigned requires `self >= origin`\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
-        _11 = move _12 wrap.<< const 1 : i32;
+        _11 = move _12 wrap.<< const 1i32;
         storage_dead(_12);
-        _10 = move _11 | const 1 : usize;
+        _10 = move _11 | const 1usize;
         storage_dead(_11);
         _9 = transmute<usize, NonNull::<Argument::<'_>>>(move _10);
         storage_dead(_10);
@@ -4432,14 +4432,14 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
 
     bb5: {
         storage_live(_13);
-        _13 = const 0 : usize < const 1 : usize;
+        _13 = const 0usize < const 1usize;
         if move _13 -> bb10 else -> bb11;
     }
 
     bb6: {
         storage_live(_17);
         _17 = transmute<NonNull::<u8>, *mut ()>(copy self_3);
-        _16 = std::slice::from_raw_parts::precondition_check(move _17, const 1 : usize, const 1 : usize, copy len_4) -> bb12 (unwind: bb13);
+        _16 = std::slice::from_raw_parts::precondition_check(move _17, const 1usize, const 1usize, copy len_4) -> bb12 (unwind: bb13);
     }
 
     bb7: {
@@ -4463,7 +4463,7 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
 
     bb10: {
         storage_live(_14);
-        _14 = const 1 : usize <= const 9223372036854775807 : usize;
+        _14 = const 1usize <= const 9223372036854775807usize;
         if move _14 -> bb14 else -> bb11;
     }
 
@@ -4640,33 +4640,33 @@ pub fn <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ m
 {
     let _0: (); // return
     let self_1: &'_ mut Vec::<u8, Global>; // arg #1
-    let to_drop_2: *mut [u8]; // local
-    let data_3: *mut u8; // local
+    let self_2: *mut [u8]; // local
+    let self_3: *mut u8; // local
     let len_4: usize; // local
     let _5: NonNull::<u8>; // anonymous local
     let _6: &'_ mut [u8]; // anonymous local
 
     bb0: {
         _0 = ();
-        storage_live(to_drop_2);
-        storage_live(data_3);
+        storage_live(self_2);
+        storage_live(self_3);
         storage_live(_5);
         _5 = copy (((((*self_1)).buf).inner).ptr).pointer;
-        data_3 = transmute<NonNull::<u8>, *mut u8>(copy _5);
+        self_3 = transmute<NonNull::<u8>, *mut u8>(copy _5);
         storage_dead(_5);
         storage_live(len_4);
         len_4 = copy ((*self_1)).len;
-        to_drop_2 = *mut  (copy data_3, copy len_4);
+        self_2 = *mut  (copy self_3, copy len_4);
         storage_dead(len_4);
-        storage_dead(data_3);
+        storage_dead(self_3);
         storage_live(_6);
-        _6 = &mut (*to_drop_2) with_metadata(copy to_drop_2.metadata);
+        _6 = &mut (*self_2) with_metadata(copy self_2.metadata);
         _0 = drop_glue::<[u8]>(move _6) -> bb1 (unwind: bb2);
     }
 
     bb1: {
         storage_dead(_6);
-        storage_dead(to_drop_2);
+        storage_dead(self_2);
         return;
     }
 
@@ -4688,7 +4688,7 @@ pub fn <std::alloc::Global as std::alloc::Allocator>::deallocate(self_1: &'_ Glo
         _0 = ();
         storage_live(_4);
         _4 = copy (layout_3).size;
-        switch copy _4 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _4 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -4738,7 +4738,7 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
     bb1: {
         storage_dead(_4);
         _5 = @discriminant(_3);
-        switch move _5 -> 1 : isize: bb3, 0 : isize: bb4, otherwise: bb5;
+        switch move _5 -> 1isize: bb3, 0isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -4799,7 +4799,7 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
         storage_live(_4);
         _4 = Alignment { _inner_repr_trick: move _3 };
         storage_live(_5);
-        _5 = Layout { size: const 1 : usize, align: move _4 };
+        _5 = Layout { size: const 1usize, align: move _4 };
         _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, move _5) -> bb1 (unwind: bb2);
     }
 
@@ -4965,8 +4965,8 @@ pub fn as_statically_known_str::<'_>(self_1: &'_ Arguments::<'_>) -> Option::<&'
         bits_4 = transmute<NonNull::<Argument::<'_>>, usize>(move _5);
         storage_dead(_5);
         storage_live(_6);
-        _6 = copy bits_4 & const 1 : usize;
-        switch copy _6 -> 1 : usize: bb1, otherwise: bb2;
+        _6 = copy bits_4 & const 1usize;
+        switch copy _6 -> 1usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -4976,7 +4976,7 @@ pub fn as_statically_known_str::<'_>(self_1: &'_ Arguments::<'_>) -> Option::<&'
         self_10 = copy ((*self_1)).template;
         data_9 = transmute<NonNull::<u8>, *const u8>(copy self_10);
         storage_live(len_11);
-        len_11 = copy bits_4 wrap.>> const 1 : i32;
+        len_11 = copy bits_4 wrap.>> const 1i32;
         storage_live(_16);
         _16 = ub_checks<bool>;
         if move _16 -> bb3 else -> bb4;
@@ -4993,7 +4993,7 @@ pub fn as_statically_known_str::<'_>(self_1: &'_ Arguments::<'_>) -> Option::<&'
     bb3: {
         storage_live(_13);
         _13 = transmute<NonNull::<u8>, *mut ()>(copy self_10);
-        _12 = std::slice::from_raw_parts::precondition_check(move _13, const 1 : usize, const 1 : usize, copy len_11) -> bb6 (unwind: bb7);
+        _12 = std::slice::from_raw_parts::precondition_check(move _13, const 1usize, const 1usize, copy len_11) -> bb6 (unwind: bb7);
     }
 
     bb4: {
@@ -5017,7 +5017,7 @@ pub fn as_statically_known_str::<'_>(self_1: &'_ Arguments::<'_>) -> Option::<&'
         storage_live(_3);
         storage_live(_15);
         _15 = @discriminant(s_0);
-        _3 = copy _15 == const 1 : isize;
+        _3 = copy _15 == const 1isize;
         storage_dead(_15);
         _2 = is_val_statically_known::<bool>(move _3) -> bb8 (unwind: bb9);
     }
@@ -5068,8 +5068,8 @@ fn Write::<String>() -> *const ()
     let <String as Write>::write_str_4: *const (); // local
     let <String as Write>::write_char_5: *const (); // local
     let <String as Write>::write_fmt_6: *const (); // local
-    let entry_array_7: [*const (); 6 : usize]; // local
-    let entry_array_ref_8: *const [*const (); 6 : usize]; // local
+    let entry_array_7: [*const (); 6usize]; // local
+    let entry_array_ref_8: *const [*const (); 6usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -5081,14 +5081,14 @@ fn Write::<String>() -> *const ()
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
         drop_1 = cast<drop_glue::<String>, *const ()>(const drop_glue::<String>);
-        size_2 = transmute<usize, *const ()>(const 24 : usize);
-        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        size_2 = transmute<usize, *const ()>(const 24usize);
+        align_3 = transmute<usize, *const ()>(const 8usize);
         <String as Write>::write_str_4 = cast<<std::string::String as std::fmt::Write>::write_str, *const ()>(const <std::string::String as std::fmt::Write>::write_str);
         <String as Write>::write_char_5 = cast<write_char, *const ()>(const write_char);
         <String as Write>::write_fmt_6 = cast<write_fmt::<String>, *const ()>(const write_fmt::<String>);
         entry_array_7 = [move drop_1, move size_2, move align_3, move <String as Write>::write_str_4, move <String as Write>::write_char_5, move <String as Write>::write_fmt_6];
         entry_array_ref_8 = &raw const entry_array_7;
-        vtable_0 = cast<*const [*const (); 6 : usize], *const ()>(move entry_array_ref_8);
+        vtable_0 = cast<*const [*const (); 6usize], *const ()>(move entry_array_ref_8);
         return;
     }
 }
@@ -5139,7 +5139,7 @@ fn spec_write_fmt::<'_, String>(self_1: &'_ mut String, args_2: Arguments::<'_>)
     bb1: {
         storage_dead(_4);
         _5 = @discriminant(_3);
-        switch move _5 -> 1 : isize: bb3, 0 : isize: bb4, otherwise: bb5;
+        switch move _5 -> 1isize: bb3, 0isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -5208,8 +5208,8 @@ fn Debug::<Error>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <Error as Debug>::fmt_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -5219,12 +5219,12 @@ fn Debug::<Error>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<Error>, *const ()>(const drop_glue::<Error>);
-        size_2 = transmute<usize, *const ()>(const 0 : usize);
-        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
         <Error as Debug>::fmt_4 = cast<<std::fmt::Error as std::fmt::Debug>::fmt, *const ()>(const <std::fmt::Error as std::fmt::Debug>::fmt);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <Error as Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -5286,8 +5286,8 @@ fn Display::<String>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <String as Display>::fmt_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -5297,12 +5297,12 @@ fn Display::<String>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<String>, *const ()>(const drop_glue::<String>);
-        size_2 = transmute<usize, *const ()>(const 24 : usize);
-        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        size_2 = transmute<usize, *const ()>(const 24usize);
+        align_3 = transmute<usize, *const ()>(const 8usize);
         <String as Display>::fmt_4 = cast<<std::string::String as std::fmt::Display>::fmt, *const ()>(const <std::string::String as std::fmt::Display>::fmt);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <String as Display>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -5431,7 +5431,7 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global
         layout_2 = Layout { size: copy size_7, align: copy alignment_8 };
         storage_dead(alignment_8);
         storage_dead(t_3);
-        switch copy size_7 -> 0 : usize: bb11, otherwise: bb12;
+        switch copy size_7 -> 0usize: bb11, otherwise: bb12;
     }
 
     bb10: {
@@ -5578,7 +5578,7 @@ pub fn expect::<(), Error>(self_1: Result::<(), Error>, msg_2: &'_ str)
         storage_live(_5);
         t_0 = ();
         _3 = @discriminant(self_1);
-        switch move _3 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _3 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
@@ -5638,7 +5638,7 @@ fn box_new_uninit(layout_1: Layout) -> *mut u8
 
     bb1: {
         _3 = @discriminant(_2);
-        switch move _3 -> 0 : isize: bb3, 1 : isize: bb4, otherwise: bb5;
+        switch move _3 -> 0isize: bb3, 1isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -5702,7 +5702,7 @@ pub fn std::boxed::Box::<T>::new::<String>(x_1: String) -> Box::<String, Global>
         storage_live(_7);
         _7 = Alignment { _inner_repr_trick: move _6 };
         storage_live(_8);
-        _8 = Layout { size: const 24 : usize, align: move _7 };
+        _8 = Layout { size: const 24usize, align: move _7 };
         _3 = box_new_uninit(move _8) -> bb1 (unwind: bb2);
     }
 
@@ -5744,7 +5744,7 @@ pub fn std::string::String::new() -> String
     bb0: {
         storage_live(_1);
         storage_live(_2);
-        _2 = cast<usize, *const u8 is !null>(const 1 : usize);
+        _2 = cast<usize, *const u8 is !null>(const 1usize);
         storage_live(_3);
         _3 = NonNull::<u8> { pointer: move _2 };
         storage_live(_4);
@@ -5752,7 +5752,7 @@ pub fn std::string::String::new() -> String
         storage_live(_5);
         _5 = Unique::<u8> { pointer: move _3, _marker: move _4 };
         storage_live(_6);
-        _6 = UsizeNoHighBit { 0: const 0 : usize };
+        _6 = UsizeNoHighBit { 0: const 0usize };
         storage_live(_7);
         _7 = Global {  };
         storage_live(_8);
@@ -5761,7 +5761,7 @@ pub fn std::string::String::new() -> String
         _9 = PhantomData::<u8> {  };
         storage_live(_10);
         _10 = RawVec::<u8, Global> { inner: move _8, _marker: move _9 };
-        _1 = Vec::<u8, Global> { buf: move _10, len: const 0 : usize };
+        _1 = Vec::<u8, Global> { buf: move _10, len: const 0usize };
         _0 = String { vec: move _1 };
         storage_dead(_1);
         return;
@@ -5803,7 +5803,7 @@ fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
         storage_live(buf_2);
         storage_live(_10);
         storage_live(_14);
-        _14 = cast<usize, *const u8 is !null>(const 1 : usize);
+        _14 = cast<usize, *const u8 is !null>(const 1usize);
         storage_live(_15);
         _15 = NonNull::<u8> { pointer: move _14 };
         storage_live(_16);
@@ -5811,7 +5811,7 @@ fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
         storage_live(_17);
         _17 = Unique::<u8> { pointer: move _15, _marker: move _16 };
         storage_live(_18);
-        _18 = UsizeNoHighBit { 0: const 0 : usize };
+        _18 = UsizeNoHighBit { 0: const 0usize };
         storage_live(_19);
         _19 = Global {  };
         storage_live(_20);
@@ -5820,7 +5820,7 @@ fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
         _21 = PhantomData::<u8> {  };
         storage_live(_22);
         _22 = RawVec::<u8, Global> { inner: move _20, _marker: move _21 };
-        _10 = Vec::<u8, Global> { buf: move _22, len: const 0 : usize };
+        _10 = Vec::<u8, Global> { buf: move _22, len: const 0usize };
         buf_2 = String { vec: move _10 };
         storage_dead(_10);
         storage_live(formatter_3);
@@ -5829,7 +5829,7 @@ fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
         _5 = &mut buf_2;
         write_4 = unsize_cast<&'_ mut String, &'_ mut (dyn FakeTrait), Write::<String>>(copy _5);
         storage_live(options_6);
-        options_6 = FormattingOptions { flags: const 1610612768 : u32, width: const 0 : u16, precision: const 0 : u16 };
+        options_6 = FormattingOptions { flags: const 1610612768u32, width: const 0u16, precision: const 0u16 };
         formatter_3 = Formatter::<'_> { options: copy options_6, buf: copy write_4 };
         storage_dead(options_6);
         storage_dead(write_4);
@@ -5837,7 +5837,7 @@ fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
         storage_live(_8);
         storage_live(_9);
         _9 = &mut formatter_3;
-        _11 = copy self_1.metadata offset const 3 : usize;
+        _11 = copy self_1.metadata offset const 3usize;
         _8 = (copy (*_11))(move self_1, move _9) -> bb1 (unwind: bb2);
     }
 

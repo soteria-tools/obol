@@ -15,7 +15,7 @@ fn {closure#0}::<i8, extern "rust-call" fn(()), ()>(_1: &'_ closure, spread_args
     bb0: {
         _0 = ();
         storage_live(_3);
-        _3 = const 1 : i32 panic./ const 1 : i32;
+        _3 = const 1i32 panic./ const 1i32;
         storage_dead(_3);
         _0 = ();
         return;

@@ -343,9 +343,9 @@ fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
         _12 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: hint::assert_unchecked must never be called when the condition is false\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _10 = copy _12.metadata;
         storage_dead(_12);
-        _9 = move _10 wrap.<< const 1 : i32;
+        _9 = move _10 wrap.<< const 1i32;
         storage_dead(_10);
-        _8 = move _9 | const 1 : usize;
+        _8 = move _9 | const 1usize;
         storage_dead(_9);
         _7 = transmute<usize, NonNull::<Argument::<'_>>>(move _8);
         storage_dead(_8);
@@ -668,9 +668,9 @@ fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(thi
         _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: slice::get_unchecked requires that the index is within the slice\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
-        _11 = move _12 wrap.<< const 1 : i32;
+        _11 = move _12 wrap.<< const 1i32;
         storage_dead(_12);
-        _10 = move _11 | const 1 : usize;
+        _10 = move _11 | const 1usize;
         storage_dead(_11);
         _9 = transmute<usize, NonNull::<Argument::<'_>>>(move _10);
         storage_dead(_10);
@@ -698,7 +698,7 @@ fn anon_const_4() -> u32
     let _0: u32; // return
 
     bb0: {
-        _0 = const 3 : u32;
+        _0 = const 3u32;
         return;
     }
 }
@@ -812,13 +812,13 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         size_3 = copy self_1.metadata;
         storage_live(_4);
         _4 = copy size_3;
-        switch copy _4 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _4 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
         storage_dead(_4);
         storage_live(_46);
-        _46 = Result::<usize, usize>::Err { 0: const 0 : usize };
+        _46 = Result::<usize, usize>::Err { 0: const 0usize };
         _0 = move _46;
         storage_dead(size_3);
         goto bb3;
@@ -826,7 +826,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
 
     bb2: {
         storage_dead(_4);
-        base_5 = const 0 : usize;
+        base_5 = const 0usize;
         goto bb4;
     }
 
@@ -838,7 +838,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         storage_live(_6);
         storage_live(_7);
         _7 = copy size_3;
-        _6 = move _7 > const 1 : usize;
+        _6 = move _7 > const 1usize;
         if move _6 -> bb5 else -> bb6;
     }
 
@@ -847,7 +847,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         storage_live(half_8);
         storage_live(_9);
         _9 = copy size_3;
-        half_8 = move _9 ub./ const 2 : usize;
+        half_8 = move _9 ub./ const 2usize;
         storage_dead(_9);
         storage_live(mid_10);
         storage_live(_11);
@@ -932,7 +932,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         storage_live(_17);
         storage_live(_34);
         _34 = @discriminant(cmp_12);
-        _17 = copy _34 == const 1 : i8;
+        _17 = copy _34 == const 1i8;
         storage_dead(_34);
         _16 = std::hint::select_unpredictable::<usize>(move _17, move base_5, move mid_10) -> bb18 (unwind: bb14);
     }
@@ -954,7 +954,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         storage_dead(_20);
         storage_dead(_19);
         _39 = @discriminant(cmp_18);
-        switch copy _39 -> 0 : i8: bb19, otherwise: bb20;
+        switch copy _39 -> 0i8: bb19, otherwise: bb20;
     }
 
     bb18: {
@@ -984,7 +984,7 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
         storage_live(result_25);
         storage_live(_26);
         storage_live(_27);
-        _27 = copy _39 == const -1 : i8;
+        _27 = copy _39 == const -1i8;
         _26 = cast<bool, usize>(move _27);
         storage_dead(_27);
         result_25 = move base_5 wrap.+ move _26;
@@ -1038,32 +1038,32 @@ pub fn binary_search_by::<'_, u32, closure>(self_1: &'_ [u32], f_2: closure) -> 
 fn main()
 {
     let _0: (); // return
-    let a_1: [u32; 5 : usize]; // local
+    let a_1: [u32; 5usize]; // local
     let b_2: &'_ [u32]; // local
-    let _3: &'_ [u32; 5 : usize]; // anonymous local
-    let _4: &'_ [u32; 5 : usize]; // anonymous local
+    let _3: &'_ [u32; 5usize]; // anonymous local
+    let _4: &'_ [u32; 5usize]; // anonymous local
     let res_5: Result::<usize, usize>; // local
     let _6: &'_ [u32]; // anonymous local
-    let _7: &'_ [u32; 5 : usize]; // anonymous local
+    let _7: &'_ [u32; 5usize]; // anonymous local
     let _8: closure; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(a_1);
-        a_1 = [const 1 : u32, const 2 : u32, const 3 : u32, const 4 : u32, const 5 : u32];
+        a_1 = [const 1u32, const 2u32, const 3u32, const 4u32, const 5u32];
         storage_live(b_2);
         storage_live(_3);
         storage_live(_4);
         _4 = &a_1;
         _3 = &(*_4);
-        b_2 = unsize_cast<&'_ [u32; 5 : usize], &'_ [u32], 5 : usize>(move _3);
+        b_2 = unsize_cast<&'_ [u32; 5usize], &'_ [u32], 5usize>(move _3);
         storage_dead(_3);
         storage_dead(_4);
         storage_live(res_5);
         storage_live(_6);
         storage_live(_7);
         _7 = &a_1;
-        _6 = unsize_cast<&'_ [u32; 5 : usize], &'_ [u32], 5 : usize>(move _7);
+        _6 = unsize_cast<&'_ [u32; 5usize], &'_ [u32], 5usize>(move _7);
         storage_dead(_7);
         storage_live(_8);
         _8 = closure {  };

@@ -57,8 +57,8 @@ fn MyTrait::<MyStruct>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <MyStruct as MyTrait>::foo_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -68,12 +68,12 @@ fn MyTrait::<MyStruct>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<MyStruct>, *const ()>(const drop_glue::<MyStruct>);
-        size_2 = transmute<usize, *const ()>(const 0 : usize);
-        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
         <MyStruct as MyTrait>::foo_4 = cast<<test_crate::MyStruct as test_crate::MyTrait>::foo, *const ()>(const <test_crate::MyStruct as test_crate::MyTrait>::foo);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <MyStruct as MyTrait>::foo_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -115,7 +115,7 @@ fn main()
         storage_live(_4);
         storage_live(_5);
         _5 = &(*x_1) with_metadata(copy x_1.metadata);
-        _7 = copy _5.metadata offset const 3 : usize;
+        _7 = copy _5.metadata offset const 3usize;
         _4 = (copy (*_7))(move _5) -> bb1 (unwind: bb2);
     }
 

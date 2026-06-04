@@ -83,22 +83,22 @@ fn use_list_mut(_1: &'_ List::<&'_ mut u32>)
     }
 }
 
-// Full name: test_crate::ArrayWrapper::<&'_ mut u32, 1 : usize>
-struct ArrayWrapper::<&'_ mut u32, 1 : usize> {
-  0: [&'_ mut u32; 1 : usize],
+// Full name: test_crate::ArrayWrapper::<&'_ mut u32, 1usize>
+struct ArrayWrapper::<&'_ mut u32, 1usize> {
+  0: [&'_ mut u32; 1usize],
 }
 
-// Full name: test_crate::ArrayWrapper::<&'_ mut u32, 2 : usize>
-struct ArrayWrapper::<&'_ mut u32, 2 : usize> {
-  0: [&'_ mut u32; 2 : usize],
+// Full name: test_crate::ArrayWrapper::<&'_ mut u32, 2usize>
+struct ArrayWrapper::<&'_ mut u32, 2usize> {
+  0: [&'_ mut u32; 2usize],
 }
 
 // Full name: test_crate::use_const_generic
-fn use_const_generic(_1: ArrayWrapper::<&'_ mut u32, 1 : usize>, _2: ArrayWrapper::<&'_ mut u32, 2 : usize>)
+fn use_const_generic(_1: ArrayWrapper::<&'_ mut u32, 1usize>, _2: ArrayWrapper::<&'_ mut u32, 2usize>)
 {
     let _0: (); // return
-    let _1: ArrayWrapper::<&'_ mut u32, 1 : usize>; // arg #1
-    let _2: ArrayWrapper::<&'_ mut u32, 2 : usize>; // arg #2
+    let _1: ArrayWrapper::<&'_ mut u32, 1usize>; // arg #1
+    let _2: ArrayWrapper::<&'_ mut u32, 2usize>; // arg #2
 
     bb0: {
         _0 = ();

@@ -16,7 +16,7 @@ pub fn incr(n_1: u32) -> u32
         storage_live(_3);
         storage_live(_2);
         _2 = copy n_1;
-        _3 = copy _2 panic.+ const 1 : u32;
+        _3 = copy _2 panic.+ const 1u32;
         _0 = move _3;
         storage_dead(_2);
         return;
@@ -86,7 +86,7 @@ pub fn unwrap_y() -> i32
     bb0: {
         storage_live(_1);
         storage_live(_2);
-        _2 = Wrap::<i32> { value: const 2 : i32 };
+        _2 = Wrap::<i32> { value: const 2i32 };
         _1 = move _2;
         _0 = copy (_1).value;
         storage_dead(_1);
@@ -100,7 +100,7 @@ pub fn get_z1() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 3 : i32;
+        _0 = const 3i32;
         return;
     }
 }
@@ -143,7 +143,7 @@ pub fn get_z2() -> i32
     }
 
     bb1: {
-        _1 = add(move _2, const 8 : i32) -> bb3 (unwind: bb4);
+        _1 = add(move _2, const 8i32) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -152,7 +152,7 @@ pub fn get_z2() -> i32
 
     bb3: {
         storage_dead(_2);
-        _0 = add(const 5 : i32, move _1) -> bb5 (unwind: bb6);
+        _0 = add(const 5i32, move _1) -> bb5 (unwind: bb6);
     }
 
     bb4: {

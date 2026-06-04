@@ -297,7 +297,7 @@ fn precondition_check(ptr_1: *mut ())
         _0 = ();
         storage_live(_5);
         _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -320,9 +320,9 @@ fn precondition_check(ptr_1: *mut ())
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: NonNull::new_unchecked requires that the pointer is non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -407,9 +407,9 @@ fn main()
         storage_live(_6);
         _0 = ();
         storage_live(x_1);
-        x_1 = const 52 : usize;
+        x_1 = const 52usize;
         storage_live(y_2);
-        y_2 = const 4294967295 : usize;
+        y_2 = const 4294967295usize;
         storage_live(z_3);
         storage_live(_4);
         _4 = copy y_2;

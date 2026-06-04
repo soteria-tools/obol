@@ -135,9 +135,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -389,9 +389,9 @@ fn std::hint::unreachable_unchecked::precondition_check()
         _11 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: hint::unreachable_unchecked must never be reached\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _9 = copy _11.metadata;
         storage_dead(_11);
-        _8 = move _9 wrap.<< const 1 : i32;
+        _8 = move _9 wrap.<< const 1i32;
         storage_dead(_9);
-        _7 = move _8 | const 1 : usize;
+        _7 = move _8 | const 1usize;
         storage_dead(_8);
         _6 = transmute<usize, NonNull::<Argument::<'_>>>(move _7);
         storage_dead(_7);
@@ -456,7 +456,7 @@ pub fn <i32 as std::iter::Step>::forward_unchecked(start_1: i32, n_2: usize) -> 
         _7 = copy _8.1;
         storage_dead(_8);
         storage_live(_10);
-        _10 = copy _5 < const 0 : i32;
+        _10 = copy _5 < const 0i32;
         b_9 = copy _7 ^ move _10;
         storage_dead(_10);
         storage_dead(_7);
@@ -562,9 +562,9 @@ fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_
         _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_add cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
-        _14 = move _15 wrap.<< const 1 : i32;
+        _14 = move _15 wrap.<< const 1i32;
         storage_dead(_15);
-        _13 = move _14 | const 1 : usize;
+        _13 = move _14 | const 1usize;
         storage_dead(_14);
         _12 = transmute<usize, NonNull::<Argument::<'_>>>(move _13);
         storage_dead(_13);
@@ -657,7 +657,7 @@ fn spec_next::<i32>(self_1: &'_ mut Range::<i32>) -> Option::<i32>
         storage_live(old_5);
         old_5 = copy ((*self_1)).start;
         storage_live(_6);
-        _6 = <i32 as std::iter::Step>::forward_unchecked(copy old_5, const 1 : usize) -> bb5 (unwind: bb6);
+        _6 = <i32 as std::iter::Step>::forward_unchecked(copy old_5, const 1usize) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -733,7 +733,7 @@ fn spec_next::<usize>(self_1: &'_ mut Range::<usize>) -> Option::<usize>
         storage_live(old_5);
         old_5 = copy ((*self_1)).start;
         storage_live(_6);
-        _6 = <usize as std::iter::Step>::forward_unchecked(copy old_5, const 1 : usize) -> bb5 (unwind: bb6);
+        _6 = <usize as std::iter::Step>::forward_unchecked(copy old_5, const 1usize) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -902,10 +902,10 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
         storage_live(_27);
         storage_live(_28);
         storage_live(s_3);
-        s_3 = const 0 : usize;
+        s_3 = const 0usize;
         storage_live(_4);
         storage_live(_5);
-        _5 = Range::<i32> { start: const 0 : i32, end: const 128 : i32 };
+        _5 = Range::<i32> { start: const 0i32, end: const 128i32 };
         _4 = into_iter::<Range::<i32>>(move _5) -> bb1 (unwind: bb2);
     }
 
@@ -932,7 +932,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     bb4: {
         storage_dead(_8);
         _10 = @discriminant(_7);
-        switch move _10 -> 0 : isize: bb6, 1 : isize: bb7, otherwise: bb8;
+        switch move _10 -> 0isize: bb6, 1isize: bb7, otherwise: bb8;
     }
 
     bb5: {
@@ -948,13 +948,13 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
         storage_live(_13);
         storage_live(_14);
         _14 = copy step_out_1;
-        _13 = Range::<usize> { start: const 0 : usize, end: move _14 };
+        _13 = Range::<usize> { start: const 0usize, end: move _14 };
         storage_dead(_14);
         _12 = into_iter::<Range::<usize>>(move _13) -> bb9 (unwind: bb10);
     }
 
     bb7: {
-        _11 = copy s_3 panic.+ const 1 : usize;
+        _11 = copy s_3 panic.+ const 1usize;
         s_3 = move _11;
         storage_dead(_9);
         storage_dead(_7);
@@ -988,7 +988,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     bb12: {
         storage_dead(_17);
         _19 = @discriminant(_16);
-        switch move _19 -> 0 : isize: bb14, 1 : isize: bb15, otherwise: bb8;
+        switch move _19 -> 0isize: bb14, 1isize: bb15, otherwise: bb8;
     }
 
     bb13: {
@@ -1010,7 +1010,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
         storage_live(_21);
         storage_live(_22);
         _22 = copy step_in_2;
-        _21 = Range::<usize> { start: const 0 : usize, end: move _22 };
+        _21 = Range::<usize> { start: const 0usize, end: move _22 };
         storage_dead(_22);
         _20 = into_iter::<Range::<usize>>(move _21) -> bb16 (unwind: bb17);
     }
@@ -1038,7 +1038,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     bb19: {
         storage_dead(_25);
         _27 = @discriminant(_24);
-        switch move _27 -> 0 : isize: bb21, 1 : isize: bb22, otherwise: bb8;
+        switch move _27 -> 0isize: bb21, 1isize: bb22, otherwise: bb8;
     }
 
     bb20: {
@@ -1056,12 +1056,12 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     }
 
     bb22: {
-        _28 = copy s_3 panic.+ const 1 : usize;
+        _28 = copy s_3 panic.+ const 1usize;
         s_3 = move _28;
         storage_live(_29);
         storage_live(_30);
         _30 = copy s_3;
-        _29 = move _30 >= const 1 : usize;
+        _29 = move _30 >= const 1usize;
         if move _29 -> bb23 else -> bb24;
     }
 

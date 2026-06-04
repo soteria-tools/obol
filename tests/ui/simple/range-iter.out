@@ -348,9 +348,9 @@ fn precondition_check(lhs_1: usize, rhs_2: usize)
         _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_add cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
-        _14 = move _15 wrap.<< const 1 : i32;
+        _14 = move _15 wrap.<< const 1i32;
         storage_dead(_15);
-        _13 = move _14 | const 1 : usize;
+        _13 = move _14 | const 1usize;
         storage_dead(_14);
         _12 = transmute<usize, NonNull::<Argument::<'_>>>(move _13);
         storage_dead(_13);
@@ -451,7 +451,7 @@ fn spec_next::<usize>(self_1: &'_ mut Range::<usize>) -> Option::<usize>
         storage_live(old_5);
         old_5 = copy ((*self_1)).start;
         storage_live(_6);
-        _6 = forward_unchecked(copy old_5, const 1 : usize) -> bb5 (unwind: bb6);
+        _6 = forward_unchecked(copy old_5, const 1usize) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -532,7 +532,7 @@ fn iter(n_1: usize)
         storage_live(_3);
         storage_live(_4);
         _4 = copy n_1;
-        _3 = Range::<usize> { start: const 0 : usize, end: move _4 };
+        _3 = Range::<usize> { start: const 0usize, end: move _4 };
         storage_dead(_4);
         _2 = into_iter::<Range::<usize>>(move _3) -> bb1 (unwind: bb2);
     }
@@ -560,7 +560,7 @@ fn iter(n_1: usize)
     bb4: {
         storage_dead(_7);
         _9 = @discriminant(_6);
-        switch move _9 -> 0 : isize: bb6, 1 : isize: bb7, otherwise: bb8;
+        switch move _9 -> 0isize: bb6, 1isize: bb7, otherwise: bb8;
     }
 
     bb5: {

@@ -95,9 +95,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -303,7 +303,7 @@ fn anon_const_2() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 0 : i32;
+        _0 = const 0i32;
         return;
     }
 }
@@ -350,7 +350,7 @@ fn main()
         _3 = move _6;
         _5 = copy (*_3);
         _2 = copy (*_5);
-        _1 = move _2 == const 0 : i32;
+        _1 = move _2 == const 0i32;
         if move _1 -> bb1 else -> bb2;
     }
 

@@ -83,18 +83,18 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<i32>(self_1: &'_ Op
         storage_live(_4);
         storage_live(_5);
         _5 = @discriminant((*self_1));
-        switch move _5 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _5 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
         _4 = @discriminant((*other_2));
-        _0 = copy _4 == const 0 : isize;
+        _0 = copy _4 == const 0isize;
         goto bb4;
     }
 
     bb2: {
         _3 = @discriminant((*other_2));
-        switch move _3 -> 0 : isize: bb5, 1 : isize: bb6, otherwise: bb3;
+        switch move _3 -> 0isize: bb5, 1isize: bb6, otherwise: bb3;
     }
 
     bb3: {
@@ -140,7 +140,7 @@ fn anon_const_0() -> Option::<i32>
 
     bb0: {
         storage_live(_1);
-        _1 = Option::<i32>::Some { 0: const 1 : i32 };
+        _1 = Option::<i32>::Some { 0: const 1i32 };
         _0 = move _1;
         return;
     }
@@ -154,7 +154,7 @@ fn anon_const_1() -> Option::<i32>
 
     bb0: {
         storage_live(_1);
-        _1 = Option::<i32>::Some { 0: const 1 : i32 };
+        _1 = Option::<i32>::Some { 0: const 1i32 };
         _0 = move _1;
         return;
     }

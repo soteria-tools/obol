@@ -53,8 +53,8 @@ fn Trait::<()>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <() as Trait>::method_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -64,12 +64,12 @@ fn Trait::<()>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<()>, *const ()>(const drop_glue::<()>);
-        size_2 = transmute<usize, *const ()>(const 0 : usize);
-        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
         <() as Trait>::method_4 = cast<method, *const ()>(const method);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <() as Trait>::method_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }

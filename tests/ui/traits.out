@@ -95,9 +95,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -472,7 +472,7 @@ pub fn to_type(self_1: u64) -> bool
     bb0: {
         storage_live(_2);
         _2 = copy self_1;
-        _0 = move _2 > const 0 : u64;
+        _0 = move _2 > const 0u64;
         storage_dead(_2);
         return;
     }
@@ -493,18 +493,18 @@ fn test(self_1: &'_ TestType1) -> bool
     bb0: {
         storage_live(_2);
         _2 = copy ((*self_1)).0;
-        _0 = move _2 > const 1 : u64;
+        _0 = move _2 > const 1u64;
         storage_dead(_2);
         return;
     }
 }
 
 // Full name: <bool as test_crate::WithConstTy<32>>::f
-pub fn f(_1: &'_ mut u64, _2: &'_ [u8; 32 : usize])
+pub fn f(_1: &'_ mut u64, _2: &'_ [u8; 32usize])
 {
     let _0: (); // return
     let _1: &'_ mut u64; // arg #1
-    let _2: &'_ [u8; 32 : usize]; // arg #2
+    let _2: &'_ [u8; 32usize]; // arg #2
 
     bb0: {
         _0 = ();

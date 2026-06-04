@@ -41,8 +41,8 @@ fn Pettable::<HouseCat>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <HouseCat as Pettable>::pet_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -52,12 +52,12 @@ fn Pettable::<HouseCat>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<HouseCat>, *const ()>(const drop_glue::<HouseCat>);
-        size_2 = transmute<usize, *const ()>(const 0 : usize);
-        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
         <HouseCat as Pettable>::pet_4 = cast<pet, *const ()>(const pet);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <HouseCat as Pettable>::pet_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -101,8 +101,8 @@ fn Cat::<HouseCat>() -> *const ()
     let <HouseCat as Feline>::hunt_4: *const (); // local
     let <HouseCat as Pettable>::pet_5: *const (); // local
     let <HouseCat as Cat>::meow_6: *const (); // local
-    let entry_array_7: [*const (); 7 : usize]; // local
-    let entry_array_ref_8: *const [*const (); 7 : usize]; // local
+    let entry_array_7: [*const (); 7usize]; // local
+    let entry_array_ref_8: *const [*const (); 7usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -114,14 +114,14 @@ fn Cat::<HouseCat>() -> *const ()
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
         drop_1 = cast<drop_glue::<HouseCat>, *const ()>(const drop_glue::<HouseCat>);
-        size_2 = transmute<usize, *const ()>(const 0 : usize);
-        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
         <HouseCat as Feline>::hunt_4 = cast<hunt, *const ()>(const hunt);
         <HouseCat as Pettable>::pet_5 = cast<pet, *const ()>(const pet);
         <HouseCat as Cat>::meow_6 = cast<meow, *const ()>(const meow);
         entry_array_7 = [move drop_1, move size_2, move align_3, move <HouseCat as Feline>::hunt_4, move <HouseCat as Pettable>::pet_5, copy Pettable::<HouseCat>, move <HouseCat as Cat>::meow_6];
         entry_array_ref_8 = &raw const entry_array_7;
-        vtable_0 = cast<*const [*const (); 7 : usize], *const ()>(move entry_array_ref_8);
+        vtable_0 = cast<*const [*const (); 7usize], *const ()>(move entry_array_ref_8);
         return;
     }
 }

@@ -10,7 +10,7 @@ pub fn foo::<u8>() -> usize
     let _0: usize; // return
 
     bb0: {
-        _0 = const 1 : usize;
+        _0 = const 1usize;
         return;
     }
 }

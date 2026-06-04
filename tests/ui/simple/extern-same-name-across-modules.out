@@ -13,7 +13,7 @@ fn call_root() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = test_crate::same_name(const 0 : i32) -> bb1 (unwind: bb2);
+        _0 = test_crate::same_name(const 0i32) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -33,7 +33,7 @@ pub fn test_crate::first::call() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = test_crate::first::same_name(const 1 : i32) -> bb1 (unwind: bb2);
+        _0 = test_crate::first::same_name(const 1i32) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -53,7 +53,7 @@ pub fn test_crate::second::nested::call() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = test_crate::second::nested::same_name(const 2 : i32) -> bb1 (unwind: bb2);
+        _0 = test_crate::second::nested::same_name(const 2i32) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -81,7 +81,7 @@ pub fn test_crate::local_impl::call() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = test_crate::local_impl::same_name(const 3 : i32) -> bb1 (unwind: bb2);
+        _0 = test_crate::local_impl::same_name(const 3i32) -> bb1 (unwind: bb2);
     }
 
     bb1: {

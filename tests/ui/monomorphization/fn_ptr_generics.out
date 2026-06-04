@@ -15,7 +15,7 @@ trait FakeTrait
 fn init_option()
 {
     let _0: (); // return
-    let a_1: [Option::<u8>; 6 : usize]; // local
+    let a_1: [Option::<u8>; 6usize]; // local
     let _2: Option::<u8>; // anonymous local
     let b_3: Option::<u8>; // local
     let _4: usize; // anonymous local
@@ -24,12 +24,12 @@ fn init_option()
         _0 = ();
         storage_live(a_1);
         storage_live(_2);
-        _2 = Option::<u8>::Some { 0: const 4 : u8 };
-        a_1 = [move _2; 6 : usize];
+        _2 = Option::<u8>::Some { 0: const 4u8 };
+        a_1 = [move _2; 6usize];
         storage_dead(_2);
         storage_live(b_3);
         storage_live(_4);
-        _4 = const 0 : usize;
+        _4 = const 0usize;
         b_3 = copy a_1[copy _4];
         storage_dead(_4);
         _0 = ();

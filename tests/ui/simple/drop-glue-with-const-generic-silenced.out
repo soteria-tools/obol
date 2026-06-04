@@ -376,7 +376,7 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         storage_live(_7);
         storage_live(_8);
         _8 = transmute<Alignment, usize>(copy alignment_2);
-        _7 = const 9223372036854775808 : usize ub.- move _8;
+        _7 = const 9223372036854775808usize ub.- move _8;
         storage_dead(_8);
         _3 = copy size_1 <= move _7;
         storage_dead(_7);
@@ -407,9 +407,9 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         _16 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Layout::from_size_alignment_unchecked requires that the rounded-up allocation size does not exceed isize::MAX\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _14 = copy _16.metadata;
         storage_dead(_16);
-        _13 = move _14 wrap.<< const 1 : i32;
+        _13 = move _14 wrap.<< const 1i32;
         storage_dead(_14);
-        _12 = move _13 | const 1 : usize;
+        _12 = move _13 | const 1usize;
         storage_dead(_13);
         _11 = transmute<usize, NonNull::<Argument::<'_>>>(move _12);
         storage_dead(_12);
@@ -470,7 +470,7 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 
     bb1: {
-        switch copy _5 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _5 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -502,9 +502,9 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Alignment::new_unchecked requires a power of two\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -548,9 +548,9 @@ pub struct Box::<u32, Global> {
   1: Global,
 }
 
-// Full name: test_crate::PortableHash::<42 : usize>
-struct PortableHash::<42 : usize> {
-  shake128_state: [KeccakState; 42 : usize],
+// Full name: test_crate::PortableHash::<42usize>
+struct PortableHash::<42usize> {
+  shake128_state: [KeccakState; 42usize],
   make_non_trivial: Box::<u32, Global>,
 }
 
@@ -572,7 +572,7 @@ pub fn deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
         _0 = ();
         storage_live(_4);
         _4 = copy (layout_3).size;
-        switch copy _4 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _4 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -681,7 +681,7 @@ pub fn drop::<u32, Global>(self_1: &'_ mut Box::<u32, Global>)
         layout_2 = Layout { size: copy size_7, align: copy alignment_8 };
         storage_dead(alignment_8);
         storage_dead(t_3);
-        switch copy size_7 -> 0 : usize: bb11, otherwise: bb12;
+        switch copy size_7 -> 0usize: bb11, otherwise: bb12;
     }
 
     bb10: {
@@ -744,12 +744,12 @@ fn drop_glue::<Box::<u32, Global>>(_1: &'_ mut Box::<u32, Global>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<PortableHash::<42 : usize>>
+// Full name: std::ptr::drop_glue::<PortableHash::<42usize>>
 #[lang_item("drop_glue")]
-fn drop_glue::<PortableHash::<42 : usize>>(_1: &'_ mut PortableHash::<42 : usize>)
+fn drop_glue::<PortableHash::<42usize>>(_1: &'_ mut PortableHash::<42usize>)
 {
     let _0: (); // return
-    let _1: &'_ mut PortableHash::<42 : usize>; // arg #1
+    let _1: &'_ mut PortableHash::<42usize>; // arg #1
     let _2: *mut Box::<u32, Global>; // anonymous local
     let _3: (); // anonymous local
 
@@ -771,11 +771,11 @@ fn drop_glue::<PortableHash::<42 : usize>>(_1: &'_ mut PortableHash::<42 : usize
 }
 
 // Full name: test_crate::foo
-fn foo(_1: PortableHash::<42 : usize>)
+fn foo(_1: PortableHash::<42usize>)
 {
     let _0: (); // return
-    let _1: PortableHash::<42 : usize>; // arg #1
-    let _2: *mut PortableHash::<42 : usize>; // anonymous local
+    let _1: PortableHash::<42usize>; // arg #1
+    let _2: *mut PortableHash::<42usize>; // anonymous local
     let _3: (); // anonymous local
 
     bb0: {
@@ -784,7 +784,7 @@ fn foo(_1: PortableHash::<42 : usize>)
         _0 = ();
         _0 = ();
         _2 = &raw mut _1;
-        _3 = drop_glue::<PortableHash::<42 : usize>>(move _2) -> bb1 (unwind: bb2);
+        _3 = drop_glue::<PortableHash::<42usize>>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {

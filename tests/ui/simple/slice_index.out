@@ -13,7 +13,7 @@ pub fn first(s_1: &'_ [u32]) -> u32
 
     bb0: {
         storage_live(_2);
-        _2 = const 0 : usize;
+        _2 = const 0usize;
         _0 = copy (*s_1)[copy _2];
         storage_dead(_2);
         return;

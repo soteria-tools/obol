@@ -7,23 +7,23 @@ pub struct CStr {
   inner: [i8],
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 4 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 4usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 4 : usize]> {
-  0: [u8; 4 : usize],
+pub struct MaybeDangling::<[u8; 4usize]> {
+  0: [u8; 4usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 4 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 4usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 4 : usize]> {
-  value: MaybeDangling::<[u8; 4 : usize]>,
+pub struct ManuallyDrop::<[u8; 4usize]> {
+  value: MaybeDangling::<[u8; 4usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 4 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 4usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 4 : usize]> {
+pub union MaybeUninit::<[u8; 4usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 4 : usize]>,
+  value: ManuallyDrop::<[u8; 4usize]>,
 }
 
 // Full name: FakeTrait

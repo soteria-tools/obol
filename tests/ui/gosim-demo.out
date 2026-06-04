@@ -76,19 +76,19 @@ pub struct Arguments::<'_> {
   args: NonNull::<Argument::<'_>>,
 }
 
-pub fn std::fmt::Arguments::<'a>::new::<'_, 7 : usize, 1 : usize>(template_1: &'_ [u8; 7 : usize], args_2: &'_ [Argument::<'_>; 1 : usize]) -> Arguments::<'_>
+pub fn std::fmt::Arguments::<'a>::new::<'_, 7usize, 1usize>(template_1: &'_ [u8; 7usize], args_2: &'_ [Argument::<'_>; 1usize]) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
-    let template_1: &'_ [u8; 7 : usize]; // arg #1
-    let args_2: &'_ [Argument::<'_>; 1 : usize]; // arg #2
+    let template_1: &'_ [u8; 7usize]; // arg #1
+    let args_2: &'_ [Argument::<'_>; 1usize]; // arg #2
     let _3: NonNull::<u8>; // anonymous local
     let _4: NonNull::<Argument::<'_>>; // anonymous local
 
     bb0: {
         storage_live(_3);
-        _3 = transmute<&'_ [u8; 7 : usize], NonNull::<u8>>(copy template_1);
+        _3 = transmute<&'_ [u8; 7usize], NonNull::<u8>>(copy template_1);
         storage_live(_4);
-        _4 = transmute<&'_ [Argument::<'_>; 1 : usize], NonNull::<Argument::<'_>>>(copy args_2);
+        _4 = transmute<&'_ [Argument::<'_>; 1usize], NonNull::<Argument::<'_>>>(copy args_2);
         _0 = Arguments::<'_> { template: move _3, args: move _4 };
         storage_dead(_4);
         storage_dead(_3);
@@ -119,9 +119,9 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
         storage_live(_3);
         storage_live(_4);
         _4 = copy (((*f_2)).options).flags;
-        _3 = move _4 & const 33554432 : u32;
+        _3 = move _4 & const 33554432u32;
         storage_dead(_4);
-        switch copy _3 -> 0 : u32: bb1, otherwise: bb2;
+        switch copy _3 -> 0u32: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -129,9 +129,9 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
         storage_live(_5);
         storage_live(_6);
         _6 = copy (((*f_2)).options).flags;
-        _5 = move _6 & const 67108864 : u32;
+        _5 = move _6 & const 67108864u32;
         storage_dead(_6);
-        switch copy _5 -> 0 : u32: bb3, otherwise: bb4;
+        switch copy _5 -> 0u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -488,9 +488,9 @@ fn precondition_check(lhs_1: usize, rhs_2: usize)
         _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_sub cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
-        _14 = move _15 wrap.<< const 1 : i32;
+        _14 = move _15 wrap.<< const 1i32;
         storage_dead(_15);
-        _13 = move _14 | const 1 : usize;
+        _13 = move _14 | const 1usize;
         storage_dead(_14);
         _12 = transmute<usize, NonNull::<Argument::<'_>>>(move _13);
         storage_dead(_13);
@@ -637,7 +637,7 @@ pub fn next::<'_, i32>(self_1: &'_ mut Iter::<'_, i32>) -> Option::<&'_ i32>
     bb1: {
         storage_live(len_4);
         len_4 = transmute<*const i32, usize>(copy end_or_len_3);
-        switch copy len_4 -> 0 : usize: bb3, otherwise: bb4;
+        switch copy len_4 -> 0usize: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -680,7 +680,7 @@ pub fn next::<'_, i32>(self_1: &'_ mut Iter::<'_, i32>) -> Option::<&'_ i32>
         storage_dead(_6);
         storage_live(_8);
         storage_live(_13);
-        _13 = copy _11 offset const 1 : usize;
+        _13 = copy _11 offset const 1usize;
         _8 = transmute<*mut i32, NonNull::<i32>>(copy _13);
         storage_dead(_13);
         ((*self_1)).ptr = move _8;
@@ -695,11 +695,11 @@ pub fn next::<'_, i32>(self_1: &'_ mut Iter::<'_, i32>) -> Option::<&'_ i32>
     }
 
     bb8: {
-        _10 = precondition_check(copy len_4, const 1 : usize) -> bb9 (unwind: bb12);
+        _10 = precondition_check(copy len_4, const 1usize) -> bb9 (unwind: bb12);
     }
 
     bb9: {
-        addr_5 = copy len_4 ub.- const 1 : usize;
+        addr_5 = copy len_4 ub.- const 1usize;
         ((*self_1)).end_or_len = transmute<usize, *const i32>(copy addr_5);
         storage_dead(len_4);
         goto bb10;
@@ -732,38 +732,38 @@ pub fn _eprint(_1: Arguments::<'_>)
 = <missing>
 
 // Full name: anon_const_0
-fn anon_const_0() -> [i32; 3 : usize]
+fn anon_const_0() -> [i32; 3usize]
 {
-    let _0: [i32; 3 : usize]; // return
-    let _1: [i32; 3 : usize]; // anonymous local
+    let _0: [i32; 3usize]; // return
+    let _1: [i32; 3usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 0 : i32, const 1 : i32, const 2 : i32];
+        _1 = [const 0i32, const 1i32, const 2i32];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_1
-fn anon_const_1() -> [u8; 7 : usize]
+fn anon_const_1() -> [u8; 7usize]
 {
-    let _0: [u8; 7 : usize]; // return
-    let _1: [u8; 7 : usize]; // anonymous local
+    let _0: [u8; 7usize]; // return
+    let _1: [u8; 7usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 2 : u8, const 45 : u8, const 32 : u8, const 192 : u8, const 1 : u8, const 10 : u8, const 0 : u8];
+        _1 = [const 2u8, const 45u8, const 32u8, const 192u8, const 1u8, const 10u8, const 0u8];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_0
-const anon_const_0: [i32; 3 : usize] = anon_const_0()
+const anon_const_0: [i32; 3usize] = anon_const_0()
 
 // Full name: anon_const_1
-const anon_const_1: [u8; 7 : usize] = anon_const_1()
+const anon_const_1: [u8; 7usize] = anon_const_1()
 
 // Full name: test_crate::debug_slice::<i32>
 fn debug_slice::<i32>(slice_1: &'_ [i32])
@@ -782,15 +782,15 @@ fn debug_slice::<i32>(slice_1: &'_ [i32])
     let _11: Arguments::<'_>; // anonymous local
     let args_12: (&'_ &'_ i32,); // local
     let _13: &'_ &'_ i32; // anonymous local
-    let args_14: [Argument::<'_>; 1 : usize]; // local
+    let args_14: [Argument::<'_>; 1usize]; // local
     let _15: Argument::<'_>; // anonymous local
     let _16: &'_ &'_ i32; // anonymous local
-    let _17: &'_ [u8; 7 : usize]; // anonymous local
-    let _18: &'_ [u8; 7 : usize]; // anonymous local
-    let _19: &'_ [Argument::<'_>; 1 : usize]; // anonymous local
-    let _20: &'_ [Argument::<'_>; 1 : usize]; // anonymous local
+    let _17: &'_ [u8; 7usize]; // anonymous local
+    let _18: &'_ [u8; 7usize]; // anonymous local
+    let _19: &'_ [Argument::<'_>; 1usize]; // anonymous local
+    let _20: &'_ [Argument::<'_>; 1usize]; // anonymous local
     let _21: &'_ &'_ i32; // anonymous local
-    let _22: &'_ [u8; 7 : usize]; // anonymous local
+    let _22: &'_ [u8; 7usize]; // anonymous local
 
     bb0: {
         storage_live(_8);
@@ -825,7 +825,7 @@ fn debug_slice::<i32>(slice_1: &'_ [i32])
     bb4: {
         storage_dead(_6);
         _8 = @discriminant(_5);
-        switch move _8 -> 0 : isize: bb6, 1 : isize: bb7, otherwise: bb8;
+        switch move _8 -> 0isize: bb6, 1isize: bb7, otherwise: bb8;
     }
 
     bb5: {
@@ -877,7 +877,7 @@ fn debug_slice::<i32>(slice_1: &'_ [i32])
         storage_live(_20);
         _20 = &args_14;
         _19 = &(*_20);
-        _11 = std::fmt::Arguments::<'a>::new::<'_, 7 : usize, 1 : usize>(move _17, move _19) -> bb11 (unwind: bb12);
+        _11 = std::fmt::Arguments::<'a>::new::<'_, 7usize, 1usize>(move _17, move _19) -> bb11 (unwind: bb12);
     }
 
     bb10: {
@@ -918,10 +918,10 @@ fn main()
     let _0: (); // return
     let _1: (); // anonymous local
     let _2: &'_ [i32]; // anonymous local
-    let _3: &'_ [i32; 3 : usize]; // anonymous local
-    let _4: &'_ [i32; 3 : usize]; // anonymous local
-    let _5: &'_ [i32; 3 : usize]; // anonymous local
-    let _6: &'_ [i32; 3 : usize]; // anonymous local
+    let _3: &'_ [i32; 3usize]; // anonymous local
+    let _4: &'_ [i32; 3usize]; // anonymous local
+    let _5: &'_ [i32; 3usize]; // anonymous local
+    let _6: &'_ [i32; 3usize]; // anonymous local
 
     bb0: {
         storage_live(_5);
@@ -935,7 +935,7 @@ fn main()
         _5 = move _6;
         _4 = &(*_5);
         _3 = &(*_4);
-        _2 = unsize_cast<&'_ [i32; 3 : usize], &'_ [i32], 3 : usize>(move _3);
+        _2 = unsize_cast<&'_ [i32; 3usize], &'_ [i32], 3usize>(move _3);
         storage_dead(_3);
         _1 = debug_slice::<i32>(move _2) -> bb1 (unwind: bb2);
     }

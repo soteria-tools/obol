@@ -17,7 +17,7 @@ fn {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>(_1: &'_ 
         storage_live(counter_3);
         storage_live(_4);
         counter_3 = move spread_args_2.0;
-        _4 = copy (*counter_3) panic.+ const 1 : u32;
+        _4 = copy (*counter_3) panic.+ const 1u32;
         (*counter_3) = move _4;
         _0 = const true;
         return;
@@ -91,8 +91,8 @@ fn Fn::<closure, (&'_ mut u32,)>() -> *const ()
     let <{closure@dyn-fn.rs:7:15} as FnOnce<(&mut u32,)>>::call_once_4: *const (); // local
     let gives_fn::{closure#0}_5: *const (); // local
     let gives_fn::{closure#0}_6: *const (); // local
-    let entry_array_7: [*const (); 6 : usize]; // local
-    let entry_array_ref_8: *const [*const (); 6 : usize]; // local
+    let entry_array_7: [*const (); 6usize]; // local
+    let entry_array_ref_8: *const [*const (); 6usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -104,14 +104,14 @@ fn Fn::<closure, (&'_ mut u32,)>() -> *const ()
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
         drop_1 = cast<drop_glue::<closure>, *const ()>(const drop_glue::<closure>);
-        size_2 = transmute<usize, *const ()>(const 0 : usize);
-        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
         <{closure@dyn-fn.rs:7:15} as FnOnce<(&mut u32,)>>::call_once_4 = cast<call_once::<closure, (&'_ mut u32,)>, *const ()>(const call_once::<closure, (&'_ mut u32,)>);
         gives_fn::{closure#0}_5 = cast<{closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>, *const ()>(const {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>);
         gives_fn::{closure#0}_6 = cast<{closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>, *const ()>(const {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>);
         entry_array_7 = [move drop_1, move size_2, move align_3, move <{closure@dyn-fn.rs:7:15} as FnOnce<(&mut u32,)>>::call_once_4, move gives_fn::{closure#0}_5, move gives_fn::{closure#0}_6];
         entry_array_ref_8 = &raw const entry_array_7;
-        vtable_0 = cast<*const [*const (); 6 : usize], *const ()>(move entry_array_ref_8);
+        vtable_0 = cast<*const [*const (); 6usize], *const ()>(move entry_array_ref_8);
         return;
     }
 }
@@ -161,7 +161,7 @@ fn takes_fn(f_1: &'_ (dyn FakeTrait))
         storage_live(_8);
         _0 = ();
         storage_live(counter_2);
-        counter_2 = const 0 : u32;
+        counter_2 = const 0u32;
         storage_live(_3);
         storage_live(_4);
         _4 = &(*f_1) with_metadata(copy f_1.metadata);
@@ -171,7 +171,7 @@ fn takes_fn(f_1: &'_ (dyn FakeTrait))
         _7 = &mut counter_2;
         _6 = &two-phase-mut (*_7);
         _5 = (move _6,);
-        _8 = copy _4.metadata offset const 5 : usize;
+        _8 = copy _4.metadata offset const 5usize;
         _3 = (copy (*_8))(move _4, move _5) -> bb1 (unwind: bb2);
     }
 

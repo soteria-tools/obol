@@ -106,9 +106,9 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
         storage_live(_3);
         storage_live(_4);
         _4 = copy (((*f_2)).options).flags;
-        _3 = move _4 & const 33554432 : u32;
+        _3 = move _4 & const 33554432u32;
         storage_dead(_4);
-        switch copy _3 -> 0 : u32: bb1, otherwise: bb2;
+        switch copy _3 -> 0u32: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -116,9 +116,9 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
         storage_live(_5);
         storage_live(_6);
         _6 = copy (((*f_2)).options).flags;
-        _5 = move _6 & const 67108864 : u32;
+        _5 = move _6 & const 67108864u32;
         storage_dead(_6);
-        switch copy _5 -> 0 : u32: bb3, otherwise: bb4;
+        switch copy _5 -> 0u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -183,8 +183,8 @@ fn Debug::<&'_ i32>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <&i32 as Debug>::fmt_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -194,12 +194,12 @@ fn Debug::<&'_ i32>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ i32>, *const ()>(const drop_glue::<&'_ i32>);
-        size_2 = transmute<usize, *const ()>(const 8 : usize);
-        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        size_2 = transmute<usize, *const ()>(const 8usize);
+        align_3 = transmute<usize, *const ()>(const 8usize);
         <&i32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&i32 as Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -272,7 +272,7 @@ fn anon_const_0() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 42 : i32;
+        _0 = const 42i32;
         return;
     }
 }
@@ -283,7 +283,7 @@ fn anon_const_1() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 42 : i32;
+        _0 = const 42i32;
         return;
     }
 }
@@ -310,7 +310,7 @@ pub fn next::<'_, i32>(self_1: &'_ mut Option::<&'_ i32>) -> Option::<&'_ i32>
         storage_live(_2);
         storage_live(_7);
         _2 = @discriminant((*self_1));
-        switch move _2 -> 1 : isize: bb1, otherwise: bb2;
+        switch move _2 -> 1isize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -420,7 +420,7 @@ pub fn for_each::<Option::<&'_ i32>, closure>(iter_1: Option::<&'_ i32>, f_2: cl
     bb2: {
         storage_dead(_5);
         _6 = @discriminant(_4);
-        switch move _6 -> 1 : isize: bb4, otherwise: bb5;
+        switch move _6 -> 1isize: bb4, otherwise: bb5;
     }
 
     bb3: {
@@ -442,7 +442,7 @@ pub fn for_each::<Option::<&'_ i32>, closure>(iter_1: Option::<&'_ i32>, f_2: cl
     bb5: {
         _0 = ();
         _11 = @discriminant(_4);
-        switch move _11 -> 1 : isize: bb8, otherwise: bb8;
+        switch move _11 -> 1isize: bb8, otherwise: bb8;
     }
 
     bb6: {
@@ -451,12 +451,12 @@ pub fn for_each::<Option::<&'_ i32>, closure>(iter_1: Option::<&'_ i32>, f_2: cl
         storage_dead(_8);
         storage_dead(item_7);
         _12 = @discriminant(_4);
-        switch move _12 -> 1 : isize: bb9, otherwise: bb9;
+        switch move _12 -> 1isize: bb9, otherwise: bb9;
     }
 
     bb7: {
         _13 = @discriminant(_4);
-        switch move _13 -> 1 : isize: bb3, otherwise: bb3;
+        switch move _13 -> 1isize: bb3, otherwise: bb3;
     }
 
     bb8: {
@@ -508,7 +508,7 @@ pub fn main()
         storage_live(_26);
         _0 = ();
         storage_live(x_1);
-        x_1 = const 42 : i32;
+        x_1 = const 42i32;
         storage_live(iter_2);
         storage_live(_3);
         storage_live(_27);
@@ -518,7 +518,7 @@ pub fn main()
         iter_2 = Option::<&'_ i32>::Some { 0: move _3 };
         storage_dead(_3);
         storage_live(sum_4);
-        sum_4 = const 0 : i32;
+        sum_4 = const 0i32;
         storage_live(_5);
         storage_live(_6);
         _6 = copy iter_2;

@@ -86,7 +86,7 @@ fn use_generic()
     bb0: {
         _0 = ();
         storage_live(_int_generic_1);
-        _int_generic_1 = new::<i32>(const 42 : i32) -> bb1 (unwind: bb2);
+        _int_generic_1 = new::<i32>(const 42i32) -> bb1 (unwind: bb2);
     }
 
     bb1: {

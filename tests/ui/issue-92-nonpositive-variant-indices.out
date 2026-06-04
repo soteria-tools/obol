@@ -24,7 +24,7 @@ fn main()
         storage_live(_1);
         _1 = Ordering::Less {  };
         _2 = @discriminant(_1);
-        switch move _2 -> -1 : isize: bb1, 0 : isize: bb2, 1 : isize: bb3, otherwise: bb4;
+        switch move _2 -> -1isize: bb1, 0isize: bb2, 1isize: bb3, otherwise: bb4;
     }
 
     bb1: {

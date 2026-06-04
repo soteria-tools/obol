@@ -378,7 +378,7 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 
     bb1: {
-        switch copy _5 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _5 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -410,9 +410,9 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Alignment::new_unchecked requires a power of two\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -467,7 +467,7 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
     }
 
     bb1: {
-        switch copy _8 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _8 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -495,7 +495,7 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
         storage_live(_10);
         storage_live(_11);
         _11 = transmute<Alignment, usize>(copy alignment_7);
-        _10 = const 9223372036854775808 : usize ub.- move _11;
+        _10 = const 9223372036854775808usize ub.- move _11;
         storage_dead(_11);
         _3 = copy size_1 <= move _10;
         storage_dead(_10);
@@ -521,9 +521,9 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
         _19 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Layout::from_size_align_unchecked requires that align is a power of 2 and the rounded-up allocation size does not exceed isize::MAX\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _17 = copy _19.metadata;
         storage_dead(_19);
-        _16 = move _17 wrap.<< const 1 : i32;
+        _16 = move _17 wrap.<< const 1i32;
         storage_dead(_17);
-        _15 = move _16 | const 1 : usize;
+        _15 = move _16 | const 1usize;
         storage_dead(_16);
         _14 = transmute<usize, NonNull::<Argument::<'_>>>(move _15);
         storage_dead(_15);
@@ -579,7 +579,7 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         storage_live(_7);
         storage_live(_8);
         _8 = transmute<Alignment, usize>(copy alignment_2);
-        _7 = const 9223372036854775808 : usize ub.- move _8;
+        _7 = const 9223372036854775808usize ub.- move _8;
         storage_dead(_8);
         _3 = copy size_1 <= move _7;
         storage_dead(_7);
@@ -610,9 +610,9 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         _16 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Layout::from_size_alignment_unchecked requires that the rounded-up allocation size does not exceed isize::MAX\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _14 = copy _16.metadata;
         storage_dead(_16);
-        _13 = move _14 wrap.<< const 1 : i32;
+        _13 = move _14 wrap.<< const 1i32;
         storage_dead(_14);
-        _12 = move _13 | const 1 : usize;
+        _12 = move _13 | const 1usize;
         storage_dead(_13);
         _11 = transmute<usize, NonNull::<Argument::<'_>>>(move _12);
         storage_dead(_12);
@@ -669,9 +669,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -682,85 +682,85 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
     }
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 1 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 1usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 1 : usize]> {
-  0: [u8; 1 : usize],
+pub struct MaybeDangling::<[u8; 1usize]> {
+  0: [u8; 1usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 1 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 1usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 1 : usize]> {
-  value: MaybeDangling::<[u8; 1 : usize]>,
+pub struct ManuallyDrop::<[u8; 1usize]> {
+  value: MaybeDangling::<[u8; 1usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 1 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 1usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 1 : usize]> {
+pub union MaybeUninit::<[u8; 1usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 1 : usize]>,
+  value: ManuallyDrop::<[u8; 1usize]>,
 }
 
-// Full name: std::intrinsics::size_of_val::<MaybeUninit::<[u8; 1 : usize]>>
-pub fn size_of_val::<MaybeUninit::<[u8; 1 : usize]>>(ptr_1: *const MaybeUninit::<[u8; 1 : usize]>) -> usize
+// Full name: std::intrinsics::size_of_val::<MaybeUninit::<[u8; 1usize]>>
+pub fn size_of_val::<MaybeUninit::<[u8; 1usize]>>(ptr_1: *const MaybeUninit::<[u8; 1usize]>) -> usize
 = <intrinsic:size_of_val>
 
-// Full name: std::intrinsics::align_of_val::<MaybeUninit::<[u8; 1 : usize]>>
-pub fn align_of_val::<MaybeUninit::<[u8; 1 : usize]>>(ptr_1: *const MaybeUninit::<[u8; 1 : usize]>) -> usize
+// Full name: std::intrinsics::align_of_val::<MaybeUninit::<[u8; 1usize]>>
+pub fn align_of_val::<MaybeUninit::<[u8; 1usize]>>(ptr_1: *const MaybeUninit::<[u8; 1usize]>) -> usize
 = <intrinsic:align_of_val>
 
 // Full name: std::marker::PhantomData::<u8>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<u8> {}
 
-// Full name: std::marker::PhantomData::<MaybeUninit::<[u8; 1 : usize]>>
+// Full name: std::marker::PhantomData::<MaybeUninit::<[u8; 1usize]>>
 #[lang_item("phantom_data")]
-pub struct PhantomData::<MaybeUninit::<[u8; 1 : usize]>> {}
+pub struct PhantomData::<MaybeUninit::<[u8; 1usize]>> {}
 
-// Full name: std::marker::PhantomData::<[u8; 1 : usize]>
+// Full name: std::marker::PhantomData::<[u8; 1usize]>
 #[lang_item("phantom_data")]
-pub struct PhantomData::<[u8; 1 : usize]> {}
+pub struct PhantomData::<[u8; 1usize]> {}
 
 // Full name: std::marker::PhantomData::<[u8]>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<[u8]> {}
 
-// Full name: std::mem::MaybeDangling::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 16usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 16 : usize]> {
-  0: [u8; 16 : usize],
+pub struct MaybeDangling::<[u8; 16usize]> {
+  0: [u8; 16usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 16 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 16usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 16 : usize]> {
-  value: MaybeDangling::<[u8; 16 : usize]>,
+pub struct ManuallyDrop::<[u8; 16usize]> {
+  value: MaybeDangling::<[u8; 16usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8 : usize]> {
-  0: [u8; 8 : usize],
+pub struct MaybeDangling::<[u8; 8usize]> {
+  0: [u8; 8usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 8 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8 : usize]> {
-  value: MaybeDangling::<[u8; 8 : usize]>,
+pub struct ManuallyDrop::<[u8; 8usize]> {
+  value: MaybeDangling::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 8 : usize]> {
+pub union MaybeUninit::<[u8; 8usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 8 : usize]>,
+  value: ManuallyDrop::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 16usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 16 : usize]> {
+pub union MaybeUninit::<[u8; 16usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 16 : usize]>,
+  value: ManuallyDrop::<[u8; 16usize]>,
 }
 
 fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
@@ -821,9 +821,9 @@ fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_
         _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_mul cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
-        _14 = move _15 wrap.<< const 1 : i32;
+        _14 = move _15 wrap.<< const 1i32;
         storage_dead(_15);
-        _13 = move _14 | const 1 : usize;
+        _13 = move _14 | const 1usize;
         storage_dead(_14);
         _12 = transmute<usize, NonNull::<Argument::<'_>>>(move _13);
         storage_dead(_13);
@@ -848,7 +848,7 @@ fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_
 
 // Full name: core::num::niche_types::UsizeNoHighBit
 pub struct UsizeNoHighBit {
-  0: usize is 0 : usize..=9223372036854775807 : usize,
+  0: usize is 0usize..=9223372036854775807usize,
 }
 
 // Full name: std::result::Result::<Infallible, AllocError>
@@ -913,21 +913,21 @@ pub enum Option::<(NonNull::<u8>, Layout)> {
   Some(0: (NonNull::<u8>, Layout)),
 }
 
-// Full name: std::ptr::NonNull::<MaybeUninit::<[u8; 1 : usize]>>
-pub struct NonNull::<MaybeUninit::<[u8; 1 : usize]>> {
-  pointer: *const MaybeUninit::<[u8; 1 : usize]> is !null,
+// Full name: std::ptr::NonNull::<MaybeUninit::<[u8; 1usize]>>
+pub struct NonNull::<MaybeUninit::<[u8; 1usize]>> {
+  pointer: *const MaybeUninit::<[u8; 1usize]> is !null,
 }
 
-// Full name: std::ptr::Unique::<MaybeUninit::<[u8; 1 : usize]>>
-pub struct Unique::<MaybeUninit::<[u8; 1 : usize]>> {
-  pointer: NonNull::<MaybeUninit::<[u8; 1 : usize]>>,
-  _marker: PhantomData::<MaybeUninit::<[u8; 1 : usize]>>,
+// Full name: std::ptr::Unique::<MaybeUninit::<[u8; 1usize]>>
+pub struct Unique::<MaybeUninit::<[u8; 1usize]>> {
+  pointer: NonNull::<MaybeUninit::<[u8; 1usize]>>,
+  _marker: PhantomData::<MaybeUninit::<[u8; 1usize]>>,
 }
 
-// Full name: std::boxed::Box::<MaybeUninit::<[u8; 1 : usize]>, Global>
+// Full name: std::boxed::Box::<MaybeUninit::<[u8; 1usize]>, Global>
 #[lang_item("owned_box")]
-pub struct Box::<MaybeUninit::<[u8; 1 : usize]>, Global> {
-  0: Unique::<MaybeUninit::<[u8; 1 : usize]>>,
+pub struct Box::<MaybeUninit::<[u8; 1usize]>, Global> {
+  0: Unique::<MaybeUninit::<[u8; 1usize]>>,
   1: Global,
 }
 
@@ -948,7 +948,7 @@ pub fn <std::alloc::Global as std::alloc::Allocator>::deallocate(self_1: &'_ Glo
         _0 = ();
         storage_live(_4);
         _4 = copy (layout_3).size;
-        switch copy _4 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _4 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -972,13 +972,13 @@ pub fn <std::alloc::Global as std::alloc::Allocator>::deallocate(self_1: &'_ Glo
     }
 }
 
-pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1 : usize]>, Global>(self_1: &'_ mut Box::<MaybeUninit::<[u8; 1 : usize]>, Global>)
+pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1usize]>, Global>(self_1: &'_ mut Box::<MaybeUninit::<[u8; 1usize]>, Global>)
 {
     let _0: (); // return
-    let self_1: &'_ mut Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // arg #1
+    let self_1: &'_ mut Box::<MaybeUninit::<[u8; 1usize]>, Global>; // arg #1
     let layout_2: Layout; // local
-    let t_3: *const MaybeUninit::<[u8; 1 : usize]>; // local
-    let _4: *mut MaybeUninit::<[u8; 1 : usize]>; // anonymous local
+    let t_3: *const MaybeUninit::<[u8; 1usize]>; // local
+    let _4: *mut MaybeUninit::<[u8; 1usize]>; // anonymous local
     let _5: (); // anonymous local
     let _6: &'_ Global; // anonymous local
     let size_7: usize; // local
@@ -988,8 +988,8 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1 : 
     let _11: (); // anonymous local
     let unique_12: NonNull::<u8>; // local
     let _13: *mut u8; // anonymous local
-    let ptr_14: NonNull::<MaybeUninit::<[u8; 1 : usize]>>; // local
-    let ptr_15: PhantomData::<MaybeUninit::<[u8; 1 : usize]>>; // local
+    let ptr_14: NonNull::<MaybeUninit::<[u8; 1usize]>>; // local
+    let ptr_15: PhantomData::<MaybeUninit::<[u8; 1usize]>>; // local
     let _16: bool; // anonymous local
     let _17: bool; // anonymous local
 
@@ -1007,15 +1007,15 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1 : 
         ptr_15 = copy (((*self_1)).0)._marker;
         storage_live(layout_2);
         storage_live(t_3);
-        _4 = transmute<NonNull::<MaybeUninit::<[u8; 1 : usize]>>, *mut MaybeUninit::<[u8; 1 : usize]>>(copy ptr_14);
-        t_3 = transmute<NonNull::<MaybeUninit::<[u8; 1 : usize]>>, *const MaybeUninit::<[u8; 1 : usize]>>(copy ptr_14);
+        _4 = transmute<NonNull::<MaybeUninit::<[u8; 1usize]>>, *mut MaybeUninit::<[u8; 1usize]>>(copy ptr_14);
+        t_3 = transmute<NonNull::<MaybeUninit::<[u8; 1usize]>>, *const MaybeUninit::<[u8; 1usize]>>(copy ptr_14);
         storage_live(alignment_8);
-        size_7 = size_of_val::<MaybeUninit::<[u8; 1 : usize]>>(copy t_3) -> bb1 (unwind: bb2);
+        size_7 = size_of_val::<MaybeUninit::<[u8; 1usize]>>(copy t_3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
         storage_live(align_9);
-        align_9 = align_of_val::<MaybeUninit::<[u8; 1 : usize]>>(move t_3) -> bb3 (unwind: bb4);
+        align_9 = align_of_val::<MaybeUninit::<[u8; 1usize]>>(move t_3) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -1056,7 +1056,7 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1 : 
         layout_2 = Layout { size: copy size_7, align: copy alignment_8 };
         storage_dead(alignment_8);
         storage_dead(t_3);
-        switch copy size_7 -> 0 : usize: bb11, otherwise: bb12;
+        switch copy size_7 -> 0usize: bb11, otherwise: bb12;
     }
 
     bb10: {
@@ -1074,7 +1074,7 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1 : 
         storage_live(_6);
         _6 = &((*self_1)).1;
         storage_live(_13);
-        _13 = cast<*mut MaybeUninit::<[u8; 1 : usize]>, *mut u8>(copy _4);
+        _13 = cast<*mut MaybeUninit::<[u8; 1usize]>, *mut u8>(copy _4);
         unique_12 = transmute<*mut u8, NonNull::<u8>>(copy _13);
         storage_dead(_13);
         _5 = <std::alloc::Global as std::alloc::Allocator>::deallocate(move _6, move unique_12, move layout_2) -> bb13 (unwind: bb14);
@@ -1090,24 +1090,24 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1 : 
     }
 }
 
-// Full name: std::ptr::drop_glue::<Box::<MaybeUninit::<[u8; 1 : usize]>, Global>>
+// Full name: std::ptr::drop_glue::<Box::<MaybeUninit::<[u8; 1usize]>, Global>>
 #[lang_item("drop_glue")]
-fn drop_glue::<Box::<MaybeUninit::<[u8; 1 : usize]>, Global>>(_1: &'_ mut Box::<MaybeUninit::<[u8; 1 : usize]>, Global>)
+fn drop_glue::<Box::<MaybeUninit::<[u8; 1usize]>, Global>>(_1: &'_ mut Box::<MaybeUninit::<[u8; 1usize]>, Global>)
 {
     let _0: (); // return
-    let _1: &'_ mut Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // arg #1
-    let _2: &'_ mut Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // anonymous local
+    let _1: &'_ mut Box::<MaybeUninit::<[u8; 1usize]>, Global>; // arg #1
+    let _2: &'_ mut Box::<MaybeUninit::<[u8; 1usize]>, Global>; // anonymous local
     let _3: (); // anonymous local
-    let _4: *const MaybeUninit::<[u8; 1 : usize]>; // anonymous local
+    let _4: *const MaybeUninit::<[u8; 1usize]>; // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);
         _0 = ();
-        _4 = transmute<NonNull::<MaybeUninit::<[u8; 1 : usize]>>, *const MaybeUninit::<[u8; 1 : usize]>>(copy (((*_1)).0).pointer);
+        _4 = transmute<NonNull::<MaybeUninit::<[u8; 1usize]>>, *const MaybeUninit::<[u8; 1usize]>>(copy (((*_1)).0).pointer);
         _2 = &mut (*_1);
-        _3 = <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1 : usize]>, Global>(move _2) -> bb1 (unwind: bb2);
+        _3 = <std::boxed::Box<T, A> as std::ops::Drop>::drop::<MaybeUninit::<[u8; 1usize]>, Global>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1136,33 +1136,33 @@ pub fn <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ m
 {
     let _0: (); // return
     let self_1: &'_ mut Vec::<u8, Global>; // arg #1
-    let to_drop_2: *mut [u8]; // local
-    let data_3: *mut u8; // local
+    let self_2: *mut [u8]; // local
+    let self_3: *mut u8; // local
     let len_4: usize; // local
     let _5: NonNull::<u8>; // anonymous local
     let _6: &'_ mut [u8]; // anonymous local
 
     bb0: {
         _0 = ();
-        storage_live(to_drop_2);
-        storage_live(data_3);
+        storage_live(self_2);
+        storage_live(self_3);
         storage_live(_5);
         _5 = copy (((((*self_1)).buf).inner).ptr).pointer;
-        data_3 = transmute<NonNull::<u8>, *mut u8>(copy _5);
+        self_3 = transmute<NonNull::<u8>, *mut u8>(copy _5);
         storage_dead(_5);
         storage_live(len_4);
         len_4 = copy ((*self_1)).len;
-        to_drop_2 = *mut  (copy data_3, copy len_4);
+        self_2 = *mut  (copy self_3, copy len_4);
         storage_dead(len_4);
-        storage_dead(data_3);
+        storage_dead(self_3);
         storage_live(_6);
-        _6 = &mut (*to_drop_2) with_metadata(copy to_drop_2.metadata);
+        _6 = &mut (*self_2) with_metadata(copy self_2.metadata);
         _0 = drop_glue::<[u8]>(move _6) -> bb1 (unwind: bb2);
     }
 
     bb1: {
         storage_dead(_6);
-        storage_dead(to_drop_2);
+        storage_dead(self_2);
         return;
     }
 
@@ -1201,7 +1201,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
         storage_live(_14);
         storage_live(self_15);
         self_3 = copy (elem_layout_2).size;
-        switch copy self_3 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy self_3 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -1215,7 +1215,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
         self_5 = copy ((*self_1)).cap;
         _4 = transmute<UsizeNoHighBit, usize>(copy self_5);
         storage_dead(self_5);
-        switch copy _4 -> 0 : usize: bb4, otherwise: bb5;
+        switch copy _4 -> 0usize: bb4, otherwise: bb5;
     }
 
     bb3: {
@@ -1311,7 +1311,7 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
     bb1: {
         storage_dead(_4);
         _5 = @discriminant(_3);
-        switch move _5 -> 1 : isize: bb3, 0 : isize: bb4, otherwise: bb5;
+        switch move _5 -> 1isize: bb3, 0isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -1372,7 +1372,7 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
         storage_live(_4);
         _4 = Alignment { _inner_repr_trick: move _3 };
         storage_live(_5);
-        _5 = Layout { size: const 1 : usize, align: move _4 };
+        _5 = Layout { size: const 1usize, align: move _4 };
         _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, move _5) -> bb1 (unwind: bb2);
     }
 
@@ -1480,7 +1480,7 @@ fn drop_glue::<Option::<Vec::<u8, Global>>>(_1: &'_ mut Option::<Vec::<u8, Globa
         storage_live(_4);
         _0 = ();
         _2 = @discriminant((*_1));
-        switch move _2 -> 0 : isize: bb1, otherwise: bb2;
+        switch move _2 -> 0isize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -1502,9 +1502,9 @@ pub struct NonNull::<[u8]> {
   pointer: *const [u8] is !null,
 }
 
-// Full name: std::ptr::NonNull::<[u8; 1 : usize]>
-pub struct NonNull::<[u8; 1 : usize]> {
-  pointer: *const [u8; 1 : usize] is !null,
+// Full name: std::ptr::NonNull::<[u8; 1usize]>
+pub struct NonNull::<[u8; 1usize]> {
+  pointer: *const [u8; 1usize] is !null,
 }
 
 fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
@@ -1530,7 +1530,7 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         _0 = ();
         storage_live(_5);
         _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -1553,9 +1553,9 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: NonNull::new_unchecked requires that the pointer is non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -1585,10 +1585,10 @@ pub struct Unique::<[u8]> {
   _marker: PhantomData::<[u8]>,
 }
 
-// Full name: std::ptr::Unique::<[u8; 1 : usize]>
-pub struct Unique::<[u8; 1 : usize]> {
-  pointer: NonNull::<[u8; 1 : usize]>,
-  _marker: PhantomData::<[u8; 1 : usize]>,
+// Full name: std::ptr::Unique::<[u8; 1usize]>
+pub struct Unique::<[u8; 1usize]> {
+  pointer: NonNull::<[u8; 1usize]>,
+  _marker: PhantomData::<[u8; 1usize]>,
 }
 
 // Full name: std::result::Result::<NonNull::<[u8]>, AllocError>
@@ -1623,7 +1623,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let zeroed_2: bool; // arg #2
     let size_3: usize; // local
     let _4: NonNull::<[u8]>; // anonymous local
-    let data_5: NonNull::<u8>; // local
+    let self_5: NonNull::<u8>; // local
     let raw_ptr_6: *mut u8; // local
     let _7: ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>; // anonymous local
     let self_8: Result::<NonNull::<u8>, AllocError>; // local
@@ -1633,7 +1633,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let _12: NonNull::<[u8]>; // anonymous local
     let _13: Alignment; // anonymous local
     let ptr_14: *mut [u8]; // local
-    let data_15: *mut u8; // local
+    let self_15: *mut u8; // local
     let _16: (); // anonymous local
     let _17: *mut (); // anonymous local
     let _18: (); // anonymous local
@@ -1647,7 +1647,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let v_26: NonNull::<u8>; // local
     let v_27: NonNull::<u8>; // local
     let ptr_28: *mut [u8]; // local
-    let data_29: *mut u8; // local
+    let self_29: *mut u8; // local
     let _30: (); // anonymous local
     let _31: *mut (); // anonymous local
     let _32: isize; // anonymous local
@@ -1671,19 +1671,19 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_30);
         storage_live(size_3);
         size_3 = copy (layout_1).size;
-        switch copy size_3 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy size_3 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
         storage_live(_4);
-        storage_live(data_5);
+        storage_live(self_5);
         _13 = copy (layout_1).align;
-        data_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
+        self_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
         storage_live(ptr_14);
-        storage_live(data_15);
-        data_15 = transmute<Alignment, *mut u8>(copy _13);
-        ptr_14 = *mut  (copy data_15, const 0 : usize);
-        storage_dead(data_15);
+        storage_live(self_15);
+        self_15 = transmute<Alignment, *mut u8>(copy _13);
+        ptr_14 = *mut  (copy self_15, const 0usize);
+        storage_dead(self_15);
         storage_live(_34);
         _34 = ub_checks<bool>;
         if move _34 -> bb3 else -> bb4;
@@ -1702,7 +1702,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb4: {
         _4 = transmute<*mut [u8], NonNull::<[u8]>>(copy ptr_14);
         storage_dead(ptr_14);
-        storage_dead(data_5);
+        storage_dead(self_5);
         _0 = Result::<NonNull::<[u8]>, AllocError>::Ok { 0: move _4 };
         storage_dead(_4);
         goto bb9;
@@ -1778,7 +1778,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(self_9);
         storage_live(_23);
         _23 = transmute<*mut u8, usize>(copy raw_ptr_6);
-        switch copy _23 -> 0 : usize: bb20, otherwise: bb21;
+        switch copy _23 -> 0usize: bb20, otherwise: bb21;
     }
 
     bb20: {
@@ -1794,7 +1794,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_32);
         storage_live(_33);
         _32 = @discriminant(_10);
-        _33 = copy _32 == const 1 : isize;
+        _33 = copy _32 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
         storage_live(_39);
         _39 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
@@ -1838,10 +1838,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_dead(_7);
         storage_live(_12);
         storage_live(ptr_28);
-        storage_live(data_29);
-        data_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
-        ptr_28 = *mut  (copy data_29, copy size_3);
-        storage_dead(data_29);
+        storage_live(self_29);
+        self_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
+        ptr_28 = *mut  (copy self_29, copy size_3);
+        storage_dead(self_29);
         storage_live(_36);
         _36 = ub_checks<bool>;
         if move _36 -> bb26 else -> bb27;
@@ -1944,10 +1944,10 @@ pub struct Box::<[u8], Global> {
   1: Global,
 }
 
-// Full name: std::boxed::Box::<[u8; 1 : usize], Global>
+// Full name: std::boxed::Box::<[u8; 1usize], Global>
 #[lang_item("owned_box")]
-pub struct Box::<[u8; 1 : usize], Global> {
-  0: Unique::<[u8; 1 : usize]>,
+pub struct Box::<[u8; 1usize], Global> {
+  0: Unique::<[u8; 1usize]>,
   1: Global,
 }
 
@@ -1973,7 +1973,7 @@ fn box_new_uninit(layout_1: Layout) -> *mut u8
 
     bb1: {
         _3 = @discriminant(_2);
-        switch move _3 -> 0 : isize: bb3, 1 : isize: bb4, otherwise: bb5;
+        switch move _3 -> 0isize: bb3, 1isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -2066,9 +2066,9 @@ fn std::vec::Vec::<T, A>::from_raw_parts_in::precondition_check(length_1: usize,
         _14 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Vec::from_raw_parts_in requires that length <= capacity\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _12 = copy _14.metadata;
         storage_dead(_14);
-        _11 = move _12 wrap.<< const 1 : i32;
+        _11 = move _12 wrap.<< const 1i32;
         storage_dead(_12);
-        _10 = move _11 | const 1 : usize;
+        _10 = move _11 | const 1usize;
         storage_dead(_11);
         _9 = transmute<usize, NonNull::<Argument::<'_>>>(move _10);
         storage_dead(_10);
@@ -2087,13 +2087,13 @@ fn std::vec::Vec::<T, A>::from_raw_parts_in::precondition_check(length_1: usize,
     }
 }
 
-// Full name: std::boxed::box_assume_init_into_vec_unsafe::<u8, 1 : usize>
-pub fn box_assume_init_into_vec_unsafe::<u8, 1 : usize>(b_1: Box::<MaybeUninit::<[u8; 1 : usize]>, Global>) -> Vec::<u8, Global>
+// Full name: std::boxed::box_assume_init_into_vec_unsafe::<u8, 1usize>
+pub fn box_assume_init_into_vec_unsafe::<u8, 1usize>(b_1: Box::<MaybeUninit::<[u8; 1usize]>, Global>) -> Vec::<u8, Global>
 {
     let _0: Vec::<u8, Global>; // return
-    let b_1: Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // arg #1
+    let b_1: Box::<MaybeUninit::<[u8; 1usize]>, Global>; // arg #1
     let _2: Box::<[u8], Global>; // anonymous local
-    let _3: Box::<[u8; 1 : usize], Global>; // anonymous local
+    let _3: Box::<[u8; 1usize], Global>; // anonymous local
     let len_4: usize; // local
     let ptr_5: *mut u8; // local
     let _6: *const [u8]; // anonymous local
@@ -2122,8 +2122,8 @@ pub fn box_assume_init_into_vec_unsafe::<u8, 1 : usize>(b_1: Box::<MaybeUninit::
         storage_live(self_18);
         storage_live(_2);
         storage_live(_3);
-        _3 = transmute<Box::<MaybeUninit::<[u8; 1 : usize]>, Global>, Box::<[u8; 1 : usize], Global>>(copy b_1);
-        _2 = unsize_cast<Box::<[u8; 1 : usize], Global>, Box::<[u8], Global>, 1 : usize>(move _3);
+        _3 = transmute<Box::<MaybeUninit::<[u8; 1usize]>, Global>, Box::<[u8; 1usize], Global>>(copy b_1);
+        _2 = unsize_cast<Box::<[u8; 1usize], Global>, Box::<[u8], Global>, 1usize>(move _3);
         storage_dead(_3);
         self_18 = move ((_2).0).pointer;
         storage_live(_6);
@@ -2160,7 +2160,7 @@ pub fn box_assume_init_into_vec_unsafe::<u8, 1 : usize>(b_1: Box::<MaybeUninit::
 
     bb4: {
         storage_live(_21);
-        _21 = UsizeNoHighBit { 0: const 0 : usize };
+        _21 = UsizeNoHighBit { 0: const 0usize };
         capacity_11 = move _21;
         goto bb6;
     }
@@ -2222,10 +2222,10 @@ pub fn box_assume_init_into_vec_unsafe::<u8, 1 : usize>(b_1: Box::<MaybeUninit::
     }
 }
 
-// Full name: std::boxed::Box::<T>::new_uninit::<[u8; 1 : usize]>
-pub fn new_uninit::<[u8; 1 : usize]>() -> Box::<MaybeUninit::<[u8; 1 : usize]>, Global>
+// Full name: std::boxed::Box::<T>::new_uninit::<[u8; 1usize]>
+pub fn new_uninit::<[u8; 1usize]>() -> Box::<MaybeUninit::<[u8; 1usize]>, Global>
 {
-    let _0: Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // return
+    let _0: Box::<MaybeUninit::<[u8; 1usize]>, Global>; // return
     let _1: *mut u8; // anonymous local
     let _2: AlignmentEnum; // anonymous local
     let _3: Alignment; // anonymous local
@@ -2238,12 +2238,12 @@ pub fn new_uninit::<[u8; 1 : usize]>() -> Box::<MaybeUninit::<[u8; 1 : usize]>, 
         storage_live(_3);
         _3 = Alignment { _inner_repr_trick: move _2 };
         storage_live(_4);
-        _4 = Layout { size: const 1 : usize, align: move _3 };
+        _4 = Layout { size: const 1usize, align: move _3 };
         _1 = box_new_uninit(move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
-        _0 = transmute<*mut u8, Box::<MaybeUninit::<[u8; 1 : usize]>, Global>>(copy _1);
+        _0 = transmute<*mut u8, Box::<MaybeUninit::<[u8; 1usize]>, Global>>(copy _1);
         storage_dead(_1);
         return;
     }
@@ -2259,13 +2259,13 @@ pub fn next(b_1: bool) -> Option::<Vec::<u8, Global>>
     let _0: Option::<Vec::<u8, Global>>; // return
     let b_1: bool; // arg #1
     let vec_2: Vec::<u8, Global>; // local
-    let _3: Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // anonymous local
-    let _4: Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // anonymous local
+    let _3: Box::<MaybeUninit::<[u8; 1usize]>, Global>; // anonymous local
+    let _4: Box::<MaybeUninit::<[u8; 1usize]>, Global>; // anonymous local
     let _5: u8; // anonymous local
     let _6: bool; // anonymous local
     let _7: Vec::<u8, Global>; // anonymous local
-    let _8: *const MaybeUninit::<[u8; 1 : usize]>; // anonymous local
-    let _9: *mut Box::<MaybeUninit::<[u8; 1 : usize]>, Global>; // anonymous local
+    let _8: *const MaybeUninit::<[u8; 1usize]>; // anonymous local
+    let _9: *mut Box::<MaybeUninit::<[u8; 1usize]>, Global>; // anonymous local
     let _10: (); // anonymous local
 
     bb0: {
@@ -2275,7 +2275,7 @@ pub fn next(b_1: bool) -> Option::<Vec::<u8, Global>>
         storage_live(vec_2);
         storage_live(_3);
         storage_live(_4);
-        _4 = new_uninit::<[u8; 1 : usize]>() -> bb1 (unwind: bb2);
+        _4 = new_uninit::<[u8; 1usize]>() -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2290,14 +2290,14 @@ pub fn next(b_1: bool) -> Option::<Vec::<u8, Global>>
     }
 
     bb3: {
-        _5 = const 42 : u8;
+        _5 = const 42u8;
         storage_dead(_6);
-        _8 = transmute<NonNull::<MaybeUninit::<[u8; 1 : usize]>>, *const MaybeUninit::<[u8; 1 : usize]>>(copy ((_4).0).pointer);
+        _8 = transmute<NonNull::<MaybeUninit::<[u8; 1usize]>>, *const MaybeUninit::<[u8; 1usize]>>(copy ((_4).0).pointer);
         ((((*_8)).value).value).0 = [move _5];
         storage_dead(_5);
         _3 = move _4;
         storage_dead(_4);
-        vec_2 = box_assume_init_into_vec_unsafe::<u8, 1 : usize>(move _3) -> bb5 (unwind: bb6);
+        vec_2 = box_assume_init_into_vec_unsafe::<u8, 1usize>(move _3) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -2305,7 +2305,7 @@ pub fn next(b_1: bool) -> Option::<Vec::<u8, Global>>
         storage_dead(_6);
         storage_dead(_5);
         _9 = &raw mut _4;
-        _10 = drop_glue::<Box::<MaybeUninit::<[u8; 1 : usize]>, Global>>(move _9) -> bb7 (unwind: bb6);
+        _10 = drop_glue::<Box::<MaybeUninit::<[u8; 1usize]>, Global>>(move _9) -> bb7 (unwind: bb6);
     }
 
     bb5: {

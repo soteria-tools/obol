@@ -23,14 +23,14 @@ fn slice_pattern_end(x_1: &'_ [()])
         _0 = ();
         _3 = copy x_1.metadata;
         _2 = move _3;
-        _4 = const 1 : usize;
+        _4 = const 1usize;
         _5 = move _2 >= move _4;
         if move _5 -> bb1 else -> bb2;
     }
 
     bb1: {
         storage_live(_named_6);
-        _named_6 = &(*x_1)[-const 1 : usize];
+        _named_6 = &(*x_1)[-const 1usize];
         _0 = ();
         storage_dead(_named_6);
         goto bb3;

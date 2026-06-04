@@ -4,8 +4,8 @@
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::foo::<10 : usize>
-fn foo::<10 : usize>()
+// Full name: test_crate::foo::<10usize>
+fn foo::<10usize>()
 {
     let _0: (); // return
 
@@ -38,7 +38,7 @@ fn main()
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = foo::<10 : usize>() -> bb1 (unwind: bb2);
+        _1 = foo::<10usize>() -> bb1 (unwind: bb2);
     }
 
     bb1: {

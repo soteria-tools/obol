@@ -23,13 +23,13 @@ fn rej_sample(a_1: &'_ [u8]) -> usize
         storage_live(_9);
         storage_live(_10);
         storage_live(sampled_2);
-        sampled_2 = const 0 : usize;
+        sampled_2 = const 0usize;
         storage_live(_3);
         storage_live(_4);
         storage_live(_5);
-        _5 = const 0 : usize;
+        _5 = const 0usize;
         _4 = copy (*a_1)[copy _5];
-        _3 = move _4 < const 42 : u8;
+        _3 = move _4 < const 42u8;
         if move _3 -> bb1 else -> bb2;
     }
 
@@ -39,9 +39,9 @@ fn rej_sample(a_1: &'_ [u8]) -> usize
         storage_live(_6);
         storage_live(_7);
         storage_live(_8);
-        _8 = const 1 : usize;
+        _8 = const 1usize;
         _7 = copy (*a_1)[copy _8];
-        _6 = move _7 < const 16 : u8;
+        _6 = move _7 < const 16u8;
         if move _6 -> bb4 else -> bb5;
     }
 
@@ -52,7 +52,7 @@ fn rej_sample(a_1: &'_ [u8]) -> usize
     }
 
     bb3: {
-        _10 = copy sampled_2 panic.+ const 101 : usize;
+        _10 = copy sampled_2 panic.+ const 101usize;
         sampled_2 = move _10;
         goto bb6;
     }
@@ -60,7 +60,7 @@ fn rej_sample(a_1: &'_ [u8]) -> usize
     bb4: {
         storage_dead(_8);
         storage_dead(_7);
-        _9 = copy sampled_2 panic.+ const 100 : usize;
+        _9 = copy sampled_2 panic.+ const 100usize;
         sampled_2 = move _9;
         goto bb6;
     }

@@ -96,8 +96,8 @@ fn Debug::<&'_ ()>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <&() as Debug>::fmt_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -107,12 +107,12 @@ fn Debug::<&'_ ()>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ ()>, *const ()>(const drop_glue::<&'_ ()>);
-        size_2 = transmute<usize, *const ()>(const 8 : usize);
-        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        size_2 = transmute<usize, *const ()>(const 8usize);
+        align_3 = transmute<usize, *const ()>(const 8usize);
         <&() as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, ()>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, ()>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&() as Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -156,62 +156,62 @@ pub fn <std::array::TryFromSliceError as std::fmt::Debug>::fmt(self_1: &'_ TryFr
     }
 }
 
-// Full name: std::result::Result::<&'_ [u8; 4 : usize], TryFromSliceError>
-pub enum Result::<&'_ [u8; 4 : usize], TryFromSliceError> {
-  Ok(0: &'_ [u8; 4 : usize]),
+// Full name: std::result::Result::<&'_ [u8; 4usize], TryFromSliceError>
+pub enum Result::<&'_ [u8; 4usize], TryFromSliceError> {
+  Ok(0: &'_ [u8; 4usize]),
   Err(0: TryFromSliceError),
 }
 
-// Full name: std::result::Result::<[u8; 4 : usize], TryFromSliceError>
-pub enum Result::<[u8; 4 : usize], TryFromSliceError> {
-  Ok(0: [u8; 4 : usize]),
+// Full name: std::result::Result::<[u8; 4usize], TryFromSliceError>
+pub enum Result::<[u8; 4usize], TryFromSliceError> {
+  Ok(0: [u8; 4usize]),
   Err(0: TryFromSliceError),
 }
 
-// Full name: std::option::Option::<&'_ [u8; 4 : usize]>
+// Full name: std::option::Option::<&'_ [u8; 4usize]>
 #[lang_item("Option")]
-pub enum Option::<&'_ [u8; 4 : usize]> {
+pub enum Option::<&'_ [u8; 4usize]> {
   None,
-  Some(0: &'_ [u8; 4 : usize]),
+  Some(0: &'_ [u8; 4usize]),
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8 : usize]> {
-  0: [u8; 8 : usize],
+pub struct MaybeDangling::<[u8; 8usize]> {
+  0: [u8; 8usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 8 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8 : usize]> {
-  value: MaybeDangling::<[u8; 8 : usize]>,
+pub struct ManuallyDrop::<[u8; 8usize]> {
+  value: MaybeDangling::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 8 : usize]> {
+pub union MaybeUninit::<[u8; 8usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 8 : usize]>,
+  value: ManuallyDrop::<[u8; 8usize]>,
 }
 
-// Full name: std::array::<impl std::convert::TryFrom<&[T]> for [T; N]>::try_from::<'_, u8, 4 : usize>
-pub fn try_from::<'_, u8, 4 : usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4 : usize], TryFromSliceError>
+// Full name: std::array::<impl std::convert::TryFrom<&[T]> for [T; N]>::try_from::<'_, u8, 4usize>
+pub fn try_from::<'_, u8, 4usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4usize], TryFromSliceError>
 {
-    let _0: Result::<[u8; 4 : usize], TryFromSliceError>; // return
+    let _0: Result::<[u8; 4usize], TryFromSliceError>; // return
     let slice_1: &'_ [u8]; // arg #1
-    let self_2: Result::<&'_ [u8; 4 : usize], TryFromSliceError>; // local
-    let self_3: Option::<&'_ [u8; 4 : usize]>; // local
+    let self_2: Result::<&'_ [u8; 4usize], TryFromSliceError>; // local
+    let self_3: Option::<&'_ [u8; 4usize]>; // local
     let _4: bool; // anonymous local
     let _5: usize; // anonymous local
-    let ptr_6: *const [u8; 4 : usize]; // local
+    let ptr_6: *const [u8; 4usize]; // local
     let self_7: *const u8; // local
-    let _8: &'_ [u8; 4 : usize]; // anonymous local
+    let _8: &'_ [u8; 4usize]; // anonymous local
     let _9: *const [u8]; // anonymous local
-    let v_10: &'_ [u8; 4 : usize]; // local
-    let v_11: [u8; 4 : usize]; // local
-    let _12: &'_ [u8; 4 : usize]; // anonymous local
-    let _13: Option::<&'_ [u8; 4 : usize]>; // anonymous local
-    let _14: Result::<&'_ [u8; 4 : usize], TryFromSliceError>; // anonymous local
+    let v_10: &'_ [u8; 4usize]; // local
+    let v_11: [u8; 4usize]; // local
+    let _12: &'_ [u8; 4usize]; // anonymous local
+    let _13: Option::<&'_ [u8; 4usize]>; // anonymous local
+    let _14: Result::<&'_ [u8; 4usize], TryFromSliceError>; // anonymous local
     let _15: TryFromSliceError; // anonymous local
 
     bb0: {
@@ -221,7 +221,7 @@ pub fn try_from::<'_, u8, 4 : usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4 : usi
         storage_live(_4);
         storage_live(_5);
         _5 = copy slice_1.metadata;
-        _4 = move _5 == const 4 : usize;
+        _4 = move _5 == const 4usize;
         if move _4 -> bb1 else -> bb2;
     }
 
@@ -231,25 +231,25 @@ pub fn try_from::<'_, u8, 4 : usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4 : usi
         storage_live(self_7);
         _9 = &raw const (*slice_1) with_metadata(copy slice_1.metadata);
         self_7 = cast<*const [u8], *const u8>(copy _9);
-        ptr_6 = cast<*const [u8], *const [u8; 4 : usize]>(copy _9);
+        ptr_6 = cast<*const [u8], *const [u8; 4usize]>(copy _9);
         storage_dead(self_7);
         storage_live(_8);
         _8 = &(*ptr_6);
-        self_3 = Option::<&'_ [u8; 4 : usize]>::Some { 0: copy _8 };
+        self_3 = Option::<&'_ [u8; 4usize]>::Some { 0: copy _8 };
         storage_dead(_8);
         storage_dead(ptr_6);
         storage_dead(_4);
         storage_dead(_9);
         storage_live(v_10);
-        v_10 = copy (self_3 as variant Option::<&'_ [u8; 4 : usize]>::Some).0;
-        self_2 = Result::<&'_ [u8; 4 : usize], TryFromSliceError>::Ok { 0: copy v_10 };
+        v_10 = copy (self_3 as variant Option::<&'_ [u8; 4usize]>::Some).0;
+        self_2 = Result::<&'_ [u8; 4usize], TryFromSliceError>::Ok { 0: copy v_10 };
         storage_dead(v_10);
         storage_dead(self_3);
         storage_live(_12);
         storage_live(v_11);
-        _12 = copy (self_2 as variant Result::<&'_ [u8; 4 : usize], TryFromSliceError>::Ok).0;
+        _12 = copy (self_2 as variant Result::<&'_ [u8; 4usize], TryFromSliceError>::Ok).0;
         v_11 = copy (*_12);
-        _0 = Result::<[u8; 4 : usize], TryFromSliceError>::Ok { 0: copy v_11 };
+        _0 = Result::<[u8; 4usize], TryFromSliceError>::Ok { 0: copy v_11 };
         storage_dead(v_11);
         goto bb3;
     }
@@ -257,18 +257,18 @@ pub fn try_from::<'_, u8, 4 : usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4 : usi
     bb2: {
         storage_dead(_5);
         storage_live(_13);
-        _13 = Option::<&'_ [u8; 4 : usize]>::None {  };
+        _13 = Option::<&'_ [u8; 4usize]>::None {  };
         self_3 = move _13;
         storage_dead(_4);
         storage_dead(_9);
         storage_live(_14);
-        _14 = Result::<&'_ [u8; 4 : usize], TryFromSliceError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0) };
+        _14 = Result::<&'_ [u8; 4usize], TryFromSliceError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0) };
         self_2 = move _14;
         storage_dead(self_3);
         storage_live(_12);
         storage_live(_15);
         _15 = TryFromSliceError { 0: const () };
-        _0 = Result::<[u8; 4 : usize], TryFromSliceError>::Err { 0: move _15 };
+        _0 = Result::<[u8; 4usize], TryFromSliceError>::Err { 0: move _15 };
         goto bb3;
     }
 
@@ -279,14 +279,14 @@ pub fn try_from::<'_, u8, 4 : usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4 : usi
     }
 }
 
-// Full name: <T as std::convert::TryInto<U>>::try_into::<&'_ [u8], [u8; 4 : usize]>
-pub fn try_into::<&'_ [u8], [u8; 4 : usize]>(self_1: &'_ [u8]) -> Result::<[u8; 4 : usize], TryFromSliceError>
+// Full name: <T as std::convert::TryInto<U>>::try_into::<&'_ [u8], [u8; 4usize]>
+pub fn try_into::<&'_ [u8], [u8; 4usize]>(self_1: &'_ [u8]) -> Result::<[u8; 4usize], TryFromSliceError>
 {
-    let _0: Result::<[u8; 4 : usize], TryFromSliceError>; // return
+    let _0: Result::<[u8; 4usize], TryFromSliceError>; // return
     let self_1: &'_ [u8]; // arg #1
 
     bb0: {
-        _0 = try_from::<'_, u8, 4 : usize>(move self_1) -> bb1 (unwind: bb2);
+        _0 = try_from::<'_, u8, 4usize>(move self_1) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -319,8 +319,8 @@ fn Debug::<TryFromSliceError>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <TryFromSliceError as Debug>::fmt_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -330,12 +330,12 @@ fn Debug::<TryFromSliceError>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<TryFromSliceError>, *const ()>(const drop_glue::<TryFromSliceError>);
-        size_2 = transmute<usize, *const ()>(const 0 : usize);
-        align_3 = transmute<usize, *const ()>(const 1 : usize);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
         <TryFromSliceError as Debug>::fmt_4 = cast<<std::array::TryFromSliceError as std::fmt::Debug>::fmt, *const ()>(const <std::array::TryFromSliceError as std::fmt::Debug>::fmt);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <TryFromSliceError as Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -347,11 +347,11 @@ static Debug::<TryFromSliceError>: *const () = Debug::<TryFromSliceError>()
 fn unwrap_failed(_1: &'_ str, _2: &'_ (dyn FakeTrait)) -> !
 = <missing>
 
-// Full name: std::result::Result::<T, E>::unwrap::<[u8; 4 : usize], TryFromSliceError>
-pub fn unwrap::<[u8; 4 : usize], TryFromSliceError>(self_1: Result::<[u8; 4 : usize], TryFromSliceError>) -> [u8; 4 : usize]
+// Full name: std::result::Result::<T, E>::unwrap::<[u8; 4usize], TryFromSliceError>
+pub fn unwrap::<[u8; 4usize], TryFromSliceError>(self_1: Result::<[u8; 4usize], TryFromSliceError>) -> [u8; 4usize]
 {
-    let t_0: [u8; 4 : usize]; // return
-    let self_1: Result::<[u8; 4 : usize], TryFromSliceError>; // arg #1
+    let t_0: [u8; 4usize]; // return
+    let self_1: Result::<[u8; 4usize], TryFromSliceError>; // arg #1
     let _2: isize; // anonymous local
     let e_3: TryFromSliceError; // local
     let _4: !; // anonymous local
@@ -362,17 +362,17 @@ pub fn unwrap::<[u8; 4 : usize], TryFromSliceError>(self_1: Result::<[u8; 4 : us
         storage_live(_2);
         storage_live(_4);
         _2 = @discriminant(self_1);
-        switch move _2 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _2 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
-        t_0 = move (self_1 as variant Result::<[u8; 4 : usize], TryFromSliceError>::Ok).0;
+        t_0 = move (self_1 as variant Result::<[u8; 4usize], TryFromSliceError>::Ok).0;
         return;
     }
 
     bb2: {
         storage_live(e_3);
-        e_3 = move (self_1 as variant Result::<[u8; 4 : usize], TryFromSliceError>::Err).0;
+        e_3 = move (self_1 as variant Result::<[u8; 4usize], TryFromSliceError>::Err).0;
         storage_live(_5);
         storage_live(_6);
         _6 = &e_3;
@@ -398,8 +398,8 @@ pub fn trait_error(s_1: &'_ [u8])
 {
     let _0: (); // return
     let s_1: &'_ [u8]; // arg #1
-    let _array_2: [u8; 4 : usize]; // local
-    let _3: Result::<[u8; 4 : usize], TryFromSliceError>; // anonymous local
+    let _array_2: [u8; 4usize]; // local
+    let _3: Result::<[u8; 4usize], TryFromSliceError>; // anonymous local
     let _4: &'_ [u8]; // anonymous local
 
     bb0: {
@@ -408,12 +408,12 @@ pub fn trait_error(s_1: &'_ [u8])
         storage_live(_3);
         storage_live(_4);
         _4 = &(*s_1) with_metadata(copy s_1.metadata);
-        _3 = try_into::<&'_ [u8], [u8; 4 : usize]>(move _4) -> bb1 (unwind: bb2);
+        _3 = try_into::<&'_ [u8], [u8; 4usize]>(move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
         storage_dead(_4);
-        _array_2 = unwrap::<[u8; 4 : usize], TryFromSliceError>(move _3) -> bb3 (unwind: bb4);
+        _array_2 = unwrap::<[u8; 4usize], TryFromSliceError>(move _3) -> bb3 (unwind: bb4);
     }
 
     bb2: {

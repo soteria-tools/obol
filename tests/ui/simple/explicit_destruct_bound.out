@@ -28,7 +28,7 @@ fn main()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = (const 1 : i32, const 2 : i32);
+        x_1 = (const 1i32, const 2i32);
         storage_live(_2);
         storage_live(_3);
         _3 = copy x_1;

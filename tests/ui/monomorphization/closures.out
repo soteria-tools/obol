@@ -65,7 +65,7 @@ fn apply_to_zero::<test_crate::main::{closure#0}::closure>(f_1: test_crate::main
         storage_live(_2);
         _2 = &f_1;
         storage_live(_3);
-        _3 = (const 0 : u8,);
+        _3 = (const 0u8,);
         _0 = {closure#0}::<i8, extern "rust-call" fn((u8,)) -> u8, (&'_ u8,)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
@@ -110,7 +110,7 @@ fn {closure#1}::<i16, extern "rust-call" fn((u8,)) -> u8, (&'_ mut u8,)>(_1: &'_
         storage_live(_11);
         x_3 = move spread_args_2.0;
         _8 = copy ((*_1)).upvar_0;
-        _4 = copy (*_8) checked.+ const 1 : u8;
+        _4 = copy (*_8) checked.+ const 1u8;
         _9 = copy ((*_1)).upvar_0;
         assert(move _4.1 == false) (overflow) else panic;
         _10 = copy ((*_1)).upvar_0;
@@ -140,7 +140,7 @@ fn apply_to_zero_mut::<test_crate::main::{closure#1}::closure>(f_1: test_crate::
         storage_live(_2);
         _2 = &mut f_1;
         storage_live(_3);
-        _3 = (const 0 : u8,);
+        _3 = (const 0u8,);
         _0 = {closure#1}::<i16, extern "rust-call" fn((u8,)) -> u8, (&'_ mut u8,)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
@@ -186,7 +186,7 @@ fn {closure#2}::<i32, extern "rust-call" fn((u8,)) -> u8, (Thing,)>(_1: test_cra
         storage_dead(_4);
         storage_live(_6);
         _6 = copy x_3;
-        _7 = copy _6 panic.+ const 1 : u8;
+        _7 = copy _6 panic.+ const 1u8;
         _0 = move _7;
         storage_dead(_6);
         return;
@@ -209,7 +209,7 @@ fn apply_to_zero_once::<test_crate::main::{closure#2}::closure>(f_1: test_crate:
         storage_live(_2);
         _2 = move f_1;
         storage_live(_3);
-        _3 = (const 0 : u8,);
+        _3 = (const 0u8,);
         _0 = {closure#2}::<i32, extern "rust-call" fn((u8,)) -> u8, (Thing,)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
@@ -243,7 +243,7 @@ fn main()
     bb0: {
         _0 = ();
         storage_live(z_1);
-        z_1 = const 1 : u8;
+        z_1 = const 1u8;
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);
@@ -257,7 +257,7 @@ fn main()
         storage_dead(_3);
         storage_dead(_2);
         storage_live(z_5);
-        z_5 = const 3 : u8;
+        z_5 = const 3u8;
         storage_live(_6);
         storage_live(_7);
         storage_live(_8);

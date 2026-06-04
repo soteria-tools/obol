@@ -375,7 +375,7 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         storage_live(_7);
         storage_live(_8);
         _8 = transmute<Alignment, usize>(copy alignment_2);
-        _7 = const 9223372036854775808 : usize ub.- move _8;
+        _7 = const 9223372036854775808usize ub.- move _8;
         storage_dead(_8);
         _3 = copy size_1 <= move _7;
         storage_dead(_7);
@@ -406,9 +406,9 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
         _16 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Layout::from_size_alignment_unchecked requires that the rounded-up allocation size does not exceed isize::MAX\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _14 = copy _16.metadata;
         storage_dead(_16);
-        _13 = move _14 wrap.<< const 1 : i32;
+        _13 = move _14 wrap.<< const 1i32;
         storage_dead(_14);
-        _12 = move _13 | const 1 : usize;
+        _12 = move _13 | const 1usize;
         storage_dead(_13);
         _11 = transmute<usize, NonNull::<Argument::<'_>>>(move _12);
         storage_dead(_12);
@@ -465,9 +465,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -560,7 +560,7 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 
     bb1: {
-        switch copy _5 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _5 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -592,9 +592,9 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: Alignment::new_unchecked requires a power of two\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -613,42 +613,42 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 16usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 16 : usize]> {
-  0: [u8; 16 : usize],
+pub struct MaybeDangling::<[u8; 16usize]> {
+  0: [u8; 16usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 16 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 16usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 16 : usize]> {
-  value: MaybeDangling::<[u8; 16 : usize]>,
+pub struct ManuallyDrop::<[u8; 16usize]> {
+  value: MaybeDangling::<[u8; 16usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8 : usize]> {
-  0: [u8; 8 : usize],
+pub struct MaybeDangling::<[u8; 8usize]> {
+  0: [u8; 8usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 8 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8 : usize]> {
-  value: MaybeDangling::<[u8; 8 : usize]>,
+pub struct ManuallyDrop::<[u8; 8usize]> {
+  value: MaybeDangling::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 8 : usize]> {
+pub union MaybeUninit::<[u8; 8usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 8 : usize]>,
+  value: ManuallyDrop::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 16usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 16 : usize]> {
+pub union MaybeUninit::<[u8; 16usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 16 : usize]>,
+  value: ManuallyDrop::<[u8; 16usize]>,
 }
 
 // Full name: std::result::Result::<Infallible, AllocError>
@@ -724,7 +724,7 @@ pub fn deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
         _0 = ();
         storage_live(_4);
         _4 = copy (layout_3).size;
-        switch copy _4 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _4 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -833,7 +833,7 @@ pub fn drop::<List::<i32>, Global>(self_1: &'_ mut Box::<List::<i32>, Global>)
         layout_2 = Layout { size: copy size_7, align: copy alignment_8 };
         storage_dead(alignment_8);
         storage_dead(t_3);
-        switch copy size_7 -> 0 : usize: bb11, otherwise: bb12;
+        switch copy size_7 -> 0usize: bb11, otherwise: bb12;
     }
 
     bb10: {
@@ -883,7 +883,7 @@ fn drop_glue::<List::<i32>>(_1: &'_ mut List::<i32>)
         storage_live(_4);
         _0 = ();
         _2 = @discriminant((*_1));
-        switch move _2 -> 0 : isize: bb1, otherwise: bb2;
+        switch move _2 -> 0isize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -1058,7 +1058,7 @@ pub fn drop::<i32, Global>(self_1: &'_ mut Box::<i32, Global>)
         layout_2 = Layout { size: copy size_7, align: copy alignment_8 };
         storage_dead(alignment_8);
         storage_dead(t_3);
-        switch copy size_7 -> 0 : usize: bb11, otherwise: bb12;
+        switch copy size_7 -> 0usize: bb11, otherwise: bb12;
     }
 
     bb10: {
@@ -1149,7 +1149,7 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         _0 = ();
         storage_live(_5);
         _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -1172,9 +1172,9 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: NonNull::new_unchecked requires that the pointer is non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -1230,7 +1230,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let zeroed_2: bool; // arg #2
     let size_3: usize; // local
     let _4: NonNull::<[u8]>; // anonymous local
-    let data_5: NonNull::<u8>; // local
+    let self_5: NonNull::<u8>; // local
     let raw_ptr_6: *mut u8; // local
     let _7: ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>; // anonymous local
     let self_8: Result::<NonNull::<u8>, AllocError>; // local
@@ -1240,7 +1240,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let _12: NonNull::<[u8]>; // anonymous local
     let _13: Alignment; // anonymous local
     let ptr_14: *mut [u8]; // local
-    let data_15: *mut u8; // local
+    let self_15: *mut u8; // local
     let _16: (); // anonymous local
     let _17: *mut (); // anonymous local
     let _18: (); // anonymous local
@@ -1254,7 +1254,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let v_26: NonNull::<u8>; // local
     let v_27: NonNull::<u8>; // local
     let ptr_28: *mut [u8]; // local
-    let data_29: *mut u8; // local
+    let self_29: *mut u8; // local
     let _30: (); // anonymous local
     let _31: *mut (); // anonymous local
     let _32: isize; // anonymous local
@@ -1278,19 +1278,19 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_30);
         storage_live(size_3);
         size_3 = copy (layout_1).size;
-        switch copy size_3 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy size_3 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
         storage_live(_4);
-        storage_live(data_5);
+        storage_live(self_5);
         _13 = copy (layout_1).align;
-        data_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
+        self_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
         storage_live(ptr_14);
-        storage_live(data_15);
-        data_15 = transmute<Alignment, *mut u8>(copy _13);
-        ptr_14 = *mut  (copy data_15, const 0 : usize);
-        storage_dead(data_15);
+        storage_live(self_15);
+        self_15 = transmute<Alignment, *mut u8>(copy _13);
+        ptr_14 = *mut  (copy self_15, const 0usize);
+        storage_dead(self_15);
         storage_live(_34);
         _34 = ub_checks<bool>;
         if move _34 -> bb3 else -> bb4;
@@ -1309,7 +1309,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb4: {
         _4 = transmute<*mut [u8], NonNull::<[u8]>>(copy ptr_14);
         storage_dead(ptr_14);
-        storage_dead(data_5);
+        storage_dead(self_5);
         _0 = Result::<NonNull::<[u8]>, AllocError>::Ok { 0: move _4 };
         storage_dead(_4);
         goto bb9;
@@ -1385,7 +1385,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(self_9);
         storage_live(_23);
         _23 = transmute<*mut u8, usize>(copy raw_ptr_6);
-        switch copy _23 -> 0 : usize: bb20, otherwise: bb21;
+        switch copy _23 -> 0usize: bb20, otherwise: bb21;
     }
 
     bb20: {
@@ -1401,7 +1401,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_32);
         storage_live(_33);
         _32 = @discriminant(_10);
-        _33 = copy _32 == const 1 : isize;
+        _33 = copy _32 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
         storage_live(_39);
         _39 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
@@ -1445,10 +1445,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_dead(_7);
         storage_live(_12);
         storage_live(ptr_28);
-        storage_live(data_29);
-        data_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
-        ptr_28 = *mut  (copy data_29, copy size_3);
-        storage_dead(data_29);
+        storage_live(self_29);
+        self_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
+        ptr_28 = *mut  (copy self_29, copy size_3);
+        storage_dead(self_29);
         storage_live(_36);
         _36 = ub_checks<bool>;
         if move _36 -> bb26 else -> bb27;
@@ -1566,7 +1566,7 @@ fn box_new_uninit(layout_1: Layout) -> *mut u8
 
     bb1: {
         _3 = @discriminant(_2);
-        switch move _3 -> 0 : isize: bb3, 1 : isize: bb4, otherwise: bb5;
+        switch move _3 -> 0isize: bb3, 1isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -1630,7 +1630,7 @@ pub fn std::boxed::Box::<T>::new::<List::<i32>>(x_1: List::<i32>) -> Box::<List:
         storage_live(_7);
         _7 = Alignment { _inner_repr_trick: move _6 };
         storage_live(_8);
-        _8 = Layout { size: const 16 : usize, align: move _7 };
+        _8 = Layout { size: const 16usize, align: move _7 };
         _3 = box_new_uninit(move _8) -> bb1 (unwind: bb2);
     }
 
@@ -1673,7 +1673,7 @@ pub fn std::boxed::Box::<T>::new::<i32>(x_1: i32) -> Box::<i32, Global>
         storage_live(_5);
         _5 = Alignment { _inner_repr_trick: move _4 };
         storage_live(_6);
-        _6 = Layout { size: const 4 : usize, align: move _5 };
+        _6 = Layout { size: const 4usize, align: move _5 };
         _3 = box_new_uninit(move _6) -> bb1 (unwind: bb2);
     }
 
@@ -1779,7 +1779,7 @@ pub fn use_tuple_struct(x_1: &'_ mut Tuple::<u32, u32>)
 
     bb0: {
         _0 = ();
-        ((*x_1)).0 = const 1 : u32;
+        ((*x_1)).0 = const 1u32;
         _0 = ();
         return;
     }
@@ -1894,9 +1894,9 @@ pub fn test2()
         storage_live(_6);
         _0 = ();
         storage_live(x_1);
-        x_1 = const 23 : u32;
+        x_1 = const 23u32;
         storage_live(y_2);
-        y_2 = const 44 : u32;
+        y_2 = const 44u32;
         storage_live(z_3);
         storage_live(_4);
         _4 = copy x_1;
@@ -1917,7 +1917,7 @@ pub fn test2()
         storage_live(s_10);
         s_10 = Sum::<u32, bool>::Right { 0: const true };
         storage_live(o_11);
-        o_11 = One::<u64>::One { 0: const 3 : u64 };
+        o_11 = One::<u64>::One { 0: const 3u64 };
         storage_live(e0_12);
         e0_12 = EmptyEnum::Empty {  };
         storage_live(e1_13);
@@ -2001,7 +2001,7 @@ pub fn test_list1()
 
     bb1: {
         storage_dead(_3);
-        l_1 = List::<i32>::Cons { 0: const 0 : i32, 1: move _2 };
+        l_1 = List::<i32>::Cons { 0: const 0i32, 1: move _2 };
         storage_dead(_2);
         _0 = ();
         _4 = &raw mut l_1;
@@ -2042,7 +2042,7 @@ pub fn test_box1()
         storage_live(_12);
         _0 = ();
         storage_live(b_1);
-        b_1 = std::boxed::Box::<T>::new::<i32>(const 0 : i32) -> bb1 (unwind: bb2);
+        b_1 = std::boxed::Box::<T>::new::<i32>(const 0i32) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2058,7 +2058,7 @@ pub fn test_box1()
 
     bb3: {
         storage_dead(_3);
-        (*x_2) = const 1 : i32;
+        (*x_2) = const 1i32;
         storage_live(x_4);
         storage_live(_5);
         _5 = &b_1;
@@ -2075,7 +2075,7 @@ pub fn test_box1()
         storage_live(_6);
         storage_live(_7);
         _7 = copy (*x_4);
-        _6 = move _7 == const 1 : i32;
+        _6 = move _7 == const 1i32;
         if move _6 -> bb8 else -> bb9;
     }
 
@@ -2187,7 +2187,7 @@ pub fn even(x_1: u32) -> bool
         storage_live(_2);
         storage_live(_3);
         _3 = copy x_1;
-        _2 = move _3 == const 0 : u32;
+        _2 = move _3 == const 0u32;
         if move _2 -> bb1 else -> bb2;
     }
 
@@ -2202,7 +2202,7 @@ pub fn even(x_1: u32) -> bool
         storage_live(_4);
         storage_live(_5);
         _5 = copy x_1;
-        _6 = copy _5 panic.- const 1 : u32;
+        _6 = copy _5 panic.- const 1u32;
         _4 = move _6;
         storage_dead(_5);
         _0 = odd(move _4) -> bb4 (unwind: bb5);
@@ -2239,7 +2239,7 @@ pub fn odd(x_1: u32) -> bool
         storage_live(_2);
         storage_live(_3);
         _3 = copy x_1;
-        _2 = move _3 == const 0 : u32;
+        _2 = move _3 == const 0u32;
         if move _2 -> bb1 else -> bb2;
     }
 
@@ -2254,7 +2254,7 @@ pub fn odd(x_1: u32) -> bool
         storage_live(_4);
         storage_live(_5);
         _5 = copy x_1;
-        _6 = copy _5 panic.- const 1 : u32;
+        _6 = copy _5 panic.- const 1u32;
         _4 = move _6;
         storage_dead(_5);
         _0 = even(move _4) -> bb4 (unwind: bb5);
@@ -2291,7 +2291,7 @@ pub fn test_even_odd()
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = even(const 0 : u32) -> bb1 (unwind: bb2);
+        _1 = even(const 0u32) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2305,7 +2305,7 @@ pub fn test_even_odd()
     bb3: {
         storage_dead(_1);
         storage_live(_3);
-        _3 = even(const 4 : u32) -> bb5 (unwind: bb6);
+        _3 = even(const 4u32) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -2332,7 +2332,7 @@ pub fn test_even_odd()
     bb9: {
         storage_dead(_3);
         storage_live(_5);
-        _5 = odd(const 1 : u32) -> bb11 (unwind: bb12);
+        _5 = odd(const 1u32) -> bb11 (unwind: bb12);
     }
 
     bb10: {
@@ -2359,7 +2359,7 @@ pub fn test_even_odd()
     bb15: {
         storage_dead(_5);
         storage_live(_7);
-        _7 = odd(const 5 : u32) -> bb17 (unwind: bb18);
+        _7 = odd(const 5u32) -> bb17 (unwind: bb18);
     }
 
     bb16: {
@@ -2426,7 +2426,7 @@ pub fn new_tuple1() -> StructWithTuple::<u32, u32>
 
     bb0: {
         storage_live(_1);
-        _1 = (const 1 : u32, const 2 : u32);
+        _1 = (const 1u32, const 2u32);
         _0 = StructWithTuple::<u32, u32> { p: move _1 };
         storage_dead(_1);
         return;
@@ -2441,7 +2441,7 @@ pub fn new_tuple2() -> StructWithTuple::<i16, i16>
 
     bb0: {
         storage_live(_1);
-        _1 = (const 1 : i16, const 2 : i16);
+        _1 = (const 1i16, const 2i16);
         _0 = StructWithTuple::<i16, i16> { p: move _1 };
         storage_dead(_1);
         return;
@@ -2456,7 +2456,7 @@ pub fn new_tuple3() -> StructWithTuple::<u64, i64>
 
     bb0: {
         storage_live(_1);
-        _1 = (const 1 : u64, const 2 : i64);
+        _1 = (const 1u64, const 2i64);
         _0 = StructWithTuple::<u64, i64> { p: move _1 };
         storage_dead(_1);
         return;
@@ -2476,7 +2476,7 @@ pub fn new_pair1() -> StructWithPair::<u32, u32>
 
     bb0: {
         storage_live(_1);
-        _1 = Pair::<u32, u32> { x: const 1 : u32, y: const 2 : u32 };
+        _1 = Pair::<u32, u32> { x: const 1u32, y: const 2u32 };
         _0 = StructWithPair::<u32, u32> { p: move _1 };
         storage_dead(_1);
         return;
@@ -2493,7 +2493,7 @@ pub fn incr(x_1: &'_ mut u32)
     bb0: {
         storage_live(_2);
         _0 = ();
-        _2 = copy (*x_1) panic.+ const 1 : u32;
+        _2 = copy (*x_1) panic.+ const 1u32;
         (*x_1) = move _2;
         _0 = ();
         return;
@@ -2512,7 +2512,7 @@ pub fn read_then_incr(x_1: &'_ mut u32) -> u32
         storage_live(_3);
         storage_live(r_2);
         r_2 = copy (*x_1);
-        _3 = copy (*x_1) panic.+ const 1 : u32;
+        _3 = copy (*x_1) panic.+ const 1u32;
         (*x_1) = move _3;
         _0 = copy r_2;
         storage_dead(r_2);

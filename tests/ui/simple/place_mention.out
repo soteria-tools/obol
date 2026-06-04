@@ -12,7 +12,7 @@ fn anon_const_0() -> (i32, i32)
 
     bb0: {
         storage_live(_1);
-        _1 = (const 11 : i32, const 22 : i32);
+        _1 = (const 11i32, const 22i32);
         _0 = move _1;
         return;
     }

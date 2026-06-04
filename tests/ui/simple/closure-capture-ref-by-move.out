@@ -27,7 +27,7 @@ fn {closure#0}::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>(_1: &'_ mut clo
         storage_live(_6);
         _0 = ();
         _4 = copy ((*_1)).upvar_0;
-        _3 = copy (*_4) checked.+ const 1 : i32;
+        _3 = copy (*_4) checked.+ const 1i32;
         _5 = copy ((*_1)).upvar_0;
         assert(move _3.1 == false) (overflow) else panic;
         _6 = copy ((*_1)).upvar_0;
@@ -51,7 +51,7 @@ fn foo()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         storage_live(rx_2);
         rx_2 = &mut x_1;
         storage_live(closure_3);

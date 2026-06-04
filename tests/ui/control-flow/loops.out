@@ -155,9 +155,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -409,9 +409,9 @@ fn std::hint::unreachable_unchecked::precondition_check()
         _11 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: hint::unreachable_unchecked must never be reached\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _9 = copy _11.metadata;
         storage_dead(_11);
-        _8 = move _9 wrap.<< const 1 : i32;
+        _8 = move _9 wrap.<< const 1i32;
         storage_dead(_9);
-        _7 = move _8 | const 1 : usize;
+        _7 = move _8 | const 1usize;
         storage_dead(_8);
         _6 = transmute<usize, NonNull::<Argument::<'_>>>(move _7);
         storage_dead(_7);
@@ -476,7 +476,7 @@ pub fn <i32 as std::iter::Step>::forward_unchecked(start_1: i32, n_2: usize) -> 
         _7 = copy _8.1;
         storage_dead(_8);
         storage_live(_10);
-        _10 = copy _5 < const 0 : i32;
+        _10 = copy _5 < const 0i32;
         b_9 = copy _7 ^ move _10;
         storage_dead(_10);
         storage_dead(_7);
@@ -582,9 +582,9 @@ fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_
         _17 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: usize::unchecked_add cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _15 = copy _17.metadata;
         storage_dead(_17);
-        _14 = move _15 wrap.<< const 1 : i32;
+        _14 = move _15 wrap.<< const 1i32;
         storage_dead(_15);
-        _13 = move _14 | const 1 : usize;
+        _13 = move _14 | const 1usize;
         storage_dead(_14);
         _12 = transmute<usize, NonNull::<Argument::<'_>>>(move _13);
         storage_dead(_13);
@@ -686,9 +686,9 @@ fn core::num::<impl u32>::unchecked_add::precondition_check(lhs_1: u32, rhs_2: u
         _15 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: u32::unchecked_add cannot overflow\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _13 = copy _15.metadata;
         storage_dead(_15);
-        _12 = move _13 wrap.<< const 1 : i32;
+        _12 = move _13 wrap.<< const 1i32;
         storage_dead(_13);
-        _11 = move _12 | const 1 : usize;
+        _11 = move _12 | const 1usize;
         storage_dead(_12);
         _10 = transmute<usize, NonNull::<Argument::<'_>>>(move _11);
         storage_dead(_11);
@@ -787,7 +787,7 @@ fn spec_next::<i32>(self_1: &'_ mut Range::<i32>) -> Option::<i32>
         storage_live(old_5);
         old_5 = copy ((*self_1)).start;
         storage_live(_6);
-        _6 = <i32 as std::iter::Step>::forward_unchecked(copy old_5, const 1 : usize) -> bb5 (unwind: bb6);
+        _6 = <i32 as std::iter::Step>::forward_unchecked(copy old_5, const 1usize) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -863,7 +863,7 @@ fn spec_next::<usize>(self_1: &'_ mut Range::<usize>) -> Option::<usize>
         storage_live(old_5);
         old_5 = copy ((*self_1)).start;
         storage_live(_6);
-        _6 = <usize as std::iter::Step>::forward_unchecked(copy old_5, const 1 : usize) -> bb5 (unwind: bb6);
+        _6 = <usize as std::iter::Step>::forward_unchecked(copy old_5, const 1usize) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -939,7 +939,7 @@ fn spec_next::<u32>(self_1: &'_ mut Range::<u32>) -> Option::<u32>
         storage_live(old_5);
         old_5 = copy ((*self_1)).start;
         storage_live(_6);
-        _6 = <u32 as std::iter::Step>::forward_unchecked(copy old_5, const 1 : usize) -> bb5 (unwind: bb6);
+        _6 = <u32 as std::iter::Step>::forward_unchecked(copy old_5, const 1usize) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -1074,7 +1074,7 @@ pub struct PhantomData::<u32> {}
 
 // Full name: core::num::niche_types::UsizeNoHighBit
 pub struct UsizeNoHighBit {
-  0: usize is 0 : usize..=9223372036854775807 : usize,
+  0: usize is 0usize..=9223372036854775807usize,
 }
 
 // Full name: core::panicking::panic
@@ -1188,7 +1188,7 @@ pub fn len::<u32, Global>(self_1: &'_ Vec::<u32, Global>) -> usize
     bb0: {
         _0 = copy ((*self_1)).len;
         storage_live(_2);
-        _2 = copy _0 <= const 2305843009213693951 : usize;
+        _2 = copy _0 <= const 2305843009213693951usize;
         assert(move _2 == true) else undefined_behavior;
         storage_dead(_2);
         return;
@@ -1254,9 +1254,9 @@ pub fn test_loop1(max_1: u32) -> u32
         storage_live(_9);
         storage_live(_10);
         storage_live(i_2);
-        i_2 = const 0 : u32;
+        i_2 = const 0u32;
         storage_live(s_3);
-        s_3 = const 0 : u32;
+        s_3 = const 0u32;
         goto bb1;
     }
 
@@ -1278,7 +1278,7 @@ pub fn test_loop1(max_1: u32) -> u32
         _8 = copy s_3 panic.+ copy _7;
         s_3 = move _8;
         storage_dead(_7);
-        _9 = copy i_2 panic.+ const 1 : u32;
+        _9 = copy i_2 panic.+ const 1u32;
         i_2 = move _9;
         storage_dead(_4);
         goto bb1;
@@ -1288,7 +1288,7 @@ pub fn test_loop1(max_1: u32) -> u32
         storage_dead(_6);
         storage_dead(_5);
         storage_dead(_4);
-        _10 = copy s_3 panic.* const 2 : u32;
+        _10 = copy s_3 panic.* const 2u32;
         s_3 = move _10;
         _0 = copy s_3;
         storage_dead(s_3);
@@ -1317,9 +1317,9 @@ pub fn test_loop2(max_1: u32) -> u32
         storage_live(_10);
         storage_live(_11);
         storage_live(i_2);
-        i_2 = const 0 : u32;
+        i_2 = const 0u32;
         storage_live(s_3);
-        s_3 = const 0 : u32;
+        s_3 = const 0u32;
         goto bb1;
     }
 
@@ -1339,7 +1339,7 @@ pub fn test_loop2(max_1: u32) -> u32
         storage_live(_7);
         storage_live(_8);
         _8 = copy i_2;
-        _7 = move _8 == const 17 : u32;
+        _7 = move _8 == const 17u32;
         if move _7 -> bb4 else -> bb5;
     }
 
@@ -1363,7 +1363,7 @@ pub fn test_loop2(max_1: u32) -> u32
         _10 = copy s_3 panic.+ copy _9;
         s_3 = move _10;
         storage_dead(_9);
-        _11 = copy i_2 panic.+ const 1 : u32;
+        _11 = copy i_2 panic.+ const 1u32;
         i_2 = move _11;
         storage_dead(_4);
         goto bb1;
@@ -1411,11 +1411,11 @@ pub fn test_loop3(max_1: u32) -> u32
         storage_live(_20);
         storage_live(_21);
         storage_live(i_2);
-        i_2 = const 0 : u32;
+        i_2 = const 0u32;
         storage_live(j_3);
-        j_3 = const 0 : u32;
+        j_3 = const 0u32;
         storage_live(s_4);
-        s_4 = const 0 : u32;
+        s_4 = const 0u32;
         goto bb1;
     }
 
@@ -1469,7 +1469,7 @@ pub fn test_loop3(max_1: u32) -> u32
         _12 = move _15;
         storage_dead(_14);
         storage_dead(_13);
-        _11 = move _12 == const 17 : u32;
+        _11 = move _12 == const 17u32;
         if move _11 -> bb7 else -> bb8;
     }
 
@@ -1477,13 +1477,13 @@ pub fn test_loop3(max_1: u32) -> u32
         storage_dead(_10);
         storage_dead(_9);
         storage_dead(_8);
-        j_3 = const 0 : u32;
+        j_3 = const 0u32;
         storage_live(_19);
         _19 = copy i_2;
         _20 = copy s_4 panic.+ copy _19;
         s_4 = move _20;
         storage_dead(_19);
-        _21 = copy i_2 panic.+ const 1 : u32;
+        _21 = copy i_2 panic.+ const 1u32;
         i_2 = move _21;
         storage_dead(_5);
         goto bb1;
@@ -1504,7 +1504,7 @@ pub fn test_loop3(max_1: u32) -> u32
         _17 = copy s_4 panic.+ copy _16;
         s_4 = move _17;
         storage_dead(_16);
-        _18 = copy j_3 panic.+ const 1 : u32;
+        _18 = copy j_3 panic.+ const 1u32;
         j_3 = move _18;
         storage_dead(_8);
         storage_dead(_5);
@@ -1545,11 +1545,11 @@ pub fn test_loop4(max_1: u32) -> u32
         storage_live(_20);
         storage_live(_21);
         storage_live(i_2);
-        i_2 = const 1 : u32;
+        i_2 = const 1u32;
         storage_live(j_3);
-        j_3 = const 0 : u32;
+        j_3 = const 0u32;
         storage_live(s_4);
-        s_4 = const 0 : u32;
+        s_4 = const 0u32;
         goto bb1;
     }
 
@@ -1607,7 +1607,7 @@ pub fn test_loop4(max_1: u32) -> u32
         _12 = move _15;
         storage_dead(_14);
         storage_dead(_13);
-        _11 = move _12 == const 17 : u32;
+        _11 = move _12 == const 17u32;
         if move _11 -> bb8 else -> bb9;
     }
 
@@ -1615,13 +1615,13 @@ pub fn test_loop4(max_1: u32) -> u32
         storage_dead(_10);
         storage_dead(_9);
         storage_dead(_8);
-        j_3 = const 0 : u32;
+        j_3 = const 0u32;
         storage_live(_19);
         _19 = copy i_2;
         _20 = copy s_4 panic.+ copy _19;
         s_4 = move _20;
         storage_dead(_19);
-        _21 = copy i_2 panic.+ const 1 : u32;
+        _21 = copy i_2 panic.+ const 1u32;
         i_2 = move _21;
         storage_dead(_5);
         goto bb1;
@@ -1642,7 +1642,7 @@ pub fn test_loop4(max_1: u32) -> u32
         _17 = copy s_4 panic.+ copy _16;
         s_4 = move _17;
         storage_dead(_16);
-        _18 = copy j_3 panic.+ const 1 : u32;
+        _18 = copy j_3 panic.+ const 1u32;
         j_3 = move _18;
         storage_dead(_8);
         goto bb5;
@@ -1676,11 +1676,11 @@ pub fn test_loop5(max_1: u32) -> u32
         storage_live(_15);
         storage_live(_16);
         storage_live(i_2);
-        i_2 = const 0 : u32;
+        i_2 = const 0u32;
         storage_live(j_3);
-        j_3 = const 0 : u32;
+        j_3 = const 0u32;
         storage_live(s_4);
-        s_4 = const 0 : u32;
+        s_4 = const 0u32;
         goto bb1;
     }
 
@@ -1729,7 +1729,7 @@ pub fn test_loop5(max_1: u32) -> u32
         _12 = copy s_4 panic.+ copy _11;
         s_4 = move _12;
         storage_dead(_11);
-        _13 = copy j_3 panic.+ const 1 : u32;
+        _13 = copy j_3 panic.+ const 1u32;
         j_3 = move _13;
         storage_dead(_8);
         goto bb4;
@@ -1744,7 +1744,7 @@ pub fn test_loop5(max_1: u32) -> u32
         _15 = copy s_4 panic.+ copy _14;
         s_4 = move _15;
         storage_dead(_14);
-        _16 = copy i_2 panic.+ const 1 : u32;
+        _16 = copy i_2 panic.+ const 1u32;
         i_2 = move _16;
         storage_dead(_5);
         goto bb1;
@@ -1773,9 +1773,9 @@ pub fn test_loop6(max_1: u32) -> u32
         storage_live(_11);
         storage_live(_12);
         storage_live(i_2);
-        i_2 = const 0 : u32;
+        i_2 = const 0u32;
         storage_live(s_3);
-        s_3 = const 0 : u32;
+        s_3 = const 0u32;
         goto bb1;
     }
 
@@ -1795,7 +1795,7 @@ pub fn test_loop6(max_1: u32) -> u32
         storage_live(_7);
         storage_live(_8);
         _8 = copy i_2;
-        _7 = move _8 > const 3 : u32;
+        _7 = move _8 > const 3u32;
         if move _7 -> bb4 else -> bb5;
     }
 
@@ -1819,7 +1819,7 @@ pub fn test_loop6(max_1: u32) -> u32
         _10 = copy s_3 panic.+ copy _9;
         s_3 = move _10;
         storage_dead(_9);
-        _11 = copy i_2 panic.+ const 1 : u32;
+        _11 = copy i_2 panic.+ const 1u32;
         i_2 = move _11;
         storage_dead(_4);
         goto bb1;
@@ -1827,7 +1827,7 @@ pub fn test_loop6(max_1: u32) -> u32
 
     bb6: {
         storage_dead(_4);
-        _12 = copy s_3 panic.+ const 1 : u32;
+        _12 = copy s_3 panic.+ const 1u32;
         s_3 = move _12;
         _0 = copy s_3;
         storage_dead(s_3);
@@ -1861,9 +1861,9 @@ pub fn test_loop7(max_1: u32) -> u32
         storage_live(_14);
         storage_live(_15);
         storage_live(i_2);
-        i_2 = const 0 : u32;
+        i_2 = const 0u32;
         storage_live(s_3);
-        s_3 = const 0 : u32;
+        s_3 = const 0u32;
         storage_live(_4);
         storage_live(_5);
         _5 = copy i_2;
@@ -1882,7 +1882,7 @@ pub fn test_loop7(max_1: u32) -> u32
     bb2: {
         storage_dead(_6);
         storage_dead(_5);
-        s_3 = const 2 : u32;
+        s_3 = const 2u32;
         goto bb4;
     }
 
@@ -1898,7 +1898,7 @@ pub fn test_loop7(max_1: u32) -> u32
 
     bb4: {
         storage_dead(_4);
-        _15 = copy s_3 panic.+ const 1 : u32;
+        _15 = copy s_3 panic.+ const 1u32;
         s_3 = move _15;
         _0 = copy s_3;
         storage_dead(s_3);
@@ -1912,7 +1912,7 @@ pub fn test_loop7(max_1: u32) -> u32
         storage_live(_10);
         storage_live(_11);
         _11 = copy i_2;
-        _10 = move _11 > const 3 : u32;
+        _10 = move _11 > const 3u32;
         if move _10 -> bb7 else -> bb8;
     }
 
@@ -1936,7 +1936,7 @@ pub fn test_loop7(max_1: u32) -> u32
         _13 = copy s_3 panic.+ copy _12;
         s_3 = move _13;
         storage_dead(_12);
-        _14 = copy i_2 panic.+ const 1 : u32;
+        _14 = copy i_2 panic.+ const 1u32;
         i_2 = move _14;
         storage_dead(_7);
         goto bb3;
@@ -1980,14 +1980,14 @@ pub fn test_loops()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = test_loop1(const 2 : u32) -> bb1 (unwind: bb2);
+        x_1 = test_loop1(const 2u32) -> bb1 (unwind: bb2);
     }
 
     bb1: {
         storage_live(_2);
         storage_live(_3);
         _3 = copy x_1;
-        _2 = move _3 == const 2 : u32;
+        _2 = move _3 == const 2u32;
         if move _2 -> bb3 else -> bb4;
     }
 
@@ -1999,7 +1999,7 @@ pub fn test_loops()
         storage_dead(_3);
         storage_dead(_2);
         storage_live(x_5);
-        x_5 = test_loop2(const 2 : u32) -> bb5 (unwind: bb6);
+        x_5 = test_loop2(const 2u32) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -2012,7 +2012,7 @@ pub fn test_loops()
         storage_live(_6);
         storage_live(_7);
         _7 = copy x_5;
-        _6 = move _7 == const 1 : u32;
+        _6 = move _7 == const 1u32;
         if move _6 -> bb9 else -> bb10;
     }
 
@@ -2032,7 +2032,7 @@ pub fn test_loops()
         storage_dead(_7);
         storage_dead(_6);
         storage_live(x_9);
-        x_9 = test_loop3(const 2 : u32) -> bb11 (unwind: bb12);
+        x_9 = test_loop3(const 2u32) -> bb11 (unwind: bb12);
     }
 
     bb10: {
@@ -2045,7 +2045,7 @@ pub fn test_loops()
         storage_live(_10);
         storage_live(_11);
         _11 = copy x_9;
-        _10 = move _11 == const 3 : u32;
+        _10 = move _11 == const 3u32;
         if move _10 -> bb15 else -> bb16;
     }
 
@@ -2065,7 +2065,7 @@ pub fn test_loops()
         storage_dead(_11);
         storage_dead(_10);
         storage_live(x_13);
-        x_13 = test_loop4(const 20 : u32) -> bb17 (unwind: bb18);
+        x_13 = test_loop4(const 20u32) -> bb17 (unwind: bb18);
     }
 
     bb16: {
@@ -2078,7 +2078,7 @@ pub fn test_loops()
         storage_live(_14);
         storage_live(_15);
         _15 = copy x_13;
-        _14 = move _15 == const 1 : u32;
+        _14 = move _15 == const 1u32;
         if move _14 -> bb21 else -> bb22;
     }
 
@@ -2098,7 +2098,7 @@ pub fn test_loops()
         storage_dead(_15);
         storage_dead(_14);
         storage_live(x_17);
-        x_17 = test_loop5(const 2 : u32) -> bb23 (unwind: bb24);
+        x_17 = test_loop5(const 2u32) -> bb23 (unwind: bb24);
     }
 
     bb22: {
@@ -2111,7 +2111,7 @@ pub fn test_loops()
         storage_live(_18);
         storage_live(_19);
         _19 = copy x_17;
-        _18 = move _19 == const 2 : u32;
+        _18 = move _19 == const 2u32;
         if move _18 -> bb27 else -> bb28;
     }
 
@@ -2131,7 +2131,7 @@ pub fn test_loops()
         storage_dead(_19);
         storage_dead(_18);
         storage_live(x_21);
-        x_21 = test_loop6(const 2 : u32) -> bb29 (unwind: bb30);
+        x_21 = test_loop6(const 2u32) -> bb29 (unwind: bb30);
     }
 
     bb28: {
@@ -2144,7 +2144,7 @@ pub fn test_loops()
         storage_live(_22);
         storage_live(_23);
         _23 = copy x_21;
-        _22 = move _23 == const 2 : u32;
+        _22 = move _23 == const 2u32;
         if move _22 -> bb33 else -> bb34;
     }
 
@@ -2228,10 +2228,10 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
         storage_live(_27);
         storage_live(_28);
         storage_live(s_3);
-        s_3 = const 0 : usize;
+        s_3 = const 0usize;
         storage_live(_4);
         storage_live(_5);
-        _5 = Range::<i32> { start: const 0 : i32, end: const 128 : i32 };
+        _5 = Range::<i32> { start: const 0i32, end: const 128i32 };
         _4 = into_iter::<Range::<i32>>(move _5) -> bb1 (unwind: bb2);
     }
 
@@ -2258,7 +2258,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     bb4: {
         storage_dead(_8);
         _10 = @discriminant(_7);
-        switch move _10 -> 0 : isize: bb6, 1 : isize: bb7, otherwise: bb8;
+        switch move _10 -> 0isize: bb6, 1isize: bb7, otherwise: bb8;
     }
 
     bb5: {
@@ -2274,13 +2274,13 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
         storage_live(_13);
         storage_live(_14);
         _14 = copy step_out_1;
-        _13 = Range::<usize> { start: const 0 : usize, end: move _14 };
+        _13 = Range::<usize> { start: const 0usize, end: move _14 };
         storage_dead(_14);
         _12 = into_iter::<Range::<usize>>(move _13) -> bb9 (unwind: bb10);
     }
 
     bb7: {
-        _11 = copy s_3 panic.+ const 1 : usize;
+        _11 = copy s_3 panic.+ const 1usize;
         s_3 = move _11;
         storage_dead(_9);
         storage_dead(_7);
@@ -2314,7 +2314,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     bb12: {
         storage_dead(_17);
         _19 = @discriminant(_16);
-        switch move _19 -> 0 : isize: bb14, 1 : isize: bb15, otherwise: bb8;
+        switch move _19 -> 0isize: bb14, 1isize: bb15, otherwise: bb8;
     }
 
     bb13: {
@@ -2336,7 +2336,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
         storage_live(_21);
         storage_live(_22);
         _22 = copy step_in_2;
-        _21 = Range::<usize> { start: const 0 : usize, end: move _22 };
+        _21 = Range::<usize> { start: const 0usize, end: move _22 };
         storage_dead(_22);
         _20 = into_iter::<Range::<usize>>(move _21) -> bb16 (unwind: bb17);
     }
@@ -2364,7 +2364,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     bb19: {
         storage_dead(_25);
         _27 = @discriminant(_24);
-        switch move _27 -> 0 : isize: bb21, 1 : isize: bb22, otherwise: bb8;
+        switch move _27 -> 0isize: bb21, 1isize: bb22, otherwise: bb8;
     }
 
     bb20: {
@@ -2382,7 +2382,7 @@ pub fn nested_loops_enum(step_out_1: usize, step_in_2: usize) -> usize
     }
 
     bb22: {
-        _28 = copy s_3 panic.+ const 1 : usize;
+        _28 = copy s_3 panic.+ const 1usize;
         s_3 = move _28;
         storage_dead(_26);
         storage_dead(_24);
@@ -2420,18 +2420,18 @@ pub fn loop_inside_if(b_1: bool, n_2: u32) -> u32
 
     bb1: {
         storage_live(s_4);
-        s_4 = const 0 : u32;
+        s_4 = const 0u32;
         storage_live(_5);
         storage_live(_6);
         storage_live(_7);
         _7 = copy n_2;
-        _6 = Range::<u32> { start: const 0 : u32, end: move _7 };
+        _6 = Range::<u32> { start: const 0u32, end: move _7 };
         storage_dead(_7);
         _5 = into_iter::<Range::<u32>>(move _6) -> bb3 (unwind: bb4);
     }
 
     bb2: {
-        _0 = const 0 : u32;
+        _0 = const 0u32;
         goto bb5;
     }
 
@@ -2463,7 +2463,7 @@ pub fn loop_inside_if(b_1: bool, n_2: u32) -> u32
     bb7: {
         storage_dead(_10);
         _12 = @discriminant(_9);
-        switch move _12 -> 0 : isize: bb9, 1 : isize: bb10, otherwise: bb11;
+        switch move _12 -> 0isize: bb9, 1isize: bb10, otherwise: bb11;
     }
 
     bb8: {
@@ -2519,9 +2519,9 @@ pub fn sum(max_1: u32) -> u32
         storage_live(_9);
         storage_live(_10);
         storage_live(i_2);
-        i_2 = const 0 : u32;
+        i_2 = const 0u32;
         storage_live(s_3);
-        s_3 = const 0 : u32;
+        s_3 = const 0u32;
         goto bb1;
     }
 
@@ -2543,7 +2543,7 @@ pub fn sum(max_1: u32) -> u32
         _8 = copy s_3 panic.+ copy _7;
         s_3 = move _8;
         storage_dead(_7);
-        _9 = copy i_2 panic.+ const 1 : u32;
+        _9 = copy i_2 panic.+ const 1u32;
         i_2 = move _9;
         storage_dead(_4);
         goto bb1;
@@ -2553,7 +2553,7 @@ pub fn sum(max_1: u32) -> u32
         storage_dead(_6);
         storage_dead(_5);
         storage_dead(_4);
-        _10 = copy s_3 panic.* const 2 : u32;
+        _10 = copy s_3 panic.* const 2u32;
         s_3 = move _10;
         _0 = copy s_3;
         storage_dead(s_3);
@@ -2581,7 +2581,7 @@ pub fn clear(v_1: &'_ mut Vec::<u32, Global>)
         storage_live(_10);
         _0 = ();
         storage_live(i_2);
-        i_2 = const 0 : usize;
+        i_2 = const 0usize;
         goto bb1;
     }
 
@@ -2628,9 +2628,9 @@ pub fn clear(v_1: &'_ mut Vec::<u32, Global>)
     bb6: {
         storage_dead(_9);
         storage_dead(_8);
-        (*_7) = const 0 : u32;
+        (*_7) = const 0u32;
         storage_dead(_7);
-        _10 = copy i_2 panic.+ const 1 : usize;
+        _10 = copy i_2 panic.+ const 1usize;
         i_2 = move _10;
         storage_dead(_3);
         goto bb1;
@@ -2667,7 +2667,7 @@ pub fn get_elem_mut(ls_1: &'_ mut List::<usize>, x_2: usize) -> &'_ mut usize
 
     bb1: {
         _3 = @discriminant((*ls_1));
-        switch move _3 -> 0 : isize: bb2, 1 : isize: bb3, otherwise: bb4;
+        switch move _3 -> 0isize: bb2, 1isize: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -2737,21 +2737,21 @@ pub fn loop_break_1()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         goto bb1;
     }
 
     bb1: {
-        x_1 = const 1 : i32;
+        x_1 = const 1i32;
         storage_live(_2);
         _2 = const true;
         if move _2 -> bb2 else -> bb3;
     }
 
     bb2: {
-        x_1 = const 2 : i32;
+        x_1 = const 2i32;
         storage_dead(_2);
-        x_1 = const 4 : i32;
+        x_1 = const 4i32;
         _0 = ();
         storage_dead(x_1);
         return;
@@ -2759,7 +2759,7 @@ pub fn loop_break_1()
 
     bb3: {
         storage_dead(_2);
-        x_1 = const 3 : i32;
+        x_1 = const 3i32;
         goto bb1;
     }
 }
@@ -2774,12 +2774,12 @@ pub fn loop_break_2()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         goto bb1;
     }
 
     bb1: {
-        x_1 = const 1 : i32;
+        x_1 = const 1i32;
         storage_live(_2);
         _2 = const true;
         if move _2 -> bb2 else -> bb3;
@@ -2787,8 +2787,8 @@ pub fn loop_break_2()
 
     bb2: {
         storage_dead(_2);
-        x_1 = const 2 : i32;
-        x_1 = const 4 : i32;
+        x_1 = const 2i32;
+        x_1 = const 4i32;
         _0 = ();
         storage_dead(x_1);
         return;
@@ -2796,7 +2796,7 @@ pub fn loop_break_2()
 
     bb3: {
         storage_dead(_2);
-        x_1 = const 3 : i32;
+        x_1 = const 3i32;
         goto bb1;
     }
 }
@@ -2812,46 +2812,46 @@ pub fn interleaved_loops()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         goto bb1;
     }
 
     bb1: {
-        x_1 = const 1 : i32;
+        x_1 = const 1i32;
         goto bb2;
     }
 
     bb2: {
-        x_1 = const 2 : i32;
+        x_1 = const 2i32;
         storage_live(_2);
         _2 = const true;
         if move _2 -> bb3 else -> bb4;
     }
 
     bb3: {
-        x_1 = const 3 : i32;
+        x_1 = const 3i32;
         storage_dead(_2);
         goto bb1;
     }
 
     bb4: {
         storage_dead(_2);
-        x_1 = const 4 : i32;
+        x_1 = const 4i32;
         storage_live(_3);
         _3 = const true;
         if move _3 -> bb5 else -> bb6;
     }
 
     bb5: {
-        x_1 = const 5 : i32;
+        x_1 = const 5i32;
         storage_dead(_3);
         goto bb2;
     }
 
     bb6: {
         storage_dead(_3);
-        x_1 = const 6 : i32;
-        x_1 = const 8 : i32;
+        x_1 = const 6i32;
+        x_1 = const 8i32;
         _0 = ();
         storage_dead(x_1);
         return;
@@ -2869,30 +2869,30 @@ pub fn interleaved_loops2()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         goto bb1;
     }
 
     bb1: {
-        x_1 = const 1 : i32;
+        x_1 = const 1i32;
         goto bb2;
     }
 
     bb2: {
-        x_1 = const 2 : i32;
+        x_1 = const 2i32;
         storage_live(_2);
         _2 = const true;
         if move _2 -> bb3 else -> bb4;
     }
 
     bb3: {
-        x_1 = const 3 : i32;
+        x_1 = const 3i32;
         storage_dead(_2);
         goto bb1;
     }
 
     bb4: {
-        x_1 = const 4 : i32;
+        x_1 = const 4i32;
         storage_live(_3);
         _3 = const true;
         if move _3 -> bb5 else -> bb6;
@@ -2901,7 +2901,7 @@ pub fn interleaved_loops2()
     bb5: {
         storage_dead(_3);
         storage_dead(_2);
-        x_1 = const 7 : i32;
+        x_1 = const 7i32;
         _0 = ();
         storage_dead(x_1);
         return;
@@ -2910,7 +2910,7 @@ pub fn interleaved_loops2()
     bb6: {
         storage_dead(_3);
         storage_dead(_2);
-        x_1 = const 5 : i32;
+        x_1 = const 5i32;
         goto bb2;
     }
 }
@@ -2928,7 +2928,7 @@ pub fn loop_after_loop()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         goto bb1;
     }
 
@@ -2936,13 +2936,13 @@ pub fn loop_after_loop()
         storage_live(_2);
         storage_live(_3);
         _3 = copy x_1;
-        _2 = move _3 > const 13 : i32;
+        _2 = move _3 > const 13i32;
         if move _2 -> bb2 else -> bb3;
     }
 
     bb2: {
         storage_dead(_3);
-        x_1 = const 1 : i32;
+        x_1 = const 1i32;
         storage_dead(_2);
         goto bb1;
     }
@@ -2950,7 +2950,7 @@ pub fn loop_after_loop()
     bb3: {
         storage_dead(_3);
         storage_dead(_2);
-        x_1 = const 2 : i32;
+        x_1 = const 2i32;
         goto bb4;
     }
 
@@ -2958,13 +2958,13 @@ pub fn loop_after_loop()
         storage_live(_4);
         storage_live(_5);
         _5 = copy x_1;
-        _4 = move _5 > const 13 : i32;
+        _4 = move _5 > const 13i32;
         if move _4 -> bb5 else -> bb6;
     }
 
     bb5: {
         storage_dead(_5);
-        x_1 = const 3 : i32;
+        x_1 = const 3i32;
         storage_dead(_4);
         goto bb4;
     }
@@ -2972,7 +2972,7 @@ pub fn loop_after_loop()
     bb6: {
         storage_dead(_5);
         storage_dead(_4);
-        x_1 = const 4 : i32;
+        x_1 = const 4i32;
         _0 = ();
         storage_dead(x_1);
         return;
@@ -2988,69 +2988,69 @@ pub fn trick_exit_computation()
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         goto bb1;
     }
 
     bb1: {
-        x_1 = const 1 : i32;
+        x_1 = const 1i32;
         goto bb2;
     }
 
     bb2: {
-        x_1 = const 2 : i32;
-        switch copy x_1 -> 0 : i32: bb3, 1 : i32: bb4, 2 : i32: bb5, 3 : i32: bb6, 4 : i32: bb7, 5 : i32: bb8, 6 : i32: bb9, otherwise: bb10;
+        x_1 = const 2i32;
+        switch copy x_1 -> 0i32: bb3, 1i32: bb4, 2i32: bb5, 3i32: bb6, 4i32: bb7, 5i32: bb8, 6i32: bb9, otherwise: bb10;
     }
 
     bb3: {
-        x_1 = const 3 : i32;
+        x_1 = const 3i32;
         goto bb11;
     }
 
     bb4: {
-        x_1 = const 4 : i32;
+        x_1 = const 4i32;
         goto bb11;
     }
 
     bb5: {
-        x_1 = const 5 : i32;
+        x_1 = const 5i32;
         goto bb11;
     }
 
     bb6: {
-        x_1 = const 6 : i32;
+        x_1 = const 6i32;
         goto bb11;
     }
 
     bb7: {
-        x_1 = const 7 : i32;
+        x_1 = const 7i32;
         goto bb11;
     }
 
     bb8: {
-        x_1 = const 8 : i32;
+        x_1 = const 8i32;
         goto bb12;
     }
 
     bb9: {
-        x_1 = const 9 : i32;
+        x_1 = const 9i32;
         goto bb12;
     }
 
     bb10: {
-        x_1 = const 10 : i32;
+        x_1 = const 10i32;
         goto bb2;
     }
 
     bb11: {
-        x_1 = const 12 : i32;
+        x_1 = const 12i32;
         _0 = ();
         storage_dead(x_1);
         return;
     }
 
     bb12: {
-        x_1 = const 11 : i32;
+        x_1 = const 11i32;
         goto bb1;
     }
 }

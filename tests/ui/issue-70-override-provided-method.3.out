@@ -44,18 +44,18 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Op
         storage_live(_4);
         storage_live(_5);
         _5 = @discriminant((*self_1));
-        switch move _5 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _5 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
         _4 = @discriminant((*other_2));
-        _0 = copy _4 == const 0 : isize;
+        _0 = copy _4 == const 0isize;
         goto bb4;
     }
 
     bb2: {
         _3 = @discriminant((*other_2));
-        switch move _3 -> 0 : isize: bb5, 1 : isize: bb6, otherwise: bb3;
+        switch move _3 -> 0isize: bb5, 1isize: bb6, otherwise: bb3;
     }
 
     bb3: {
@@ -227,9 +227,9 @@ fn main()
         _0 = ();
         storage_live(_1);
         storage_live(_2);
-        _2 = Option::<u32>::Some { 0: const 42 : u32 };
+        _2 = Option::<u32>::Some { 0: const 42u32 };
         storage_live(_3);
-        _3 = Option::<u32>::Some { 0: const 42 : u32 };
+        _3 = Option::<u32>::Some { 0: const 42u32 };
         _1 = <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::provided::<u32, Option::<u32>>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
@@ -239,9 +239,9 @@ fn main()
         storage_dead(_1);
         storage_live(_4);
         storage_live(_5);
-        _5 = Option::<u32>::Some { 0: const 42 : u32 };
+        _5 = Option::<u32>::Some { 0: const 42u32 };
         storage_live(_6);
-        _6 = Option::<u32>::Some { 0: const 42 : u32 };
+        _6 = Option::<u32>::Some { 0: const 42u32 };
         _4 = test_crate::GenericTrait::provided::<NoOverride::<u32>, Option::<u32>, Option::<u32>>(move _5, move _6) -> bb3 (unwind: bb4);
     }
 

@@ -10,7 +10,7 @@ fn anon_const_0() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 42 : i32;
+        _0 = const 42i32;
         return;
     }
 }

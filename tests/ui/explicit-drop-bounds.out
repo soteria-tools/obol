@@ -30,7 +30,7 @@ fn main()
         storage_live(_1);
         storage_live(_2);
         _2 = ();
-        _1 = use_trait::<u32, ()>(const 42 : u32, move _2) -> bb1 (unwind: bb2);
+        _1 = use_trait::<u32, ()>(const 42u32, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {

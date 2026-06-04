@@ -55,7 +55,7 @@ fn anon_const_1() -> u32
     let _0: u32; // return
 
     bb0: {
-        _0 = const 13 : u32;
+        _0 = const 13u32;
         return;
     }
 }
@@ -177,7 +177,7 @@ fn main()
         storage_live(foochar_3);
         foochar_3 = cast<foo::<char>, fn(&'_ char)>(const foo::<char>);
         storage_live(a_4);
-        a_4 = const 11 : u8;
+        a_4 = const 11u8;
         storage_live(_5);
         storage_live(_6);
         _6 = copy fooint1_1;
@@ -194,7 +194,7 @@ fn main()
         storage_dead(_8);
         storage_dead(_5);
         storage_live(b_9);
-        b_9 = const 12 : u8;
+        b_9 = const 12u8;
         storage_live(_10);
         storage_live(_11);
         _11 = copy fooint1_1;

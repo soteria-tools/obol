@@ -35,7 +35,7 @@ fn anon_const_0() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 42 : i32;
+        _0 = const 42i32;
         return;
     }
 }
@@ -53,7 +53,7 @@ fn <i32 as test_crate::Modifiable<T>>::modify::<i32>(self_1: &'_ mut i32, arg_2:
 
     bb0: {
         storage_live(_3);
-        _3 = copy (*self_1) panic.+ const 1 : i32;
+        _3 = copy (*self_1) panic.+ const 1i32;
         (*self_1) = move _3;
         storage_live(_4);
         _4 = &(*arg_2);
@@ -78,8 +78,8 @@ fn Modifiable::<i32, i32>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <i32 as Modifiable<i32>>::modify_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -89,12 +89,12 @@ fn Modifiable::<i32, i32>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
-        size_2 = transmute<usize, *const ()>(const 4 : usize);
-        align_3 = transmute<usize, *const ()>(const 4 : usize);
+        size_2 = transmute<usize, *const ()>(const 4usize);
+        align_3 = transmute<usize, *const ()>(const 4usize);
         <i32 as Modifiable<i32>>::modify_4 = cast<<i32 as test_crate::Modifiable<T>>::modify::<i32>, *const ()>(const <i32 as test_crate::Modifiable<T>>::modify::<i32>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as Modifiable<i32>>::modify_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -124,7 +124,7 @@ fn modify_trait_object::<i32>(arg_1: &'_ i32) -> i32
         storage_live(_3);
         storage_live(_4);
         storage_live(_5);
-        _5 = const 199 : i32;
+        _5 = const 199i32;
         _4 = &mut _5;
         _3 = &mut (*_4);
         x_2 = unsize_cast<&'_ mut i32, &'_ mut (dyn FakeTrait), Modifiable::<i32, i32>>(move _3);
@@ -134,7 +134,7 @@ fn modify_trait_object::<i32>(arg_1: &'_ i32) -> i32
         _6 = &two-phase-mut (*x_2) with_metadata(copy x_2.metadata);
         storage_live(_7);
         _7 = &(*arg_1);
-        _8 = copy _6.metadata offset const 3 : usize;
+        _8 = copy _6.metadata offset const 3usize;
         _0 = (copy (*_8))(move _6, move _7) -> bb1 (unwind: bb2);
     }
 

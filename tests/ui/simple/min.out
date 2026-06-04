@@ -90,7 +90,7 @@ fn main()
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = min::<u64>(const 1 : u64, const 2 : u64) -> bb1 (unwind: bb2);
+        _1 = min::<u64>(const 1u64, const 2u64) -> bb1 (unwind: bb2);
     }
 
     bb1: {

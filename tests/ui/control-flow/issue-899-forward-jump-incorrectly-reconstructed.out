@@ -53,7 +53,7 @@ fn absorb_full()
         _0 = ();
         storage_live(_1);
         storage_live(_2);
-        _2 = condition(const 1 : u32) -> bb1 (unwind: bb2);
+        _2 = condition(const 1u32) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -66,7 +66,7 @@ fn absorb_full()
 
     bb3: {
         storage_live(_3);
-        _3 = condition(const 2 : u32) -> bb5 (unwind: bb6);
+        _3 = condition(const 2u32) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -86,7 +86,7 @@ fn absorb_full()
         storage_dead(_2);
         storage_dead(_1);
         storage_live(_4);
-        _4 = condition(const 3 : u32) -> bb10 (unwind: bb11);
+        _4 = condition(const 3u32) -> bb10 (unwind: bb11);
     }
 
     bb8: {

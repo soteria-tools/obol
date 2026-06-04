@@ -101,9 +101,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -150,9 +150,9 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
         storage_live(_3);
         storage_live(_4);
         _4 = copy (((*f_2)).options).flags;
-        _3 = move _4 & const 33554432 : u32;
+        _3 = move _4 & const 33554432u32;
         storage_dead(_4);
-        switch copy _3 -> 0 : u32: bb1, otherwise: bb2;
+        switch copy _3 -> 0u32: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -160,9 +160,9 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
         storage_live(_5);
         storage_live(_6);
         _6 = copy (((*f_2)).options).flags;
-        _5 = move _6 & const 67108864 : u32;
+        _5 = move _6 & const 67108864u32;
         storage_dead(_6);
-        switch copy _5 -> 0 : u32: bb3, otherwise: bb4;
+        switch copy _5 -> 0u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -227,8 +227,8 @@ fn Debug::<&'_ i32>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <&i32 as Debug>::fmt_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -238,12 +238,12 @@ fn Debug::<&'_ i32>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ i32>, *const ()>(const drop_glue::<&'_ i32>);
-        size_2 = transmute<usize, *const ()>(const 8 : usize);
-        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        size_2 = transmute<usize, *const ()>(const 8usize);
+        align_3 = transmute<usize, *const ()>(const 8usize);
         <&i32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&i32 as Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -588,7 +588,7 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
     }
 
     bb1: {
-        switch copy _8 -> 1 : u32: bb3, otherwise: bb4;
+        switch copy _8 -> 1u32: bb3, otherwise: bb4;
     }
 
     bb2: {
@@ -604,11 +604,11 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
         _6 = transmute<*const (), usize>(copy _9);
         storage_dead(_9);
         storage_live(_7);
-        _7 = copy align_2 wrap.- const 1 : usize;
+        _7 = copy align_2 wrap.- const 1usize;
         _5 = move _6 & move _7;
         storage_dead(_7);
         storage_dead(_6);
-        _0 = move _5 == const 0 : usize;
+        _0 = move _5 == const 0usize;
         storage_dead(_5);
         return;
     }
@@ -634,9 +634,9 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
         _18 = transmute<&'_ str, &'_ [u8]>(const "is_aligned_to: align is not a power-of-two");
         _16 = copy _18.metadata;
         storage_dead(_18);
-        _15 = move _16 wrap.<< const 1 : i32;
+        _15 = move _16 wrap.<< const 1i32;
         storage_dead(_16);
-        _14 = move _15 | const 1 : usize;
+        _14 = move _15 | const 1usize;
         storage_dead(_15);
         _13 = transmute<usize, NonNull::<Argument::<'_>>>(move _14);
         storage_dead(_14);
@@ -802,7 +802,7 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
         storage_live(_13);
         _0 = ();
         storage_live(_6);
-        switch copy count_5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy count_5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -811,7 +811,7 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
     }
 
     bb2: {
-        zero_size_7 = copy size_3 == const 0 : usize;
+        zero_size_7 = copy size_3 == const 0usize;
         goto bb3;
     }
 
@@ -849,7 +849,7 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
         storage_live(_16);
         storage_live(_17);
         _17 = transmute<*const (), usize>(copy src_1);
-        _16 = move _17 == const 0 : usize;
+        _16 = move _17 == const 0usize;
         storage_dead(_17);
         _8 = ~(move _16);
         storage_dead(_16);
@@ -903,9 +903,9 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
         _28 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: ptr::copy_nonoverlapping requires that both pointer arguments are aligned and non-null and the specified memory ranges do not overlap\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _26 = copy _28.metadata;
         storage_dead(_28);
-        _25 = move _26 wrap.<< const 1 : i32;
+        _25 = move _26 wrap.<< const 1i32;
         storage_dead(_26);
-        _24 = move _25 | const 1 : usize;
+        _24 = move _25 | const 1usize;
         storage_dead(_25);
         _23 = transmute<usize, NonNull::<Argument::<'_>>>(move _24);
         storage_dead(_24);
@@ -941,7 +941,7 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
         storage_live(_19);
         storage_live(_20);
         _20 = transmute<*mut (), usize>(copy dst_2);
-        _19 = move _20 == const 0 : usize;
+        _19 = move _20 == const 0usize;
         storage_dead(_20);
         _10 = ~(move _19);
         storage_dead(_19);
@@ -994,7 +994,7 @@ pub fn copy_nonoverlapping::<i32>(src_1: *const i32, dst_2: *mut i32, count_3: u
         _5 = cast<*const i32, *const ()>(copy src_1);
         storage_live(_6);
         _6 = cast<*mut i32, *mut ()>(copy dst_2);
-        _4 = precondition_check(move _5, move _6, const 4 : usize, const 4 : usize, copy count_3) -> bb3 (unwind: bb4);
+        _4 = precondition_check(move _5, move _6, const 4usize, const 4usize, copy count_3) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -1019,7 +1019,7 @@ fn anon_const_0() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 42 : i32;
+        _0 = const 42i32;
         return;
     }
 }
@@ -1030,7 +1030,7 @@ fn anon_const_1() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 42 : i32;
+        _0 = const 42i32;
         return;
     }
 }
@@ -1058,7 +1058,7 @@ fn write::<i32>(x_1: &'_ mut i32, y_2: &'_ i32)
         _4 = &raw const (*y_2);
         storage_live(_5);
         _5 = &raw mut (*x_1);
-        _3 = copy_nonoverlapping::<i32>(move _4, move _5, const 1 : usize) -> bb1 (unwind: bb2);
+        _3 = copy_nonoverlapping::<i32>(move _4, move _5, const 1usize) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1110,7 +1110,7 @@ fn main()
         storage_live(_24);
         _0 = ();
         storage_live(x_1);
-        x_1 = const 0 : i32;
+        x_1 = const 0i32;
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);

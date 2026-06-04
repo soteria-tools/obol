@@ -129,7 +129,7 @@ pub fn is_some::<i32>(self_1: &'_ Option::<i32>) -> bool
     bb0: {
         storage_live(_2);
         _2 = @discriminant((*self_1));
-        _0 = copy _2 == const 1 : isize;
+        _0 = copy _2 == const 1isize;
         return;
     }
 }
@@ -262,21 +262,21 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 }
 
 // Full name: anon_const_4
-fn anon_const_4() -> [u8; 55 : usize]
+fn anon_const_4() -> [u8; 55usize]
 {
-    let _0: [u8; 55 : usize]; // return
-    let _1: [u8; 55 : usize]; // anonymous local
+    let _0: [u8; 55usize]; // return
+    let _1: [u8; 55usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 16 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 101 : u8, const 110 : u8, const 100 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 192 : u8, const 34 : u8, const 32 : u8, const 111 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 102 : u8, const 111 : u8, const 114 : u8, const 32 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 108 : u8, const 101 : u8, const 110 : u8, const 103 : u8, const 116 : u8, const 104 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _1 = [const 16u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 101u8, const 110u8, const 100u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 192u8, const 34u8, const 32u8, const 111u8, const 117u8, const 116u8, const 32u8, const 111u8, const 102u8, const 32u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 102u8, const 111u8, const 114u8, const 32u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 111u8, const 102u8, const 32u8, const 108u8, const 101u8, const 110u8, const 103u8, const 116u8, const 104u8, const 32u8, const 192u8, const 0u8];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_4
-const anon_const_4: [u8; 55 : usize] = anon_const_4()
+const anon_const_4: [u8; 55usize] = anon_const_4()
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(end_1: usize, len_2: usize) -> !
@@ -288,10 +288,10 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -306,7 +306,7 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 55 : usize]; // anonymous local
+    let _25: &'_ [u8; 55usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -362,9 +362,9 @@ fn runtime(end_1: usize, len_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_4;
-        _21 = transmute<&'_ [u8; 55 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 55usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -402,21 +402,21 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 }
 
 // Full name: anon_const_5
-fn anon_const_5() -> [u8; 40 : usize]
+fn anon_const_5() -> [u8; 40usize]
 {
-    let _0: [u8; 40 : usize]; // return
-    let _1: [u8; 40 : usize]; // anonymous local
+    let _0: [u8; 40usize]; // return
+    let _1: [u8; 40usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 22 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 115 : u8, const 116 : u8, const 97 : u8, const 114 : u8, const 116 : u8, const 115 : u8, const 32 : u8, const 97 : u8, const 116 : u8, const 32 : u8, const 192 : u8, const 13 : u8, const 32 : u8, const 98 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 101 : u8, const 110 : u8, const 100 : u8, const 115 : u8, const 32 : u8, const 97 : u8, const 116 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _1 = [const 22u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 115u8, const 116u8, const 97u8, const 114u8, const 116u8, const 115u8, const 32u8, const 97u8, const 116u8, const 32u8, const 192u8, const 13u8, const 32u8, const 98u8, const 117u8, const 116u8, const 32u8, const 101u8, const 110u8, const 100u8, const 115u8, const 32u8, const 97u8, const 116u8, const 32u8, const 192u8, const 0u8];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_5
-const anon_const_5: [u8; 40 : usize] = anon_const_5()
+const anon_const_5: [u8; 40usize] = anon_const_5()
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(start_1: usize, end_2: usize) -> !
@@ -428,10 +428,10 @@ fn runtime(start_1: usize, end_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -446,7 +446,7 @@ fn runtime(start_1: usize, end_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 40 : usize]; // anonymous local
+    let _25: &'_ [u8; 40usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -502,9 +502,9 @@ fn runtime(start_1: usize, end_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_5;
-        _21 = transmute<&'_ [u8; 40 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 40usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -551,10 +551,10 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -569,7 +569,7 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 55 : usize]; // anonymous local
+    let _25: &'_ [u8; 55usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -625,9 +625,9 @@ fn runtime(end_1: usize, len_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_4;
-        _21 = transmute<&'_ [u8; 55 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 55usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -665,21 +665,21 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 }
 
 // Full name: anon_const_3
-fn anon_const_3() -> [u8; 57 : usize]
+fn anon_const_3() -> [u8; 57usize]
 {
-    let _0: [u8; 57 : usize]; // return
-    let _1: [u8; 57 : usize]; // anonymous local
+    let _0: [u8; 57usize]; // return
+    let _1: [u8; 57usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 18 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 115 : u8, const 116 : u8, const 97 : u8, const 114 : u8, const 116 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 192 : u8, const 34 : u8, const 32 : u8, const 111 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 102 : u8, const 111 : u8, const 114 : u8, const 32 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 108 : u8, const 101 : u8, const 110 : u8, const 103 : u8, const 116 : u8, const 104 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _1 = [const 18u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 115u8, const 116u8, const 97u8, const 114u8, const 116u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 192u8, const 34u8, const 32u8, const 111u8, const 117u8, const 116u8, const 32u8, const 111u8, const 102u8, const 32u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 102u8, const 111u8, const 114u8, const 32u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 111u8, const 102u8, const 32u8, const 108u8, const 101u8, const 110u8, const 103u8, const 116u8, const 104u8, const 32u8, const 192u8, const 0u8];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_3
-const anon_const_3: [u8; 57 : usize] = anon_const_3()
+const anon_const_3: [u8; 57usize] = anon_const_3()
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(start_1: usize, len_2: usize) -> !
@@ -691,10 +691,10 @@ fn runtime(start_1: usize, len_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -709,7 +709,7 @@ fn runtime(start_1: usize, len_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 57 : usize]; // anonymous local
+    let _25: &'_ [u8; 57usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -765,9 +765,9 @@ fn runtime(start_1: usize, len_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_3;
-        _21 = transmute<&'_ [u8; 57 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 57usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -1032,17 +1032,17 @@ fn anon_const_0() -> Option::<i32>
 
     bb0: {
         storage_live(_1);
-        _1 = Option::<i32>::Some { 0: const 0 : i32 };
+        _1 = Option::<i32>::Some { 0: const 0i32 };
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_1
-fn anon_const_1() -> [bool; 1 : usize]
+fn anon_const_1() -> [bool; 1usize]
 {
-    let _0: [bool; 1 : usize]; // return
-    let _1: [bool; 1 : usize]; // anonymous local
+    let _0: [bool; 1usize]; // return
+    let _1: [bool; 1usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
@@ -1056,7 +1056,7 @@ fn anon_const_1() -> [bool; 1 : usize]
 const anon_const_0: Option::<i32> = anon_const_0()
 
 // Full name: anon_const_1
-const anon_const_1: [bool; 1 : usize] = anon_const_1()
+const anon_const_1: [bool; 1usize] = anon_const_1()
 
 // Full name: test_crate::foo::bar
 fn bar()
@@ -1077,16 +1077,16 @@ fn foo()
     let _1: bool; // anonymous local
     let _2: &'_ Option::<i32>; // anonymous local
     let slice_3: &'_ [bool]; // local
-    let _4: &'_ [bool; 1 : usize]; // anonymous local
-    let _5: &'_ [bool; 1 : usize]; // anonymous local
+    let _4: &'_ [bool; 1usize]; // anonymous local
+    let _5: &'_ [bool; 1usize]; // anonymous local
     let _6: &'_ [bool]; // anonymous local
     let _7: &'_ [bool]; // anonymous local
     let _8: &'_ [bool]; // anonymous local
     let _9: RangeFrom::<usize>; // anonymous local
-    let _10: &'_ [bool; 1 : usize]; // anonymous local
+    let _10: &'_ [bool; 1usize]; // anonymous local
     let _11: &'_ Option::<i32>; // anonymous local
     let _12: &'_ Option::<i32>; // anonymous local
-    let _13: &'_ [bool; 1 : usize]; // anonymous local
+    let _13: &'_ [bool; 1usize]; // anonymous local
 
     bb0: {
         storage_live(_10);
@@ -1112,7 +1112,7 @@ fn foo()
         _10 = move _13;
         _5 = &(*_10);
         _4 = &(*_5);
-        slice_3 = unsize_cast<&'_ [bool; 1 : usize], &'_ [bool], 1 : usize>(move _4);
+        slice_3 = unsize_cast<&'_ [bool; 1usize], &'_ [bool], 1usize>(move _4);
         storage_dead(_4);
         storage_dead(_5);
         storage_live(_6);
@@ -1120,7 +1120,7 @@ fn foo()
         storage_live(_8);
         _8 = &(*slice_3) with_metadata(copy slice_3.metadata);
         storage_live(_9);
-        _9 = RangeFrom::<usize> { start: const 1 : usize };
+        _9 = RangeFrom::<usize> { start: const 1usize };
         _7 = core::slice::index::<impl std::ops::Index<I> for [T]>::index::<bool, RangeFrom::<usize>>(move _8, move _9) -> bb3 (unwind: bb4);
     }
 
@@ -1150,7 +1150,7 @@ fn f() -> u32
     let _0: u32; // return
 
     bb0: {
-        _0 = const 1 : u32;
+        _0 = const 1u32;
         return;
     }
 }
@@ -1161,7 +1161,7 @@ fn f() -> u32
     let _0: u32; // return
 
     bb0: {
-        _0 = const 0 : u32;
+        _0 = const 0u32;
         return;
     }
 }
@@ -1253,7 +1253,7 @@ fn mono_usage()
     bb0: {
         _0 = ();
         storage_live(_container1_1);
-        _container1_1 = create::<i32>(const 42 : i32) -> bb1 (unwind: bb2);
+        _container1_1 = create::<i32>(const 42i32) -> bb1 (unwind: bb2);
     }
 
     bb1: {

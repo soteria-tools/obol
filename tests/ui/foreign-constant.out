@@ -10,7 +10,7 @@ fn foo() -> u8
     let _0: u8; // return
 
     bb0: {
-        _0 = const 16 : u8;
+        _0 = const 16u8;
         return;
     }
 }

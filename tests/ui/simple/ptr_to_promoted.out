@@ -10,7 +10,7 @@ fn anon_const_0() -> u8
     let _0: u8; // return
 
     bb0: {
-        _0 = const 0 : u8;
+        _0 = const 0u8;
         return;
     }
 }

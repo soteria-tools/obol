@@ -23,7 +23,7 @@ fn anon_const_0() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 42 : i32;
+        _0 = const 42i32;
         return;
     }
 }
@@ -65,8 +65,8 @@ fn Trait::<i32>() -> *const ()
     let align_3: *const (); // local
     let <i32 as Trait>::consume_4: *const (); // local
     let <i32 as Trait>::another_5: *const (); // local
-    let entry_array_6: [*const (); 5 : usize]; // local
-    let entry_array_ref_7: *const [*const (); 5 : usize]; // local
+    let entry_array_6: [*const (); 5usize]; // local
+    let entry_array_ref_7: *const [*const (); 5usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -77,13 +77,13 @@ fn Trait::<i32>() -> *const ()
         storage_live(entry_array_6);
         storage_live(entry_array_ref_7);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
-        size_2 = transmute<usize, *const ()>(const 4 : usize);
-        align_3 = transmute<usize, *const ()>(const 4 : usize);
+        size_2 = transmute<usize, *const ()>(const 4usize);
+        align_3 = transmute<usize, *const ()>(const 4usize);
         <i32 as Trait>::consume_4 = cast<<i32 as test_crate::Trait>::consume, *const ()>(const <i32 as test_crate::Trait>::consume);
         <i32 as Trait>::another_5 = cast<another, *const ()>(const another);
         entry_array_6 = [move drop_1, move size_2, move align_3, move <i32 as Trait>::consume_4, move <i32 as Trait>::another_5];
         entry_array_ref_7 = &raw const entry_array_6;
-        vtable_0 = cast<*const [*const (); 5 : usize], *const ()>(move entry_array_ref_7);
+        vtable_0 = cast<*const [*const (); 5usize], *const ()>(move entry_array_ref_7);
         return;
     }
 }
@@ -125,7 +125,7 @@ fn main()
         storage_live(_4);
         storage_live(_5);
         _5 = &(*b_1) with_metadata(copy b_1.metadata);
-        _7 = copy _5.metadata offset const 3 : usize;
+        _7 = copy _5.metadata offset const 3usize;
         _4 = (copy (*_7))(move _5) -> bb1 (unwind: bb2);
     }
 

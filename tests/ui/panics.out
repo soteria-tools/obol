@@ -101,7 +101,7 @@ fn drop_glue::<&'_ str>(_1: &'_ mut &'_ str)
 // Full name: std::any::TypeId
 #[lang_item("type_id")]
 pub struct TypeId {
-  data: [*const (); 2 : usize],
+  data: [*const (); 2usize],
 }
 
 // Full name: <T as std::any::Any>::type_id::<&'_ str>
@@ -111,7 +111,7 @@ pub fn type_id::<&'_ str>(self_1: &'_ &'_ str) -> TypeId
     let self_1: &'_ &'_ str; // arg #1
     let _2: *const (); // anonymous local
     let _3: *const (); // anonymous local
-    let _4: [*const (); 2 : usize]; // anonymous local
+    let _4: [*const (); 2usize]; // anonymous local
     let _5: TypeId; // anonymous local
 
     bb0: {
@@ -136,8 +136,8 @@ fn Any::<&'_ str>() -> *const ()
     let size_2: *const (); // local
     let align_3: *const (); // local
     let <&str as Any>::type_id_4: *const (); // local
-    let entry_array_5: [*const (); 4 : usize]; // local
-    let entry_array_ref_6: *const [*const (); 4 : usize]; // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -147,12 +147,12 @@ fn Any::<&'_ str>() -> *const ()
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ str>, *const ()>(const drop_glue::<&'_ str>);
-        size_2 = transmute<usize, *const ()>(const 16 : usize);
-        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        size_2 = transmute<usize, *const ()>(const 16usize);
+        align_3 = transmute<usize, *const ()>(const 8usize);
         <&str as Any>::type_id_4 = cast<type_id::<&'_ str>, *const ()>(const type_id::<&'_ str>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&str as Any>::type_id_4];
         entry_array_ref_6 = &raw const entry_array_5;
-        vtable_0 = cast<*const [*const (); 4 : usize], *const ()>(move entry_array_ref_6);
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
     }
 }
@@ -264,9 +264,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -333,42 +333,42 @@ pub fn black_box::<()>(dummy_1: ())
 #[lang_item("phantom_data")]
 pub struct PhantomData::<(dyn FakeTrait)> {}
 
-// Full name: std::mem::MaybeDangling::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 16usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 16 : usize]> {
-  0: [u8; 16 : usize],
+pub struct MaybeDangling::<[u8; 16usize]> {
+  0: [u8; 16usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 16 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 16usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 16 : usize]> {
-  value: MaybeDangling::<[u8; 16 : usize]>,
+pub struct ManuallyDrop::<[u8; 16usize]> {
+  value: MaybeDangling::<[u8; 16usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8 : usize]> {
-  0: [u8; 8 : usize],
+pub struct MaybeDangling::<[u8; 8usize]> {
+  0: [u8; 8usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 8 : usize]>
+// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8 : usize]> {
-  value: MaybeDangling::<[u8; 8 : usize]>,
+pub struct ManuallyDrop::<[u8; 8usize]> {
+  value: MaybeDangling::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 8 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 8 : usize]> {
+pub union MaybeUninit::<[u8; 8usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 8 : usize]>,
+  value: ManuallyDrop::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 16 : usize]>
+// Full name: std::mem::MaybeUninit::<[u8; 16usize]>
 #[lang_item("maybe_uninit")]
-pub union MaybeUninit::<[u8; 16 : usize]> {
+pub union MaybeUninit::<[u8; 16usize]> {
   uninit: (),
-  value: ManuallyDrop::<[u8; 16 : usize]>,
+  value: ManuallyDrop::<[u8; 16usize]>,
 }
 
 // Full name: std::result::Result::<Infallible, AllocError>
@@ -466,7 +466,7 @@ pub fn fmt::<&'_ str>(self_1: &'_ Payload::<&'_ str>, f_2: &'_ mut Formatter::<'
         storage_live(_3);
         storage_live(_7);
         _3 = @discriminant(((*self_1)).inner);
-        switch move _3 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _3 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
@@ -527,7 +527,7 @@ pub fn get::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> &'_ (dyn FakeTrait)
         storage_live(_2);
         storage_live(_4);
         _2 = @discriminant(((*self_1)).inner);
-        switch move _2 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _2 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
@@ -801,7 +801,7 @@ fn precondition_check(ptr_1: *mut ())
         _0 = ();
         storage_live(_5);
         _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
@@ -824,9 +824,9 @@ fn precondition_check(ptr_1: *mut ())
         _13 = transmute<&'_ str, &'_ [u8]>(const "unsafe precondition(s) violated: NonNull::new_unchecked requires that the pointer is non-null\n\nThis indicates a bug in the program. This Undefined Behavior check is optional, and cannot be relied on for safety.");
         _11 = copy _13.metadata;
         storage_dead(_13);
-        _10 = move _11 wrap.<< const 1 : i32;
+        _10 = move _11 wrap.<< const 1i32;
         storage_dead(_11);
-        _9 = move _10 | const 1 : usize;
+        _9 = move _10 | const 1usize;
         storage_dead(_10);
         _8 = transmute<usize, NonNull::<Argument::<'_>>>(move _9);
         storage_dead(_9);
@@ -858,7 +858,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let zeroed_2: bool; // arg #2
     let size_3: usize; // local
     let _4: NonNull::<[u8]>; // anonymous local
-    let data_5: NonNull::<u8>; // local
+    let self_5: NonNull::<u8>; // local
     let raw_ptr_6: *mut u8; // local
     let _7: ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>; // anonymous local
     let self_8: Result::<NonNull::<u8>, AllocError>; // local
@@ -868,7 +868,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let _12: NonNull::<[u8]>; // anonymous local
     let _13: Alignment; // anonymous local
     let ptr_14: *mut [u8]; // local
-    let data_15: *mut u8; // local
+    let self_15: *mut u8; // local
     let _16: (); // anonymous local
     let _17: *mut (); // anonymous local
     let _18: (); // anonymous local
@@ -882,7 +882,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let v_26: NonNull::<u8>; // local
     let v_27: NonNull::<u8>; // local
     let ptr_28: *mut [u8]; // local
-    let data_29: *mut u8; // local
+    let self_29: *mut u8; // local
     let _30: (); // anonymous local
     let _31: *mut (); // anonymous local
     let _32: isize; // anonymous local
@@ -906,19 +906,19 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_30);
         storage_live(size_3);
         size_3 = copy (layout_1).size;
-        switch copy size_3 -> 0 : usize: bb1, otherwise: bb2;
+        switch copy size_3 -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {
         storage_live(_4);
-        storage_live(data_5);
+        storage_live(self_5);
         _13 = copy (layout_1).align;
-        data_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
+        self_5 = transmute<Alignment, NonNull::<u8>>(copy _13);
         storage_live(ptr_14);
-        storage_live(data_15);
-        data_15 = transmute<Alignment, *mut u8>(copy _13);
-        ptr_14 = *mut  (copy data_15, const 0 : usize);
-        storage_dead(data_15);
+        storage_live(self_15);
+        self_15 = transmute<Alignment, *mut u8>(copy _13);
+        ptr_14 = *mut  (copy self_15, const 0usize);
+        storage_dead(self_15);
         storage_live(_34);
         _34 = ub_checks<bool>;
         if move _34 -> bb3 else -> bb4;
@@ -937,7 +937,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb4: {
         _4 = transmute<*mut [u8], NonNull::<[u8]>>(copy ptr_14);
         storage_dead(ptr_14);
-        storage_dead(data_5);
+        storage_dead(self_5);
         _0 = Result::<NonNull::<[u8]>, AllocError>::Ok { 0: move _4 };
         storage_dead(_4);
         goto bb9;
@@ -1013,7 +1013,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(self_9);
         storage_live(_23);
         _23 = transmute<*mut u8, usize>(copy raw_ptr_6);
-        switch copy _23 -> 0 : usize: bb20, otherwise: bb21;
+        switch copy _23 -> 0usize: bb20, otherwise: bb21;
     }
 
     bb20: {
@@ -1029,7 +1029,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(_32);
         storage_live(_33);
         _32 = @discriminant(_10);
-        _33 = copy _32 == const 1 : isize;
+        _33 = copy _32 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
         storage_live(_39);
         _39 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: const RawMemory( 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0, --, --, --, --, --, --, --, --) };
@@ -1073,10 +1073,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_dead(_7);
         storage_live(_12);
         storage_live(ptr_28);
-        storage_live(data_29);
-        data_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
-        ptr_28 = *mut  (copy data_29, copy size_3);
-        storage_dead(data_29);
+        storage_live(self_29);
+        self_29 = transmute<NonNull::<u8>, *mut u8>(copy ptr_11);
+        ptr_28 = *mut  (copy self_29, copy size_3);
+        storage_dead(self_29);
         storage_live(_36);
         _36 = ub_checks<bool>;
         if move _36 -> bb26 else -> bb27;
@@ -1137,7 +1137,7 @@ fn box_new_uninit(layout_1: Layout) -> *mut u8
 
     bb1: {
         _3 = @discriminant(_2);
-        switch move _3 -> 0 : isize: bb3, 1 : isize: bb4, otherwise: bb5;
+        switch move _3 -> 0isize: bb3, 1isize: bb4, otherwise: bb5;
     }
 
     bb2: {
@@ -1219,7 +1219,7 @@ pub fn std::boxed::Box::<T>::new::<&'_ str>(x_1: &'_ str) -> Box::<&'_ str, Glob
         storage_live(_5);
         _5 = Alignment { _inner_repr_trick: move _4 };
         storage_live(_6);
-        _6 = Layout { size: const 16 : usize, align: move _5 };
+        _6 = Layout { size: const 16usize, align: move _5 };
         _3 = box_new_uninit(move _6) -> bb1 (unwind: bb2);
     }
 
@@ -1279,7 +1279,7 @@ pub fn take_box::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> *mut (dyn Fake
         ((*self_1)).inner = move _8;
         storage_dead(_8);
         _3 = @discriminant(_2);
-        switch move _3 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _3 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {
@@ -1365,8 +1365,8 @@ fn PanicPayload::<Payload::<&'_ str>>() -> *const ()
     let <Payload<&str> as PanicPayload>::take_box_5: *const (); // local
     let <Payload<&str> as PanicPayload>::get_6: *const (); // local
     let <Payload<&str> as PanicPayload>::as_str_7: *const (); // local
-    let entry_array_8: [*const (); 7 : usize]; // local
-    let entry_array_ref_9: *const [*const (); 7 : usize]; // local
+    let entry_array_8: [*const (); 7usize]; // local
+    let entry_array_ref_9: *const [*const (); 7usize]; // local
 
     bb0: {
         storage_live(drop_1);
@@ -1379,15 +1379,15 @@ fn PanicPayload::<Payload::<&'_ str>>() -> *const ()
         storage_live(entry_array_8);
         storage_live(entry_array_ref_9);
         drop_1 = cast<drop_glue::<Payload::<&'_ str>>, *const ()>(const drop_glue::<Payload::<&'_ str>>);
-        size_2 = transmute<usize, *const ()>(const 16 : usize);
-        align_3 = transmute<usize, *const ()>(const 8 : usize);
+        size_2 = transmute<usize, *const ()>(const 16usize);
+        align_3 = transmute<usize, *const ()>(const 8usize);
         <Payload<&str> as Display>::fmt_4 = cast<fmt::<&'_ str>, *const ()>(const fmt::<&'_ str>);
         <Payload<&str> as PanicPayload>::take_box_5 = cast<take_box::<&'_ str>, *const ()>(const take_box::<&'_ str>);
         <Payload<&str> as PanicPayload>::get_6 = cast<get::<&'_ str>, *const ()>(const get::<&'_ str>);
         <Payload<&str> as PanicPayload>::as_str_7 = cast<as_str::<Payload::<&'_ str>>, *const ()>(const as_str::<Payload::<&'_ str>>);
         entry_array_8 = [move drop_1, move size_2, move align_3, move <Payload<&str> as Display>::fmt_4, move <Payload<&str> as PanicPayload>::take_box_5, move <Payload<&str> as PanicPayload>::get_6, move <Payload<&str> as PanicPayload>::as_str_7];
         entry_array_ref_9 = &raw const entry_array_8;
-        vtable_0 = cast<*const [*const (); 7 : usize], *const ()>(move entry_array_ref_9);
+        vtable_0 = cast<*const [*const (); 7usize], *const ()>(move entry_array_ref_9);
         return;
     }
 }

@@ -2,21 +2,21 @@
 // Final ULLBC:
 
 // Full name: anon_const_3
-fn anon_const_3() -> [u8; 55 : usize]
+fn anon_const_3() -> [u8; 55usize]
 {
-    let _0: [u8; 55 : usize]; // return
-    let _1: [u8; 55 : usize]; // anonymous local
+    let _0: [u8; 55usize]; // return
+    let _1: [u8; 55usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 16 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 101 : u8, const 110 : u8, const 100 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 192 : u8, const 34 : u8, const 32 : u8, const 111 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 102 : u8, const 111 : u8, const 114 : u8, const 32 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 108 : u8, const 101 : u8, const 110 : u8, const 103 : u8, const 116 : u8, const 104 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _1 = [const 16u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 101u8, const 110u8, const 100u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 192u8, const 34u8, const 32u8, const 111u8, const 117u8, const 116u8, const 32u8, const 111u8, const 102u8, const 32u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 102u8, const 111u8, const 114u8, const 32u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 111u8, const 102u8, const 32u8, const 108u8, const 101u8, const 110u8, const 103u8, const 116u8, const 104u8, const 32u8, const 192u8, const 0u8];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_3
-const anon_const_3: [u8; 55 : usize] = anon_const_3()
+const anon_const_3: [u8; 55usize] = anon_const_3()
 
 // Full name: std::fmt::Error
 pub struct Error {}
@@ -260,10 +260,10 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -278,7 +278,7 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 55 : usize]; // anonymous local
+    let _25: &'_ [u8; 55usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -334,9 +334,9 @@ fn runtime(end_1: usize, len_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_3;
-        _21 = transmute<&'_ [u8; 55 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 55usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -374,21 +374,21 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 }
 
 // Full name: anon_const_4
-fn anon_const_4() -> [u8; 40 : usize]
+fn anon_const_4() -> [u8; 40usize]
 {
-    let _0: [u8; 40 : usize]; // return
-    let _1: [u8; 40 : usize]; // anonymous local
+    let _0: [u8; 40usize]; // return
+    let _1: [u8; 40usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 22 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 115 : u8, const 116 : u8, const 97 : u8, const 114 : u8, const 116 : u8, const 115 : u8, const 32 : u8, const 97 : u8, const 116 : u8, const 32 : u8, const 192 : u8, const 13 : u8, const 32 : u8, const 98 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 101 : u8, const 110 : u8, const 100 : u8, const 115 : u8, const 32 : u8, const 97 : u8, const 116 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _1 = [const 22u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 115u8, const 116u8, const 97u8, const 114u8, const 116u8, const 115u8, const 32u8, const 97u8, const 116u8, const 32u8, const 192u8, const 13u8, const 32u8, const 98u8, const 117u8, const 116u8, const 32u8, const 101u8, const 110u8, const 100u8, const 115u8, const 32u8, const 97u8, const 116u8, const 32u8, const 192u8, const 0u8];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_4
-const anon_const_4: [u8; 40 : usize] = anon_const_4()
+const anon_const_4: [u8; 40usize] = anon_const_4()
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(start_1: usize, end_2: usize) -> !
@@ -400,10 +400,10 @@ fn runtime(start_1: usize, end_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -418,7 +418,7 @@ fn runtime(start_1: usize, end_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 40 : usize]; // anonymous local
+    let _25: &'_ [u8; 40usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -474,9 +474,9 @@ fn runtime(start_1: usize, end_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_4;
-        _21 = transmute<&'_ [u8; 40 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 40usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -523,10 +523,10 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -541,7 +541,7 @@ fn runtime(end_1: usize, len_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 55 : usize]; // anonymous local
+    let _25: &'_ [u8; 55usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -597,9 +597,9 @@ fn runtime(end_1: usize, len_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_3;
-        _21 = transmute<&'_ [u8; 55 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 55usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -637,21 +637,21 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 }
 
 // Full name: anon_const_2
-fn anon_const_2() -> [u8; 57 : usize]
+fn anon_const_2() -> [u8; 57usize]
 {
-    let _0: [u8; 57 : usize]; // return
-    let _1: [u8; 57 : usize]; // anonymous local
+    let _0: [u8; 57usize]; // return
+    let _1: [u8; 57usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 18 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 115 : u8, const 116 : u8, const 97 : u8, const 114 : u8, const 116 : u8, const 32 : u8, const 105 : u8, const 110 : u8, const 100 : u8, const 101 : u8, const 120 : u8, const 32 : u8, const 192 : u8, const 34 : u8, const 32 : u8, const 111 : u8, const 117 : u8, const 116 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 114 : u8, const 97 : u8, const 110 : u8, const 103 : u8, const 101 : u8, const 32 : u8, const 102 : u8, const 111 : u8, const 114 : u8, const 32 : u8, const 115 : u8, const 108 : u8, const 105 : u8, const 99 : u8, const 101 : u8, const 32 : u8, const 111 : u8, const 102 : u8, const 32 : u8, const 108 : u8, const 101 : u8, const 110 : u8, const 103 : u8, const 116 : u8, const 104 : u8, const 32 : u8, const 192 : u8, const 0 : u8];
+        _1 = [const 18u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 115u8, const 116u8, const 97u8, const 114u8, const 116u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 192u8, const 34u8, const 32u8, const 111u8, const 117u8, const 116u8, const 32u8, const 111u8, const 102u8, const 32u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 102u8, const 111u8, const 114u8, const 32u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 111u8, const 102u8, const 32u8, const 108u8, const 101u8, const 110u8, const 103u8, const 116u8, const 104u8, const 32u8, const 192u8, const 0u8];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_2
-const anon_const_2: [u8; 57 : usize] = anon_const_2()
+const anon_const_2: [u8; 57usize] = anon_const_2()
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(start_1: usize, len_2: usize) -> !
@@ -663,10 +663,10 @@ fn runtime(start_1: usize, len_2: usize) -> !
     let _4: Arguments::<'_>; // anonymous local
     let args_5: &'_ usize; // local
     let args_6: &'_ usize; // local
-    let args_7: [Argument::<'_>; 2 : usize]; // local
+    let args_7: [Argument::<'_>; 2usize]; // local
     let _8: Argument::<'_>; // anonymous local
     let _9: Argument::<'_>; // anonymous local
-    let args_10: &'_ [Argument::<'_>; 2 : usize]; // local
+    let args_10: &'_ [Argument::<'_>; 2usize]; // local
     let _11: ArgumentType::<'_>; // anonymous local
     let _12: NonNull::<()>; // anonymous local
     let _13: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>; // anonymous local
@@ -681,7 +681,7 @@ fn runtime(start_1: usize, len_2: usize) -> !
     let _22: NonNull::<Argument::<'_>>; // anonymous local
     let _23: PhantomData::<&'_ ()>; // anonymous local
     let _24: PhantomData::<&'_ ()>; // anonymous local
-    let _25: &'_ [u8; 57 : usize]; // anonymous local
+    let _25: &'_ [u8; 57usize]; // anonymous local
 
     bb0: {
         storage_live(_3);
@@ -737,9 +737,9 @@ fn runtime(start_1: usize, len_2: usize) -> !
         storage_live(_21);
         storage_live(_25);
         _25 = &anon_const_2;
-        _21 = transmute<&'_ [u8; 57 : usize], NonNull::<u8>>(move _25);
+        _21 = transmute<&'_ [u8; 57usize], NonNull::<u8>>(move _25);
         storage_live(_22);
-        _22 = transmute<&'_ [Argument::<'_>; 2 : usize], NonNull::<Argument::<'_>>>(copy args_10);
+        _22 = transmute<&'_ [Argument::<'_>; 2usize], NonNull::<Argument::<'_>>>(copy args_10);
         _4 = Arguments::<'_> { template: move _21, args: move _22 };
         storage_dead(_22);
         storage_dead(_21);
@@ -1045,16 +1045,16 @@ pub fn core::slice::index::<impl std::ops::Index<I> for [T]>::index::<u32, Range
     }
 }
 
-pub fn std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32 : usize>(self_1: &'_ [u32; 32 : usize], index_2: Range::<usize>) -> &'_ [u32]
+pub fn std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32usize>(self_1: &'_ [u32; 32usize], index_2: Range::<usize>) -> &'_ [u32]
 {
     let _0: &'_ [u32]; // return
-    let self_1: &'_ [u32; 32 : usize]; // arg #1
+    let self_1: &'_ [u32; 32usize]; // arg #1
     let index_2: Range::<usize>; // arg #2
     let _3: &'_ [u32]; // anonymous local
 
     bb0: {
         storage_live(_3);
-        _3 = unsize_cast<&'_ [u32; 32 : usize], &'_ [u32], 32 : usize>(copy self_1);
+        _3 = unsize_cast<&'_ [u32; 32usize], &'_ [u32], 32usize>(copy self_1);
         _0 = core::slice::index::<impl std::ops::Index<I> for [T]>::index::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
     }
 
@@ -1182,16 +1182,16 @@ pub fn core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32
     }
 }
 
-pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 32 : usize>(self_1: &'_ mut [u32; 32 : usize], index_2: Range::<usize>) -> &'_ mut [u32]
+pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 32usize>(self_1: &'_ mut [u32; 32usize], index_2: Range::<usize>) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
-    let self_1: &'_ mut [u32; 32 : usize]; // arg #1
+    let self_1: &'_ mut [u32; 32usize]; // arg #1
     let index_2: Range::<usize>; // arg #2
     let _3: &'_ mut [u32]; // anonymous local
 
     bb0: {
         storage_live(_3);
-        _3 = unsize_cast<&'_ mut [u32; 32 : usize], &'_ mut [u32], 32 : usize>(copy self_1);
+        _3 = unsize_cast<&'_ mut [u32; 32usize], &'_ mut [u32], 32usize>(copy self_1);
         _0 = core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
     }
 
@@ -1205,16 +1205,16 @@ pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Ran
     }
 }
 
-pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 4 : usize>(self_1: &'_ mut [u32; 4 : usize], index_2: Range::<usize>) -> &'_ mut [u32]
+pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 4usize>(self_1: &'_ mut [u32; 4usize], index_2: Range::<usize>) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
-    let self_1: &'_ mut [u32; 4 : usize]; // arg #1
+    let self_1: &'_ mut [u32; 4usize]; // arg #1
     let index_2: Range::<usize>; // arg #2
     let _3: &'_ mut [u32]; // anonymous local
 
     bb0: {
         storage_live(_3);
-        _3 = unsize_cast<&'_ mut [u32; 4 : usize], &'_ mut [u32], 4 : usize>(copy self_1);
+        _3 = unsize_cast<&'_ mut [u32; 4usize], &'_ mut [u32], 4usize>(copy self_1);
         _0 = core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
     }
 
@@ -1259,9 +1259,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
         _9 = transmute<&'_ str, &'_ [u8]>(copy s_1);
         _7 = copy _9.metadata;
         storage_dead(_9);
-        _6 = move _7 wrap.<< const 1 : i32;
+        _6 = move _7 wrap.<< const 1i32;
         storage_dead(_7);
-        _5 = move _6 | const 1 : usize;
+        _5 = move _6 | const 1usize;
         storage_dead(_6);
         _4 = transmute<usize, NonNull::<Argument::<'_>>>(move _5);
         storage_dead(_5);
@@ -1335,21 +1335,21 @@ pub fn len::<u8>(self_1: &'_ [u8]) -> usize
 }
 
 // Full name: anon_const_0
-fn anon_const_0() -> [u32; 2 : usize]
+fn anon_const_0() -> [u32; 2usize]
 {
-    let _0: [u32; 2 : usize]; // return
-    let _1: [u32; 2 : usize]; // anonymous local
+    let _0: [u32; 2usize]; // return
+    let _1: [u32; 2usize]; // anonymous local
 
     bb0: {
         storage_live(_1);
-        _1 = [const 0 : u32; 2 : usize];
+        _1 = [const 0u32; 2usize];
         _0 = move _1;
         return;
     }
 }
 
 // Full name: anon_const_0
-const anon_const_0: [u32; 2 : usize] = anon_const_0()
+const anon_const_0: [u32; 2usize] = anon_const_0()
 
 // Full name: test_crate::AB
 pub enum AB {
@@ -1367,7 +1367,7 @@ pub fn incr(x_1: &'_ mut u32)
     bb0: {
         storage_live(_2);
         _0 = ();
-        _2 = copy (*x_1) panic.+ const 1 : u32;
+        _2 = copy (*x_1) panic.+ const 1u32;
         (*x_1) = move _2;
         _0 = ();
         return;
@@ -1375,10 +1375,10 @@ pub fn incr(x_1: &'_ mut u32)
 }
 
 // Full name: test_crate::index_array_u32
-pub fn index_array_u32(s_1: [u32; 32 : usize], i_2: usize) -> u32
+pub fn index_array_u32(s_1: [u32; 32usize], i_2: usize) -> u32
 {
     let _0: u32; // return
-    let s_1: [u32; 32 : usize]; // arg #1
+    let s_1: [u32; 32usize]; // arg #1
     let i_2: usize; // arg #2
     let _3: usize; // anonymous local
 
@@ -1392,15 +1392,15 @@ pub fn index_array_u32(s_1: [u32; 32 : usize], i_2: usize) -> u32
 }
 
 // Full name: test_crate::index_array_copy
-pub fn index_array_copy(x_1: &'_ [u32; 32 : usize]) -> u32
+pub fn index_array_copy(x_1: &'_ [u32; 32usize]) -> u32
 {
     let _0: u32; // return
-    let x_1: &'_ [u32; 32 : usize]; // arg #1
+    let x_1: &'_ [u32; 32usize]; // arg #1
     let _2: usize; // anonymous local
 
     bb0: {
         storage_live(_2);
-        _2 = const 0 : usize;
+        _2 = const 0usize;
         _0 = copy (*x_1)[copy _2];
         storage_dead(_2);
         return;
@@ -1502,34 +1502,34 @@ pub fn slice_subslice_mut_(x_1: &'_ mut [u32], y_2: usize, z_3: usize) -> &'_ mu
 }
 
 // Full name: test_crate::array_to_slice_shared_
-pub fn array_to_slice_shared_(x_1: &'_ [u32; 32 : usize]) -> &'_ [u32]
+pub fn array_to_slice_shared_(x_1: &'_ [u32; 32usize]) -> &'_ [u32]
 {
     let _0: &'_ [u32]; // return
-    let x_1: &'_ [u32; 32 : usize]; // arg #1
-    let _2: &'_ [u32; 32 : usize]; // anonymous local
+    let x_1: &'_ [u32; 32usize]; // arg #1
+    let _2: &'_ [u32; 32usize]; // anonymous local
 
     bb0: {
         storage_live(_2);
         _2 = &(*x_1);
-        _0 = unsize_cast<&'_ [u32; 32 : usize], &'_ [u32], 32 : usize>(move _2);
+        _0 = unsize_cast<&'_ [u32; 32usize], &'_ [u32], 32usize>(move _2);
         storage_dead(_2);
         return;
     }
 }
 
 // Full name: test_crate::array_to_slice_mut_
-pub fn array_to_slice_mut_(x_1: &'_ mut [u32; 32 : usize]) -> &'_ mut [u32]
+pub fn array_to_slice_mut_(x_1: &'_ mut [u32; 32usize]) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
-    let x_1: &'_ mut [u32; 32 : usize]; // arg #1
+    let x_1: &'_ mut [u32; 32usize]; // arg #1
     let _2: &'_ mut [u32]; // anonymous local
-    let _3: &'_ mut [u32; 32 : usize]; // anonymous local
+    let _3: &'_ mut [u32; 32usize]; // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_3);
         _3 = &mut (*x_1);
-        _2 = unsize_cast<&'_ mut [u32; 32 : usize], &'_ mut [u32], 32 : usize>(move _3);
+        _2 = unsize_cast<&'_ mut [u32; 32usize], &'_ mut [u32], 32usize>(move _3);
         storage_dead(_3);
         _0 = &mut (*_2) with_metadata(copy _2.metadata);
         storage_dead(_2);
@@ -1538,15 +1538,15 @@ pub fn array_to_slice_mut_(x_1: &'_ mut [u32; 32 : usize]) -> &'_ mut [u32]
 }
 
 // Full name: test_crate::array_subslice_shared_
-pub fn array_subslice_shared_(x_1: &'_ [u32; 32 : usize], y_2: usize, z_3: usize) -> &'_ [u32]
+pub fn array_subslice_shared_(x_1: &'_ [u32; 32usize], y_2: usize, z_3: usize) -> &'_ [u32]
 {
     let _0: &'_ [u32]; // return
-    let x_1: &'_ [u32; 32 : usize]; // arg #1
+    let x_1: &'_ [u32; 32usize]; // arg #1
     let y_2: usize; // arg #2
     let z_3: usize; // arg #3
     let _4: &'_ [u32]; // anonymous local
     let _5: &'_ [u32]; // anonymous local
-    let _6: &'_ [u32; 32 : usize]; // anonymous local
+    let _6: &'_ [u32; 32usize]; // anonymous local
     let _7: Range::<usize>; // anonymous local
     let _8: usize; // anonymous local
     let _9: usize; // anonymous local
@@ -1564,7 +1564,7 @@ pub fn array_subslice_shared_(x_1: &'_ [u32; 32 : usize], y_2: usize, z_3: usize
         _7 = Range::<usize> { start: move _8, end: move _9 };
         storage_dead(_9);
         storage_dead(_8);
-        _5 = std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32 : usize>(move _6, move _7) -> bb1 (unwind: bb2);
+        _5 = std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32usize>(move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1583,16 +1583,16 @@ pub fn array_subslice_shared_(x_1: &'_ [u32; 32 : usize], y_2: usize, z_3: usize
 }
 
 // Full name: test_crate::array_subslice_mut_
-pub fn array_subslice_mut_(x_1: &'_ mut [u32; 32 : usize], y_2: usize, z_3: usize) -> &'_ mut [u32]
+pub fn array_subslice_mut_(x_1: &'_ mut [u32; 32usize], y_2: usize, z_3: usize) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
-    let x_1: &'_ mut [u32; 32 : usize]; // arg #1
+    let x_1: &'_ mut [u32; 32usize]; // arg #1
     let y_2: usize; // arg #2
     let z_3: usize; // arg #3
     let _4: &'_ mut [u32]; // anonymous local
     let _5: &'_ mut [u32]; // anonymous local
     let _6: &'_ mut [u32]; // anonymous local
-    let _7: &'_ mut [u32; 32 : usize]; // anonymous local
+    let _7: &'_ mut [u32; 32usize]; // anonymous local
     let _8: Range::<usize>; // anonymous local
     let _9: usize; // anonymous local
     let _10: usize; // anonymous local
@@ -1611,7 +1611,7 @@ pub fn array_subslice_mut_(x_1: &'_ mut [u32; 32 : usize], y_2: usize, z_3: usiz
         _8 = Range::<usize> { start: move _9, end: move _10 };
         storage_dead(_10);
         storage_dead(_9);
-        _6 = std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 32 : usize>(move _7, move _8) -> bb1 (unwind: bb2);
+        _6 = std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 32usize>(move _7, move _8) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1632,10 +1632,10 @@ pub fn array_subslice_mut_(x_1: &'_ mut [u32; 32 : usize], y_2: usize, z_3: usiz
 }
 
 // Full name: test_crate::index_index_array
-pub fn index_index_array(s_1: [[u32; 32 : usize]; 32 : usize], i_2: usize, j_3: usize) -> u32
+pub fn index_index_array(s_1: [[u32; 32usize]; 32usize], i_2: usize, j_3: usize) -> u32
 {
     let _0: u32; // return
-    let s_1: [[u32; 32 : usize]; 32 : usize]; // arg #1
+    let s_1: [[u32; 32usize]; 32usize]; // arg #1
     let i_2: usize; // arg #2
     let j_3: usize; // arg #3
     let _4: usize; // anonymous local
@@ -1654,10 +1654,10 @@ pub fn index_index_array(s_1: [[u32; 32 : usize]; 32 : usize], i_2: usize, j_3: 
 }
 
 // Full name: test_crate::update_update_array
-pub fn update_update_array(s_1: [[u32; 32 : usize]; 32 : usize], i_2: usize, j_3: usize)
+pub fn update_update_array(s_1: [[u32; 32usize]; 32usize], i_2: usize, j_3: usize)
 {
     let _0: (); // return
-    let s_1: [[u32; 32 : usize]; 32 : usize]; // arg #1
+    let s_1: [[u32; 32usize]; 32usize]; // arg #1
     let i_2: usize; // arg #2
     let j_3: usize; // arg #3
     let _4: usize; // anonymous local
@@ -1669,7 +1669,7 @@ pub fn update_update_array(s_1: [[u32; 32 : usize]; 32 : usize], i_2: usize, j_3
         _4 = copy i_2;
         storage_live(_5);
         _5 = copy j_3;
-        s_1[copy _4][copy _5] = const 0 : u32;
+        s_1[copy _4][copy _5] = const 0u32;
         storage_dead(_5);
         storage_dead(_4);
         _0 = ();
@@ -1678,10 +1678,10 @@ pub fn update_update_array(s_1: [[u32; 32 : usize]; 32 : usize], i_2: usize, j_3
 }
 
 // Full name: test_crate::incr_array_self
-pub fn incr_array_self(s_1: &'_ mut [u32; 2 : usize])
+pub fn incr_array_self(s_1: &'_ mut [u32; 2usize])
 {
     let _0: (); // return
-    let s_1: &'_ mut [u32; 2 : usize]; // arg #1
+    let s_1: &'_ mut [u32; 2usize]; // arg #1
     let _2: usize; // anonymous local
     let _3: u32; // anonymous local
 
@@ -1689,8 +1689,8 @@ pub fn incr_array_self(s_1: &'_ mut [u32; 2 : usize])
         storage_live(_3);
         _0 = ();
         storage_live(_2);
-        _2 = const 0 : usize;
-        _3 = copy (*s_1)[copy _2] panic.+ const 1 : u32;
+        _2 = const 0usize;
+        _3 = copy (*s_1)[copy _2] panic.+ const 1u32;
         (*s_1)[copy _2] = move _3;
         storage_dead(_2);
         _0 = ();
@@ -1710,8 +1710,8 @@ pub fn incr_slice_self(s_1: &'_ mut [u32])
         storage_live(_3);
         _0 = ();
         storage_live(_2);
-        _2 = const 0 : usize;
-        _3 = copy (*s_1)[copy _2] panic.+ const 1 : u32;
+        _2 = const 0usize;
+        _3 = copy (*s_1)[copy _2] panic.+ const 1u32;
         (*s_1)[copy _2] = move _3;
         storage_dead(_2);
         _0 = ();
@@ -1720,11 +1720,11 @@ pub fn incr_slice_self(s_1: &'_ mut [u32])
 }
 
 // Full name: test_crate::array_local_deep_copy
-pub fn array_local_deep_copy(x_1: &'_ [u32; 32 : usize])
+pub fn array_local_deep_copy(x_1: &'_ [u32; 32usize])
 {
     let _0: (); // return
-    let x_1: &'_ [u32; 32 : usize]; // arg #1
-    let _y_2: [u32; 32 : usize]; // local
+    let x_1: &'_ [u32; 32usize]; // arg #1
+    let _y_2: [u32; 32usize]; // local
 
     bb0: {
         _0 = ();
@@ -1737,10 +1737,10 @@ pub fn array_local_deep_copy(x_1: &'_ [u32; 32 : usize])
 }
 
 // Full name: test_crate::take_array
-pub fn take_array(_1: [u32; 2 : usize])
+pub fn take_array(_1: [u32; 2usize])
 {
     let _0: (); // return
-    let _1: [u32; 2 : usize]; // arg #1
+    let _1: [u32; 2usize]; // arg #1
 
     bb0: {
         _0 = ();
@@ -1750,10 +1750,10 @@ pub fn take_array(_1: [u32; 2 : usize])
 }
 
 // Full name: test_crate::take_array_borrow
-pub fn take_array_borrow(_1: &'_ [u32; 2 : usize])
+pub fn take_array_borrow(_1: &'_ [u32; 2usize])
 {
     let _0: (); // return
-    let _1: &'_ [u32; 2 : usize]; // arg #1
+    let _1: &'_ [u32; 2usize]; // arg #1
 
     bb0: {
         _0 = ();
@@ -1789,12 +1789,12 @@ pub fn take_mut_slice(_1: &'_ mut [u32])
 }
 
 // Full name: test_crate::const_array
-pub fn const_array() -> [u32; 2 : usize]
+pub fn const_array() -> [u32; 2usize]
 {
-    let _0: [u32; 2 : usize]; // return
+    let _0: [u32; 2usize]; // return
 
     bb0: {
-        _0 = [const 0 : u32; 2 : usize];
+        _0 = [const 0u32; 2usize];
         return;
     }
 }
@@ -1804,10 +1804,10 @@ pub fn const_slice()
 {
     let _0: (); // return
     let _1: &'_ [u32]; // anonymous local
-    let _2: &'_ [u32; 2 : usize]; // anonymous local
-    let _3: &'_ [u32; 2 : usize]; // anonymous local
-    let _4: &'_ [u32; 2 : usize]; // anonymous local
-    let _5: &'_ [u32; 2 : usize]; // anonymous local
+    let _2: &'_ [u32; 2usize]; // anonymous local
+    let _3: &'_ [u32; 2usize]; // anonymous local
+    let _4: &'_ [u32; 2usize]; // anonymous local
+    let _5: &'_ [u32; 2usize]; // anonymous local
 
     bb0: {
         storage_live(_4);
@@ -1820,7 +1820,7 @@ pub fn const_slice()
         _4 = move _5;
         _3 = &(*_4);
         _2 = &(*_3);
-        _1 = unsize_cast<&'_ [u32; 2 : usize], &'_ [u32], 2 : usize>(move _2);
+        _1 = unsize_cast<&'_ [u32; 2usize], &'_ [u32], 2usize>(move _2);
         storage_dead(_2);
         storage_dead(_3);
         storage_dead(_1);
@@ -1833,27 +1833,27 @@ pub fn const_slice()
 pub fn take_all()
 {
     let _0: (); // return
-    let x_1: [u32; 2 : usize]; // local
+    let x_1: [u32; 2usize]; // local
     let _2: (); // anonymous local
-    let _3: [u32; 2 : usize]; // anonymous local
+    let _3: [u32; 2usize]; // anonymous local
     let _4: (); // anonymous local
-    let _5: [u32; 2 : usize]; // anonymous local
+    let _5: [u32; 2usize]; // anonymous local
     let _6: (); // anonymous local
-    let _7: &'_ [u32; 2 : usize]; // anonymous local
-    let _8: &'_ [u32; 2 : usize]; // anonymous local
+    let _7: &'_ [u32; 2usize]; // anonymous local
+    let _8: &'_ [u32; 2usize]; // anonymous local
     let _9: (); // anonymous local
     let _10: &'_ [u32]; // anonymous local
-    let _11: &'_ [u32; 2 : usize]; // anonymous local
-    let _12: &'_ [u32; 2 : usize]; // anonymous local
+    let _11: &'_ [u32; 2usize]; // anonymous local
+    let _12: &'_ [u32; 2usize]; // anonymous local
     let _13: (); // anonymous local
     let _14: &'_ mut [u32]; // anonymous local
-    let _15: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _16: &'_ mut [u32; 2 : usize]; // anonymous local
+    let _15: &'_ mut [u32; 2usize]; // anonymous local
+    let _16: &'_ mut [u32; 2usize]; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = [const 0 : u32; 2 : usize];
+        x_1 = [const 0u32; 2usize];
         storage_live(_2);
         storage_live(_3);
         _3 = copy x_1;
@@ -1898,7 +1898,7 @@ pub fn take_all()
         storage_live(_12);
         _12 = &x_1;
         _11 = &(*_12);
-        _10 = unsize_cast<&'_ [u32; 2 : usize], &'_ [u32], 2 : usize>(move _11);
+        _10 = unsize_cast<&'_ [u32; 2usize], &'_ [u32], 2usize>(move _11);
         storage_dead(_11);
         _9 = take_slice(move _10) -> bb7 (unwind: bb8);
     }
@@ -1917,7 +1917,7 @@ pub fn take_all()
         storage_live(_16);
         _16 = &mut x_1;
         _15 = &mut (*_16);
-        _14 = unsize_cast<&'_ mut [u32; 2 : usize], &'_ mut [u32], 2 : usize>(move _15);
+        _14 = unsize_cast<&'_ mut [u32; 2usize], &'_ mut [u32], 2usize>(move _15);
         storage_dead(_15);
         _13 = take_mut_slice(move _14) -> bb9 (unwind: bb10);
     }
@@ -1941,15 +1941,15 @@ pub fn take_all()
 }
 
 // Full name: test_crate::index_array
-pub fn index_array(x_1: [u32; 2 : usize]) -> u32
+pub fn index_array(x_1: [u32; 2usize]) -> u32
 {
     let _0: u32; // return
-    let x_1: [u32; 2 : usize]; // arg #1
+    let x_1: [u32; 2usize]; // arg #1
     let _2: usize; // anonymous local
 
     bb0: {
         storage_live(_2);
-        _2 = const 0 : usize;
+        _2 = const 0usize;
         _0 = copy x_1[copy _2];
         storage_dead(_2);
         return;
@@ -1957,15 +1957,15 @@ pub fn index_array(x_1: [u32; 2 : usize]) -> u32
 }
 
 // Full name: test_crate::index_array_borrow
-pub fn index_array_borrow(x_1: &'_ [u32; 2 : usize]) -> u32
+pub fn index_array_borrow(x_1: &'_ [u32; 2usize]) -> u32
 {
     let _0: u32; // return
-    let x_1: &'_ [u32; 2 : usize]; // arg #1
+    let x_1: &'_ [u32; 2usize]; // arg #1
     let _2: usize; // anonymous local
 
     bb0: {
         storage_live(_2);
-        _2 = const 0 : usize;
+        _2 = const 0usize;
         _0 = copy (*x_1)[copy _2];
         storage_dead(_2);
         return;
@@ -1981,7 +1981,7 @@ pub fn index_slice_u32_0(x_1: &'_ [u32]) -> u32
 
     bb0: {
         storage_live(_2);
-        _2 = const 0 : usize;
+        _2 = const 0usize;
         _0 = copy (*x_1)[copy _2];
         storage_dead(_2);
         return;
@@ -1997,7 +1997,7 @@ pub fn index_mut_slice_u32_0(x_1: &'_ mut [u32]) -> u32
 
     bb0: {
         storage_live(_2);
-        _2 = const 0 : usize;
+        _2 = const 0usize;
         _0 = copy (*x_1)[copy _2];
         storage_dead(_2);
         return;
@@ -2008,31 +2008,31 @@ pub fn index_mut_slice_u32_0(x_1: &'_ mut [u32]) -> u32
 pub fn index_all() -> u32
 {
     let _0: u32; // return
-    let x_1: [u32; 2 : usize]; // local
+    let x_1: [u32; 2usize]; // local
     let _2: bool; // anonymous local
-    let _y_3: [u32; 2 : usize]; // local
-    let _z_4: [u32; 1 : usize]; // local
+    let _y_3: [u32; 2usize]; // local
+    let _z_4: [u32; 1usize]; // local
     let _5: u32; // anonymous local
     let _6: u32; // anonymous local
     let _7: u32; // anonymous local
     let _8: u32; // anonymous local
-    let _9: [u32; 2 : usize]; // anonymous local
+    let _9: [u32; 2usize]; // anonymous local
     let _10: u32; // anonymous local
-    let _11: [u32; 2 : usize]; // anonymous local
+    let _11: [u32; 2usize]; // anonymous local
     let _12: u32; // anonymous local
     let _13: u32; // anonymous local
-    let _14: &'_ [u32; 2 : usize]; // anonymous local
-    let _15: &'_ [u32; 2 : usize]; // anonymous local
+    let _14: &'_ [u32; 2usize]; // anonymous local
+    let _15: &'_ [u32; 2usize]; // anonymous local
     let _16: u32; // anonymous local
     let _17: u32; // anonymous local
     let _18: &'_ [u32]; // anonymous local
-    let _19: &'_ [u32; 2 : usize]; // anonymous local
-    let _20: &'_ [u32; 2 : usize]; // anonymous local
+    let _19: &'_ [u32; 2usize]; // anonymous local
+    let _20: &'_ [u32; 2usize]; // anonymous local
     let _21: u32; // anonymous local
     let _22: u32; // anonymous local
     let _23: &'_ mut [u32]; // anonymous local
-    let _24: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _25: &'_ mut [u32; 2 : usize]; // anonymous local
+    let _24: &'_ mut [u32; 2usize]; // anonymous local
+    let _25: &'_ mut [u32; 2usize]; // anonymous local
     let _26: u32; // anonymous local
 
     bb0: {
@@ -2041,7 +2041,7 @@ pub fn index_all() -> u32
         storage_live(_21);
         storage_live(_26);
         storage_live(x_1);
-        x_1 = [const 0 : u32; 2 : usize];
+        x_1 = [const 0u32; 2usize];
         storage_live(_2);
         _2 = const true;
         if move _2 -> bb1 else -> bb2;
@@ -2049,14 +2049,14 @@ pub fn index_all() -> u32
 
     bb1: {
         storage_live(_y_3);
-        _y_3 = [const 0 : u32; 2 : usize];
+        _y_3 = [const 0u32; 2usize];
         storage_dead(_y_3);
         goto bb3;
     }
 
     bb2: {
         storage_live(_z_4);
-        _z_4 = [const 0 : u32];
+        _z_4 = [const 0u32];
         storage_dead(_z_4);
         goto bb3;
     }
@@ -2114,7 +2114,7 @@ pub fn index_all() -> u32
         storage_live(_20);
         _20 = &x_1;
         _19 = &(*_20);
-        _18 = unsize_cast<&'_ [u32; 2 : usize], &'_ [u32], 2 : usize>(move _19);
+        _18 = unsize_cast<&'_ [u32; 2usize], &'_ [u32], 2usize>(move _19);
         storage_dead(_19);
         _17 = index_slice_u32_0(move _18) -> bb10 (unwind: bb11);
     }
@@ -2135,7 +2135,7 @@ pub fn index_all() -> u32
         storage_live(_25);
         _25 = &mut x_1;
         _24 = &mut (*_25);
-        _23 = unsize_cast<&'_ mut [u32; 2 : usize], &'_ mut [u32], 2 : usize>(move _24);
+        _23 = unsize_cast<&'_ mut [u32; 2usize], &'_ mut [u32], 2usize>(move _24);
         storage_dead(_24);
         _22 = index_mut_slice_u32_0(move _23) -> bb12 (unwind: bb13);
     }
@@ -2163,17 +2163,17 @@ pub fn index_all() -> u32
 }
 
 // Full name: test_crate::update_array
-pub fn update_array(x_1: [u32; 2 : usize])
+pub fn update_array(x_1: [u32; 2usize])
 {
     let _0: (); // return
-    let x_1: [u32; 2 : usize]; // arg #1
+    let x_1: [u32; 2usize]; // arg #1
     let _2: usize; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
-        _2 = const 0 : usize;
-        x_1[copy _2] = const 1 : u32;
+        _2 = const 0usize;
+        x_1[copy _2] = const 1u32;
         _0 = ();
         storage_dead(_2);
         return;
@@ -2181,17 +2181,17 @@ pub fn update_array(x_1: [u32; 2 : usize])
 }
 
 // Full name: test_crate::update_array_mut_borrow
-pub fn update_array_mut_borrow(x_1: &'_ mut [u32; 2 : usize])
+pub fn update_array_mut_borrow(x_1: &'_ mut [u32; 2usize])
 {
     let _0: (); // return
-    let x_1: &'_ mut [u32; 2 : usize]; // arg #1
+    let x_1: &'_ mut [u32; 2usize]; // arg #1
     let _2: usize; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
-        _2 = const 0 : usize;
-        (*x_1)[copy _2] = const 1 : u32;
+        _2 = const 0usize;
+        (*x_1)[copy _2] = const 1u32;
         _0 = ();
         storage_dead(_2);
         return;
@@ -2208,8 +2208,8 @@ pub fn update_mut_slice(x_1: &'_ mut [u32])
     bb0: {
         _0 = ();
         storage_live(_2);
-        _2 = const 0 : usize;
-        (*x_1)[copy _2] = const 1 : u32;
+        _2 = const 0usize;
+        (*x_1)[copy _2] = const 1u32;
         _0 = ();
         storage_dead(_2);
         return;
@@ -2220,23 +2220,23 @@ pub fn update_mut_slice(x_1: &'_ mut [u32])
 pub fn update_all()
 {
     let _0: (); // return
-    let x_1: [u32; 2 : usize]; // local
+    let x_1: [u32; 2usize]; // local
     let _2: (); // anonymous local
-    let _3: [u32; 2 : usize]; // anonymous local
+    let _3: [u32; 2usize]; // anonymous local
     let _4: (); // anonymous local
-    let _5: [u32; 2 : usize]; // anonymous local
+    let _5: [u32; 2usize]; // anonymous local
     let _6: (); // anonymous local
-    let _7: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _8: &'_ mut [u32; 2 : usize]; // anonymous local
+    let _7: &'_ mut [u32; 2usize]; // anonymous local
+    let _8: &'_ mut [u32; 2usize]; // anonymous local
     let _9: (); // anonymous local
     let _10: &'_ mut [u32]; // anonymous local
-    let _11: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _12: &'_ mut [u32; 2 : usize]; // anonymous local
+    let _11: &'_ mut [u32; 2usize]; // anonymous local
+    let _12: &'_ mut [u32; 2usize]; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = [const 0 : u32; 2 : usize];
+        x_1 = [const 0u32; 2usize];
         storage_live(_2);
         storage_live(_3);
         _3 = copy x_1;
@@ -2281,7 +2281,7 @@ pub fn update_all()
         storage_live(_12);
         _12 = &mut x_1;
         _11 = &mut (*_12);
-        _10 = unsize_cast<&'_ mut [u32; 2 : usize], &'_ mut [u32], 2 : usize>(move _11);
+        _10 = unsize_cast<&'_ mut [u32; 2usize], &'_ mut [u32], 2usize>(move _11);
         storage_dead(_11);
         _9 = update_mut_slice(move _10) -> bb7 (unwind: bb8);
     }
@@ -2308,18 +2308,18 @@ pub fn update_all()
 pub fn range_all()
 {
     let _0: (); // return
-    let x_1: [u32; 4 : usize]; // local
+    let x_1: [u32; 4usize]; // local
     let _2: (); // anonymous local
     let _3: &'_ mut [u32]; // anonymous local
     let _4: &'_ mut [u32]; // anonymous local
     let _5: &'_ mut [u32]; // anonymous local
-    let _6: &'_ mut [u32; 4 : usize]; // anonymous local
+    let _6: &'_ mut [u32; 4usize]; // anonymous local
     let _7: Range::<usize>; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = [const 0 : u32; 4 : usize];
+        x_1 = [const 0u32; 4usize];
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);
@@ -2327,8 +2327,8 @@ pub fn range_all()
         storage_live(_6);
         _6 = &mut x_1;
         storage_live(_7);
-        _7 = Range::<usize> { start: const 1 : usize, end: const 3 : usize };
-        _5 = std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 4 : usize>(move _6, move _7) -> bb1 (unwind: bb2);
+        _7 = Range::<usize> { start: const 1usize, end: const 3usize };
+        _5 = std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 4usize>(move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2359,18 +2359,18 @@ pub fn range_all()
 }
 
 // Full name: test_crate::deref_array_borrow
-pub fn deref_array_borrow(x_1: &'_ [u32; 2 : usize]) -> u32
+pub fn deref_array_borrow(x_1: &'_ [u32; 2usize]) -> u32
 {
     let _0: u32; // return
-    let x_1: &'_ [u32; 2 : usize]; // arg #1
-    let x_2: [u32; 2 : usize]; // local
+    let x_1: &'_ [u32; 2usize]; // arg #1
+    let x_2: [u32; 2usize]; // local
     let _3: usize; // anonymous local
 
     bb0: {
         storage_live(x_2);
         x_2 = copy (*x_1);
         storage_live(_3);
-        _3 = const 0 : usize;
+        _3 = const 0usize;
         _0 = copy x_2[copy _3];
         storage_dead(x_2);
         storage_dead(_3);
@@ -2379,18 +2379,18 @@ pub fn deref_array_borrow(x_1: &'_ [u32; 2 : usize]) -> u32
 }
 
 // Full name: test_crate::deref_array_mut_borrow
-pub fn deref_array_mut_borrow(x_1: &'_ mut [u32; 2 : usize]) -> u32
+pub fn deref_array_mut_borrow(x_1: &'_ mut [u32; 2usize]) -> u32
 {
     let _0: u32; // return
-    let x_1: &'_ mut [u32; 2 : usize]; // arg #1
-    let x_2: [u32; 2 : usize]; // local
+    let x_1: &'_ mut [u32; 2usize]; // arg #1
+    let x_2: [u32; 2usize]; // local
     let _3: usize; // anonymous local
 
     bb0: {
         storage_live(x_2);
         x_2 = copy (*x_1);
         storage_live(_3);
-        _3 = const 0 : usize;
+        _3 = const 0usize;
         _0 = copy x_2[copy _3];
         storage_dead(x_2);
         storage_dead(_3);
@@ -2399,10 +2399,10 @@ pub fn deref_array_mut_borrow(x_1: &'_ mut [u32; 2 : usize]) -> u32
 }
 
 // Full name: test_crate::take_array_t
-pub fn take_array_t(_1: [AB; 2 : usize])
+pub fn take_array_t(_1: [AB; 2usize])
 {
     let _0: (); // return
-    let _1: [AB; 2 : usize]; // arg #1
+    let _1: [AB; 2usize]; // arg #1
 
     bb0: {
         _0 = ();
@@ -2415,11 +2415,11 @@ pub fn take_array_t(_1: [AB; 2 : usize])
 pub fn non_copyable_array()
 {
     let _0: (); // return
-    let x_1: [AB; 2 : usize]; // local
+    let x_1: [AB; 2usize]; // local
     let _2: AB; // anonymous local
     let _3: AB; // anonymous local
     let _4: (); // anonymous local
-    let _5: [AB; 2 : usize]; // anonymous local
+    let _5: [AB; 2usize]; // anonymous local
 
     bb0: {
         _0 = ();
@@ -2470,9 +2470,9 @@ pub fn sum(s_1: &'_ [u32]) -> u32
         storage_live(_10);
         storage_live(_11);
         storage_live(sum_2);
-        sum_2 = const 0 : u32;
+        sum_2 = const 0u32;
         storage_live(i_3);
-        i_3 = const 0 : usize;
+        i_3 = const 0usize;
         goto bb1;
     }
 
@@ -2507,7 +2507,7 @@ pub fn sum(s_1: &'_ [u32]) -> u32
         sum_2 = move _10;
         storage_dead(_8);
         storage_dead(_9);
-        _11 = copy i_3 panic.+ const 1 : usize;
+        _11 = copy i_3 panic.+ const 1usize;
         i_3 = move _11;
         storage_dead(_4);
         goto bb1;
@@ -2556,7 +2556,7 @@ pub fn sum2(s_1: &'_ [u32], s2_2: &'_ [u32]) -> u32
         storage_live(_21);
         storage_live(_22);
         storage_live(sum_3);
-        sum_3 = const 0 : u32;
+        sum_3 = const 0u32;
         storage_live(_4);
         storage_live(_5);
         storage_live(_6);
@@ -2591,7 +2591,7 @@ pub fn sum2(s_1: &'_ [u32], s2_2: &'_ [u32]) -> u32
         storage_dead(_5);
         storage_dead(_4);
         storage_live(i_10);
-        i_10 = const 0 : usize;
+        i_10 = const 0usize;
         goto bb7;
     }
 
@@ -2651,7 +2651,7 @@ pub fn sum2(s_1: &'_ [u32], s2_2: &'_ [u32]) -> u32
         storage_dead(_15);
         storage_dead(_19);
         storage_dead(_17);
-        _22 = copy i_10 panic.+ const 1 : usize;
+        _22 = copy i_10 panic.+ const 1usize;
         i_10 = move _22;
         storage_dead(_11);
         goto bb7;
@@ -2673,9 +2673,9 @@ pub fn f0()
 {
     let _0: (); // return
     let s_1: &'_ mut [u32]; // local
-    let _2: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _3: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _4: [u32; 2 : usize]; // anonymous local
+    let _2: &'_ mut [u32; 2usize]; // anonymous local
+    let _3: &'_ mut [u32; 2usize]; // anonymous local
+    let _4: [u32; 2usize]; // anonymous local
     let _5: usize; // anonymous local
 
     bb0: {
@@ -2684,15 +2684,15 @@ pub fn f0()
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);
-        _4 = [const 1 : u32, const 2 : u32];
+        _4 = [const 1u32, const 2u32];
         _3 = &mut _4;
         _2 = &mut (*_3);
-        s_1 = unsize_cast<&'_ mut [u32; 2 : usize], &'_ mut [u32], 2 : usize>(move _2);
+        s_1 = unsize_cast<&'_ mut [u32; 2usize], &'_ mut [u32], 2usize>(move _2);
         storage_dead(_2);
         storage_dead(_3);
         storage_live(_5);
-        _5 = const 0 : usize;
-        (*s_1)[copy _5] = const 1 : u32;
+        _5 = const 0usize;
+        (*s_1)[copy _5] = const 1u32;
         storage_dead(_5);
         _0 = ();
         storage_dead(_4);
@@ -2705,16 +2705,16 @@ pub fn f0()
 pub fn f1()
 {
     let _0: (); // return
-    let s_1: [u32; 2 : usize]; // local
+    let s_1: [u32; 2usize]; // local
     let _2: usize; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(s_1);
-        s_1 = [const 1 : u32, const 2 : u32];
+        s_1 = [const 1u32, const 2u32];
         storage_live(_2);
-        _2 = const 0 : usize;
-        s_1[copy _2] = const 1 : u32;
+        _2 = const 0usize;
+        s_1[copy _2] = const 1u32;
         storage_dead(_2);
         _0 = ();
         storage_dead(s_1);
@@ -2736,15 +2736,15 @@ pub fn f2(_1: u32)
 }
 
 // Full name: test_crate::f4
-pub fn f4(x_1: &'_ [u32; 32 : usize], y_2: usize, z_3: usize) -> &'_ [u32]
+pub fn f4(x_1: &'_ [u32; 32usize], y_2: usize, z_3: usize) -> &'_ [u32]
 {
     let _0: &'_ [u32]; // return
-    let x_1: &'_ [u32; 32 : usize]; // arg #1
+    let x_1: &'_ [u32; 32usize]; // arg #1
     let y_2: usize; // arg #2
     let z_3: usize; // arg #3
     let _4: &'_ [u32]; // anonymous local
     let _5: &'_ [u32]; // anonymous local
-    let _6: &'_ [u32; 32 : usize]; // anonymous local
+    let _6: &'_ [u32; 32usize]; // anonymous local
     let _7: Range::<usize>; // anonymous local
     let _8: usize; // anonymous local
     let _9: usize; // anonymous local
@@ -2762,7 +2762,7 @@ pub fn f4(x_1: &'_ [u32; 32 : usize], y_2: usize, z_3: usize) -> &'_ [u32]
         _7 = Range::<usize> { start: move _8, end: move _9 };
         storage_dead(_9);
         storage_dead(_8);
-        _5 = std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32 : usize>(move _6, move _7) -> bb1 (unwind: bb2);
+        _5 = std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32usize>(move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2784,26 +2784,26 @@ pub fn f4(x_1: &'_ [u32; 32 : usize], y_2: usize, z_3: usize) -> &'_ [u32]
 pub fn f3() -> u32
 {
     let _0: u32; // return
-    let a_1: [u32; 2 : usize]; // local
+    let a_1: [u32; 2usize]; // local
     let _2: (); // anonymous local
     let _3: u32; // anonymous local
     let _4: usize; // anonymous local
-    let b_5: [u32; 32 : usize]; // local
+    let b_5: [u32; 32usize]; // local
     let _6: &'_ [u32]; // anonymous local
-    let _7: &'_ [u32; 2 : usize]; // anonymous local
-    let _8: &'_ [u32; 2 : usize]; // anonymous local
+    let _7: &'_ [u32; 2usize]; // anonymous local
+    let _8: &'_ [u32; 2usize]; // anonymous local
     let _9: &'_ [u32]; // anonymous local
     let _10: &'_ [u32]; // anonymous local
-    let _11: &'_ [u32; 32 : usize]; // anonymous local
-    let _12: &'_ [u32; 32 : usize]; // anonymous local
+    let _11: &'_ [u32; 32usize]; // anonymous local
+    let _12: &'_ [u32; 32usize]; // anonymous local
 
     bb0: {
         storage_live(a_1);
-        a_1 = [const 1 : u32, const 2 : u32];
+        a_1 = [const 1u32, const 2u32];
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);
-        _4 = const 0 : usize;
+        _4 = const 0usize;
         _3 = copy a_1[copy _4];
         _2 = f2(move _3) -> bb1 (unwind: bb2);
     }
@@ -2813,13 +2813,13 @@ pub fn f3() -> u32
         storage_dead(_4);
         storage_dead(_2);
         storage_live(b_5);
-        b_5 = [const 0 : u32; 32 : usize];
+        b_5 = [const 0u32; 32usize];
         storage_live(_6);
         storage_live(_7);
         storage_live(_8);
         _8 = &a_1;
         _7 = &(*_8);
-        _6 = unsize_cast<&'_ [u32; 2 : usize], &'_ [u32], 2 : usize>(move _7);
+        _6 = unsize_cast<&'_ [u32; 2usize], &'_ [u32], 2usize>(move _7);
         storage_dead(_7);
         storage_live(_9);
         storage_live(_10);
@@ -2827,7 +2827,7 @@ pub fn f3() -> u32
         storage_live(_12);
         _12 = &b_5;
         _11 = &(*_12);
-        _10 = f4(move _11, const 16 : usize, const 18 : usize) -> bb3 (unwind: bb4);
+        _10 = f4(move _11, const 16usize, const 18usize) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -2861,15 +2861,15 @@ pub fn f3() -> u32
 }
 
 // Full name: test_crate::f5
-pub fn f5(x_1: &'_ [u32; 32 : usize]) -> u32
+pub fn f5(x_1: &'_ [u32; 32usize]) -> u32
 {
     let _0: u32; // return
-    let x_1: &'_ [u32; 32 : usize]; // arg #1
+    let x_1: &'_ [u32; 32usize]; // arg #1
     let _2: usize; // anonymous local
 
     bb0: {
         storage_live(_2);
-        _2 = const 0 : usize;
+        _2 = const 0usize;
         _0 = copy (*x_1)[copy _2];
         storage_dead(_2);
         return;
@@ -2880,22 +2880,22 @@ pub fn f5(x_1: &'_ [u32; 32 : usize]) -> u32
 pub fn ite()
 {
     let _0: (); // return
-    let x_1: [u32; 2 : usize]; // local
+    let x_1: [u32; 2usize]; // local
     let _2: bool; // anonymous local
-    let y_3: [u32; 2 : usize]; // local
+    let y_3: [u32; 2usize]; // local
     let _4: u32; // anonymous local
     let _5: &'_ mut [u32]; // anonymous local
-    let _6: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _7: &'_ mut [u32; 2 : usize]; // anonymous local
+    let _6: &'_ mut [u32; 2usize]; // anonymous local
+    let _7: &'_ mut [u32; 2usize]; // anonymous local
     let _8: u32; // anonymous local
     let _9: &'_ mut [u32]; // anonymous local
-    let _10: &'_ mut [u32; 2 : usize]; // anonymous local
-    let _11: &'_ mut [u32; 2 : usize]; // anonymous local
+    let _10: &'_ mut [u32; 2usize]; // anonymous local
+    let _11: &'_ mut [u32; 2usize]; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(x_1);
-        x_1 = [const 0 : u32; 2 : usize];
+        x_1 = [const 0u32; 2usize];
         storage_live(_2);
         _2 = const true;
         if move _2 -> bb1 else -> bb2;
@@ -2903,14 +2903,14 @@ pub fn ite()
 
     bb1: {
         storage_live(y_3);
-        y_3 = [const 0 : u32; 2 : usize];
+        y_3 = [const 0u32; 2usize];
         storage_live(_4);
         storage_live(_5);
         storage_live(_6);
         storage_live(_7);
         _7 = &mut x_1;
         _6 = &mut (*_7);
-        _5 = unsize_cast<&'_ mut [u32; 2 : usize], &'_ mut [u32], 2 : usize>(move _6);
+        _5 = unsize_cast<&'_ mut [u32; 2usize], &'_ mut [u32], 2usize>(move _6);
         storage_dead(_6);
         _4 = index_mut_slice_u32_0(move _5) -> bb3 (unwind: bb4);
     }
@@ -2930,7 +2930,7 @@ pub fn ite()
         storage_live(_11);
         _11 = &mut y_3;
         _10 = &mut (*_11);
-        _9 = unsize_cast<&'_ mut [u32; 2 : usize], &'_ mut [u32], 2 : usize>(move _10);
+        _9 = unsize_cast<&'_ mut [u32; 2usize], &'_ mut [u32], 2usize>(move _10);
         storage_dead(_10);
         _8 = index_mut_slice_u32_0(move _9) -> bb6 (unwind: bb7);
     }
@@ -2977,7 +2977,7 @@ pub fn zero_slice(a_1: &'_ mut [u8])
         storage_live(_9);
         _0 = ();
         storage_live(i_2);
-        i_2 = const 0 : usize;
+        i_2 = const 0usize;
         storage_live(len_3);
         storage_live(_4);
         _4 = &(*a_1) with_metadata(copy a_1.metadata);
@@ -3008,9 +3008,9 @@ pub fn zero_slice(a_1: &'_ mut [u8])
         storage_dead(_6);
         storage_live(_8);
         _8 = copy i_2;
-        (*a_1)[copy _8] = const 0 : u8;
+        (*a_1)[copy _8] = const 0u8;
         storage_dead(_8);
-        _9 = copy i_2 panic.+ const 1 : usize;
+        _9 = copy i_2 panic.+ const 1usize;
         i_2 = move _9;
         storage_dead(_5);
         goto bb3;
@@ -3052,7 +3052,7 @@ pub fn iter_mut_slice(a_1: &'_ mut [u8])
     bb1: {
         storage_dead(_3);
         storage_live(i_4);
-        i_4 = const 0 : usize;
+        i_4 = const 0usize;
         goto bb3;
     }
 
@@ -3073,7 +3073,7 @@ pub fn iter_mut_slice(a_1: &'_ mut [u8])
     bb4: {
         storage_dead(_7);
         storage_dead(_6);
-        _8 = copy i_4 panic.+ const 1 : usize;
+        _8 = copy i_4 panic.+ const 1usize;
         i_4 = move _8;
         storage_dead(_5);
         goto bb3;
@@ -3110,9 +3110,9 @@ pub fn sum_mut_slice(a_1: &'_ mut [u32]) -> u32
         storage_live(_10);
         storage_live(_11);
         storage_live(i_2);
-        i_2 = const 0 : usize;
+        i_2 = const 0usize;
         storage_live(s_3);
-        s_3 = const 0 : u32;
+        s_3 = const 0u32;
         goto bb1;
     }
 
@@ -3147,7 +3147,7 @@ pub fn sum_mut_slice(a_1: &'_ mut [u32]) -> u32
         s_3 = move _10;
         storage_dead(_8);
         storage_dead(_9);
-        _11 = copy i_2 panic.+ const 1 : usize;
+        _11 = copy i_2 panic.+ const 1usize;
         i_2 = move _11;
         storage_dead(_4);
         goto bb1;
@@ -3165,16 +3165,16 @@ pub fn sum_mut_slice(a_1: &'_ mut [u32]) -> u32
 }
 
 // Full name: test_crate::slice_pattern_1
-fn slice_pattern_1(x_1: [(); 1 : usize])
+fn slice_pattern_1(x_1: [(); 1usize])
 {
     let _0: (); // return
-    let x_1: [(); 1 : usize]; // arg #1
+    let x_1: [(); 1usize]; // arg #1
     let _named_2: (); // local
 
     bb0: {
         _0 = ();
         storage_live(_named_2);
-        _named_2 = copy x_1[const 0 : usize];
+        _named_2 = copy x_1[const 0usize];
         _0 = ();
         storage_dead(_named_2);
         return;
@@ -3182,16 +3182,16 @@ fn slice_pattern_1(x_1: [(); 1 : usize])
 }
 
 // Full name: test_crate::slice_pattern_3
-fn slice_pattern_3(x_1: &'_ [(); 1 : usize])
+fn slice_pattern_3(x_1: &'_ [(); 1usize])
 {
     let _0: (); // return
-    let x_1: &'_ [(); 1 : usize]; // arg #1
+    let x_1: &'_ [(); 1usize]; // arg #1
     let _named_2: &'_ (); // local
 
     bb0: {
         _0 = ();
         storage_live(_named_2);
-        _named_2 = &(*x_1)[const 0 : usize];
+        _named_2 = &(*x_1)[const 0usize];
         _0 = ();
         storage_dead(_named_2);
         return;
@@ -3217,14 +3217,14 @@ fn slice_pattern_4(x_1: &'_ [()])
         _0 = ();
         _3 = copy x_1.metadata;
         _2 = move _3;
-        _4 = const 1 : usize;
+        _4 = const 1usize;
         _5 = move _2 == move _4;
         if move _5 -> bb1 else -> bb2;
     }
 
     bb1: {
         storage_live(_named_6);
-        _named_6 = &(*x_1)[const 0 : usize];
+        _named_6 = &(*x_1)[const 0usize];
         _0 = ();
         storage_dead(_named_6);
         goto bb3;

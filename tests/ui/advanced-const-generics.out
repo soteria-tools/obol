@@ -104,7 +104,7 @@ pub fn fmt(self_1: &'_ Foo, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
         _3 = &two-phase-mut (*f_2);
         storage_live(_4);
         _5 = @discriminant((*self_1));
-        switch move _5 -> 0 : isize: bb1, 1 : isize: bb2, otherwise: bb3;
+        switch move _5 -> 0isize: bb1, 1isize: bb2, otherwise: bb3;
     }
 
     bb1: {

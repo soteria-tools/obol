@@ -1,6 +1,6 @@
-Thread errored when extracting body of test_crate::main: Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 12, col: 16 }, end: Loc { line: 12, col: 21 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
-Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
-Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 0, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
+Thread errored when extracting body of test_crate::main: Error { span: Span { data: SpanData { file_id: 1, beg: Loc { line: 12, col: 16 }, end: Loc { line: 12, col: 21 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
+Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 1, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
+Item test_crate::SLICE caused errors; ignoring. Error { span: Span { data: SpanData { file_id: 1, beg: Loc { line: 3, col: 1 }, end: Loc { line: 3, col: 27 } }, generated_from_span: None }, msg: "Unsupported constant kind: Unevaluated(ConstDef(DefId { id: 1, name: \"test_crate::SLICE::{constant#0}\" }), GenericArgs([]))" }
 
 // Final ULLBC:
 
@@ -85,7 +85,7 @@ pub enum AssertKind {
 fn four() -> usize
 {
     let _0: usize; // return
-    let _1: [(); 42 : usize]; // anonymous local
+    let _1: [(); 42usize]; // anonymous local
     let _2: usize; // anonymous local
     let _3: usize; // anonymous local
 
@@ -95,9 +95,9 @@ fn four() -> usize
         _1 = const RawMemory();
         storage_dead(_1);
         storage_live(_2);
-        _2 = const 42 : usize;
+        _2 = const 42usize;
         storage_dead(_2);
-        _3 = const 2 : usize panic.+ const 2 : usize;
+        _3 = const 2usize panic.+ const 2usize;
         _0 = move _3;
         return;
     }

@@ -10,7 +10,7 @@ fn anon_const_0() -> usize
     let _0: usize; // return
 
     bb0: {
-        _0 = const 0 : usize;
+        _0 = const 0usize;
         return;
     }
 }
@@ -33,7 +33,7 @@ fn constant()
         storage_live(_5);
         _0 = ();
         storage_live(_val_1);
-        _val_1 = const 0 : usize;
+        _val_1 = const 0usize;
         storage_live(_ref_2);
         storage_live(_6);
         _6 = &anon_const_0;
@@ -41,7 +41,7 @@ fn constant()
         _ref_2 = &(*_5);
         storage_live(_ref_mut_3);
         storage_live(_4);
-        _4 = const 0 : usize;
+        _4 = const 0usize;
         _ref_mut_3 = &mut _4;
         _0 = ();
         storage_dead(_4);
@@ -58,7 +58,7 @@ fn SHARED_STATIC() -> usize
     let _0: usize; // return
 
     bb0: {
-        _0 = const 0 : usize;
+        _0 = const 0usize;
         return;
     }
 }
@@ -117,7 +117,7 @@ fn MUT_STATIC() -> usize
     let _0: usize; // return
 
     bb0: {
-        _0 = const 0 : usize;
+        _0 = const 0usize;
         return;
     }
 }
