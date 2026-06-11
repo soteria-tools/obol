@@ -1,0 +1,161 @@
+
+// Final ULLBC:
+
+pub fn std::ptr::const_ptr::<impl *const T>::is_null::<u8>(self_1: *const u8) -> bool
+{
+    let _0: bool; // return
+    let self_1: *const u8; // arg #1
+    let _2: *const u8; // anonymous local
+    let _3: usize; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = cast<*const u8, *const u8>(copy self_1);
+        storage_live(_3);
+        _3 = @ZeroIfNull<*const u8>(copy _2) -> bb1 (unwind: bb1);
+    }
+
+    bb1: {
+        _0 = move _3 == const 0usize;
+        storage_dead(_3);
+        storage_dead(_2);
+        return;
+    }
+}
+
+pub fn std::ptr::const_ptr::<impl *const T>::is_null::<u32>(self_1: *const u32) -> bool
+{
+    let _0: bool; // return
+    let self_1: *const u32; // arg #1
+    let _2: *const u8; // anonymous local
+    let _3: usize; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = cast<*const u32, *const u8>(copy self_1);
+        storage_live(_3);
+        _3 = @ZeroIfNull<*const u8>(copy _2) -> bb1 (unwind: bb1);
+    }
+
+    bb1: {
+        _0 = move _3 == const 0usize;
+        storage_dead(_3);
+        storage_dead(_2);
+        return;
+    }
+}
+
+pub fn std::ptr::mut_ptr::<impl *mut T>::is_null::<i32>(self_1: *mut i32) -> bool
+{
+    let _0: bool; // return
+    let self_1: *mut i32; // arg #1
+    let _2: *const u8; // anonymous local
+    let _3: usize; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = cast<*mut i32, *const u8>(copy self_1);
+        storage_live(_3);
+        _3 = @ZeroIfNull<*const u8>(copy _2) -> bb1 (unwind: bb1);
+    }
+
+    bb1: {
+        _0 = move _3 == const 0usize;
+        storage_dead(_3);
+        storage_dead(_2);
+        return;
+    }
+}
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: test_crate::is_null_const
+pub fn is_null_const(p_1: *const u8) -> bool
+{
+    let _0: bool; // return
+    let p_1: *const u8; // arg #1
+    let _2: *const u8; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = copy p_1;
+        _0 = std::ptr::const_ptr::<impl *const T>::is_null::<u8>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::is_null_mut
+pub fn is_null_mut(p_1: *mut i32) -> bool
+{
+    let _0: bool; // return
+    let p_1: *mut i32; // arg #1
+    let _2: *mut i32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = copy p_1;
+        _0 = std::ptr::mut_ptr::<impl *mut T>::is_null::<i32>(move _2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_2);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::branch_on_null
+pub fn branch_on_null(p_1: *const u32) -> u32
+{
+    let _0: u32; // return
+    let p_1: *const u32; // arg #1
+    let _2: bool; // anonymous local
+    let _3: *const u32; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        storage_live(_3);
+        _3 = copy p_1;
+        _2 = std::ptr::const_ptr::<impl *const T>::is_null::<u32>(move _3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        if move _2 -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_3);
+        _0 = const 0u32;
+        goto bb5;
+    }
+
+    bb4: {
+        storage_dead(_3);
+        _0 = copy (*p_1);
+        goto bb5;
+    }
+
+    bb5: {
+        storage_dead(_2);
+        return;
+    }
+}
+
+
+

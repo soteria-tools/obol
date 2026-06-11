@@ -574,13 +574,7 @@ fn precondition_check(addr_1: *const (), align_2: usize, is_zst_3: bool)
     bb6: {
         storage_live(_9);
         storage_live(_10);
-        _10 = transmute<*const (), usize>(copy addr_1);
-        _9 = move _10 == const 0usize;
-        storage_dead(_10);
-        _4 = ~(move _9);
-        storage_dead(_9);
-        storage_dead(_8);
-        if move _4 -> bb8 else -> bb7;
+        _10 = @ZeroIfNull<*const ()>(copy addr_1) -> bb11 (unwind: bb11);
     }
 
     bb7: {
@@ -625,6 +619,15 @@ fn precondition_check(addr_1: *const (), align_2: usize, is_zst_3: bool)
 
     bb10: {
         undefined_behavior;
+    }
+
+    bb11: {
+        _9 = move _10 == const 0usize;
+        storage_dead(_10);
+        _4 = ~(move _9);
+        storage_dead(_9);
+        storage_dead(_8);
+        if move _4 -> bb8 else -> bb7;
     }
 }
 
@@ -1210,8 +1213,7 @@ pub fn try_with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ 
     bb1: {
         storage_dead(_7);
         storage_live(_15);
-        _15 = transmute<*const u32, usize>(copy self_6);
-        switch copy _15 -> 0usize: bb3, otherwise: bb4;
+        _15 = @ZeroIfNull<*const u32>(copy self_6) -> bb8 (unwind: bb8);
     }
 
     bb2: {
@@ -1287,6 +1289,10 @@ pub fn try_with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ 
         _0 = Result::<u32, AccessError>::Ok { 0: move _10 };
         storage_dead(_10);
         goto bb6;
+    }
+
+    bb8: {
+        switch copy _15 -> 0usize: bb3, otherwise: bb4;
     }
 }
 

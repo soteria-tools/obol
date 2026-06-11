@@ -96,6 +96,9 @@ fn run_passes(ctx: &mut TransformCtx) {
         CowBox::Borrowed(&simplify_output::remove_unit_locals::Transform),
         // Another round.
         CowBox::Borrowed(&control_flow::merge_goto_chains::Transform),
+        // When a pointer is transmuted only to check whether it is null, replace the bit-level
+        // transmute with a call to the `ZeroIfNull` builtin. Gated on `reconstruct_null_checks`.
+        CowBox::Borrowed(&resugar::reconstruct_ptr_null_checks::Transform),
         // Filter the "dangling" blocks. Those might have been introduced by, for instance,
         // [`merge_goto_chains`].
         CowBox::Borrowed(&normalize::filter_unreachable_blocks::Transform),

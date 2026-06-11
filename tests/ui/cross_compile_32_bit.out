@@ -299,8 +299,7 @@ fn precondition_check(ptr_1: *mut ())
         storage_live(_3);
         _0 = ();
         storage_live(_5);
-        _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0usize: bb1, otherwise: bb2;
+        _5 = @ZeroIfNull<*mut ()>(copy ptr_1) -> bb5 (unwind: bb5);
     }
 
     bb1: {
@@ -346,6 +345,10 @@ fn precondition_check(ptr_1: *mut ())
 
     bb4: {
         undefined_behavior;
+    }
+
+    bb5: {
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 }
 

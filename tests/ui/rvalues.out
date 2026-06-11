@@ -884,8 +884,7 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         storage_live(_3);
         _0 = ();
         storage_live(_5);
-        _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0usize: bb1, otherwise: bb2;
+        _5 = @ZeroIfNull<*mut ()>(copy ptr_1) -> bb5 (unwind: bb5);
     }
 
     bb1: {
@@ -931,6 +930,10 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
 
     bb4: {
         undefined_behavior;
+    }
+
+    bb5: {
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 }
 
@@ -1122,8 +1125,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(self_8);
         storage_live(self_9);
         storage_live(_23);
-        _23 = transmute<*mut u8, usize>(copy raw_ptr_6);
-        switch copy _23 -> 0usize: bb20, otherwise: bb21;
+        _23 = @ZeroIfNull<*mut u8>(copy raw_ptr_6) -> bb30 (unwind: bb30);
     }
 
     bb20: {
@@ -1226,6 +1228,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
 
     bb29: {
         undefined_behavior;
+    }
+
+    bb30: {
+        switch copy _23 -> 0usize: bb20, otherwise: bb21;
     }
 }
 

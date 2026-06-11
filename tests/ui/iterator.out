@@ -1848,13 +1848,7 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
     bb3: {
         storage_live(_12);
         storage_live(_13);
-        _13 = transmute<*mut (), usize>(copy data_1);
-        _12 = move _13 == const 0usize;
-        storage_dead(_13);
-        _5 = ~(move _12);
-        storage_dead(_12);
-        storage_dead(_11);
-        if move _5 -> bb5 else -> bb6;
+        _13 = @ZeroIfNull<*mut ()>(copy data_1) -> bb14 (unwind: bb14);
     }
 
     bb4: {
@@ -1933,6 +1927,15 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
         storage_dead(_7);
         storage_dead(_5);
         return;
+    }
+
+    bb14: {
+        _12 = move _13 == const 0usize;
+        storage_dead(_13);
+        _5 = ~(move _12);
+        storage_dead(_12);
+        storage_dead(_11);
+        if move _5 -> bb5 else -> bb6;
     }
 }
 

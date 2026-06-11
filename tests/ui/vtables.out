@@ -1379,13 +1379,7 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     bb9: {
         storage_live(_16);
         storage_live(_17);
-        _17 = transmute<*const (), usize>(copy src_1);
-        _16 = move _17 == const 0usize;
-        storage_dead(_17);
-        _8 = ~(move _16);
-        storage_dead(_16);
-        storage_dead(_15);
-        if move _8 -> bb11 else -> bb10;
+        _17 = @ZeroIfNull<*const ()>(copy src_1) -> bb26 (unwind: bb26);
     }
 
     bb10: {
@@ -1471,13 +1465,7 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     bb21: {
         storage_live(_19);
         storage_live(_20);
-        _20 = transmute<*mut (), usize>(copy dst_2);
-        _19 = move _20 == const 0usize;
-        storage_dead(_20);
-        _10 = ~(move _19);
-        storage_dead(_19);
-        storage_dead(_18);
-        if move _10 -> bb22 else -> bb12;
+        _20 = @ZeroIfNull<*mut ()>(copy dst_2) -> bb27 (unwind: bb27);
     }
 
     bb22: {
@@ -1497,6 +1485,24 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     bb25: {
         storage_dead(_6);
         return;
+    }
+
+    bb26: {
+        _16 = move _17 == const 0usize;
+        storage_dead(_17);
+        _8 = ~(move _16);
+        storage_dead(_16);
+        storage_dead(_15);
+        if move _8 -> bb11 else -> bb10;
+    }
+
+    bb27: {
+        _19 = move _20 == const 0usize;
+        storage_dead(_20);
+        _10 = ~(move _19);
+        storage_dead(_19);
+        storage_dead(_18);
+        if move _10 -> bb22 else -> bb12;
     }
 }
 
@@ -1978,8 +1984,7 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
         storage_live(_3);
         _0 = ();
         storage_live(_5);
-        _5 = transmute<*mut (), usize>(copy ptr_1);
-        switch copy _5 -> 0usize: bb1, otherwise: bb2;
+        _5 = @ZeroIfNull<*mut ()>(copy ptr_1) -> bb5 (unwind: bb5);
     }
 
     bb1: {
@@ -2025,6 +2030,10 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
 
     bb4: {
         undefined_behavior;
+    }
+
+    bb5: {
+        switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 }
 
@@ -2245,8 +2254,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(self_8);
         storage_live(self_9);
         storage_live(_23);
-        _23 = transmute<*mut u8, usize>(copy raw_ptr_6);
-        switch copy _23 -> 0usize: bb20, otherwise: bb21;
+        _23 = @ZeroIfNull<*mut u8>(copy raw_ptr_6) -> bb30 (unwind: bb30);
     }
 
     bb20: {
@@ -2349,6 +2357,10 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
 
     bb29: {
         undefined_behavior;
+    }
+
+    bb30: {
+        switch copy _23 -> 0usize: bb20, otherwise: bb21;
     }
 }
 

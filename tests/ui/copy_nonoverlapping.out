@@ -856,13 +856,7 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
     bb9: {
         storage_live(_16);
         storage_live(_17);
-        _17 = transmute<*const (), usize>(copy src_1);
-        _16 = move _17 == const 0usize;
-        storage_dead(_17);
-        _8 = ~(move _16);
-        storage_dead(_16);
-        storage_dead(_15);
-        if move _8 -> bb11 else -> bb10;
+        _17 = @ZeroIfNull<*const ()>(copy src_1) -> bb26 (unwind: bb26);
     }
 
     bb10: {
@@ -948,13 +942,7 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
     bb21: {
         storage_live(_19);
         storage_live(_20);
-        _20 = transmute<*mut (), usize>(copy dst_2);
-        _19 = move _20 == const 0usize;
-        storage_dead(_20);
-        _10 = ~(move _19);
-        storage_dead(_19);
-        storage_dead(_18);
-        if move _10 -> bb22 else -> bb12;
+        _20 = @ZeroIfNull<*mut ()>(copy dst_2) -> bb27 (unwind: bb27);
     }
 
     bb22: {
@@ -974,6 +962,24 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
     bb25: {
         storage_dead(_6);
         return;
+    }
+
+    bb26: {
+        _16 = move _17 == const 0usize;
+        storage_dead(_17);
+        _8 = ~(move _16);
+        storage_dead(_16);
+        storage_dead(_15);
+        if move _8 -> bb11 else -> bb10;
+    }
+
+    bb27: {
+        _19 = move _20 == const 0usize;
+        storage_dead(_20);
+        _10 = ~(move _19);
+        storage_dead(_19);
+        storage_dead(_18);
+        if move _10 -> bb22 else -> bb12;
     }
 }
 
