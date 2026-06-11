@@ -25,7 +25,6 @@ pub(crate) struct BodyTransCtx<'tcx, 'tctx, 'ictx> {
     /// The translation context for the item.
     pub i_ctx: &'ictx mut ItemTransCtx<'tcx, 'tctx>,
 
-    pub generic_args: Option<ty::GenericArgs>,
     pub local_decls: &'ictx [mir::LocalDecl],
     pub signature: &'ictx mut FunSig,
 
@@ -62,13 +61,11 @@ impl<'tcx, 'tctx, 'ictx> BodyTransCtx<'tcx, 'tctx, 'ictx> {
         i_ctx: &'ictx mut ItemTransCtx<'tcx, 'tctx>,
         local_decls: &'ictx [mir::LocalDecl],
         signature: &'ictx mut FunSig,
-        generic_args: Option<ty::GenericArgs>,
     ) -> Self {
         BodyTransCtx {
             i_ctx,
             local_decls,
             signature,
-            generic_args,
             locals: Default::default(),
             locals_map: Default::default(),
             blocks: Default::default(),
@@ -136,47 +133,7 @@ impl BodyTransCtx<'_, '_, '_> {
         self.locals_map.insert(rid, local_id);
     }
 
-    fn subst_ty(&mut self, span: Span, ty: ty::Ty) -> Result<ty::Ty, Error> {
-        // For some extremely bizarre reason, constructor functions (e.g. Option::Some)
-        // have their locals non-substituted, despite the function having the right generics.
-        // We thus do it manually, which is... not good.
-        match ty.kind() {
-            ty::TyKind::Param(param) => Ok(self.generic_args.as_ref().unwrap()[param]),
-            ty::TyKind::RigidTy(rigid) => match rigid {
-                ty::RigidTy::Adt(def, args)
-                    if args
-                        .0
-                        .iter()
-                        .any(|a| a.ty().is_some_and(|ty| ty.kind().rigid().is_none())) =>
-                {
-                    let new_args: Vec<_> = args
-                        .clone()
-                        .0
-                        .into_iter()
-                        .map(|arg| -> Result<_, Error> {
-                            match arg {
-                                ty::GenericArgKind::Type(ty) => {
-                                    let ty = self.subst_ty(span, ty)?;
-                                    Ok(ty::GenericArgKind::Type(ty))
-                                }
-                                _ => Ok(arg),
-                            }
-                        })
-                        .try_collect()?;
-                    Ok(ty::Ty::from_rigid_kind(ty::RigidTy::Adt(
-                        def,
-                        ty::GenericArgs(new_args),
-                    )))
-                }
-                _ => Ok(ty),
-            },
-
-            _ => Ok(ty),
-        }
-    }
-
     fn translate_ty(&mut self, span: Span, ty: ty::Ty) -> Result<Ty, Error> {
-        let ty = self.subst_ty(span, ty)?;
         self.i_ctx.translate_ty(span, ty)
     }
 

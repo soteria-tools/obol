@@ -323,13 +323,8 @@ impl ItemTransCtx<'_, '_> {
             || matches!(def.kind, mir::mono::InstanceKind::Intrinsic)
         {
             Body::Opaque
-        } else if let Some((is_polymorphic, body)) = self.get_body(def) {
-            let generics = if is_polymorphic {
-                Some(def.args())
-            } else {
-                None
-            };
-            let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals(), &mut signature, generics);
+        } else if let Some(body) = self.get_body(def) {
+            let mut bt_ctx = BodyTransCtx::new(&mut self, body.locals(), &mut signature);
             bt_ctx.translate_body(span, def, &body)
         } else {
             trace!("Instance {} has no body -- left opaque.", def.name(),);

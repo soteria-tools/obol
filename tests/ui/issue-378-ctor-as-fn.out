@@ -649,13 +649,6 @@ pub enum Option::<u8> {
   Some(0: u8),
 }
 
-// Full name: std::option::Option::<missing(@Type0)>
-#[lang_item("Option")]
-pub enum Option::<missing(@Type0)> {
-  None,
-  Some(0: missing(@Type0)),
-}
-
 // Full name: std::option::Option::<(NonNull::<u8>, Layout)>
 #[lang_item("Option")]
 pub enum Option::<(NonNull::<u8>, Layout)> {
@@ -670,7 +663,7 @@ pub fn Some::<u8>(_1: u8) -> Option::<u8>
     let _1: u8; // arg #1
 
     bb0: {
-        _0 = Option::<missing(@Type0)>::Some { 0: move _1 };
+        _0 = Option::<u8>::Some { 0: move _1 };
         return;
     }
 }

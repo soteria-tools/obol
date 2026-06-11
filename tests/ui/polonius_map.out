@@ -3571,6 +3571,18 @@ pub struct ManuallyDrop::<[u8; 2usize]> {
   value: MaybeDangling::<[u8; 2usize]>,
 }
 
+// Full name: std::mem::MaybeDangling::<[u8; 1usize]>
+#[lang_item("maybe_dangling")]
+pub struct MaybeDangling::<[u8; 1usize]> {
+  0: [u8; 1usize],
+}
+
+// Full name: std::mem::ManuallyDrop::<[u8; 1usize]>
+#[lang_item("manually_drop")]
+pub struct ManuallyDrop::<[u8; 1usize]> {
+  value: MaybeDangling::<[u8; 1usize]>,
+}
+
 // Full name: std::mem::MaybeDangling::<[u8; 4usize]>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<[u8; 4usize]> {
@@ -3593,18 +3605,6 @@ pub struct MaybeDangling::<[u8; 8usize]> {
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<[u8; 8usize]> {
   value: MaybeDangling::<[u8; 8usize]>,
-}
-
-// Full name: std::mem::MaybeDangling::<[u8; 1usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 1usize]> {
-  0: [u8; 1usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 1usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 1usize]> {
-  value: MaybeDangling::<[u8; 1usize]>,
 }
 
 // Full name: std::mem::MaybeUninit::<[u8; 8usize]>

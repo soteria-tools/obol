@@ -85,16 +85,11 @@ impl ItemTransCtx<'_, '_> {
         })
     }
 
-    /// Get the MIR body of this instance, if it exists.
-    /// HACK: The boolean indicates whether the body *may* contain uninstantiated generics,
-    /// as if we go into rustc internals some instantiation information may get lost (???)
-    pub fn get_body(
-        &mut self,
-        def: mir::mono::Instance,
-    ) -> Option<(bool, rustc_public::mir::Body)> {
+    /// Get the (monomorphic) MIR body of this instance, if it exists.
+    pub fn get_body(&mut self, def: mir::mono::Instance) -> Option<rustc_public::mir::Body> {
         if let Some(body) = def.body() {
             // we can't rely on "has_body", as in some cases it returns false even when there is a body.
-            Some((false, body))
+            Some(body)
         } else {
             let tcx = self.t_ctx.tcx;
             let inner_id = rustc_public::rustc_internal::internal(tcx, def.def.def_id());
@@ -110,7 +105,17 @@ impl ItemTransCtx<'_, '_> {
             } else {
                 None
             };
-            body_internal.map(|b| (b.is_polymorphic, rustc_public::rustc_internal::stable(b)))
+            body_internal.map(|b| {
+                // `optimized_mir`/`mir_for_ctfe` return the *generic* MIR. We instantiate it with
+                // the instance's arguments so that the resulting body is monomorphic.
+                let instance = rustc_internal::internal(tcx, def);
+                let b = instance.instantiate_mir_and_normalize_erasing_regions(
+                    tcx,
+                    rustc_middle::ty::TypingEnv::fully_monomorphized(),
+                    rustc_middle::ty::EarlyBinder::bind(b),
+                );
+                rustc_public::rustc_internal::stable(b)
+            })
         }
     }
 
@@ -123,7 +128,7 @@ impl ItemTransCtx<'_, '_> {
         def: mir::mono::Instance,
         n_args: usize,
     ) -> Vec<Option<String>> {
-        let Some((_, body)) = self.get_body(def) else {
+        let Some(body) = self.get_body(def) else {
             return vec![None; n_args];
         };
         body.arg_locals()
