@@ -1,0 +1,105 @@
+Item GlobalConstFn(AllocId(0, ThreadLocalIndex), Some(Ty { id: 4, kind: RigidTy(Dynamic([Binder { value: Trait(ExistentialTraitRef { def_id: TraitDef(DefId { id: 4, name: "test_crate::MyTrait" }), generic_args: GenericArgs([]) }), bound_vars: [] }], Region { kind: ReErased })) })) caused errors; ignoring. Any { .. }
+
+// Final ULLBC:
+
+// Full name: test_crate::S
+struct S {}
+
+// Full name: std::ptr::drop_glue::<S>
+#[lang_item("drop_glue")]
+fn drop_glue::<S>(_1: &'_ mut S)
+{
+    let _0: (); // return
+    let _1: &'_ mut S; // arg #1
+
+    bb0: {
+        _0 = ();
+        return;
+    }
+}
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: anon_const_0
+const anon_const_0: (dyn FakeTrait) = anon_const_0()
+
+// Full name: <test_crate::S as test_crate::MyTrait>::val
+pub fn val(self_1: &'_ S) -> u32
+{
+    let _0: u32; // return
+    let self_1: &'_ S; // arg #1
+
+    bb0: {
+        _0 = const 42u32;
+        return;
+    }
+}
+
+// Full name: {vtable}::test_crate::MyTrait::<S>
+fn MyTrait::<S>() -> *const ()
+{
+    let vtable_0: *const (); // return
+    let drop_1: *const (); // local
+    let size_2: *const (); // local
+    let align_3: *const (); // local
+    let <S as MyTrait>::val_4: *const (); // local
+    let entry_array_5: [*const (); 4usize]; // local
+    let entry_array_ref_6: *const [*const (); 4usize]; // local
+
+    bb0: {
+        storage_live(drop_1);
+        storage_live(size_2);
+        storage_live(align_3);
+        storage_live(<S as MyTrait>::val_4);
+        storage_live(entry_array_5);
+        storage_live(entry_array_ref_6);
+        drop_1 = cast<drop_glue::<S>, *const ()>(const drop_glue::<S>);
+        size_2 = transmute<usize, *const ()>(const 0usize);
+        align_3 = transmute<usize, *const ()>(const 1usize);
+        <S as MyTrait>::val_4 = cast<val, *const ()>(const val);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <S as MyTrait>::val_4];
+        entry_array_ref_6 = &raw const entry_array_5;
+        vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
+        return;
+    }
+}
+
+// Full name: {vtable}::test_crate::MyTrait::<S>
+static MyTrait::<S>: *const () = MyTrait::<S>()
+
+// Full name: test_crate::get
+pub fn get() -> &'_ (dyn FakeTrait)
+{
+    let _0: &'_ (dyn FakeTrait); // return
+    let _1: &'_ (dyn FakeTrait); // anonymous local
+    let _2: &'_ (dyn FakeTrait); // anonymous local
+    let _3: &'_ (dyn FakeTrait); // anonymous local
+    let _4: &'_ (dyn FakeTrait); // anonymous local
+    let _5: &'_ (dyn FakeTrait); // anonymous local
+    let _6: &'_ (dyn FakeTrait); // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_5);
+        _5 = &anon_const_0;
+        storage_live(_6);
+        _6 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait), MyTrait::<S>>(move _5);
+        _4 = move _6;
+        _3 = &(*_4) with_metadata(copy _4.metadata);
+        _2 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait),  at []>(move _3);
+        storage_dead(_3);
+        _1 = &(*_2) with_metadata(copy _2.metadata);
+        _0 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait),  at []>(move _1);
+        storage_dead(_4);
+        storage_dead(_2);
+        storage_dead(_1);
+        return;
+    }
+}
+
+
+
