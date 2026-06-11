@@ -233,7 +233,7 @@ fn __RUST_STD_INTERNAL_VAL() -> LazyStorage::<u32, !>
 }
 
 // Full name: test_crate::FOO::{constant#0}::{closure#1}::__RUST_STD_INTERNAL_VAL
-static __RUST_STD_INTERNAL_VAL: LazyStorage::<u32, !> = __RUST_STD_INTERNAL_VAL()
+thread_local __RUST_STD_INTERNAL_VAL: LazyStorage::<u32, !> = __RUST_STD_INTERNAL_VAL()
 
 // Full name: test_crate::FOO::__rust_std_internal_init_fn
 fn __rust_std_internal_init_fn() -> u32

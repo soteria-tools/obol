@@ -565,13 +565,21 @@ impl ItemTransCtx<'_, '_> {
         let initializer = self.register_global_from_static_fn(span, def);
         let ty = self.translate_ty(span, def.ty())?;
 
+        // Distinguish thread-local statics (`#[thread_local]`) from regular ones.
+        let internal_def_id = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def_id());
+        let global_kind = if self.t_ctx.tcx.is_thread_local_static(internal_def_id) {
+            GlobalKind::ThreadLocal
+        } else {
+            GlobalKind::Static
+        };
+
         Ok(GlobalDecl {
             def_id,
             item_meta,
             generics: GenericParams::empty(),
             ty,
             src: item_kind,
-            global_kind: GlobalKind::Static,
+            global_kind,
             init: initializer,
         })
     }

@@ -991,12 +991,6 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                     const_ty,
                 );
 
-                register_error!(
-                    self,
-                    span,
-                    "Obol translated a ThreadLocalRef as just a constant allocation; concurrency is not yet supported."
-                );
-
                 match tgt_ty.kind() {
                     TyKind::Ref(_, _, kind) => Ok(Rvalue::Ref {
                         place,
