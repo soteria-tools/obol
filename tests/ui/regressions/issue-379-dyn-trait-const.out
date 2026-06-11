@@ -1,4 +1,3 @@
-Item GlobalConstFn(AllocId(0, ThreadLocalIndex), Some(Ty { id: 4, kind: RigidTy(Dynamic([Binder { value: Trait(ExistentialTraitRef { def_id: TraitDef(DefId { id: 4, name: "test_crate::MyTrait" }), generic_args: GenericArgs([]) }), bound_vars: [] }], Region { kind: ReErased })) })) caused errors; ignoring. Any { .. }
 
 // Final ULLBC:
 
@@ -22,7 +21,21 @@ fn drop_glue::<S>(_1: &'_ mut S)
 trait FakeTrait
 
 // Full name: anon_const_0
-const anon_const_0: (dyn FakeTrait) = anon_const_0()
+fn anon_const_0() -> S
+{
+    let _0: S; // return
+    let _1: S; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = S {  };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: anon_const_0
+const anon_const_0: S = anon_const_0()
 
 // Full name: <test_crate::S as test_crate::MyTrait>::val
 pub fn val(self_1: &'_ S) -> u32
@@ -76,7 +89,7 @@ pub fn get() -> &'_ (dyn FakeTrait)
     let _2: &'_ (dyn FakeTrait); // anonymous local
     let _3: &'_ (dyn FakeTrait); // anonymous local
     let _4: &'_ (dyn FakeTrait); // anonymous local
-    let _5: &'_ (dyn FakeTrait); // anonymous local
+    let _5: &'_ S; // anonymous local
     let _6: &'_ (dyn FakeTrait); // anonymous local
 
     bb0: {
@@ -87,7 +100,7 @@ pub fn get() -> &'_ (dyn FakeTrait)
         storage_live(_5);
         _5 = &anon_const_0;
         storage_live(_6);
-        _6 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait), MyTrait::<S>>(move _5);
+        _6 = unsize_cast<&'_ S, &'_ (dyn FakeTrait), MyTrait::<S>>(move _5);
         _4 = move _6;
         _3 = &(*_4) with_metadata(copy _4.metadata);
         _2 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait),  at []>(move _3);

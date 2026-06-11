@@ -249,15 +249,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         }
                     }
                     _ => {
-                        let metadata = match subty.kind() {
+                        let (metadata, dyn_self_ty) = match subty.kind() {
                             TyKind::Slice(_) => {
                                 let meta_bytes =
                                     &alloc.bytes.as_slice()[offset + size / 2..offset + size];
                                 let len =
                                     self.read_target_uint(Self::as_init(meta_bytes)?.as_slice())?;
-                                Some(UnsizingMetadata::Length(Box::new(ConstantExpr::mk_usize(
-                                    ScalarValue::Unsigned(UIntTy::Usize, len),
-                                ))))
+                                let meta = UnsizingMetadata::Length(Box::new(
+                                    ScalarValue::Unsigned(UIntTy::Usize, len).to_constant(),
+                                ));
+                                (Some(meta), None)
                             }
                             TyKind::DynTrait(_) => {
                                 let Some(vtable_prov) =
@@ -266,26 +267,19 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                     unreachable!("&dyn constant with no vtable provenance?");
                                 };
                                 let alloc: mir::alloc::GlobalAlloc = vtable_prov.0.into();
-                                let vtable_global = match alloc {
-                                    mir::alloc::GlobalAlloc::VTable(self_ty, trait_ref) => {
-                                        let trait_ref = trait_ref.map(|t| {
-                                            let t = rustc_public::rustc_internal::internal(
-                                                self.t_ctx.tcx,
-                                                t,
-                                            );
-                                            let t = self
-                                                .t_ctx
-                                                .tcx
-                                                .instantiate_bound_regions_with_erased(t);
-                                            let t = rustc_public::rustc_internal::stable(t);
-                                            t.with_self_ty(self_ty)
-                                        });
-                                        self.register_vtable(span, self_ty, trait_ref)
-                                    }
-                                    _ => {
-                                        unreachable!("&dyn constant with non-vtable provenance?");
-                                    }
+                                let mir::alloc::GlobalAlloc::VTable(self_ty, trait_ref) = alloc
+                                else {
+                                    unreachable!("&dyn constant with non-vtable provenance?");
                                 };
+                                let trait_ref = trait_ref.map(|t| {
+                                    let t =
+                                        rustc_public::rustc_internal::internal(self.t_ctx.tcx, t);
+                                    let t = self.t_ctx.tcx.instantiate_bound_regions_with_erased(t);
+                                    let t = rustc_public::rustc_internal::stable(t);
+                                    t.with_self_ty(self_ty)
+                                });
+                                let vtable_global = self.register_vtable(span, self_ty, trait_ref);
+
                                 let global_ref = GlobalDeclRef {
                                     id: vtable_global,
                                     generics: Box::new(GenericArgs::empty()),
@@ -294,18 +288,22 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                                     kind: ConstantExprKind::Global(global_ref),
                                     ty: TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty(),
                                 };
-                                Some(UnsizingMetadata::VTable(
+                                let meta = UnsizingMetadata::VTable(
                                     self.dummy_trait_ref(),
                                     Box::new(meta),
-                                ))
+                                );
+                                (Some(meta), Some(self_ty))
                             }
-                            _ => None,
+                            _ => (None, None),
                         };
 
-                        let glob_ty = match glob_alloc {
+                        let glob_ty = match (&glob_alloc, dyn_self_ty) {
                             // we try checking if there's a static we can use the type of,
                             // to avoid registering unsized globals (a static is always sized)
-                            GlobalAlloc::Static(stt) => stt.ty(),
+                            (GlobalAlloc::Static(stt), _) => stt.ty(),
+                            // for a `&dyn Trait` the pointee type is unsized; use the concrete
+                            // type recovered from the vtable so we register a sized global.
+                            (_, Some(dyn_self_ty)) => dyn_self_ty,
                             _ => rty.kind().builtin_deref(true).unwrap().ty,
                         };
 
