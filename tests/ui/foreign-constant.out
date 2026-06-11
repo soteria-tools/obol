@@ -5,18 +5,7 @@
 trait FakeTrait
 
 // Full name: foreign_constant_aux::CONSTANT
-pub fn CONSTANT() -> u8
-{
-    let _0: u8; // return
-
-    bb0: {
-        _0 = const 16u8;
-        return;
-    }
-}
-
-// Full name: foreign_constant_aux::CONSTANT
-pub const CONSTANT: u8 = CONSTANT()
+pub const CONSTANT: u8 = 16u8
 
 // Full name: test_crate::foo
 fn foo() -> u8

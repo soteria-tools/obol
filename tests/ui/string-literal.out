@@ -682,58 +682,14 @@ pub struct PhantomData::<u8> {}
 
 // Full name: std::mem::SizedTypeProperties::SIZE::<u8>
 #[lang_item("mem_size_const")]
-pub fn SIZE::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
-#[lang_item("mem_size_const")]
-pub const SIZE::<u8>: usize = SIZE::<u8>()
+pub const SIZE::<u8>: usize = 1usize
 
 // Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
 #[lang_item("mem_align_const")]
-pub fn ALIGN::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
-#[lang_item("mem_align_const")]
-pub const ALIGN::<u8>: usize = ALIGN::<u8>()
+pub const ALIGN::<u8>: usize = 1usize
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub fn LAYOUT::<u8>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 1usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
+pub const LAYOUT::<u8>: Layout = Layout { size: 1usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
 fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {

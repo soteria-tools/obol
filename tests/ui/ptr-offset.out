@@ -140,19 +140,7 @@ pub fn caller_location() -> &'_ Location::<'_>
 
 // Full name: std::mem::SizedTypeProperties::SIZE::<i32>
 #[lang_item("mem_size_const")]
-pub fn SIZE::<i32>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 4usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
-#[lang_item("mem_size_const")]
-pub const SIZE::<i32>: usize = SIZE::<i32>()
+pub const SIZE::<i32>: usize = 4usize
 
 // Full name: std::panic::Location::<'a>::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>

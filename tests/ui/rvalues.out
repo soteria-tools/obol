@@ -574,55 +574,13 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
 }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
-pub fn LAYOUT::<i32>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 4usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
-pub const LAYOUT::<i32>: Layout = LAYOUT::<i32>()
+pub const LAYOUT::<i32>: Layout = Layout { size: 4usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl2 {  } } }
 
 // Full name: core::f32::<impl f32>::MAX
-pub fn MAX() -> f32
-{
-    let _0: f32; // return
-
-    bb0: {
-        _0 = const 3.40282347E+38f32;
-        return;
-    }
-}
-
-// Full name: core::f32::<impl f32>::MAX
-pub const MAX: f32 = MAX()
+pub const MAX: f32 = 3.40282347E+38f32
 
 // Full name: core::f64::<impl f64>::MIN
-pub fn MIN() -> f64
-{
-    let _0: f64; // return
-
-    bb0: {
-        _0 = const -1.7976931348623157E+308f64;
-        return;
-    }
-}
-
-// Full name: core::f64::<impl f64>::MIN
-pub const MIN: f64 = MIN()
+pub const MIN: f64 = -1.7976931348623157E+308f64
 
 // Full name: std::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {
@@ -1418,21 +1376,7 @@ pub fn std::boxed::Box::<T>::new::<i32>(x_1: i32) -> Box::<i32, Global>
 }
 
 // Full name: anon_const_0
-fn anon_const_0() -> [u32; 64usize]
-{
-    let _0: [u32; 64usize]; // return
-    let _1: [u32; 64usize]; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = [const 0u32; 64usize];
-        _0 = move _1;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: [u32; 64usize] = anon_const_0()
+const anon_const_0: [u32; 64usize] = [0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32]
 
 // Full name: test_crate::addr_of
 fn addr_of()

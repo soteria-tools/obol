@@ -3728,27 +3728,7 @@ fn do_reserve_and_handle::<Global>(slf_1: &'_ mut RawVecInner::<Global>, len_2: 
 }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub fn LAYOUT::<u8>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 1usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
+pub const LAYOUT::<u8>: Layout = Layout { size: 1usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
 // Full name: std::vec::Vec::<T, A>::reserve::<u8, Global>
 pub fn reserve::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, additional_2: usize)
@@ -4000,50 +3980,15 @@ pub fn write_char(self_1: &'_ mut String, c_2: char) -> Result::<(), Error>
 }
 
 // Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u8>
-pub fn MAX_SLICE_LEN::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 9223372036854775807usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u8>
-pub const MAX_SLICE_LEN::<u8>: usize = MAX_SLICE_LEN::<u8>()
+pub const MAX_SLICE_LEN::<u8>: usize = 9223372036854775807usize
 
 // Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
 #[lang_item("mem_align_const")]
-pub fn ALIGN::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
-#[lang_item("mem_align_const")]
-pub const ALIGN::<u8>: usize = ALIGN::<u8>()
+pub const ALIGN::<u8>: usize = 1usize
 
 // Full name: std::mem::SizedTypeProperties::SIZE::<u8>
 #[lang_item("mem_size_const")]
-pub fn SIZE::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
-#[lang_item("mem_size_const")]
-pub const SIZE::<u8>: usize = SIZE::<u8>()
+pub const SIZE::<u8>: usize = 1usize
 
 // Full name: std::vec::Vec::<T, A>::append_elements::<u8, Global>
 fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *const [u8])
@@ -4396,18 +4341,7 @@ pub fn panic(expr_1: &'_ str) -> !
 }
 
 // Full name: std::mem::SizedTypeProperties::IS_ZST::<u8>
-pub fn IS_ZST::<u8>() -> bool
-{
-    let _0: bool; // return
-
-    bb0: {
-        _0 = const false;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<u8>
-pub const IS_ZST::<u8>: bool = IS_ZST::<u8>()
+pub const IS_ZST::<u8>: bool = false
 
 // Full name: std::intrinsics::ptr_offset_from_unsigned::<u8>
 pub fn ptr_offset_from_unsigned::<u8>(ptr_1: *const u8, base_2: *const u8) -> usize
@@ -5378,27 +5312,7 @@ pub struct PhantomData::<(dyn FakeTrait)> {}
 pub struct PhantomData::<String> {}
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<String>
-pub fn LAYOUT::<String>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 24usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<String>
-pub const LAYOUT::<String>: Layout = LAYOUT::<String>()
+pub const LAYOUT::<String>: Layout = Layout { size: 24usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl3 {  } } }
 
 // Full name: std::ptr::NonNull::<(dyn FakeTrait)>
 pub struct NonNull::<(dyn FakeTrait)> {

@@ -210,14 +210,16 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         principal: Option<ty::TraitRef>,
     ) -> Result<GlobalDecl, Error> {
         let init = self.register_vtable_init(Span::dummy(), from_ty, principal);
+        let ty = TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty();
+        let value = self.call_initializer(init, ty.clone());
         Ok(GlobalDecl {
             def_id,
             item_meta,
             generics: GenericParams::empty(),
             global_kind: GlobalKind::Static,
             src: ItemSource::TopLevel,
-            ty: TyKind::RawPtr(Ty::mk_unit(), RefKind::Shared).into_ty(),
-            init,
+            ty,
+            value,
         })
     }
 }

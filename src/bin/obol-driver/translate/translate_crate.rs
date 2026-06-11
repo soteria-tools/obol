@@ -33,11 +33,8 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum TransItemSource {
     Global(mir::alloc::AllocId, Option<ty::Ty>), // the static or const itself, with its type
-    GlobalConstFn(mir::alloc::AllocId, Option<ty::Ty>), // the const initialiser of a global
     Static(mir::mono::StaticDef),                // a synthetic global, created from an static def
-    StaticFn(mir::mono::StaticDef),              // the initializer function of a synthetic global
     NamedConst(ty::ConstDef, MyGenericArgs),     // a named (top-level or associated) const item
-    NamedConstFn(ty::ConstDef, MyGenericArgs),   // the initializer function of a named const
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -50,7 +47,7 @@ pub enum TransItemSource {
 impl TransItemSource {
     pub(crate) fn as_def_id(&self) -> Option<DefId> {
         match self {
-            TransItemSource::Global(id, _) | TransItemSource::GlobalConstFn(id, _) => {
+            TransItemSource::Global(id, _) => {
                 let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
                 match glob_alloc {
                     mir::alloc::GlobalAlloc::Function(instance) => Some(instance.def.def_id()),
@@ -59,10 +56,8 @@ impl TransItemSource {
                 }
             }
             TransItemSource::Fun(instance) => Some(instance.def.def_id()),
-            TransItemSource::Static(stt) | TransItemSource::StaticFn(stt) => Some(stt.0),
-            TransItemSource::NamedConst(def, _) | TransItemSource::NamedConstFn(def, _) => {
-                Some(def.0)
-            }
+            TransItemSource::Static(stt) => Some(stt.0),
+            TransItemSource::NamedConst(def, _) => Some(def.0),
             TransItemSource::Type(id, _) => Some(id.0),
             TransItemSource::Closure(def, _) => Some(def.def_id()),
             TransItemSource::ClosureAsFn(def, _) => Some(def.def_id()),
@@ -106,13 +101,8 @@ impl TransItemSource {
             TransItemSource::ForeignType(def) => (5, def.def_id().to_index(), 0),
             TransItemSource::VTable(ty, t) => (6, ty.to_index(), key_trait(t)),
             TransItemSource::VTableInit(ty, t) => (7, ty.to_index(), key_trait(t)),
-            TransItemSource::GlobalConstFn(id, ty) => {
-                (8, id.to_index(), ty.map(|t| t.to_index()).unwrap_or(0))
-            }
             TransItemSource::Static(stt) => (9, stt.0.to_index(), 0),
-            TransItemSource::StaticFn(stt) => (10, stt.0.to_index(), 0),
             TransItemSource::NamedConst(def, gargs) => (11, def.0.to_index(), gargs.sort_key()),
-            TransItemSource::NamedConstFn(def, gargs) => (12, def.0.to_index(), gargs.sort_key()),
         }
     }
 }
@@ -152,10 +142,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     }
                     TransItemSource::Fun(..)
                     | TransItemSource::ClosureAsFn(..)
-                    | TransItemSource::VTableInit(..)
-                    | TransItemSource::GlobalConstFn(..)
-                    | TransItemSource::StaticFn(..)
-                    | TransItemSource::NamedConstFn(..) => {
+                    | TransItemSource::VTableInit(..) => {
                         ItemId::Fun(self.translated.fun_decls.reserve_slot())
                     }
                 };
@@ -275,18 +262,6 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .unwrap()
     }
 
-    pub(crate) fn register_global_const_fn(
-        &mut self,
-        src: &Option<DepSource>,
-        stt: mir::alloc::AllocId,
-        ty: Option<ty::Ty>,
-    ) -> FunDeclId {
-        *self
-            .register_and_enqueue_id(src, TransItemSource::GlobalConstFn(stt, ty))
-            .as_fun()
-            .unwrap()
-    }
-
     pub(crate) fn register_global_from_static(
         &mut self,
         src: &Option<DepSource>,
@@ -295,17 +270,6 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         *self
             .register_and_enqueue_id(src, TransItemSource::Static(stt))
             .as_global()
-            .unwrap()
-    }
-
-    pub(crate) fn register_global_from_static_fn(
-        &mut self,
-        src: &Option<DepSource>,
-        stt: mir::mono::StaticDef,
-    ) -> FunDeclId {
-        *self
-            .register_and_enqueue_id(src, TransItemSource::StaticFn(stt))
-            .as_fun()
             .unwrap()
     }
 
@@ -318,18 +282,6 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         *self
             .register_and_enqueue_id(src, TransItemSource::NamedConst(def, args))
             .as_global()
-            .unwrap()
-    }
-
-    pub(crate) fn register_named_const_fn(
-        &mut self,
-        src: &Option<DepSource>,
-        def: ty::ConstDef,
-        args: MyGenericArgs,
-    ) -> FunDeclId {
-        *self
-            .register_and_enqueue_id(src, TransItemSource::NamedConstFn(def, args))
-            .as_fun()
             .unwrap()
     }
 }
@@ -424,16 +376,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         self.t_ctx.register_vtable_init(&src, ty, traitdef)
     }
 
-    pub(crate) fn register_global_const_fn(
-        &mut self,
-        span: Span,
-        stt: mir::alloc::AllocId,
-        ty: Option<ty::Ty>,
-    ) -> FunDeclId {
-        let src = self.make_dep_source(span);
-        self.t_ctx.register_global_const_fn(&src, stt, ty)
-    }
-
     pub(crate) fn register_global_from_static(
         &mut self,
         span: Span,
@@ -441,15 +383,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> GlobalDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_global_from_static(&src, stt)
-    }
-
-    pub(crate) fn register_global_from_static_fn(
-        &mut self,
-        span: Span,
-        stt: mir::mono::StaticDef,
-    ) -> FunDeclId {
-        let src = self.make_dep_source(span);
-        self.t_ctx.register_global_from_static_fn(&src, stt)
     }
 
     pub(crate) fn register_named_const(
@@ -460,16 +393,6 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> GlobalDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_named_const(&src, def, args)
-    }
-
-    pub(crate) fn register_named_const_fn(
-        &mut self,
-        span: Span,
-        def: ty::ConstDef,
-        args: MyGenericArgs,
-    ) -> FunDeclId {
-        let src = self.make_dep_source(span);
-        self.t_ctx.register_named_const_fn(&src, def, args)
     }
 }
 

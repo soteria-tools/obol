@@ -1073,18 +1073,7 @@ pub struct PhantomData::<List::<usize>> {}
 pub struct PhantomData::<u32> {}
 
 // Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u32>
-pub fn MAX_SLICE_LEN::<u32>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 2305843009213693951usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u32>
-pub const MAX_SLICE_LEN::<u32>: usize = MAX_SLICE_LEN::<u32>()
+pub const MAX_SLICE_LEN::<u32>: usize = 2305843009213693951usize
 
 // Full name: core::num::niche_types::UsizeNoHighBit
 pub struct UsizeNoHighBit {

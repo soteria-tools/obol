@@ -2,18 +2,7 @@
 // Final ULLBC:
 
 // Full name: std::char::MAX
-pub fn MAX() -> char
-{
-    let _0: char; // return
-
-    bb0: {
-        _0 = const 􏿿;
-        return;
-    }
-}
-
-// Full name: std::char::MAX
-pub const MAX: char = MAX()
+pub const MAX: char = 􏿿
 
 // Full name: FakeTrait
 trait FakeTrait

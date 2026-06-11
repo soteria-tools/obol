@@ -8,41 +8,13 @@ trait FakeTrait
 struct A {}
 
 // Full name: anon_const_0
-fn anon_const_0() -> A
-{
-    let _0: A; // return
-    let _1: A; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = A {  };
-        _0 = move _1;
-        return;
-    }
-}
+const anon_const_0: A = A {  }
 
 // Full name: test_crate::B
 struct B {}
 
 // Full name: anon_const_1
-fn anon_const_1() -> B
-{
-    let _0: B; // return
-    let _1: B; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = B {  };
-        _0 = move _1;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: A = anon_const_0()
-
-// Full name: anon_const_1
-const anon_const_1: B = anon_const_1()
+const anon_const_1: B = B {  }
 
 // Full name: test_crate::MyIterator::method::<A>
 fn method::<A>(self_1: &'_ A)

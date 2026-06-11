@@ -5,32 +5,10 @@
 trait FakeTrait
 
 // Full name: anon_const_0
-fn anon_const_0() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 0usize;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: usize = anon_const_0()
+const anon_const_0: usize = 0usize
 
 // Full name: test_crate::constant::CONST
-fn CONST() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 0usize;
-        return;
-    }
-}
-
-// Full name: test_crate::constant::CONST
-const CONST: usize = CONST()
+const CONST: usize = 0usize
 
 // Full name: test_crate::constant
 fn constant()

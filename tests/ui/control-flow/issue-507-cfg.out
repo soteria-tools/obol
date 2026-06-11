@@ -5,18 +5,7 @@
 trait FakeTrait
 
 // Full name: test_crate::CONST
-fn CONST() -> u8
-{
-    let _0: u8; // return
-
-    bb0: {
-        _0 = const 0u8;
-        return;
-    }
-}
-
-// Full name: test_crate::CONST
-const CONST: u8 = CONST()
+const CONST: u8 = 0u8
 
 // Full name: test_crate::f0
 fn f0()

@@ -1297,49 +1297,14 @@ pub fn <I as std::iter::IntoIterator>::into_iter::<ChunksExact::<'_, i32>>(self_
 
 // Full name: std::mem::SizedTypeProperties::SIZE::<i32>
 #[lang_item("mem_size_const")]
-pub fn SIZE::<i32>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 4usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
-#[lang_item("mem_size_const")]
-pub const SIZE::<i32>: usize = SIZE::<i32>()
+pub const SIZE::<i32>: usize = 4usize
 
 // Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
 #[lang_item("mem_align_const")]
-pub fn ALIGN::<i32>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 4usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
-#[lang_item("mem_align_const")]
-pub const ALIGN::<i32>: usize = ALIGN::<i32>()
+pub const ALIGN::<i32>: usize = 4usize
 
 // Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
-pub fn IS_ZST::<i32>() -> bool
-{
-    let _0: bool; // return
-
-    bb0: {
-        _0 = const false;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
-pub const IS_ZST::<i32>: bool = IS_ZST::<i32>()
+pub const IS_ZST::<i32>: bool = false
 
 fn core::num::<impl usize>::unchecked_sub::precondition_check(lhs_1: usize, rhs_2: usize)
 {

@@ -5,63 +5,16 @@
 trait FakeTrait
 
 // Full name: anon_const_0
-fn anon_const_0() -> u32
-{
-    let _0: u32; // return
-
-    bb0: {
-        _0 = const 1u32;
-        return;
-    }
-}
+const anon_const_0: u32 = 1u32
 
 // Full name: anon_const_1
-fn anon_const_1()
-{
-    let _0: (); // return
-
-    bb0: {
-        _0 = ();
-        _0 = ();
-        return;
-    }
-}
+const anon_const_1: () = ()
 
 // Full name: anon_const_2
-fn anon_const_2()
-{
-    let _0: (); // return
-
-    bb0: {
-        _0 = ();
-        _0 = ();
-        return;
-    }
-}
+const anon_const_2: () = ()
 
 // Full name: anon_const_3
-fn anon_const_3()
-{
-    let _0: (); // return
-
-    bb0: {
-        _0 = ();
-        _0 = ();
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: u32 = anon_const_0()
-
-// Full name: anon_const_1
-const anon_const_1: () = anon_const_1()
-
-// Full name: anon_const_2
-const anon_const_2: () = anon_const_2()
-
-// Full name: anon_const_3
-const anon_const_3: () = anon_const_3()
+const anon_const_3: () = ()
 
 // Full name: <() as test_crate::Trait>::method1
 fn method1(self_1: (), _other_2: &'_ u32) -> bool

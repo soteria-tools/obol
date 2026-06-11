@@ -440,27 +440,7 @@ pub fn load(self_1: &'_ Atomic::<u64>, order_2: Ordering) -> u64
 }
 
 // Full name: test_crate::INITIAL_STATE
-fn INITIAL_STATE() -> Atomic::<u64>
-{
-    let _0: Atomic::<u64>; // return
-    let _1: Align8::<u64>; // anonymous local
-    let _2: UnsafeCell::<Align8::<u64>>; // anonymous local
-    let _3: Atomic::<u64>; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = Align8::<u64> { 0: const 0u64 };
-        storage_live(_2);
-        _2 = UnsafeCell::<Align8::<u64>> { value: move _1 };
-        storage_live(_3);
-        _3 = Atomic::<u64> { v: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: test_crate::INITIAL_STATE
-const INITIAL_STATE: Atomic::<u64> = INITIAL_STATE()
+const INITIAL_STATE: Atomic::<u64> = Atomic::<u64> { v: UnsafeCell::<Align8::<u64>> { value: Align8::<u64> { 0: 0u64 } } }
 
 // Full name: test_crate::HART_STATES
 fn HART_STATES() -> [Atomic::<u64>; 2usize]

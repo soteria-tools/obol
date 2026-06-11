@@ -287,35 +287,11 @@ pub fn ctpop::<usize>(x_1: usize) -> u32
 
 // Full name: std::mem::SizedTypeProperties::SIZE::<i32>
 #[lang_item("mem_size_const")]
-pub fn SIZE::<i32>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 4usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
-#[lang_item("mem_size_const")]
-pub const SIZE::<i32>: usize = SIZE::<i32>()
+pub const SIZE::<i32>: usize = 4usize
 
 // Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
 #[lang_item("mem_align_const")]
-pub fn ALIGN::<i32>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 4usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
-#[lang_item("mem_align_const")]
-pub const ALIGN::<i32>: usize = ALIGN::<i32>()
+pub const ALIGN::<i32>: usize = 4usize
 
 // Full name: std::option::Option::<Arguments::<'_>>
 #[lang_item("Option")]
@@ -1046,32 +1022,10 @@ pub fn copy_nonoverlapping::<i32>(src_1: *const i32, dst_2: *mut i32, count_3: u
 }
 
 // Full name: anon_const_0
-fn anon_const_0() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
+const anon_const_0: i32 = 42i32
 
 // Full name: anon_const_1
-fn anon_const_1() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: i32 = anon_const_0()
-
-// Full name: anon_const_1
-const anon_const_1: i32 = anon_const_1()
+const anon_const_1: i32 = 42i32
 
 // Full name: test_crate::write::<i32>
 fn write::<i32>(x_1: &'_ mut i32, y_2: &'_ i32)

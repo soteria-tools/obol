@@ -5,18 +5,7 @@
 trait FakeTrait
 
 // Full name: test_crate::SizedTypeProperties::IS_ZST::<()>
-pub fn IS_ZST::<()>() -> bool
-{
-    let _0: bool; // return
-
-    bb0: {
-        _0 = const true;
-        return;
-    }
-}
-
-// Full name: test_crate::SizedTypeProperties::IS_ZST::<()>
-pub const IS_ZST::<()>: bool = IS_ZST::<()>()
+pub const IS_ZST::<()>: bool = true
 
 // Full name: test_crate::main
 fn main()

@@ -91,18 +91,7 @@ pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
 // Full name: core::num::<impl usize>::MAX
-pub fn MAX() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 4294967295usize;
-        return;
-    }
-}
-
-// Full name: core::num::<impl usize>::MAX
-pub const MAX: usize = MAX()
+pub const MAX: usize = 4294967295usize
 
 // Full name: std::panic::Location::<'a>::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>

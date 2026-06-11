@@ -283,18 +283,7 @@ pub fn len::<u32>(self_1: &'_ [u32]) -> usize
 }
 
 // Full name: anon_const_0
-fn anon_const_0() -> u32
-{
-    let _0: u32; // return
-
-    bb0: {
-        _0 = const 9u32;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: u32 = anon_const_0()
+const anon_const_0: u32 = 9u32
 
 // Full name: test_crate::function_call
 fn function_call(_1: u32)
@@ -747,18 +736,7 @@ fn foo()
 }
 
 // Full name: test_crate::CONSTANT
-fn CONSTANT() -> u32
-{
-    let _0: u32; // return
-
-    bb0: {
-        _0 = const 42u32;
-        return;
-    }
-}
-
-// Full name: test_crate::CONSTANT
-const CONSTANT: u32 = CONSTANT()
+const CONSTANT: u32 = 42u32
 
 // Full name: test_crate::thing
 pub fn thing()

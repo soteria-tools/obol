@@ -847,138 +847,25 @@ pub union MaybeUninit::<[Foo; 1usize]> {
 }
 
 // Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
-pub fn IS_ZST::<i32>() -> bool
-{
-    let _0: bool; // return
-
-    bb0: {
-        _0 = const false;
-        return;
-    }
-}
+pub const IS_ZST::<i32>: bool = false
 
 // Full name: std::mem::SizedTypeProperties::IS_ZST::<Foo>
-pub fn IS_ZST::<Foo>() -> bool
-{
-    let _0: bool; // return
-
-    bb0: {
-        _0 = const true;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
-pub const IS_ZST::<i32>: bool = IS_ZST::<i32>()
-
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<Foo>
-pub const IS_ZST::<Foo>: bool = IS_ZST::<Foo>()
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<[Foo; 1usize]>
-pub fn LAYOUT::<[Foo; 1usize]>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 0usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
-pub fn LAYOUT::<i32>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 4usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<Foo>
-pub fn LAYOUT::<Foo>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 0usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
+pub const IS_ZST::<Foo>: bool = true
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<[i32; 1usize]>
-pub fn LAYOUT::<[i32; 1usize]>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 4usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<[i32; 1usize]>
-pub const LAYOUT::<[i32; 1usize]>: Layout = LAYOUT::<[i32; 1usize]>()
+pub const LAYOUT::<[i32; 1usize]>: Layout = Layout { size: 4usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl2 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<[Foo; 1usize]>
-pub const LAYOUT::<[Foo; 1usize]>: Layout = LAYOUT::<[Foo; 1usize]>()
+pub const LAYOUT::<[Foo; 1usize]>: Layout = Layout { size: 0usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
-pub const LAYOUT::<i32>: Layout = LAYOUT::<i32>()
+pub const LAYOUT::<i32>: Layout = Layout { size: 4usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl2 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<Foo>
-pub const LAYOUT::<Foo>: Layout = LAYOUT::<Foo>()
+pub const LAYOUT::<Foo>: Layout = Layout { size: 0usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<i32>
-pub fn MAX_SLICE_LEN::<i32>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 2305843009213693951usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<i32>
-pub const MAX_SLICE_LEN::<i32>: usize = MAX_SLICE_LEN::<i32>()
+pub const MAX_SLICE_LEN::<i32>: usize = 2305843009213693951usize
 
 fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_2: usize)
 {

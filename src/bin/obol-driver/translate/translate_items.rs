@@ -164,13 +164,6 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let decl = bt_ctx.translate_vtable_init(id, item_meta, *ty, tref)?;
                 self.translated.fun_decls.set_slot(id, decl);
             }
-            TransItemSource::GlobalConstFn(stt, ty) => {
-                let Some(ItemId::Fun(id)) = trans_id else {
-                    unreachable!()
-                };
-                let fun_decl = bt_ctx.translate_global_const_fn(id, item_meta, stt.clone(), *ty)?;
-                self.translated.fun_decls.set_slot(id, fun_decl);
-            }
             TransItemSource::Static(stt) => {
                 let Some(ItemId::Global(id)) = trans_id else {
                     unreachable!()
@@ -178,26 +171,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let decl = bt_ctx.translate_global_from_static(id, item_meta, *stt)?;
                 self.translated.global_decls.set_slot(id, decl);
             }
-            TransItemSource::StaticFn(stt) => {
-                let Some(ItemId::Fun(id)) = trans_id else {
-                    unreachable!()
-                };
-                let decl = bt_ctx.translate_global_from_static_fn(id, item_meta, *stt)?;
-                self.translated.fun_decls.set_slot(id, decl);
-            }
             TransItemSource::NamedConst(def, args) => {
                 let Some(ItemId::Global(id)) = trans_id else {
                     unreachable!()
                 };
                 let decl = bt_ctx.translate_named_const(id, item_meta, *def, args.clone())?;
                 self.translated.global_decls.set_slot(id, decl);
-            }
-            TransItemSource::NamedConstFn(def, args) => {
-                let Some(ItemId::Fun(id)) = trans_id else {
-                    unreachable!()
-                };
-                let decl = bt_ctx.translate_named_const_fn(id, item_meta, *def, args.clone())?;
-                self.translated.fun_decls.set_slot(id, decl);
             }
         }
         Ok(())
@@ -374,6 +353,57 @@ impl ItemTransCtx<'_, '_> {
         })
     }
 
+    /// Build a global's `value` as a call to its (separately-translated) initializer function.
+    /// Used for globals whose value we don't compute directly (statics with a body, vtables).
+    pub(crate) fn call_initializer(&self, init: FunDeclId, ty: Ty) -> ConstantExpr {
+        ConstantExpr {
+            kind: ConstantExprKind::Call(
+                FnPtr {
+                    kind: Box::new(FnPtrKind::Fun(FunId::Regular(init))),
+                    generics: Box::new(GenericArgs::empty()),
+                },
+                vec![],
+            ),
+            ty,
+        }
+    }
+
+    /// Evaluate the value of a global identified by its allocation id.
+    fn translate_global_alloc_value(
+        &mut self,
+        def: &mir::alloc::AllocId,
+        rty: Option<ty::Ty>,
+    ) -> Result<ConstantExpr, Error> {
+        let alloc: mir::alloc::GlobalAlloc = def.clone().into();
+        let (const_expr, _ty) = match alloc {
+            mir::alloc::GlobalAlloc::Static(def) => {
+                let span = self.translate_span_from_smir(&def.span());
+                let alloc = def.eval_initializer()?;
+                self.translate_alloc_to_const(span, &alloc, rty)?
+            }
+            mir::alloc::GlobalAlloc::Memory(mem) => {
+                self.translate_alloc_to_const(Span::dummy(), &mem, rty)?
+            }
+            mir::alloc::GlobalAlloc::TypeId { ty: type_id_ty } => {
+                let span = Span::dummy();
+                let Some(output_ty) = rty else {
+                    raise_error!(self, span, "TypeId global missing type annotation")
+                };
+                let output = self.translate_ty(span, output_ty)?;
+                let translated_ty = self.translate_ty(span, type_id_ty)?;
+                let const_val = ConstantExpr {
+                    kind: ConstantExprKind::TypeId(translated_ty),
+                    ty: output.clone(),
+                };
+                (const_val, output)
+            }
+            _ => {
+                panic!("Cannot translate global value: {def:?}")
+            }
+        };
+        Ok(const_expr)
+    }
+
     // Translate one global.
     pub fn translate_global(
         mut self,
@@ -388,27 +418,28 @@ impl ItemTransCtx<'_, '_> {
         // Retrieve the kind
         let item_kind = ItemSource::TopLevel;
         trace!("Translating global type");
+        let translated_ty = match ty {
+            Some(ty) => self.translate_ty(span, ty)?,
+            None => TyKind::Error("Untype global".into()).into_ty(),
+        };
         let alloc: mir::alloc::GlobalAlloc = def.clone().into();
-        let (global_kind, init) = match alloc {
+        let (global_kind, value) = match alloc {
             mir::alloc::GlobalAlloc::Static(static_def) => {
                 let instance: mir::mono::Instance = static_def.into();
 
-                // Some statics don't have a body, such as non-generics in the sysroot.
-                let initializer = if instance.has_body() {
-                    self.register_fun_decl_id(span, instance)
+                // Some statics don't have a body, such as non-generics in the sysroot. For those
+                // we evaluate the value directly; otherwise we call the initializer function.
+                let value = if instance.has_body() {
+                    let init = self.register_fun_decl_id(span, instance);
+                    self.call_initializer(init, translated_ty.clone())
                 } else {
-                    self.register_global_const_fn(span, def.clone(), ty)
+                    self.translate_global_alloc_value(def, ty)?
                 };
-
-                (GlobalKind::Static, initializer)
+                (GlobalKind::Static, value)
             }
-            mir::alloc::GlobalAlloc::Memory(..) => {
-                let initializer = self.register_global_const_fn(span, def.clone(), ty);
-                (GlobalKind::AnonConst, initializer)
-            }
-            mir::alloc::GlobalAlloc::TypeId { .. } => {
-                let initializer = self.register_global_const_fn(span, def.clone(), ty);
-                (GlobalKind::AnonConst, initializer)
+            mir::alloc::GlobalAlloc::Memory(..) | mir::alloc::GlobalAlloc::TypeId { .. } => {
+                let value = self.translate_global_alloc_value(def, ty)?;
+                (GlobalKind::AnonConst, value)
             }
             mir::alloc::GlobalAlloc::VTable(..) => {
                 panic!("Shouldn't reach a VTable global")
@@ -417,19 +448,15 @@ impl ItemTransCtx<'_, '_> {
                 unreachable!("Shouldn't reach a global function")
             }
         };
-        let ty = match ty {
-            Some(ty) => self.translate_ty(span, ty)?,
-            None => TyKind::Error("Untype global".into()).into_ty(),
-        };
 
         Ok(GlobalDecl {
             def_id,
             item_meta,
             generics: GenericParams::empty(),
-            ty,
+            ty: translated_ty,
             src: item_kind,
             global_kind,
-            init,
+            value,
         })
     }
 
@@ -468,103 +495,6 @@ impl ItemTransCtx<'_, '_> {
         Ok(type_def)
     }
 
-    fn make_trivial_return_function(
-        self,
-        def_id: FunDeclId,
-        item_meta: ItemMeta,
-        span: Span,
-        const_expr: ConstantExpr,
-        output: Ty,
-        global_id: GlobalDeclId,
-    ) -> Result<FunDecl, Error> {
-        let signature = FunSig {
-            is_unsafe: false,
-            inputs: vec![],
-            output: output.clone(),
-            abi: Abi::rust(),
-        };
-
-        use ullbc_ast::*;
-
-        let mut locals = Locals::new(0);
-        locals.locals.push_with(|index| Local {
-            index,
-            name: None,
-            ty: output.clone(),
-            span,
-        });
-        let body = Body::Unstructured(GExprBody {
-            body: vec![BlockData {
-                statements: vec![Statement::new(
-                    span,
-                    StatementKind::Assign(
-                        locals.return_place(),
-                        Rvalue::Use(Operand::Const(Box::new(const_expr)), WithRetag::No),
-                    ),
-                )],
-                terminator: Terminator::new(span, ullbc_ast::TerminatorKind::Return),
-            }]
-            .into(),
-            bound_body_regions: 0,
-            span,
-            locals,
-            comments: vec![],
-        });
-
-        Ok(FunDecl {
-            def_id,
-            item_meta,
-            signature: Box::new(signature),
-            generics: GenericParams::empty(),
-            src: ItemSource::TopLevel,
-            is_global_initializer: Some(global_id),
-            body,
-        })
-    }
-
-    pub fn translate_global_const_fn(
-        mut self,
-        def_id: FunDeclId,
-        item_meta: ItemMeta,
-        def: mir::alloc::AllocId,
-        rty: Option<ty::Ty>,
-    ) -> Result<FunDecl, Error> {
-        let alloc: mir::alloc::GlobalAlloc = def.clone().into();
-
-        let (span, const_expr, ty) = match alloc {
-            mir::alloc::GlobalAlloc::Static(def) => {
-                let span = self.translate_span_from_smir(&def.span());
-                let alloc = def.eval_initializer()?;
-                let (const_expr, ty) = self.translate_alloc_to_const(span, &alloc, rty)?;
-                (span, const_expr, ty)
-            }
-            mir::alloc::GlobalAlloc::Memory(mem) => {
-                let span = Span::dummy();
-                let (const_expr, ty) = self.translate_alloc_to_const(span, &mem, rty)?;
-                (span, const_expr, ty)
-            }
-            mir::alloc::GlobalAlloc::TypeId { ty: type_id_ty } => {
-                let span = Span::dummy();
-                let Some(output_ty) = rty else {
-                    raise_error!(self, span, "TypeId global missing type annotation")
-                };
-                let output = self.translate_ty(span, output_ty)?;
-                let translated_ty = self.translate_ty(span, type_id_ty)?;
-                let const_val = ConstantExpr {
-                    kind: ConstantExprKind::TypeId(translated_ty),
-                    ty: output.clone(),
-                };
-                (span, const_val, output)
-            }
-            _ => {
-                panic!("Cannot translate global const fn: {def:?}")
-            }
-        };
-        let global_id = self.register_global_decl_id(span, def, rty);
-
-        self.make_trivial_return_function(def_id, item_meta, span, const_expr, ty, global_id)
-    }
-
     pub fn translate_global_from_static(
         mut self,
         def_id: GlobalDeclId,
@@ -572,13 +502,13 @@ impl ItemTransCtx<'_, '_> {
         def: mir::mono::StaticDef,
     ) -> Result<GlobalDecl, Error> {
         trace!("About to translate global from static:\n{:?}", def);
-        let span = item_meta.span;
-
-        // Retrieve the kind
         let item_kind = ItemSource::TopLevel;
         trace!("Translating global type");
-        let initializer = self.register_global_from_static_fn(span, def);
-        let ty = self.translate_ty(span, def.ty())?;
+
+        // Evaluate the static's initializer directly into the global's value.
+        let span = self.translate_span_from_smir(&def.span());
+        let alloc = def.eval_initializer()?;
+        let (value, ty) = self.translate_alloc_to_const(span, &alloc, Some(def.ty()))?;
 
         // Distinguish thread-local statics (`#[thread_local]`) from regular ones.
         let internal_def_id = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def_id());
@@ -595,22 +525,8 @@ impl ItemTransCtx<'_, '_> {
             ty,
             src: item_kind,
             global_kind,
-            init: initializer,
+            value,
         })
-    }
-
-    pub fn translate_global_from_static_fn(
-        mut self,
-        def_id: FunDeclId,
-        item_meta: ItemMeta,
-        def: mir::mono::StaticDef,
-    ) -> Result<FunDecl, Error> {
-        let span = def.span();
-        let span = self.translate_span_from_smir(&span);
-        let alloc = def.eval_initializer()?;
-        let (const_expr, ty) = self.translate_alloc_to_const(span, &alloc, Some(def.ty()))?;
-        let global_id = self.register_global_from_static(span, def);
-        self.make_trivial_return_function(def_id, item_meta, span, const_expr, ty, global_id)
     }
 
     pub fn translate_named_const(
@@ -631,46 +547,13 @@ impl ItemTransCtx<'_, '_> {
         let internal_ty = tcx
             .try_normalize_erasing_regions(typing_env, unnorm_ty)
             .unwrap_or_else(|_| unnorm_ty.skip_normalization());
-        let rty = rustc_public::rustc_internal::stable(internal_ty);
-        let ty = self.translate_ty(span, rty)?;
-        let initializer = self.register_named_const_fn(span, const_def, args);
+        let ty = self.translate_ty(span, rustc_public::rustc_internal::stable(internal_ty))?;
 
-        Ok(GlobalDecl {
-            def_id,
-            item_meta,
-            generics: GenericParams::empty(),
-            ty,
-            src: ItemSource::TopLevel,
-            global_kind: GlobalKind::NamedConst,
-            init: initializer,
-        })
-    }
-
-    pub fn translate_named_const_fn(
-        mut self,
-        def_id: FunDeclId,
-        item_meta: ItemMeta,
-        const_def: ty::ConstDef,
-        args: MyGenericArgs,
-    ) -> Result<FunDecl, Error> {
-        let span = item_meta.span;
-        let tcx = self.t_ctx.tcx;
-        let internal_def = rustc_public::rustc_internal::internal(tcx, const_def.def_id());
-        let gargs: ty::GenericArgs = args.clone().into();
-        let internal_args = rustc_public::rustc_internal::internal(tcx, gargs);
-        let typing_env = rustc_middle::ty::TypingEnv::fully_monomorphized();
-        // Normalize so that e.g. array-length consts in the type get evaluated.
-        let unnorm_ty = tcx.type_of(internal_def).instantiate(tcx, internal_args);
-        let internal_ty = tcx
-            .try_normalize_erasing_regions(typing_env, unnorm_ty)
-            .unwrap_or_else(|_| unnorm_ty.skip_normalization());
-
-        // Evaluate the const to its value (this is what we inlined before; now it becomes the
-        // initializer of the named global).
+        // Evaluate the const directly into the global's value.
         let uneval = rustc_middle::mir::UnevaluatedConst::new(internal_def, internal_args);
         let cnst = rustc_middle::mir::Const::Unevaluated(uneval, internal_ty);
         let eval_span = tcx.def_span(internal_def);
-        let const_expr = match cnst.eval(tcx, typing_env, eval_span) {
+        let value = match cnst.eval(tcx, typing_env, eval_span) {
             Ok(val) => {
                 let evaluated = rustc_middle::mir::Const::Val(val, internal_ty);
                 let stable_const = rustc_public::rustc_internal::stable(evaluated);
@@ -680,8 +563,15 @@ impl ItemTransCtx<'_, '_> {
                 raise_error!(self, span, "Could not evaluate named const: {:?}", e)
             }
         };
-        let ty = const_expr.ty.clone();
-        let global_id = self.register_named_const(span, const_def, args);
-        self.make_trivial_return_function(def_id, item_meta, span, const_expr, ty, global_id)
+
+        Ok(GlobalDecl {
+            def_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            ty,
+            src: ItemSource::TopLevel,
+            global_kind: GlobalKind::NamedConst,
+            value,
+        })
     }
 }

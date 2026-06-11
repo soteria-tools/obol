@@ -10,7 +10,7 @@ use std::collections::HashMap;
 use charon_lib::{
     ast::*,
     transform::{CowBox, TransformCtx, ctx::UllbcPass},
-    ullbc_ast::{ExprBody, StatementKind},
+    ullbc_ast::ExprBody,
 };
 
 pub struct Transform {
@@ -20,32 +20,20 @@ pub struct Transform {
 
 impl Transform {
     pub fn new(ctx: &TransformCtx) -> CowBox<dyn UllbcPass> {
+        // The `GlobalAlloc::TypeId` arm of `translate_global_alloc_value` stores the marker
+        // directly as the global's value, so we just read it off.
         let typeid_globals = ctx
             .translated
             .global_decls
             .iter()
             .filter(|g| matches!(g.global_kind, GlobalKind::AnonConst))
-            .filter_map(|g| Some((g.def_id, find_typeid_ty_in_init(ctx, g.init)?)))
+            .filter_map(|g| match &g.value.kind {
+                ConstantExprKind::TypeId(t) => Some((g.def_id, t.clone())),
+                _ => None,
+            })
             .collect();
         CowBox::Owned(Box::new(Transform { typeid_globals }))
     }
-}
-
-/// Scans an init-function body for a `ConstantExprKind::TypeId(T)` assignment and returns T.
-/// The `translate_global_const_fn` TypeId arm emits exactly this shape.
-fn find_typeid_ty_in_init(ctx: &TransformCtx, init_id: FunDeclId) -> Option<Ty> {
-    let init_fn = ctx.translated.fun_decls.get(init_id)?;
-    let body = &init_fn.body.as_unstructured()?;
-    for block in body.body.iter() {
-        for stmt in &block.statements {
-            if let StatementKind::Assign(_, Rvalue::Use(Operand::Const(cexpr), _)) = &stmt.kind
-                && let ConstantExprKind::TypeId(t) = &cexpr.kind
-            {
-                return Some(t.clone());
-            }
-        }
-    }
-    None
 }
 
 impl UllbcPass for Transform {

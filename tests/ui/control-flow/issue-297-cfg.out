@@ -191,35 +191,11 @@ pub fn into_iter::<Chunks::<'_, u8>>(self_1: Chunks::<'_, u8>) -> Chunks::<'_, u
 
 // Full name: std::mem::SizedTypeProperties::SIZE::<u8>
 #[lang_item("mem_size_const")]
-pub fn SIZE::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
-#[lang_item("mem_size_const")]
-pub const SIZE::<u8>: usize = SIZE::<u8>()
+pub const SIZE::<u8>: usize = 1usize
 
 // Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
 #[lang_item("mem_align_const")]
-pub fn ALIGN::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
-#[lang_item("mem_align_const")]
-pub const ALIGN::<u8>: usize = ALIGN::<u8>()
+pub const ALIGN::<u8>: usize = 1usize
 
 // Full name: std::option::Option::<&'_ [u8]>
 #[lang_item("Option")]
@@ -1153,18 +1129,7 @@ fn f1(a_1: &'_ [u8]) -> usize
 }
 
 // Full name: test_crate::FIELD_MODULUS
-fn FIELD_MODULUS() -> i16
-{
-    let _0: i16; // return
-
-    bb0: {
-        _0 = const 8i16;
-        return;
-    }
-}
-
-// Full name: test_crate::FIELD_MODULUS
-const FIELD_MODULUS: i16 = FIELD_MODULUS()
+const FIELD_MODULUS: i16 = 8i16
 
 // Full name: test_crate::f2
 fn f2(a_1: &'_ [u8], result_2: &'_ mut [i16]) -> usize

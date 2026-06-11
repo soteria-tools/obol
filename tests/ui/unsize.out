@@ -1179,27 +1179,7 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
 }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub fn LAYOUT::<u8>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 1usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
+pub const LAYOUT::<u8>: Layout = Layout { size: 1usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
 pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ mut RawVec::<u8, Global>)
 {
@@ -1438,97 +1418,17 @@ pub struct PhantomData::<String> {}
 #[lang_item("phantom_data")]
 pub struct PhantomData::<[i32; 2usize]> {}
 
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<String>
-pub fn LAYOUT::<String>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 24usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<String>>
-pub fn LAYOUT::<RcInner::<String>>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 40usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<[i32; 2usize]>
-pub fn LAYOUT::<[i32; 2usize]>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 8usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<[i32; 2usize]>>
-pub fn LAYOUT::<RcInner::<[i32; 2usize]>>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 24usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<[i32; 2usize]>
-pub const LAYOUT::<[i32; 2usize]>: Layout = LAYOUT::<[i32; 2usize]>()
+pub const LAYOUT::<[i32; 2usize]>: Layout = Layout { size: 8usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl2 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<String>
-pub const LAYOUT::<String>: Layout = LAYOUT::<String>()
+pub const LAYOUT::<String>: Layout = Layout { size: 24usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl3 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<[i32; 2usize]>>
-pub const LAYOUT::<RcInner::<[i32; 2usize]>>: Layout = LAYOUT::<RcInner::<[i32; 2usize]>>()
+pub const LAYOUT::<RcInner::<[i32; 2usize]>>: Layout = Layout { size: 24usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl3 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<String>>
-pub const LAYOUT::<RcInner::<String>>: Layout = LAYOUT::<RcInner::<String>>()
+pub const LAYOUT::<RcInner::<String>>: Layout = Layout { size: 40usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl3 {  } } }
 
 // Full name: std::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {

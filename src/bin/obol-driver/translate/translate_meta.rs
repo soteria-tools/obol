@@ -241,7 +241,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 TransItemSource::VTable(_, _) | TransItemSource::VTableInit(_, _) => Name {
                     name: vec![PathElem::Ident("unknown_trait".into(), Disambiguator::ZERO)],
                 },
-                TransItemSource::Global(id, ..) | TransItemSource::GlobalConstFn(id, ..) => Name {
+                TransItemSource::Global(id, ..) => Name {
                     name: vec![PathElem::Ident(
                         format!("anon_const_{}", id.to_index()),
                         Disambiguator::ZERO,
@@ -263,15 +263,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             }
             TransItemSource::Fun(_)
             | TransItemSource::Type(..)
-            | TransItemSource::NamedConst(..)
-            | TransItemSource::NamedConstFn(..) => 'add_generics: {
+            | TransItemSource::NamedConst(..) => 'add_generics: {
                 let (gargs, span) = match src {
                     TransItemSource::Fun(instance) => (instance.args(), instance.def.span()),
                     TransItemSource::Type(adt, gargs) => (gargs.clone().into(), adt.span()),
                     // Append the const's generic arguments (e.g. the `Self` type of an associated
                     // const) so that distinct monomorphizations get distinct names.
-                    TransItemSource::NamedConst(def, gargs)
-                    | TransItemSource::NamedConstFn(def, gargs) => (gargs.clone().into(), def.span()),
+                    TransItemSource::NamedConst(def, gargs) => (gargs.clone().into(), def.span()),
                     _ => unreachable!(),
                 };
                 if gargs.0.is_empty() {
@@ -453,11 +451,11 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             }
             TransItemSource::ForeignType(def) => Some(def.span()),
             TransItemSource::Fun(instance) => Some(instance.def.span()),
-            TransItemSource::Static(stt) | TransItemSource::StaticFn(stt) => Some(stt.span()),
-            TransItemSource::NamedConst(def, _) | TransItemSource::NamedConstFn(def, _) => {
+            TransItemSource::Static(stt) => Some(stt.span()),
+            TransItemSource::NamedConst(def, _) => {
                 Some(def.span())
             }
-            TransItemSource::Global(id, ..) | TransItemSource::GlobalConstFn(id, ..) => {
+            TransItemSource::Global(id, ..) => {
                 let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
                 match glob_alloc {
                     mir::alloc::GlobalAlloc::Function(instance) => Some(instance.def.span()),

@@ -18,18 +18,7 @@ fn drop_glue::<i32>(_1: &'_ mut i32)
 trait FakeTrait
 
 // Full name: anon_const_0
-fn anon_const_0() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: i32 = anon_const_0()
+const anon_const_0: i32 = 42i32
 
 // Full name: <i32 as test_crate::Trait>::another
 fn another(self_1: &'_ i32)

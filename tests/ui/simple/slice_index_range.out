@@ -261,21 +261,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 }
 
 // Full name: anon_const_1
-fn anon_const_1() -> [u8; 55usize]
-{
-    let _0: [u8; 55usize]; // return
-    let _1: [u8; 55usize]; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = [const 16u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 101u8, const 110u8, const 100u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 192u8, const 34u8, const 32u8, const 111u8, const 117u8, const 116u8, const 32u8, const 111u8, const 102u8, const 32u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 102u8, const 111u8, const 114u8, const 32u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 111u8, const 102u8, const 32u8, const 108u8, const 101u8, const 110u8, const 103u8, const 116u8, const 104u8, const 32u8, const 192u8, const 0u8];
-        _0 = move _1;
-        return;
-    }
-}
-
-// Full name: anon_const_1
-const anon_const_1: [u8; 55usize] = anon_const_1()
+const anon_const_1: [u8; 55usize] = [16u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 101u8, 110u8, 100u8, 32u8, 105u8, 110u8, 100u8, 101u8, 120u8, 32u8, 192u8, 34u8, 32u8, 111u8, 117u8, 116u8, 32u8, 111u8, 102u8, 32u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 102u8, 111u8, 114u8, 32u8, 115u8, 108u8, 105u8, 99u8, 101u8, 32u8, 111u8, 102u8, 32u8, 108u8, 101u8, 110u8, 103u8, 116u8, 104u8, 32u8, 192u8, 0u8]
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(end_1: usize, len_2: usize) -> !
@@ -401,21 +387,7 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 }
 
 // Full name: anon_const_2
-fn anon_const_2() -> [u8; 40usize]
-{
-    let _0: [u8; 40usize]; // return
-    let _1: [u8; 40usize]; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = [const 22u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 115u8, const 116u8, const 97u8, const 114u8, const 116u8, const 115u8, const 32u8, const 97u8, const 116u8, const 32u8, const 192u8, const 13u8, const 32u8, const 98u8, const 117u8, const 116u8, const 32u8, const 101u8, const 110u8, const 100u8, const 115u8, const 32u8, const 97u8, const 116u8, const 32u8, const 192u8, const 0u8];
-        _0 = move _1;
-        return;
-    }
-}
-
-// Full name: anon_const_2
-const anon_const_2: [u8; 40usize] = anon_const_2()
+const anon_const_2: [u8; 40usize] = [22u8, 115u8, 108u8, 105u8, 99u8, 101u8, 32u8, 105u8, 110u8, 100u8, 101u8, 120u8, 32u8, 115u8, 116u8, 97u8, 114u8, 116u8, 115u8, 32u8, 97u8, 116u8, 32u8, 192u8, 13u8, 32u8, 98u8, 117u8, 116u8, 32u8, 101u8, 110u8, 100u8, 115u8, 32u8, 97u8, 116u8, 32u8, 192u8, 0u8]
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(start_1: usize, end_2: usize) -> !
@@ -664,21 +636,7 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 }
 
 // Full name: anon_const_0
-fn anon_const_0() -> [u8; 57usize]
-{
-    let _0: [u8; 57usize]; // return
-    let _1: [u8; 57usize]; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = [const 18u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 115u8, const 116u8, const 97u8, const 114u8, const 116u8, const 32u8, const 105u8, const 110u8, const 100u8, const 101u8, const 120u8, const 32u8, const 192u8, const 34u8, const 32u8, const 111u8, const 117u8, const 116u8, const 32u8, const 111u8, const 102u8, const 32u8, const 114u8, const 97u8, const 110u8, const 103u8, const 101u8, const 32u8, const 102u8, const 111u8, const 114u8, const 32u8, const 115u8, const 108u8, const 105u8, const 99u8, const 101u8, const 32u8, const 111u8, const 102u8, const 32u8, const 108u8, const 101u8, const 110u8, const 103u8, const 116u8, const 104u8, const 32u8, const 192u8, const 0u8];
-        _0 = move _1;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: [u8; 57usize] = anon_const_0()
+const anon_const_0: [u8; 57usize] = [18u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 115u8, 116u8, 97u8, 114u8, 116u8, 32u8, 105u8, 110u8, 100u8, 101u8, 120u8, 32u8, 192u8, 34u8, 32u8, 111u8, 117u8, 116u8, 32u8, 111u8, 102u8, 32u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 102u8, 111u8, 114u8, 32u8, 115u8, 108u8, 105u8, 99u8, 101u8, 32u8, 111u8, 102u8, 32u8, 108u8, 101u8, 110u8, 103u8, 116u8, 104u8, 32u8, 192u8, 0u8]
 
 // Full name: core::slice::index::slice_index_fail::do_panic::runtime
 fn runtime(start_1: usize, len_2: usize) -> !

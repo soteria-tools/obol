@@ -613,51 +613,11 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 }
 
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
-pub fn LAYOUT::<i32>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 4usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<List::<i32>>
-pub fn LAYOUT::<List::<i32>>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 16usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<List::<i32>>
-pub const LAYOUT::<List::<i32>>: Layout = LAYOUT::<List::<i32>>()
+pub const LAYOUT::<List::<i32>>: Layout = Layout { size: 16usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl3 {  } } }
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
-pub const LAYOUT::<i32>: Layout = LAYOUT::<i32>()
+pub const LAYOUT::<i32>: Layout = Layout { size: 4usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl2 {  } } }
 
 // Full name: std::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {

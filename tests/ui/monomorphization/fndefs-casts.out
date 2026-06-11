@@ -39,32 +39,10 @@ pub fn call::<foo::<u32>, (&'_ u32,)>(_1: &'_ foo::<u32>, _2: (&'_ u32,))
 trait FakeTrait
 
 // Full name: anon_const_0
-fn anon_const_0() -> char
-{
-    let _0: char; // return
-
-    bb0: {
-        _0 = const x;
-        return;
-    }
-}
+const anon_const_0: char = x
 
 // Full name: anon_const_1
-fn anon_const_1() -> u32
-{
-    let _0: u32; // return
-
-    bb0: {
-        _0 = const 13u32;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: char = anon_const_0()
-
-// Full name: anon_const_1
-const anon_const_1: u32 = anon_const_1()
+const anon_const_1: u32 = 13u32
 
 // Full name: test_crate::foo::<u8>
 fn foo::<u8>(x_1: &'_ u8)

@@ -661,18 +661,7 @@ fn index_slice_ignore_value(x_1: &'_ [u32])
 }
 
 // Full name: test_crate::div_signed_with_constant::FOO
-fn FOO() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
-
-// Full name: test_crate::div_signed_with_constant::FOO
-const FOO: i32 = FOO()
+const FOO: i32 = 42i32
 
 // Full name: test_crate::div_signed_with_constant
 fn div_signed_with_constant() -> i32

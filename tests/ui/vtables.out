@@ -836,58 +836,14 @@ pub struct PhantomData::<u8> {}
 
 // Full name: std::mem::SizedTypeProperties::SIZE::<u8>
 #[lang_item("mem_size_const")]
-pub fn SIZE::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
-#[lang_item("mem_size_const")]
-pub const SIZE::<u8>: usize = SIZE::<u8>()
+pub const SIZE::<u8>: usize = 1usize
 
 // Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
 #[lang_item("mem_align_const")]
-pub fn ALIGN::<u8>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 1usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
-#[lang_item("mem_align_const")]
-pub const ALIGN::<u8>: usize = ALIGN::<u8>()
+pub const ALIGN::<u8>: usize = 1usize
 
 // Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub fn LAYOUT::<u8>() -> Layout
-{
-    let _0: Layout; // return
-    let _1: AlignmentEnum; // anonymous local
-    let _2: Alignment; // anonymous local
-    let _3: Layout; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_2);
-        _2 = Alignment { _inner_repr_trick: move _1 };
-        storage_live(_3);
-        _3 = Layout { size: const 1usize, align: move _2 };
-        _0 = move _3;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
-pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
+pub const LAYOUT::<u8>: Layout = Layout { size: 1usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
 fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {
@@ -3300,158 +3256,37 @@ pub fn to_string::<str>(self_1: &'_ str) -> String
 }
 
 // Full name: anon_const_4
-fn anon_const_4() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 100i32;
-        return;
-    }
-}
+const anon_const_4: i32 = 100i32
 
 // Full name: anon_const_5
-fn anon_const_5() -> i64
-{
-    let _0: i64; // return
-
-    bb0: {
-        _0 = const 200i64;
-        return;
-    }
-}
+const anon_const_5: i64 = 200i64
 
 // Full name: anon_const_6
-fn anon_const_6() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
+const anon_const_6: i32 = 42i32
 
 // Full name: anon_const_10
-fn anon_const_10() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 100i32;
-        return;
-    }
-}
+const anon_const_10: i32 = 100i32
 
 // Full name: anon_const_11
-fn anon_const_11() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
+const anon_const_11: i32 = 42i32
 
 // Full name: anon_const_12
-fn anon_const_12() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
+const anon_const_12: i32 = 42i32
 
 // Full name: anon_const_13
-fn anon_const_13() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 100i32;
-        return;
-    }
-}
+const anon_const_13: i32 = 100i32
 
 // Full name: anon_const_14
-fn anon_const_14() -> i64
-{
-    let _0: i64; // return
-
-    bb0: {
-        _0 = const 200i64;
-        return;
-    }
-}
+const anon_const_14: i64 = 200i64
 
 // Full name: anon_const_15
-fn anon_const_15() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 42i32;
-        return;
-    }
-}
+const anon_const_15: i32 = 42i32
 
 // Full name: anon_const_16
-fn anon_const_16() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 10i32;
-        return;
-    }
-}
+const anon_const_16: i32 = 10i32
 
 // Full name: anon_const_17
-fn anon_const_17() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 10i32;
-        return;
-    }
-}
-
-// Full name: anon_const_4
-const anon_const_4: i32 = anon_const_4()
-
-// Full name: anon_const_5
-const anon_const_5: i64 = anon_const_5()
-
-// Full name: anon_const_6
-const anon_const_6: i32 = anon_const_6()
-
-// Full name: anon_const_10
-const anon_const_10: i32 = anon_const_10()
-
-// Full name: anon_const_11
-const anon_const_11: i32 = anon_const_11()
-
-// Full name: anon_const_12
-const anon_const_12: i32 = anon_const_12()
-
-// Full name: anon_const_13
-const anon_const_13: i32 = anon_const_13()
-
-// Full name: anon_const_14
-const anon_const_14: i64 = anon_const_14()
-
-// Full name: anon_const_15
-const anon_const_15: i32 = anon_const_15()
-
-// Full name: anon_const_16
-const anon_const_16: i32 = anon_const_16()
-
-// Full name: anon_const_17
-const anon_const_17: i32 = anon_const_17()
+const anon_const_17: i32 = 10i32
 
 // Full name: <i32 as test_crate::Super<i32>>::super_method
 fn super_method(self_1: &'_ i32, arg_2: i32) -> i32

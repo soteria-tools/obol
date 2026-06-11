@@ -77,21 +77,7 @@ pub struct Wrap::<i32> {
 }
 
 // Full name: test_crate::Y
-pub fn Y() -> Wrap::<i32>
-{
-    let _0: Wrap::<i32>; // return
-    let _1: Wrap::<i32>; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = Wrap::<i32> { value: const 2i32 };
-        _0 = move _1;
-        return;
-    }
-}
-
-// Full name: test_crate::Y
-pub const Y: Wrap::<i32> = Y()
+pub const Y: Wrap::<i32> = Wrap::<i32> { value: 2i32 }
 
 // Full name: test_crate::unwrap_y
 pub fn unwrap_y() -> i32
@@ -109,18 +95,7 @@ pub fn unwrap_y() -> i32
 }
 
 // Full name: test_crate::get_z1::Z1
-fn Z1() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 3i32;
-        return;
-    }
-}
-
-// Full name: test_crate::get_z1::Z1
-const Z1: i32 = Z1()
+const Z1: i32 = 3i32
 
 // Full name: test_crate::get_z1
 pub fn get_z1() -> i32
@@ -158,32 +133,10 @@ pub fn add(a_1: i32, b_2: i32) -> i32
 }
 
 // Full name: test_crate::Q3
-pub fn Q3() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 8i32;
-        return;
-    }
-}
-
-// Full name: test_crate::Q3
-pub const Q3: i32 = Q3()
+pub const Q3: i32 = 8i32
 
 // Full name: test_crate::Q1
-pub fn Q1() -> i32
-{
-    let _0: i32; // return
-
-    bb0: {
-        _0 = const 5i32;
-        return;
-    }
-}
-
-// Full name: test_crate::Q1
-pub const Q1: i32 = Q1()
+pub const Q1: i32 = 5i32
 
 // Full name: test_crate::get_z2
 pub fn get_z2() -> i32

@@ -187,33 +187,10 @@ pub fn ctpop::<usize>(x_1: usize) -> u32
 
 // Full name: std::mem::SizedTypeProperties::ALIGN::<MaybeUninit::<u32>>
 #[lang_item("mem_align_const")]
-pub fn ALIGN::<MaybeUninit::<u32>>() -> usize
-{
-    let _0: usize; // return
-
-    bb0: {
-        _0 = const 4usize;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::ALIGN::<MaybeUninit::<u32>>
-#[lang_item("mem_align_const")]
-pub const ALIGN::<MaybeUninit::<u32>>: usize = ALIGN::<MaybeUninit::<u32>>()
+pub const ALIGN::<MaybeUninit::<u32>>: usize = 4usize
 
 // Full name: std::mem::SizedTypeProperties::IS_ZST::<MaybeUninit::<u32>>
-pub fn IS_ZST::<MaybeUninit::<u32>>() -> bool
-{
-    let _0: bool; // return
-
-    bb0: {
-        _0 = const false;
-        return;
-    }
-}
-
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<MaybeUninit::<u32>>
-pub const IS_ZST::<MaybeUninit::<u32>>: bool = IS_ZST::<MaybeUninit::<u32>>()
+pub const IS_ZST::<MaybeUninit::<u32>>: bool = false
 
 // Full name: std::thread::AccessError
 pub struct AccessError {}
@@ -237,33 +214,7 @@ pub struct LazyStorage::<u32, !> {
 }
 
 // Full name: test_crate::FOO::{constant#0}::{closure#1}::__RUST_STD_INTERNAL_VAL
-fn __RUST_STD_INTERNAL_VAL() -> LazyStorage::<u32, !>
-{
-    let _0: LazyStorage::<u32, !>; // return
-    let _1: UnsafeCell::<MaybeUninit::<u32>>; // anonymous local
-    let _2: State::<!>; // anonymous local
-    let _3: UnsafeCell::<State::<!>>; // anonymous local
-    let _4: Cell::<State::<!>>; // anonymous local
-    let _5: LazyStorage::<u32, !>; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = UnsafeCell::<MaybeUninit::<u32>> { value: const RawMemory(--, --, --, --) };
-        storage_live(_2);
-        _2 = State::<!>::Uninitialized {  };
-        storage_live(_3);
-        _3 = UnsafeCell::<State::<!>> { value: move _2 };
-        storage_live(_4);
-        _4 = Cell::<State::<!>> { value: move _3 };
-        storage_live(_5);
-        _5 = LazyStorage::<u32, !> { value: move _1, state: move _4 };
-        _0 = move _5;
-        return;
-    }
-}
-
-// Full name: test_crate::FOO::{constant#0}::{closure#1}::__RUST_STD_INTERNAL_VAL
-thread_local __RUST_STD_INTERNAL_VAL: LazyStorage::<u32, !> = __RUST_STD_INTERNAL_VAL()
+thread_local __RUST_STD_INTERNAL_VAL: LazyStorage::<u32, !> = LazyStorage::<u32, !> { value: UnsafeCell::<MaybeUninit::<u32>> { value: RawMemory(--, --, --, --) }, state: Cell::<State::<!>> { value: UnsafeCell::<State::<!>> { value: State::<!>::Uninitialized {  } } } }
 
 // Full name: test_crate::FOO::__rust_std_internal_init_fn
 fn __rust_std_internal_init_fn() -> u32
@@ -1158,18 +1109,18 @@ pub fn call_once::<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option:
     }
 }
 
-// Full name: std::option::Option::<&'_ u32>
-#[lang_item("Option")]
-pub enum Option::<&'_ u32> {
-  None,
-  Some(0: &'_ u32),
-}
-
 // Full name: std::option::Option::<&'_ mut Option::<u32>>
 #[lang_item("Option")]
 pub enum Option::<&'_ mut Option::<u32>> {
   None,
   Some(0: &'_ mut Option::<u32>),
+}
+
+// Full name: std::option::Option::<&'_ u32>
+#[lang_item("Option")]
+pub enum Option::<&'_ u32> {
+  None,
+  Some(0: &'_ u32),
 }
 
 // Full name: std::result::Result::<u32, AccessError>
@@ -1417,24 +1368,7 @@ fn closure_as_fn(arg1_1: Option::<&'_ mut Option::<u32>>) -> *const u32
 }
 
 // Full name: anon_const_0
-fn anon_const_0() -> LocalKey::<u32>
-{
-    let _0: LocalKey::<u32>; // return
-    let _1: fn(Option::<&'_ mut Option::<u32>>) -> *const u32; // anonymous local
-    let _2: LocalKey::<u32>; // anonymous local
-
-    bb0: {
-        storage_live(_1);
-        _1 = cast<closure_as_fn<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>, fn(Option::<&'_ mut Option::<u32>>) -> *const u32>(const closure_as_fn<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>);
-        storage_live(_2);
-        _2 = LocalKey::<u32> { inner: move _1 };
-        _0 = move _2;
-        return;
-    }
-}
-
-// Full name: anon_const_0
-const anon_const_0: LocalKey::<u32> = anon_const_0()
+const anon_const_0: LocalKey::<u32> = LocalKey::<u32> { inner: fnptr(closure_as_fn<test_crate::FOO::{constant#0}::{closure#1}::closure, (Option::<&'_ mut Option::<u32>>,)>) }
 
 // Full name: test_crate::main
 fn main()
