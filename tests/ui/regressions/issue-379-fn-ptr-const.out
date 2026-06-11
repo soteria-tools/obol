@@ -1,0 +1,46 @@
+Item test_crate::target caused errors; ignoring. Any { .. }
+
+// Final ULLBC:
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: test_crate::target
+fn target() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const true;
+        return;
+    }
+}
+
+// Full name: test_crate::Holder
+struct Holder {
+  0: *const (),
+}
+
+// Full name: test_crate::get
+pub fn get() -> *const ()
+{
+    let _0: *const (); // return
+    let _1: Holder; // anonymous local
+    let _2: *const (); // anonymous local
+    let _3: Holder; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        storage_live(_2);
+        _2 = &raw const target;
+        storage_live(_3);
+        _3 = Holder { 0: move _2 };
+        _1 = move _3;
+        _0 = copy (_1).0;
+        storage_dead(_1);
+        return;
+    }
+}
+
+
+
