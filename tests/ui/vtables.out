@@ -734,7 +734,7 @@ fn Debug::<&'_ i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <&i32 as Debug>::fmt_4: *const (); // local
+    let <&i32 as std::fmt::Debug>::fmt_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -742,14 +742,14 @@ fn Debug::<&'_ i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<&i32 as Debug>::fmt_4);
+        storage_live(<&i32 as std::fmt::Debug>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ i32>, *const ()>(const drop_glue::<&'_ i32>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&i32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <&i32 as Debug>::fmt_4];
+        <&i32 as std::fmt::Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <&i32 as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -3473,8 +3473,8 @@ fn Checkable::<i32, i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as Super<i32>>::super_method_4: *const (); // local
-    let <i32 as Checkable<i32>>::check_5: *const (); // local
+    let <i32 as test_crate::Super<i32>>::super_method_4: *const (); // local
+    let <i32 as test_crate::Checkable<i32>>::check_5: *const (); // local
     let entry_array_6: [*const (); 5usize]; // local
     let entry_array_ref_7: *const [*const (); 5usize]; // local
 
@@ -3482,16 +3482,16 @@ fn Checkable::<i32, i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as Super<i32>>::super_method_4);
-        storage_live(<i32 as Checkable<i32>>::check_5);
+        storage_live(<i32 as test_crate::Super<i32>>::super_method_4);
+        storage_live(<i32 as test_crate::Checkable<i32>>::check_5);
         storage_live(entry_array_6);
         storage_live(entry_array_ref_7);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as Super<i32>>::super_method_4 = cast<super_method, *const ()>(const super_method);
-        <i32 as Checkable<i32>>::check_5 = cast<<i32 as test_crate::Checkable<i32>>::check, *const ()>(const <i32 as test_crate::Checkable<i32>>::check);
-        entry_array_6 = [move drop_1, move size_2, move align_3, move <i32 as Super<i32>>::super_method_4, move <i32 as Checkable<i32>>::check_5];
+        <i32 as test_crate::Super<i32>>::super_method_4 = cast<super_method, *const ()>(const super_method);
+        <i32 as test_crate::Checkable<i32>>::check_5 = cast<<i32 as test_crate::Checkable<i32>>::check, *const ()>(const <i32 as test_crate::Checkable<i32>>::check);
+        entry_array_6 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Super<i32>>::super_method_4, move <i32 as test_crate::Checkable<i32>>::check_5];
         entry_array_ref_7 = &raw const entry_array_6;
         vtable_0 = cast<*const [*const (); 5usize], *const ()>(move entry_array_ref_7);
         return;
@@ -3550,7 +3550,7 @@ fn NoParam::<i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as NoParam>::dummy_4: *const (); // local
+    let <i32 as test_crate::NoParam>::dummy_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -3558,14 +3558,14 @@ fn NoParam::<i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as NoParam>::dummy_4);
+        storage_live(<i32 as test_crate::NoParam>::dummy_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as NoParam>::dummy_4 = cast<<i32 as test_crate::NoParam>::dummy, *const ()>(const <i32 as test_crate::NoParam>::dummy);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as NoParam>::dummy_4];
+        <i32 as test_crate::NoParam>::dummy_4 = cast<<i32 as test_crate::NoParam>::dummy, *const ()>(const <i32 as test_crate::NoParam>::dummy);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::NoParam>::dummy_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -3636,7 +3636,7 @@ fn Modifiable::<i32, String>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as Modifiable<String>>::modify_4: *const (); // local
+    let <i32 as test_crate::Modifiable<std::string::String>>::modify_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -3644,14 +3644,14 @@ fn Modifiable::<i32, String>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as Modifiable<String>>::modify_4);
+        storage_live(<i32 as test_crate::Modifiable<std::string::String>>::modify_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as Modifiable<String>>::modify_4 = cast<<i32 as test_crate::Modifiable<T>>::modify::<String>, *const ()>(const <i32 as test_crate::Modifiable<T>>::modify::<String>);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as Modifiable<String>>::modify_4];
+        <i32 as test_crate::Modifiable<std::string::String>>::modify_4 = cast<<i32 as test_crate::Modifiable<T>>::modify::<String>, *const ()>(const <i32 as test_crate::Modifiable<T>>::modify::<String>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Modifiable<std::string::String>>::modify_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -3692,7 +3692,7 @@ fn Modifiable::<i32, i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as Modifiable<i32>>::modify_4: *const (); // local
+    let <i32 as test_crate::Modifiable<i32>>::modify_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -3700,14 +3700,14 @@ fn Modifiable::<i32, i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as Modifiable<i32>>::modify_4);
+        storage_live(<i32 as test_crate::Modifiable<i32>>::modify_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as Modifiable<i32>>::modify_4 = cast<<i32 as test_crate::Modifiable<T>>::modify::<i32>, *const ()>(const <i32 as test_crate::Modifiable<T>>::modify::<i32>);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as Modifiable<i32>>::modify_4];
+        <i32 as test_crate::Modifiable<i32>>::modify_4 = cast<<i32 as test_crate::Modifiable<T>>::modify::<i32>, *const ()>(const <i32 as test_crate::Modifiable<T>>::modify::<i32>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Modifiable<i32>>::modify_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -3828,7 +3828,7 @@ fn BaseOn::<i32, i64>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as BaseOn<i64>>::operate_on_4: *const (); // local
+    let <i32 as test_crate::BaseOn<i64>>::operate_on_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -3836,14 +3836,14 @@ fn BaseOn::<i32, i64>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as BaseOn<i64>>::operate_on_4);
+        storage_live(<i32 as test_crate::BaseOn<i64>>::operate_on_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as BaseOn<i64>>::operate_on_4 = cast<<i32 as test_crate::BaseOn<i64>>::operate_on, *const ()>(const <i32 as test_crate::BaseOn<i64>>::operate_on);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as BaseOn<i64>>::operate_on_4];
+        <i32 as test_crate::BaseOn<i64>>::operate_on_4 = cast<<i32 as test_crate::BaseOn<i64>>::operate_on, *const ()>(const <i32 as test_crate::BaseOn<i64>>::operate_on);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::BaseOn<i64>>::operate_on_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -3958,9 +3958,9 @@ fn Both32And64::<i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as BaseOn<i32>>::operate_on_4: *const (); // local
-    let <i32 as BaseOn<i64>>::operate_on_5: *const (); // local
-    let <i32 as Both32And64>::both_operate_6: *const (); // local
+    let <i32 as test_crate::BaseOn<i32>>::operate_on_4: *const (); // local
+    let <i32 as test_crate::BaseOn<i64>>::operate_on_5: *const (); // local
+    let <i32 as test_crate::Both32And64>::both_operate_6: *const (); // local
     let entry_array_7: [*const (); 7usize]; // local
     let entry_array_ref_8: *const [*const (); 7usize]; // local
 
@@ -3968,18 +3968,18 @@ fn Both32And64::<i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as BaseOn<i32>>::operate_on_4);
-        storage_live(<i32 as BaseOn<i64>>::operate_on_5);
-        storage_live(<i32 as Both32And64>::both_operate_6);
+        storage_live(<i32 as test_crate::BaseOn<i32>>::operate_on_4);
+        storage_live(<i32 as test_crate::BaseOn<i64>>::operate_on_5);
+        storage_live(<i32 as test_crate::Both32And64>::both_operate_6);
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as BaseOn<i32>>::operate_on_4 = cast<<i32 as test_crate::BaseOn<i32>>::operate_on, *const ()>(const <i32 as test_crate::BaseOn<i32>>::operate_on);
-        <i32 as BaseOn<i64>>::operate_on_5 = cast<<i32 as test_crate::BaseOn<i64>>::operate_on, *const ()>(const <i32 as test_crate::BaseOn<i64>>::operate_on);
-        <i32 as Both32And64>::both_operate_6 = cast<both_operate::<i32>, *const ()>(const both_operate::<i32>);
-        entry_array_7 = [move drop_1, move size_2, move align_3, move <i32 as BaseOn<i32>>::operate_on_4, move <i32 as BaseOn<i64>>::operate_on_5, copy BaseOn::<i32, i64>, move <i32 as Both32And64>::both_operate_6];
+        <i32 as test_crate::BaseOn<i32>>::operate_on_4 = cast<<i32 as test_crate::BaseOn<i32>>::operate_on, *const ()>(const <i32 as test_crate::BaseOn<i32>>::operate_on);
+        <i32 as test_crate::BaseOn<i64>>::operate_on_5 = cast<<i32 as test_crate::BaseOn<i64>>::operate_on, *const ()>(const <i32 as test_crate::BaseOn<i64>>::operate_on);
+        <i32 as test_crate::Both32And64>::both_operate_6 = cast<both_operate::<i32>, *const ()>(const both_operate::<i32>);
+        entry_array_7 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::BaseOn<i32>>::operate_on_4, move <i32 as test_crate::BaseOn<i64>>::operate_on_5, copy BaseOn::<i32, i64>, move <i32 as test_crate::Both32And64>::both_operate_6];
         entry_array_ref_8 = &raw const entry_array_7;
         vtable_0 = cast<*const [*const (); 7usize], *const ()>(move entry_array_ref_8);
         return;
@@ -4044,7 +4044,7 @@ fn LifetimeTrait::<i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as LifetimeTrait>::lifetime_method_4: *const (); // local
+    let <i32 as test_crate::LifetimeTrait>::lifetime_method_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -4052,14 +4052,14 @@ fn LifetimeTrait::<i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as LifetimeTrait>::lifetime_method_4);
+        storage_live(<i32 as test_crate::LifetimeTrait>::lifetime_method_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as LifetimeTrait>::lifetime_method_4 = cast<<i32 as test_crate::LifetimeTrait>::lifetime_method, *const ()>(const <i32 as test_crate::LifetimeTrait>::lifetime_method);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as LifetimeTrait>::lifetime_method_4];
+        <i32 as test_crate::LifetimeTrait>::lifetime_method_4 = cast<<i32 as test_crate::LifetimeTrait>::lifetime_method, *const ()>(const <i32 as test_crate::LifetimeTrait>::lifetime_method);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::LifetimeTrait>::lifetime_method_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;

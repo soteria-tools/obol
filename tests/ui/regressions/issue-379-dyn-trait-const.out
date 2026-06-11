@@ -56,7 +56,7 @@ fn MyTrait::<S>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <S as MyTrait>::val_4: *const (); // local
+    let <test_crate::S as test_crate::MyTrait>::val_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -64,14 +64,14 @@ fn MyTrait::<S>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<S as MyTrait>::val_4);
+        storage_live(<test_crate::S as test_crate::MyTrait>::val_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<S>, *const ()>(const drop_glue::<S>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <S as MyTrait>::val_4 = cast<val, *const ()>(const val);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <S as MyTrait>::val_4];
+        <test_crate::S as test_crate::MyTrait>::val_4 = cast<val, *const ()>(const val);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <test_crate::S as test_crate::MyTrait>::val_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;

@@ -4047,9 +4047,9 @@ fn Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, 
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <{closure@RawTable<(u32, u32)>::reserve_rehash<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(&mut RawTableInner, usize)>>::call_once_4: *const (); // local
-    let RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5: *const (); // local
-    let RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_6: *const (); // local
+    let <{closure@hashbrown::raw::RawTable<(u32, u32)>::reserve_rehash<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(&mut hashbrown::raw::RawTableInner, usize)>>::call_once_4: *const (); // local
+    let hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5: *const (); // local
+    let hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6: *const (); // local
     let entry_array_7: [*const (); 6usize]; // local
     let entry_array_ref_8: *const [*const (); 6usize]; // local
 
@@ -4057,18 +4057,18 @@ fn Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, 
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<{closure@RawTable<(u32, u32)>::reserve_rehash<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(&mut RawTableInner, usize)>>::call_once_4);
-        storage_live(RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5);
-        storage_live(RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_6);
+        storage_live(<{closure@hashbrown::raw::RawTable<(u32, u32)>::reserve_rehash<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(&mut hashbrown::raw::RawTableInner, usize)>>::call_once_4);
+        storage_live(hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5);
+        storage_live(hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6);
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
         drop_1 = cast<drop_glue::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure>, *const ()>(const drop_glue::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <{closure@RawTable<(u32, u32)>::reserve_rehash<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(&mut RawTableInner, usize)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>);
-        RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>);
-        RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_6 = cast<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>);
-        entry_array_7 = [move drop_1, move size_2, move align_3, move <{closure@RawTable<(u32, u32)>::reserve_rehash<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(&mut RawTableInner, usize)>>::call_once_4, move RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5, move RawTable::<(u32, u32)>::reserve_rehash::<{closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_6];
+        <{closure@hashbrown::raw::RawTable<(u32, u32)>::reserve_rehash<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(&mut hashbrown::raw::RawTableInner, usize)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6 = cast<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>);
+        entry_array_7 = [move drop_1, move size_2, move align_3, move <{closure@hashbrown::raw::RawTable<(u32, u32)>::reserve_rehash<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(&mut hashbrown::raw::RawTableInner, usize)>>::call_once_4, move hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5, move hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6];
         entry_array_ref_8 = &raw const entry_array_7;
         vtable_0 = cast<*const [*const (); 6usize], *const ()>(move entry_array_ref_8);
         return;
@@ -4350,8 +4350,8 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <{closure@RawTable<(u32, u32)>::find<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4: *const (); // local
-    let RawTable::<(u32, u32)>::find::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5: *const (); // local
+    let <{closure@hashbrown::raw::RawTable<(u32, u32)>::find<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4: *const (); // local
+    let hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5: *const (); // local
     let entry_array_6: [*const (); 5usize]; // local
     let entry_array_ref_7: *const [*const (); 5usize]; // local
 
@@ -4359,16 +4359,16 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<{closure@RawTable<(u32, u32)>::find<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4);
-        storage_live(RawTable::<(u32, u32)>::find::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5);
+        storage_live(<{closure@hashbrown::raw::RawTable<(u32, u32)>::find<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4);
+        storage_live(hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5);
         storage_live(entry_array_6);
         storage_live(entry_array_ref_7);
         drop_1 = cast<drop_glue::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure>, *const ()>(const drop_glue::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure>);
         size_2 = transmute<usize, *const ()>(const 16usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <{closure@RawTable<(u32, u32)>::find<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>);
-        RawTable::<(u32, u32)>::find::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>);
-        entry_array_6 = [move drop_1, move size_2, move align_3, move <{closure@RawTable<(u32, u32)>::find<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4, move RawTable::<(u32, u32)>::find::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5];
+        <{closure@hashbrown::raw::RawTable<(u32, u32)>::find<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>);
+        entry_array_6 = [move drop_1, move size_2, move align_3, move <{closure@hashbrown::raw::RawTable<(u32, u32)>::find<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4, move hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5];
         entry_array_ref_7 = &raw const entry_array_6;
         vtable_0 = cast<*const [*const (); 5usize], *const ()>(move entry_array_ref_7);
         return;
@@ -4571,8 +4571,8 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <{closure@RawTable<(u32, u32)>::find_or_find_insert_index<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4: *const (); // local
-    let RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5: *const (); // local
+    let <{closure@hashbrown::raw::RawTable<(u32, u32)>::find_or_find_insert_index<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4: *const (); // local
+    let hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5: *const (); // local
     let entry_array_6: [*const (); 5usize]; // local
     let entry_array_ref_7: *const [*const (); 5usize]; // local
 
@@ -4580,16 +4580,16 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<{closure@RawTable<(u32, u32)>::find_or_find_insert_index<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4);
-        storage_live(RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5);
+        storage_live(<{closure@hashbrown::raw::RawTable<(u32, u32)>::find_or_find_insert_index<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4);
+        storage_live(hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5);
         storage_live(entry_array_6);
         storage_live(entry_array_ref_7);
         drop_1 = cast<drop_glue::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure>, *const ()>(const drop_glue::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure>);
         size_2 = transmute<usize, *const ()>(const 16usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <{closure@RawTable<(u32, u32)>::find_or_find_insert_index<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>);
-        RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>);
-        entry_array_6 = [move drop_1, move size_2, move align_3, move <{closure@RawTable<(u32, u32)>::find_or_find_insert_index<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}} as FnOnce<(usize,)>>::call_once_4, move RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@equivalent_key<u32, u32, u32>::{closure#0}}, {closure@make_hasher<u32, u32, RandomState>::{closure#0}}>::{closure#0}_5];
+        <{closure@hashbrown::raw::RawTable<(u32, u32)>::find_or_find_insert_index<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>);
+        entry_array_6 = [move drop_1, move size_2, move align_3, move <{closure@hashbrown::raw::RawTable<(u32, u32)>::find_or_find_insert_index<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4, move hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5];
         entry_array_ref_7 = &raw const entry_array_6;
         vtable_0 = cast<*const [*const (); 5usize], *const ()>(move entry_array_ref_7);
         return;

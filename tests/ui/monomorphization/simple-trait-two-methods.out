@@ -63,8 +63,8 @@ fn Trait::<i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as Trait>::consume_4: *const (); // local
-    let <i32 as Trait>::another_5: *const (); // local
+    let <i32 as test_crate::Trait>::consume_4: *const (); // local
+    let <i32 as test_crate::Trait>::another_5: *const (); // local
     let entry_array_6: [*const (); 5usize]; // local
     let entry_array_ref_7: *const [*const (); 5usize]; // local
 
@@ -72,16 +72,16 @@ fn Trait::<i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as Trait>::consume_4);
-        storage_live(<i32 as Trait>::another_5);
+        storage_live(<i32 as test_crate::Trait>::consume_4);
+        storage_live(<i32 as test_crate::Trait>::another_5);
         storage_live(entry_array_6);
         storage_live(entry_array_ref_7);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as Trait>::consume_4 = cast<<i32 as test_crate::Trait>::consume, *const ()>(const <i32 as test_crate::Trait>::consume);
-        <i32 as Trait>::another_5 = cast<another, *const ()>(const another);
-        entry_array_6 = [move drop_1, move size_2, move align_3, move <i32 as Trait>::consume_4, move <i32 as Trait>::another_5];
+        <i32 as test_crate::Trait>::consume_4 = cast<<i32 as test_crate::Trait>::consume, *const ()>(const <i32 as test_crate::Trait>::consume);
+        <i32 as test_crate::Trait>::another_5 = cast<another, *const ()>(const another);
+        entry_array_6 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Trait>::consume_4, move <i32 as test_crate::Trait>::another_5];
         entry_array_ref_7 = &raw const entry_array_6;
         vtable_0 = cast<*const [*const (); 5usize], *const ()>(move entry_array_ref_7);
         return;

@@ -52,7 +52,7 @@ fn Broken::<()>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <() as Broken>::broken_4: *const (); // local
+    let <() as test_crate::Broken>::broken_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -60,14 +60,14 @@ fn Broken::<()>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<() as Broken>::broken_4);
+        storage_live(<() as test_crate::Broken>::broken_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<()>, *const ()>(const drop_glue::<()>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <() as Broken>::broken_4 = cast<broken::<()>, *const ()>(const broken::<()>);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <() as Broken>::broken_4];
+        <() as test_crate::Broken>::broken_4 = cast<broken::<()>, *const ()>(const broken::<()>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <() as test_crate::Broken>::broken_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;

@@ -122,7 +122,7 @@ fn Any::<&'_ str>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <&str as Any>::type_id_4: *const (); // local
+    let <&str as std::any::Any>::type_id_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -130,14 +130,14 @@ fn Any::<&'_ str>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<&str as Any>::type_id_4);
+        storage_live(<&str as std::any::Any>::type_id_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ str>, *const ()>(const drop_glue::<&'_ str>);
         size_2 = transmute<usize, *const ()>(const 16usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&str as Any>::type_id_4 = cast<type_id::<&'_ str>, *const ()>(const type_id::<&'_ str>);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <&str as Any>::type_id_4];
+        <&str as std::any::Any>::type_id_4 = cast<type_id::<&'_ str>, *const ()>(const type_id::<&'_ str>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <&str as std::any::Any>::type_id_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -1316,10 +1316,10 @@ fn PanicPayload::<Payload::<&'_ str>>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <Payload<&str> as Display>::fmt_4: *const (); // local
-    let <Payload<&str> as PanicPayload>::take_box_5: *const (); // local
-    let <Payload<&str> as PanicPayload>::get_6: *const (); // local
-    let <Payload<&str> as PanicPayload>::as_str_7: *const (); // local
+    let <std::rt::begin_panic::Payload<&str> as std::fmt::Display>::fmt_4: *const (); // local
+    let <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::take_box_5: *const (); // local
+    let <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::get_6: *const (); // local
+    let <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::as_str_7: *const (); // local
     let entry_array_8: [*const (); 7usize]; // local
     let entry_array_ref_9: *const [*const (); 7usize]; // local
 
@@ -1327,20 +1327,20 @@ fn PanicPayload::<Payload::<&'_ str>>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<Payload<&str> as Display>::fmt_4);
-        storage_live(<Payload<&str> as PanicPayload>::take_box_5);
-        storage_live(<Payload<&str> as PanicPayload>::get_6);
-        storage_live(<Payload<&str> as PanicPayload>::as_str_7);
+        storage_live(<std::rt::begin_panic::Payload<&str> as std::fmt::Display>::fmt_4);
+        storage_live(<std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::take_box_5);
+        storage_live(<std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::get_6);
+        storage_live(<std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::as_str_7);
         storage_live(entry_array_8);
         storage_live(entry_array_ref_9);
         drop_1 = cast<drop_glue::<Payload::<&'_ str>>, *const ()>(const drop_glue::<Payload::<&'_ str>>);
         size_2 = transmute<usize, *const ()>(const 16usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <Payload<&str> as Display>::fmt_4 = cast<fmt::<&'_ str>, *const ()>(const fmt::<&'_ str>);
-        <Payload<&str> as PanicPayload>::take_box_5 = cast<take_box::<&'_ str>, *const ()>(const take_box::<&'_ str>);
-        <Payload<&str> as PanicPayload>::get_6 = cast<get::<&'_ str>, *const ()>(const get::<&'_ str>);
-        <Payload<&str> as PanicPayload>::as_str_7 = cast<as_str::<Payload::<&'_ str>>, *const ()>(const as_str::<Payload::<&'_ str>>);
-        entry_array_8 = [move drop_1, move size_2, move align_3, move <Payload<&str> as Display>::fmt_4, move <Payload<&str> as PanicPayload>::take_box_5, move <Payload<&str> as PanicPayload>::get_6, move <Payload<&str> as PanicPayload>::as_str_7];
+        <std::rt::begin_panic::Payload<&str> as std::fmt::Display>::fmt_4 = cast<fmt::<&'_ str>, *const ()>(const fmt::<&'_ str>);
+        <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::take_box_5 = cast<take_box::<&'_ str>, *const ()>(const take_box::<&'_ str>);
+        <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::get_6 = cast<get::<&'_ str>, *const ()>(const get::<&'_ str>);
+        <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::as_str_7 = cast<as_str::<Payload::<&'_ str>>, *const ()>(const as_str::<Payload::<&'_ str>>);
+        entry_array_8 = [move drop_1, move size_2, move align_3, move <std::rt::begin_panic::Payload<&str> as std::fmt::Display>::fmt_4, move <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::take_box_5, move <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::get_6, move <std::rt::begin_panic::Payload<&str> as core::panic::PanicPayload>::as_str_7];
         entry_array_ref_9 = &raw const entry_array_8;
         vtable_0 = cast<*const [*const (); 7usize], *const ()>(move entry_array_ref_9);
         return;

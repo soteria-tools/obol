@@ -101,7 +101,9 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         })),
                     )),
                     Method(instance) => {
-                        let name = instance.trimmed_name();
+                        // Use the non-trimmed name: `trimmed_name` forces rustc's
+                        // `trimmed_def_paths` query which can cause ICEs
+                        let name = instance.name();
                         let fun = self.register_fun_decl_id(Span::dummy(), instance);
                         let fn_ptr = FnPtr {
                             kind: Box::new(FnPtrKind::Fun(FunId::Regular(fun))),

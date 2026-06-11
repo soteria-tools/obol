@@ -87,7 +87,7 @@ fn Super::<i32, i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as Super<i32>>::super_method_4: *const (); // local
+    let <i32 as test_crate::Super<i32>>::super_method_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -95,14 +95,14 @@ fn Super::<i32, i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as Super<i32>>::super_method_4);
+        storage_live(<i32 as test_crate::Super<i32>>::super_method_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as Super<i32>>::super_method_4 = cast<super_method, *const ()>(const super_method);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as Super<i32>>::super_method_4];
+        <i32 as test_crate::Super<i32>>::super_method_4 = cast<super_method, *const ()>(const super_method);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Super<i32>>::super_method_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -201,9 +201,9 @@ fn Right::<i32, i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as Internal>::internal_method_4: *const (); // local
-    let <i32 as Super<i32>>::super_method_5: *const (); // local
-    let <i32 as Right<i32>>::right_method_6: *const (); // local
+    let <i32 as test_crate::Internal>::internal_method_4: *const (); // local
+    let <i32 as test_crate::Super<i32>>::super_method_5: *const (); // local
+    let <i32 as test_crate::Right<i32>>::right_method_6: *const (); // local
     let entry_array_7: [*const (); 7usize]; // local
     let entry_array_ref_8: *const [*const (); 7usize]; // local
 
@@ -211,18 +211,18 @@ fn Right::<i32, i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as Internal>::internal_method_4);
-        storage_live(<i32 as Super<i32>>::super_method_5);
-        storage_live(<i32 as Right<i32>>::right_method_6);
+        storage_live(<i32 as test_crate::Internal>::internal_method_4);
+        storage_live(<i32 as test_crate::Super<i32>>::super_method_5);
+        storage_live(<i32 as test_crate::Right<i32>>::right_method_6);
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as Internal>::internal_method_4 = cast<internal_method, *const ()>(const internal_method);
-        <i32 as Super<i32>>::super_method_5 = cast<super_method, *const ()>(const super_method);
-        <i32 as Right<i32>>::right_method_6 = cast<right_method, *const ()>(const right_method);
-        entry_array_7 = [move drop_1, move size_2, move align_3, move <i32 as Internal>::internal_method_4, move <i32 as Super<i32>>::super_method_5, copy Super::<i32, i32>, move <i32 as Right<i32>>::right_method_6];
+        <i32 as test_crate::Internal>::internal_method_4 = cast<internal_method, *const ()>(const internal_method);
+        <i32 as test_crate::Super<i32>>::super_method_5 = cast<super_method, *const ()>(const super_method);
+        <i32 as test_crate::Right<i32>>::right_method_6 = cast<right_method, *const ()>(const right_method);
+        entry_array_7 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Internal>::internal_method_4, move <i32 as test_crate::Super<i32>>::super_method_5, copy Super::<i32, i32>, move <i32 as test_crate::Right<i32>>::right_method_6];
         entry_array_ref_8 = &raw const entry_array_7;
         vtable_0 = cast<*const [*const (); 7usize], *const ()>(move entry_array_ref_8);
         return;
@@ -299,11 +299,11 @@ fn Join::<i32, i32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <i32 as Internal>::internal_method_4: *const (); // local
-    let <i32 as Left>::left_method_5: *const (); // local
-    let <i32 as Super<i32>>::super_method_6: *const (); // local
-    let <i32 as Right<i32>>::right_method_7: *const (); // local
-    let <i32 as Join<i32>>::join_method_8: *const (); // local
+    let <i32 as test_crate::Internal>::internal_method_4: *const (); // local
+    let <i32 as test_crate::Left>::left_method_5: *const (); // local
+    let <i32 as test_crate::Super<i32>>::super_method_6: *const (); // local
+    let <i32 as test_crate::Right<i32>>::right_method_7: *const (); // local
+    let <i32 as test_crate::Join<i32>>::join_method_8: *const (); // local
     let entry_array_9: [*const (); 10usize]; // local
     let entry_array_ref_10: *const [*const (); 10usize]; // local
 
@@ -311,22 +311,22 @@ fn Join::<i32, i32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<i32 as Internal>::internal_method_4);
-        storage_live(<i32 as Left>::left_method_5);
-        storage_live(<i32 as Super<i32>>::super_method_6);
-        storage_live(<i32 as Right<i32>>::right_method_7);
-        storage_live(<i32 as Join<i32>>::join_method_8);
+        storage_live(<i32 as test_crate::Internal>::internal_method_4);
+        storage_live(<i32 as test_crate::Left>::left_method_5);
+        storage_live(<i32 as test_crate::Super<i32>>::super_method_6);
+        storage_live(<i32 as test_crate::Right<i32>>::right_method_7);
+        storage_live(<i32 as test_crate::Join<i32>>::join_method_8);
         storage_live(entry_array_9);
         storage_live(entry_array_ref_10);
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as Internal>::internal_method_4 = cast<internal_method, *const ()>(const internal_method);
-        <i32 as Left>::left_method_5 = cast<left_method, *const ()>(const left_method);
-        <i32 as Super<i32>>::super_method_6 = cast<super_method, *const ()>(const super_method);
-        <i32 as Right<i32>>::right_method_7 = cast<right_method, *const ()>(const right_method);
-        <i32 as Join<i32>>::join_method_8 = cast<<i32 as test_crate::Join<i32>>::join_method, *const ()>(const <i32 as test_crate::Join<i32>>::join_method);
-        entry_array_9 = [move drop_1, move size_2, move align_3, move <i32 as Internal>::internal_method_4, move <i32 as Left>::left_method_5, move <i32 as Super<i32>>::super_method_6, copy Super::<i32, i32>, move <i32 as Right<i32>>::right_method_7, copy Right::<i32, i32>, move <i32 as Join<i32>>::join_method_8];
+        <i32 as test_crate::Internal>::internal_method_4 = cast<internal_method, *const ()>(const internal_method);
+        <i32 as test_crate::Left>::left_method_5 = cast<left_method, *const ()>(const left_method);
+        <i32 as test_crate::Super<i32>>::super_method_6 = cast<super_method, *const ()>(const super_method);
+        <i32 as test_crate::Right<i32>>::right_method_7 = cast<right_method, *const ()>(const right_method);
+        <i32 as test_crate::Join<i32>>::join_method_8 = cast<<i32 as test_crate::Join<i32>>::join_method, *const ()>(const <i32 as test_crate::Join<i32>>::join_method);
+        entry_array_9 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Internal>::internal_method_4, move <i32 as test_crate::Left>::left_method_5, move <i32 as test_crate::Super<i32>>::super_method_6, copy Super::<i32, i32>, move <i32 as test_crate::Right<i32>>::right_method_7, copy Right::<i32, i32>, move <i32 as test_crate::Join<i32>>::join_method_8];
         entry_array_ref_10 = &raw const entry_array_9;
         vtable_0 = cast<*const [*const (); 10usize], *const ()>(move entry_array_ref_10);
         return;

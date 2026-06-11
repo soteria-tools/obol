@@ -192,7 +192,7 @@ fn Debug::<&'_ u32>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <&u32 as Debug>::fmt_4: *const (); // local
+    let <&u32 as std::fmt::Debug>::fmt_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -200,14 +200,14 @@ fn Debug::<&'_ u32>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<&u32 as Debug>::fmt_4);
+        storage_live(<&u32 as std::fmt::Debug>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ u32>, *const ()>(const drop_glue::<&'_ u32>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&u32 as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, u32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, u32>);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <&u32 as Debug>::fmt_4];
+        <&u32 as std::fmt::Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, u32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, u32>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <&u32 as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;

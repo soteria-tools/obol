@@ -5048,9 +5048,9 @@ fn Write::<String>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <String as Write>::write_str_4: *const (); // local
-    let <String as Write>::write_char_5: *const (); // local
-    let <String as Write>::write_fmt_6: *const (); // local
+    let <std::string::String as std::fmt::Write>::write_str_4: *const (); // local
+    let <std::string::String as std::fmt::Write>::write_char_5: *const (); // local
+    let <std::string::String as std::fmt::Write>::write_fmt_6: *const (); // local
     let entry_array_7: [*const (); 6usize]; // local
     let entry_array_ref_8: *const [*const (); 6usize]; // local
 
@@ -5058,18 +5058,18 @@ fn Write::<String>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<String as Write>::write_str_4);
-        storage_live(<String as Write>::write_char_5);
-        storage_live(<String as Write>::write_fmt_6);
+        storage_live(<std::string::String as std::fmt::Write>::write_str_4);
+        storage_live(<std::string::String as std::fmt::Write>::write_char_5);
+        storage_live(<std::string::String as std::fmt::Write>::write_fmt_6);
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
         drop_1 = cast<drop_glue::<String>, *const ()>(const drop_glue::<String>);
         size_2 = transmute<usize, *const ()>(const 24usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <String as Write>::write_str_4 = cast<<std::string::String as std::fmt::Write>::write_str, *const ()>(const <std::string::String as std::fmt::Write>::write_str);
-        <String as Write>::write_char_5 = cast<write_char, *const ()>(const write_char);
-        <String as Write>::write_fmt_6 = cast<write_fmt::<String>, *const ()>(const write_fmt::<String>);
-        entry_array_7 = [move drop_1, move size_2, move align_3, move <String as Write>::write_str_4, move <String as Write>::write_char_5, move <String as Write>::write_fmt_6];
+        <std::string::String as std::fmt::Write>::write_str_4 = cast<<std::string::String as std::fmt::Write>::write_str, *const ()>(const <std::string::String as std::fmt::Write>::write_str);
+        <std::string::String as std::fmt::Write>::write_char_5 = cast<write_char, *const ()>(const write_char);
+        <std::string::String as std::fmt::Write>::write_fmt_6 = cast<write_fmt::<String>, *const ()>(const write_fmt::<String>);
+        entry_array_7 = [move drop_1, move size_2, move align_3, move <std::string::String as std::fmt::Write>::write_str_4, move <std::string::String as std::fmt::Write>::write_char_5, move <std::string::String as std::fmt::Write>::write_fmt_6];
         entry_array_ref_8 = &raw const entry_array_7;
         vtable_0 = cast<*const [*const (); 6usize], *const ()>(move entry_array_ref_8);
         return;
@@ -5190,7 +5190,7 @@ fn Debug::<Error>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <Error as Debug>::fmt_4: *const (); // local
+    let <std::fmt::Error as std::fmt::Debug>::fmt_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -5198,14 +5198,14 @@ fn Debug::<Error>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<Error as Debug>::fmt_4);
+        storage_live(<std::fmt::Error as std::fmt::Debug>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<Error>, *const ()>(const drop_glue::<Error>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <Error as Debug>::fmt_4 = cast<<std::fmt::Error as std::fmt::Debug>::fmt, *const ()>(const <std::fmt::Error as std::fmt::Debug>::fmt);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <Error as Debug>::fmt_4];
+        <std::fmt::Error as std::fmt::Debug>::fmt_4 = cast<<std::fmt::Error as std::fmt::Debug>::fmt, *const ()>(const <std::fmt::Error as std::fmt::Debug>::fmt);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <std::fmt::Error as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -5268,7 +5268,7 @@ fn Display::<String>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <String as Display>::fmt_4: *const (); // local
+    let <std::string::String as std::fmt::Display>::fmt_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -5276,14 +5276,14 @@ fn Display::<String>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<String as Display>::fmt_4);
+        storage_live(<std::string::String as std::fmt::Display>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<String>, *const ()>(const drop_glue::<String>);
         size_2 = transmute<usize, *const ()>(const 24usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <String as Display>::fmt_4 = cast<<std::string::String as std::fmt::Display>::fmt, *const ()>(const <std::string::String as std::fmt::Display>::fmt);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <String as Display>::fmt_4];
+        <std::string::String as std::fmt::Display>::fmt_4 = cast<<std::string::String as std::fmt::Display>::fmt, *const ()>(const <std::string::String as std::fmt::Display>::fmt);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <std::string::String as std::fmt::Display>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;

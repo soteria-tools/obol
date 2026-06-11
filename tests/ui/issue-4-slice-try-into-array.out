@@ -95,7 +95,7 @@ fn Debug::<&'_ ()>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <&() as Debug>::fmt_4: *const (); // local
+    let <&() as std::fmt::Debug>::fmt_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -103,14 +103,14 @@ fn Debug::<&'_ ()>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<&() as Debug>::fmt_4);
+        storage_live(<&() as std::fmt::Debug>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<&'_ ()>, *const ()>(const drop_glue::<&'_ ()>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&() as Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, ()>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, ()>);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <&() as Debug>::fmt_4];
+        <&() as std::fmt::Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, ()>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, ()>);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <&() as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
@@ -302,7 +302,7 @@ fn Debug::<TryFromSliceError>() -> *const ()
     let drop_1: *const (); // local
     let size_2: *const (); // local
     let align_3: *const (); // local
-    let <TryFromSliceError as Debug>::fmt_4: *const (); // local
+    let <std::array::TryFromSliceError as std::fmt::Debug>::fmt_4: *const (); // local
     let entry_array_5: [*const (); 4usize]; // local
     let entry_array_ref_6: *const [*const (); 4usize]; // local
 
@@ -310,14 +310,14 @@ fn Debug::<TryFromSliceError>() -> *const ()
         storage_live(drop_1);
         storage_live(size_2);
         storage_live(align_3);
-        storage_live(<TryFromSliceError as Debug>::fmt_4);
+        storage_live(<std::array::TryFromSliceError as std::fmt::Debug>::fmt_4);
         storage_live(entry_array_5);
         storage_live(entry_array_ref_6);
         drop_1 = cast<drop_glue::<TryFromSliceError>, *const ()>(const drop_glue::<TryFromSliceError>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <TryFromSliceError as Debug>::fmt_4 = cast<<std::array::TryFromSliceError as std::fmt::Debug>::fmt, *const ()>(const <std::array::TryFromSliceError as std::fmt::Debug>::fmt);
-        entry_array_5 = [move drop_1, move size_2, move align_3, move <TryFromSliceError as Debug>::fmt_4];
+        <std::array::TryFromSliceError as std::fmt::Debug>::fmt_4 = cast<<std::array::TryFromSliceError as std::fmt::Debug>::fmt, *const ()>(const <std::array::TryFromSliceError as std::fmt::Debug>::fmt);
+        entry_array_5 = [move drop_1, move size_2, move align_3, move <std::array::TryFromSliceError as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
         return;
