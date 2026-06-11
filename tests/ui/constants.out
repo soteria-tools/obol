@@ -76,23 +76,51 @@ pub struct Wrap::<i32> {
   value: i32,
 }
 
+// Full name: test_crate::Y
+pub fn Y() -> Wrap::<i32>
+{
+    let _0: Wrap::<i32>; // return
+    let _1: Wrap::<i32>; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = Wrap::<i32> { value: const 2i32 };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: test_crate::Y
+pub const Y: Wrap::<i32> = Y()
+
 // Full name: test_crate::unwrap_y
 pub fn unwrap_y() -> i32
 {
     let _0: i32; // return
     let _1: Wrap::<i32>; // anonymous local
-    let _2: Wrap::<i32>; // anonymous local
 
     bb0: {
         storage_live(_1);
-        storage_live(_2);
-        _2 = Wrap::<i32> { value: const 2i32 };
-        _1 = move _2;
+        _1 = copy Y;
         _0 = copy (_1).value;
         storage_dead(_1);
         return;
     }
 }
+
+// Full name: test_crate::get_z1::Z1
+fn Z1() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 3i32;
+        return;
+    }
+}
+
+// Full name: test_crate::get_z1::Z1
+const Z1: i32 = Z1()
 
 // Full name: test_crate::get_z1
 pub fn get_z1() -> i32
@@ -100,7 +128,7 @@ pub fn get_z1() -> i32
     let _0: i32; // return
 
     bb0: {
-        _0 = const 3i32;
+        _0 = copy Z1;
         return;
     }
 }
@@ -129,6 +157,34 @@ pub fn add(a_1: i32, b_2: i32) -> i32
     }
 }
 
+// Full name: test_crate::Q3
+pub fn Q3() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 8i32;
+        return;
+    }
+}
+
+// Full name: test_crate::Q3
+pub const Q3: i32 = Q3()
+
+// Full name: test_crate::Q1
+pub fn Q1() -> i32
+{
+    let _0: i32; // return
+
+    bb0: {
+        _0 = const 5i32;
+        return;
+    }
+}
+
+// Full name: test_crate::Q1
+pub const Q1: i32 = Q1()
+
 // Full name: test_crate::get_z2
 pub fn get_z2() -> i32
 {
@@ -143,7 +199,7 @@ pub fn get_z2() -> i32
     }
 
     bb1: {
-        _1 = add(move _2, const 8i32) -> bb3 (unwind: bb4);
+        _1 = add(move _2, copy Q3) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -152,7 +208,7 @@ pub fn get_z2() -> i32
 
     bb3: {
         storage_dead(_2);
-        _0 = add(const 5i32, move _1) -> bb5 (unwind: bb6);
+        _0 = add(copy Q1, move _1) -> bb5 (unwind: bb6);
     }
 
     bb4: {

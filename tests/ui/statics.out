@@ -18,6 +18,20 @@ fn anon_const_0() -> usize
 // Full name: anon_const_0
 const anon_const_0: usize = anon_const_0()
 
+// Full name: test_crate::constant::CONST
+fn CONST() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 0usize;
+        return;
+    }
+}
+
+// Full name: test_crate::constant::CONST
+const CONST: usize = CONST()
+
 // Full name: test_crate::constant
 fn constant()
 {
@@ -33,7 +47,7 @@ fn constant()
         storage_live(_5);
         _0 = ();
         storage_live(_val_1);
-        _val_1 = const 0usize;
+        _val_1 = copy CONST;
         storage_live(_ref_2);
         storage_live(_6);
         _6 = &anon_const_0;
@@ -41,7 +55,7 @@ fn constant()
         _ref_2 = &(*_5);
         storage_live(_ref_mut_3);
         storage_live(_4);
-        _4 = const 0usize;
+        _4 = copy CONST;
         _ref_mut_3 = &mut _4;
         _0 = ();
         storage_dead(_4);

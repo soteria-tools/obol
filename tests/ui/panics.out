@@ -320,6 +320,29 @@ pub fn black_box::<()>(dummy_1: ())
 #[lang_item("phantom_data")]
 pub struct PhantomData::<(dyn FakeTrait)> {}
 
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<&'_ str>
+pub fn LAYOUT::<&'_ str>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl3 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 16usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<&'_ str>
+pub const LAYOUT::<&'_ str>: Layout = LAYOUT::<&'_ str>()
+
 // Full name: std::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {
   Ok(0: Infallible),
@@ -1162,20 +1185,11 @@ pub fn std::boxed::Box::<T>::new::<&'_ str>(x_1: &'_ str) -> Box::<&'_ str, Glob
     let x_1: &'_ str; // arg #1
     let ptr_2: *mut &'_ str; // local
     let _3: *mut u8; // anonymous local
-    let _4: AlignmentEnum; // anonymous local
-    let _5: Alignment; // anonymous local
-    let _6: Layout; // anonymous local
 
     bb0: {
         storage_live(ptr_2);
         storage_live(_3);
-        storage_live(_4);
-        _4 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_5);
-        _5 = Alignment { _inner_repr_trick: move _4 };
-        storage_live(_6);
-        _6 = Layout { size: const 16usize, align: move _5 };
-        _3 = box_new_uninit(move _6) -> bb1 (unwind: bb2);
+        _3 = box_new_uninit(copy LAYOUT::<&'_ str>) -> bb1 (unwind: bb2);
     }
 
     bb1: {

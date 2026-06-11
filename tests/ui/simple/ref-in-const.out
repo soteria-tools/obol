@@ -328,6 +328,23 @@ fn anon_const_0() -> &'_ i32
 // Full name: anon_const_0
 const anon_const_0: &'_ i32 = anon_const_0()
 
+// Full name: test_crate::SOME_INT
+fn SOME_INT() -> &'_ &'_ i32
+{
+    let _0: &'_ &'_ i32; // return
+    let _1: &'_ &'_ i32; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = &anon_const_0;
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: test_crate::SOME_INT
+const SOME_INT: &'_ &'_ i32 = SOME_INT()
+
 // Full name: test_crate::main
 fn main()
 {
@@ -337,7 +354,6 @@ fn main()
     let _3: &'_ &'_ i32; // anonymous local
     let _4: !; // anonymous local
     let _5: &'_ i32; // anonymous local
-    let _6: &'_ &'_ i32; // anonymous local
 
     bb0: {
         storage_live(_5);
@@ -345,9 +361,7 @@ fn main()
         storage_live(_1);
         storage_live(_2);
         storage_live(_3);
-        storage_live(_6);
-        _6 = &anon_const_0;
-        _3 = move _6;
+        _3 = copy SOME_INT;
         _5 = copy (*_3);
         _2 = copy (*_5);
         _1 = move _2 == const 0i32;

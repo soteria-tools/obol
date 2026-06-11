@@ -20,18 +20,32 @@ struct Holder {
   0: *const (),
 }
 
+// Full name: test_crate::C
+fn C() -> Holder
+{
+    let _0: Holder; // return
+    let _1: Holder; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = Holder { 0: const fnptr(target) };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: test_crate::C
+const C: Holder = C()
+
 // Full name: test_crate::get
 pub fn get() -> *const ()
 {
     let _0: *const (); // return
     let _1: Holder; // anonymous local
-    let _2: Holder; // anonymous local
 
     bb0: {
         storage_live(_1);
-        storage_live(_2);
-        _2 = Holder { 0: const fnptr(target) };
-        _1 = move _2;
+        _1 = copy C;
         _0 = copy (_1).0;
         storage_dead(_1);
         return;

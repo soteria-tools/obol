@@ -445,6 +445,20 @@ fn anon_const_7() -> [u8; 62usize]
 // Full name: anon_const_7
 const anon_const_7: [u8; 62usize] = anon_const_7()
 
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
+pub fn IS_ZST::<i32>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
+pub const IS_ZST::<i32>: bool = IS_ZST::<i32>()
+
 // Full name: std::mem::MaybeDangling::<i32>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<i32> {
@@ -532,7 +546,7 @@ pub fn conjure_zst::<i32>() -> i32
     bb0: {
         storage_live(_3);
         storage_live(_15);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -650,7 +664,7 @@ pub fn call_mut::<'_, '_, '_, i32, NeverShortCircuit::<i32>, std::ops::try_trait
         storage_live(_21);
         storage_live(_22);
         storage_live(_23);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -921,6 +935,22 @@ pub fn panic(expr_1: &'_ str) -> !
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<i32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub const SIZE::<i32>: usize = SIZE::<i32>()
+
 // Full name: std::intrinsics::ptr_offset_from_unsigned::<i32>
 pub fn ptr_offset_from_unsigned::<i32>(ptr_1: *const i32, base_2: *const i32) -> usize
 = <intrinsic:ptr_offset_from_unsigned>
@@ -956,7 +986,7 @@ pub fn <std::array::drain::Drain<'_, '_, T, F> as std::ops::Drop>::drop::<'_, '_
         storage_live(_14);
         storage_live(_19);
         _0 = ();
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -1011,7 +1041,7 @@ pub fn <std::array::drain::Drain<'_, '_, T, F> as std::ops::Drop>::drop::<'_, '_
 
     bb5: {
         storage_live(_17);
-        _17 = const 0usize < const 4usize;
+        _17 = const 0usize < copy SIZE::<i32>;
         if move _17 -> bb10 else -> bb11;
     }
 
@@ -1036,7 +1066,7 @@ pub fn <std::array::drain::Drain<'_, '_, T, F> as std::ops::Drop>::drop::<'_, '_
 
     bb10: {
         storage_live(_18);
-        _18 = const 4usize <= const 9223372036854775807usize;
+        _18 = copy SIZE::<i32> <= const 9223372036854775807usize;
         if move _18 -> bb12 else -> bb11;
     }
 
@@ -1941,7 +1971,7 @@ pub fn try_map::<i32, NeverShortCircuit::<i32>, std::ops::try_trait::NeverShortC
         self_9 = transmute<*mut ManuallyDrop::<[i32; 256usize]>, NonNull::<ManuallyDrop::<[i32; 256usize]>>>(copy _12);
         ptr_8 = transmute<*mut ManuallyDrop::<[i32; 256usize]>, NonNull::<i32>>(copy _12);
         storage_dead(self_9);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {

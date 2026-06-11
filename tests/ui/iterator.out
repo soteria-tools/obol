@@ -1295,6 +1295,52 @@ pub fn <I as std::iter::IntoIterator>::into_iter::<ChunksExact::<'_, i32>>(self_
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<i32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub const SIZE::<i32>: usize = SIZE::<i32>()
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
+#[lang_item("mem_align_const")]
+pub fn ALIGN::<i32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
+#[lang_item("mem_align_const")]
+pub const ALIGN::<i32>: usize = ALIGN::<i32>()
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
+pub fn IS_ZST::<i32>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
+pub const IS_ZST::<i32>: bool = IS_ZST::<i32>()
+
 fn core::num::<impl usize>::unchecked_sub::precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
@@ -1635,7 +1681,7 @@ fn std::slice::Iter::<'a, T>::new::<'_, i32>(slice_1: &'_ [i32]) -> Iter::<'_, i
         ptr_3 = transmute<*mut i32, NonNull::<i32>>(copy _9);
         storage_dead(_9);
         storage_dead(self_4);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -1693,7 +1739,7 @@ pub fn <std::slice::Iter<'a, T> as std::iter::Iterator>::next::<'_, i32>(self_1:
         ptr_2 = copy ((*self_1)).ptr;
         storage_live(end_or_len_3);
         end_or_len_3 = copy ((*self_1)).end_or_len;
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -2054,7 +2100,7 @@ pub fn split_at_unchecked::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32],
     bb4: {
         storage_live(_12);
         _12 = cast<*const [i32], *mut ()>(copy _10);
-        _11 = std::slice::from_raw_parts::precondition_check(move _12, const 4usize, const 4usize, copy mid_2) -> bb6 (unwind: bb7);
+        _11 = std::slice::from_raw_parts::precondition_check(move _12, copy SIZE::<i32>, copy ALIGN::<i32>, copy mid_2) -> bb6 (unwind: bb7);
     }
 
     bb5: {
@@ -2084,7 +2130,7 @@ pub fn split_at_unchecked::<i32>(self_1: &'_ [i32], mid_2: usize) -> (&'_ [i32],
     bb8: {
         storage_live(_15);
         _15 = cast<*const i32, *mut ()>(copy data_8);
-        _14 = std::slice::from_raw_parts::precondition_check(move _15, const 4usize, const 4usize, copy len_9) -> bb10 (unwind: bb11);
+        _14 = std::slice::from_raw_parts::precondition_check(move _15, copy SIZE::<i32>, copy ALIGN::<i32>, copy len_9) -> bb10 (unwind: bb11);
     }
 
     bb9: {

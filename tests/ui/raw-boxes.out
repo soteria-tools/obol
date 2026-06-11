@@ -573,6 +573,29 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
+pub fn LAYOUT::<i32>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl2 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 4usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<i32>
+pub const LAYOUT::<i32>: Layout = LAYOUT::<i32>()
+
 // Full name: std::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {
   Ok(0: Infallible),
@@ -1303,20 +1326,11 @@ pub fn std::boxed::Box::<T>::new::<i32>(x_1: i32) -> Box::<i32, Global>
     let x_1: i32; // arg #1
     let ptr_2: *mut i32; // local
     let _3: *mut u8; // anonymous local
-    let _4: AlignmentEnum; // anonymous local
-    let _5: Alignment; // anonymous local
-    let _6: Layout; // anonymous local
 
     bb0: {
         storage_live(ptr_2);
         storage_live(_3);
-        storage_live(_4);
-        _4 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_5);
-        _5 = Alignment { _inner_repr_trick: move _4 };
-        storage_live(_6);
-        _6 = Layout { size: const 4usize, align: move _5 };
-        _3 = box_new_uninit(move _6) -> bb1 (unwind: bb2);
+        _3 = box_new_uninit(copy LAYOUT::<i32>) -> bb1 (unwind: bb2);
     }
 
     bb1: {

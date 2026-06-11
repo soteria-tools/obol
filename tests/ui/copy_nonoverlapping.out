@@ -285,6 +285,38 @@ pub fn caller_location() -> &'_ Location::<'_>
 pub fn ctpop::<usize>(x_1: usize) -> u32
 = <intrinsic:ctpop>
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<i32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub const SIZE::<i32>: usize = SIZE::<i32>()
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
+#[lang_item("mem_align_const")]
+pub fn ALIGN::<i32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<i32>
+#[lang_item("mem_align_const")]
+pub const ALIGN::<i32>: usize = ALIGN::<i32>()
+
 // Full name: std::option::Option::<Arguments::<'_>>
 #[lang_item("Option")]
 pub enum Option::<Arguments::<'_>> {
@@ -994,7 +1026,7 @@ pub fn copy_nonoverlapping::<i32>(src_1: *const i32, dst_2: *mut i32, count_3: u
         _5 = cast<*const i32, *const ()>(copy src_1);
         storage_live(_6);
         _6 = cast<*mut i32, *mut ()>(copy dst_2);
-        _4 = precondition_check(move _5, move _6, const 4usize, const 4usize, copy count_3) -> bb3 (unwind: bb4);
+        _4 = precondition_check(move _5, move _6, copy SIZE::<i32>, copy ALIGN::<i32>, copy count_3) -> bb3 (unwind: bb4);
     }
 
     bb2: {

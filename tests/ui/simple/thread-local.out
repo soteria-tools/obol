@@ -185,6 +185,36 @@ pub fn caller_location() -> &'_ Location::<'_>
 pub fn ctpop::<usize>(x_1: usize) -> u32
 = <intrinsic:ctpop>
 
+// Full name: std::mem::SizedTypeProperties::ALIGN::<MaybeUninit::<u32>>
+#[lang_item("mem_align_const")]
+pub fn ALIGN::<MaybeUninit::<u32>>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<MaybeUninit::<u32>>
+#[lang_item("mem_align_const")]
+pub const ALIGN::<MaybeUninit::<u32>>: usize = ALIGN::<MaybeUninit::<u32>>()
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<MaybeUninit::<u32>>
+pub fn IS_ZST::<MaybeUninit::<u32>>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<MaybeUninit::<u32>>
+pub const IS_ZST::<MaybeUninit::<u32>>: bool = IS_ZST::<MaybeUninit::<u32>>()
+
 // Full name: std::thread::AccessError
 pub struct AccessError {}
 
@@ -903,11 +933,11 @@ fn get_or_init_slow::<u32, !, __rust_std_internal_init_fn>(self_1: &'_ LazyStora
     bb14: {
         storage_live(_31);
         _31 = cast<*const UnsafeCell::<MaybeUninit::<u32>>, *const ()>(copy _27);
-        _30 = precondition_check(move _31, const 4usize, const false) -> bb16 (unwind: bb17);
+        _30 = precondition_check(move _31, copy ALIGN::<MaybeUninit::<u32>>, copy IS_ZST::<MaybeUninit::<u32>>) -> bb16 (unwind: bb17);
     }
 
     bb15: {
-        if const false -> bb18 else -> bb19;
+        if copy IS_ZST::<MaybeUninit::<u32>> -> bb18 else -> bb19;
     }
 
     bb16: {

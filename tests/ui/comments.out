@@ -746,6 +746,20 @@ fn foo()
     }
 }
 
+// Full name: test_crate::CONSTANT
+fn CONSTANT() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 42u32;
+        return;
+    }
+}
+
+// Full name: test_crate::CONSTANT
+const CONSTANT: u32 = CONSTANT()
+
 // Full name: test_crate::thing
 pub fn thing()
 {
@@ -761,7 +775,7 @@ pub fn thing()
         _0 = ();
         storage_live(x_1);
         storage_live(_2);
-        _2 = const 42u32 panic.>> const 3i32;
+        _2 = copy CONSTANT panic.>> const 3i32;
         _3 = copy _2 panic.+ const 12u32;
         x_1 = move _3;
         storage_dead(_2);

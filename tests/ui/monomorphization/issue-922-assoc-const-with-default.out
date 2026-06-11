@@ -4,6 +4,20 @@
 // Full name: FakeTrait
 trait FakeTrait
 
+// Full name: test_crate::SizedTypeProperties::IS_ZST::<()>
+pub fn IS_ZST::<()>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const true;
+        return;
+    }
+}
+
+// Full name: test_crate::SizedTypeProperties::IS_ZST::<()>
+pub const IS_ZST::<()>: bool = IS_ZST::<()>()
+
 // Full name: test_crate::main
 fn main()
 {
@@ -13,7 +27,7 @@ fn main()
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = const true;
+        _1 = copy IS_ZST::<()>;
         storage_dead(_1);
         _0 = ();
         return;

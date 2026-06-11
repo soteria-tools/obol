@@ -684,6 +684,29 @@ pub struct PhantomData::<u32> {}
 #[lang_item("phantom_data")]
 pub struct PhantomData::<u8> {}
 
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u32>
+pub fn LAYOUT::<u32>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl2 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 4usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u32>
+pub const LAYOUT::<u32>: Layout = LAYOUT::<u32>()
+
 fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
@@ -1108,21 +1131,12 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u32, Global>(sel
     let _0: (); // return
     let self_1: &'_ mut RawVec::<u32, Global>; // arg #1
     let _2: &'_ mut RawVecInner::<Global>; // anonymous local
-    let _3: AlignmentEnum; // anonymous local
-    let _4: Alignment; // anonymous local
-    let _5: Layout; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
         _2 = &two-phase-mut ((*self_1)).inner;
-        storage_live(_3);
-        _3 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_4);
-        _4 = Alignment { _inner_repr_trick: move _3 };
-        storage_live(_5);
-        _5 = Layout { size: const 4usize, align: move _4 };
-        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, move _5) -> bb1 (unwind: bb2);
+        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, copy LAYOUT::<u32>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2247,22 +2261,13 @@ pub fn with_capacity::<u32>(capacity_1: usize) -> Vec::<u32, Global>
     let _3: RawVecInner::<Global>; // anonymous local
     let _4: PhantomData::<u32>; // anonymous local
     let _5: Global; // anonymous local
-    let _6: AlignmentEnum; // anonymous local
-    let _7: Alignment; // anonymous local
-    let _8: Layout; // anonymous local
 
     bb0: {
         storage_live(_2);
         storage_live(_3);
         storage_live(_5);
         _5 = Global {  };
-        storage_live(_6);
-        _6 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_7);
-        _7 = Alignment { _inner_repr_trick: move _6 };
-        storage_live(_8);
-        _8 = Layout { size: const 4usize, align: move _7 };
-        _3 = with_capacity_in::<Global>(move capacity_1, move _5, move _8) -> bb1 (unwind: bb2);
+        _3 = with_capacity_in::<Global>(move capacity_1, move _5, copy LAYOUT::<u32>) -> bb1 (unwind: bb2);
     }
 
     bb1: {

@@ -4,6 +4,20 @@
 // Full name: FakeTrait
 trait FakeTrait
 
+// Full name: test_crate::CONST
+fn CONST() -> u8
+{
+    let _0: u8; // return
+
+    bb0: {
+        _0 = const 0u8;
+        return;
+    }
+}
+
+// Full name: test_crate::CONST
+const CONST: u8 = CONST()
+
 // Full name: test_crate::f0
 fn f0()
 {
@@ -38,7 +52,7 @@ fn f0()
     bb4: {
         storage_dead(_2);
         storage_live(x_3);
-        x_3 = const 0u8;
+        x_3 = copy CONST;
         _0 = ();
         storage_dead(x_3);
         goto bb3;
@@ -119,7 +133,7 @@ fn f1(serialized_1: &'_ [u8; 1usize])
     bb7: {
         storage_dead(_10);
         storage_live(x_11);
-        x_11 = const 0u8;
+        x_11 = copy CONST;
         storage_dead(x_11);
         storage_dead(_9);
         goto bb6;

@@ -717,13 +717,73 @@ pub struct PhantomData::<u8> {}
 #[lang_item("phantom_data")]
 pub struct PhantomData::<MaybeUninit::<[u8; 1usize]>> {}
 
+// Full name: std::marker::PhantomData::<[u8]>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<[u8]> {}
+
 // Full name: std::marker::PhantomData::<[u8; 1usize]>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<[u8; 1usize]> {}
 
-// Full name: std::marker::PhantomData::<[u8]>
-#[lang_item("phantom_data")]
-pub struct PhantomData::<[u8]> {}
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<u8>
+pub fn IS_ZST::<u8>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<u8>
+pub const IS_ZST::<u8>: bool = IS_ZST::<u8>()
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<[u8; 1usize]>
+pub fn LAYOUT::<[u8; 1usize]>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl0 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 1usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub fn LAYOUT::<u8>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl0 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 1usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<[u8; 1usize]>
+pub const LAYOUT::<[u8; 1usize]>: Layout = LAYOUT::<[u8; 1usize]>()
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
 
 fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {
@@ -1321,21 +1381,12 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
     let _0: (); // return
     let self_1: &'_ mut RawVec::<u8, Global>; // arg #1
     let _2: &'_ mut RawVecInner::<Global>; // anonymous local
-    let _3: AlignmentEnum; // anonymous local
-    let _4: Alignment; // anonymous local
-    let _5: Layout; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
         _2 = &two-phase-mut ((*self_1)).inner;
-        storage_live(_3);
-        _3 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_4);
-        _4 = Alignment { _inner_repr_trick: move _3 };
-        storage_live(_5);
-        _5 = Layout { size: const 1usize, align: move _4 };
-        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, move _5) -> bb1 (unwind: bb2);
+        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2119,7 +2170,7 @@ pub fn box_assume_init_into_vec_unsafe::<u8, 1usize>(b_1: Box::<MaybeUninit::<[u
         storage_live(capacity_11);
         storage_live(ptr_10);
         ptr_10 = cast<*mut [u8], *mut u8>(copy b_7);
-        if const false -> bb4 else -> bb5;
+        if copy IS_ZST::<u8> -> bb4 else -> bb5;
     }
 
     bb3: {
@@ -2195,19 +2246,10 @@ pub fn new_uninit::<[u8; 1usize]>() -> Box::<MaybeUninit::<[u8; 1usize]>, Global
 {
     let _0: Box::<MaybeUninit::<[u8; 1usize]>, Global>; // return
     let _1: *mut u8; // anonymous local
-    let _2: AlignmentEnum; // anonymous local
-    let _3: Alignment; // anonymous local
-    let _4: Layout; // anonymous local
 
     bb0: {
         storage_live(_1);
-        storage_live(_2);
-        _2 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_3);
-        _3 = Alignment { _inner_repr_trick: move _2 };
-        storage_live(_4);
-        _4 = Layout { size: const 1usize, align: move _3 };
-        _1 = box_new_uninit(move _4) -> bb1 (unwind: bb2);
+        _1 = box_new_uninit(copy LAYOUT::<[u8; 1usize]>) -> bb1 (unwind: bb2);
     }
 
     bb1: {

@@ -90,6 +90,20 @@ pub struct Location::<'_> {
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
+// Full name: core::num::<impl usize>::MAX
+pub fn MAX() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4294967295usize;
+        return;
+    }
+}
+
+// Full name: core::num::<impl usize>::MAX
+pub const MAX: usize = MAX()
+
 // Full name: std::panic::Location::<'a>::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
@@ -409,7 +423,7 @@ fn main()
         storage_live(x_1);
         x_1 = const 52usize;
         storage_live(y_2);
-        y_2 = const 4294967295usize;
+        y_2 = copy MAX;
         storage_live(z_3);
         storage_live(_4);
         _4 = copy y_2;

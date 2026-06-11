@@ -1,6 +1,20 @@
 
 // Final ULLBC:
 
+// Full name: core::num::<impl usize>::MAX
+pub fn MAX() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 18446744073709551615usize;
+        return;
+    }
+}
+
+// Full name: core::num::<impl usize>::MAX
+pub const MAX: usize = MAX()
+
 // Full name: FakeTrait
 trait FakeTrait
 
@@ -29,7 +43,7 @@ fn main()
         storage_live(x_1);
         x_1 = const 52usize;
         storage_live(y_2);
-        y_2 = const 18446744073709551615usize;
+        y_2 = copy MAX;
         storage_live(z_3);
         storage_live(_4);
         _4 = copy y_2;

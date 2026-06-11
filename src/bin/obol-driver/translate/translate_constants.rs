@@ -821,4 +821,23 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             }
         }
     }
+
+    pub(crate) fn translate_const_value(
+        &mut self,
+        span: Span,
+        const_: &ty::MirConst,
+    ) -> Result<ConstantExpr, Error> {
+        let ty = self.translate_ty(span, const_.ty())?;
+        match const_.kind() {
+            ty::ConstantKind::Allocated(alloc) => {
+                self.translate_allocation(span, alloc, ty.kind(), const_.ty())
+            }
+            ty::ConstantKind::ZeroSized => {
+                self.translate_zst_constant(span, ty.kind(), const_.ty())
+            }
+            other => {
+                raise_error!(self, span, "Unexpected evaluated const kind: {:?}", other)
+            }
+        }
+    }
 }

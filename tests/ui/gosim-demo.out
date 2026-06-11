@@ -252,6 +252,20 @@ pub fn caller_location() -> &'_ Location::<'_>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ i32> {}
 
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
+pub fn IS_ZST::<i32>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
+pub const IS_ZST::<i32>: bool = IS_ZST::<i32>()
+
 // Full name: core::panic::panic_info::PanicInfo::<'_>
 #[lang_item("panic_info")]
 pub struct PanicInfo::<'_> {
@@ -571,7 +585,7 @@ pub fn into_iter::<'_, i32>(self_1: &'_ [i32]) -> Iter::<'_, i32>
         ptr_3 = transmute<*mut i32, NonNull::<i32>>(copy _9);
         storage_dead(_9);
         storage_dead(self_4);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -631,7 +645,7 @@ pub fn next::<'_, i32>(self_1: &'_ mut Iter::<'_, i32>) -> Option::<&'_ i32>
         ptr_2 = copy ((*self_1)).ptr;
         storage_live(end_or_len_3);
         end_or_len_3 = copy ((*self_1)).end_or_len;
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<i32> -> bb1 else -> bb2;
     }
 
     bb1: {

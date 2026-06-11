@@ -189,6 +189,38 @@ pub fn into_iter::<Chunks::<'_, u8>>(self_1: Chunks::<'_, u8>) -> Chunks::<'_, u
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<u8>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 1usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
+#[lang_item("mem_size_const")]
+pub const SIZE::<u8>: usize = SIZE::<u8>()
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
+#[lang_item("mem_align_const")]
+pub fn ALIGN::<u8>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 1usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
+#[lang_item("mem_align_const")]
+pub const ALIGN::<u8>: usize = ALIGN::<u8>()
+
 // Full name: std::option::Option::<&'_ [u8]>
 #[lang_item("Option")]
 pub enum Option::<&'_ [u8]> {
@@ -744,7 +776,7 @@ pub fn split_at_unchecked::<u8>(self_1: &'_ [u8], mid_2: usize) -> (&'_ [u8], &'
     bb4: {
         storage_live(_12);
         _12 = cast<*const [u8], *mut ()>(copy _10);
-        _11 = std::slice::from_raw_parts::precondition_check(move _12, const 1usize, const 1usize, copy mid_2) -> bb6 (unwind: bb7);
+        _11 = std::slice::from_raw_parts::precondition_check(move _12, copy SIZE::<u8>, copy ALIGN::<u8>, copy mid_2) -> bb6 (unwind: bb7);
     }
 
     bb5: {
@@ -774,7 +806,7 @@ pub fn split_at_unchecked::<u8>(self_1: &'_ [u8], mid_2: usize) -> (&'_ [u8], &'
     bb8: {
         storage_live(_15);
         _15 = cast<*const u8, *mut ()>(copy data_8);
-        _14 = std::slice::from_raw_parts::precondition_check(move _15, const 1usize, const 1usize, copy len_9) -> bb10 (unwind: bb11);
+        _14 = std::slice::from_raw_parts::precondition_check(move _15, copy SIZE::<u8>, copy ALIGN::<u8>, copy len_9) -> bb10 (unwind: bb11);
     }
 
     bb9: {
@@ -1120,6 +1152,20 @@ fn f1(a_1: &'_ [u8]) -> usize
     }
 }
 
+// Full name: test_crate::FIELD_MODULUS
+fn FIELD_MODULUS() -> i16
+{
+    let _0: i16; // return
+
+    bb0: {
+        _0 = const 8i16;
+        return;
+    }
+}
+
+// Full name: test_crate::FIELD_MODULUS
+const FIELD_MODULUS: i16 = FIELD_MODULUS()
+
 // Full name: test_crate::f2
 fn f2(a_1: &'_ [u8], result_2: &'_ mut [i16]) -> usize
 {
@@ -1290,7 +1336,7 @@ fn f2(a_1: &'_ [u8], result_2: &'_ mut [i16]) -> usize
         storage_live(_32);
         storage_live(_33);
         _33 = copy d1_22;
-        _32 = move _33 < const 8i16;
+        _32 = move _33 < copy FIELD_MODULUS;
         if move _32 -> bb11 else -> bb12;
     }
 
@@ -1337,7 +1383,7 @@ fn f2(a_1: &'_ [u8], result_2: &'_ mut [i16]) -> usize
         storage_live(_39);
         storage_live(_40);
         _40 = copy d2_27;
-        _39 = move _40 < const 8i16;
+        _39 = move _40 < copy FIELD_MODULUS;
         if move _39 -> bb16 else -> bb17;
     }
 

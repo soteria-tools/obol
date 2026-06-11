@@ -304,6 +304,34 @@ fn SLICE() -> [(); 4usize]
 // Full name: test_crate::SLICE
 static SLICE: [(); 4usize] = SLICE()
 
+// Full name: test_crate::FOO
+fn FOO() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 42usize;
+        return;
+    }
+}
+
+// Full name: test_crate::FOO
+const FOO: usize = FOO()
+
+// Full name: test_crate::BAR
+fn BAR() -> [(); 42usize]
+{
+    let _0: [(); 42usize]; // return
+
+    bb0: {
+        _0 = const RawMemory();
+        return;
+    }
+}
+
+// Full name: test_crate::BAR
+const BAR: [(); 42usize] = BAR()
+
 // Full name: test_crate::four
 fn four() -> usize
 {
@@ -315,10 +343,10 @@ fn four() -> usize
     bb0: {
         storage_live(_3);
         storage_live(_1);
-        _1 = const RawMemory();
+        _1 = copy BAR;
         storage_dead(_1);
         storage_live(_2);
-        _2 = const 42usize;
+        _2 = copy FOO;
         storage_dead(_2);
         _3 = const 2usize panic.+ const 2usize;
         _0 = move _3;

@@ -138,6 +138,22 @@ pub struct Location::<'_> {
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<i32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<i32>
+#[lang_item("mem_size_const")]
+pub const SIZE::<i32>: usize = SIZE::<i32>()
+
 // Full name: std::panic::Location::<'a>::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
@@ -526,7 +542,7 @@ pub fn offset::<i32>(self_1: *const i32, count_2: isize) -> *const i32
     bb1: {
         storage_live(_4);
         _4 = cast<*const i32, *const ()>(copy self_1);
-        _3 = precondition_check(move _4, copy count_2, const 4usize) -> bb3 (unwind: bb4);
+        _3 = precondition_check(move _4, copy count_2, copy SIZE::<i32>) -> bb3 (unwind: bb4);
     }
 
     bb2: {

@@ -834,6 +834,61 @@ pub fn cold_path()
 #[lang_item("phantom_data")]
 pub struct PhantomData::<u8> {}
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<u8>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 1usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
+#[lang_item("mem_size_const")]
+pub const SIZE::<u8>: usize = SIZE::<u8>()
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
+#[lang_item("mem_align_const")]
+pub fn ALIGN::<u8>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 1usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
+#[lang_item("mem_align_const")]
+pub const ALIGN::<u8>: usize = ALIGN::<u8>()
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub fn LAYOUT::<u8>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl0 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 1usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
+
 fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
@@ -1805,21 +1860,12 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
     let _0: (); // return
     let self_1: &'_ mut RawVec::<u8, Global>; // arg #1
     let _2: &'_ mut RawVecInner::<Global>; // anonymous local
-    let _3: AlignmentEnum; // anonymous local
-    let _4: Alignment; // anonymous local
-    let _5: Layout; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
         _2 = &two-phase-mut ((*self_1)).inner;
-        storage_live(_3);
-        _3 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_4);
-        _4 = Alignment { _inner_repr_trick: move _3 };
-        storage_live(_5);
-        _5 = Layout { size: const 1usize, align: move _4 };
-        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, move _5) -> bb1 (unwind: bb2);
+        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3069,9 +3115,6 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
     let _17: bool; // anonymous local
     let _18: bool; // anonymous local
     let _19: PhantomData::<u8>; // anonymous local
-    let _20: AlignmentEnum; // anonymous local
-    let _21: Alignment; // anonymous local
-    let _22: Layout; // anonymous local
 
     bb0: {
         storage_live(_9);
@@ -3082,13 +3125,7 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
         len_3 = copy s_1.metadata;
         storage_live(_7);
         storage_live(_8);
-        storage_live(_20);
-        _20 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_21);
-        _21 = Alignment { _inner_repr_trick: move _20 };
-        storage_live(_22);
-        _22 = Layout { size: const 1usize, align: move _21 };
-        _8 = with_capacity_in::<Global>(copy len_3, move alloc_2, move _22) -> bb1 (unwind: bb2);
+        _8 = with_capacity_in::<Global>(copy len_3, move alloc_2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3130,7 +3167,7 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
         _12 = cast<*const [u8], *const ()>(copy _9);
         storage_live(_13);
         _13 = transmute<NonNull::<u8>, *mut ()>(copy _10);
-        _11 = std::ptr::copy_nonoverlapping::precondition_check(move _12, move _13, const 1usize, const 1usize, copy len_3) -> bb7 (unwind: bb8);
+        _11 = std::ptr::copy_nonoverlapping::precondition_check(move _12, move _13, copy SIZE::<u8>, copy ALIGN::<u8>, copy len_3) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -3154,7 +3191,7 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
 
     bb9: {
         storage_live(_15);
-        switch const 1usize -> 0usize: bb11, otherwise: bb12;
+        switch copy SIZE::<u8> -> 0usize: bb11, otherwise: bb12;
     }
 
     bb10: {

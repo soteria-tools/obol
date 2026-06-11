@@ -765,6 +765,45 @@ pub struct PhantomData::<u8> {}
 #[lang_item("phantom_data")]
 pub struct PhantomData::<u32> {}
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<u32>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<u32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<u32>
+#[lang_item("mem_size_const")]
+pub const SIZE::<u32>: usize = SIZE::<u32>()
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u32>
+pub fn LAYOUT::<u32>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl2 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 4usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u32>
+pub const LAYOUT::<u32>: Layout = LAYOUT::<u32>()
+
 fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
@@ -3315,9 +3354,6 @@ fn grow_one::<u32, Global>(self_1: &'_ mut RawVec::<u32, Global>)
     let _6: isize; // anonymous local
     let err_7: TryReserveError; // local
     let _8: !; // anonymous local
-    let _9: AlignmentEnum; // anonymous local
-    let _10: Alignment; // anonymous local
-    let _11: Layout; // anonymous local
 
     bb0: {
         storage_live(_8);
@@ -3331,13 +3367,7 @@ fn grow_one::<u32, Global>(self_1: &'_ mut RawVec::<u32, Global>)
         self_5 = copy ((*self_2)).cap;
         _4 = transmute<UsizeNoHighBit, usize>(copy self_5);
         storage_dead(self_5);
-        storage_live(_9);
-        _9 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_10);
-        _10 = Alignment { _inner_repr_trick: move _9 };
-        storage_live(_11);
-        _11 = Layout { size: const 4usize, align: move _10 };
-        _3 = grow_amortized::<Global>(move self_2, move _4, const 1usize, move _11) -> bb1 (unwind: bb2);
+        _3 = grow_amortized::<Global>(move self_2, move _4, const 1usize, copy LAYOUT::<u32>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3406,7 +3436,7 @@ pub fn push_mut::<u32, Global>(self_1: &'_ mut Vec::<u32, Global>, value_2: u32)
         len_3 = copy ((*self_1)).len;
         storage_live(_4);
         storage_live(_5);
-        switch const 4usize -> 0usize: bb1, otherwise: bb2;
+        switch copy SIZE::<u32> -> 0usize: bb1, otherwise: bb2;
     }
 
     bb1: {

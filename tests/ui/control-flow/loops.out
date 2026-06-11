@@ -1072,6 +1072,20 @@ pub struct PhantomData::<List::<usize>> {}
 #[lang_item("phantom_data")]
 pub struct PhantomData::<u32> {}
 
+// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u32>
+pub fn MAX_SLICE_LEN::<u32>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 2305843009213693951usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u32>
+pub const MAX_SLICE_LEN::<u32>: usize = MAX_SLICE_LEN::<u32>()
+
 // Full name: core::num::niche_types::UsizeNoHighBit
 pub struct UsizeNoHighBit {
   0: usize is 0usize..=9223372036854775807usize,
@@ -1188,7 +1202,7 @@ pub fn len::<u32, Global>(self_1: &'_ Vec::<u32, Global>) -> usize
     bb0: {
         _0 = copy ((*self_1)).len;
         storage_live(_2);
-        _2 = copy _0 <= const 2305843009213693951usize;
+        _2 = copy _0 <= copy MAX_SLICE_LEN::<u32>;
         assert(move _2 == true) else undefined_behavior;
         storage_dead(_2);
         return;

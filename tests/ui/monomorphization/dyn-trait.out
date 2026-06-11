@@ -3648,6 +3648,29 @@ fn do_reserve_and_handle::<Global>(slf_1: &'_ mut RawVecInner::<Global>, len_2: 
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub fn LAYOUT::<u8>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl0 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 1usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
+
 // Full name: std::vec::Vec::<T, A>::reserve::<u8, Global>
 pub fn reserve::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, additional_2: usize)
 {
@@ -3663,9 +3686,6 @@ pub fn reserve::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, additional_2: us
     let self_9: usize; // local
     let elem_size_10: usize; // local
     let self_11: UsizeNoHighBit; // local
-    let _12: AlignmentEnum; // anonymous local
-    let _13: Alignment; // anonymous local
-    let _14: Layout; // anonymous local
 
     bb0: {
         storage_live(_7);
@@ -3675,13 +3695,7 @@ pub fn reserve::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, additional_2: us
         storage_live(self_4);
         self_4 = &two-phase-mut (((*self_1)).buf).inner;
         storage_live(elem_layout_5);
-        storage_live(_12);
-        _12 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_13);
-        _13 = Alignment { _inner_repr_trick: move _12 };
-        storage_live(_14);
-        _14 = Layout { size: const 1usize, align: move _13 };
-        elem_layout_5 = move _14;
+        elem_layout_5 = copy LAYOUT::<u8>;
         storage_live(_6);
         storage_live(_8);
         storage_live(self_9);
@@ -3906,6 +3920,52 @@ pub fn write_char(self_1: &'_ mut String, c_2: char) -> Result::<(), Error>
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u8>
+pub fn MAX_SLICE_LEN::<u8>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 9223372036854775807usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u8>
+pub const MAX_SLICE_LEN::<u8>: usize = MAX_SLICE_LEN::<u8>()
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
+#[lang_item("mem_align_const")]
+pub fn ALIGN::<u8>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 1usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
+#[lang_item("mem_align_const")]
+pub const ALIGN::<u8>: usize = ALIGN::<u8>()
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<u8>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 1usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
+#[lang_item("mem_size_const")]
+pub const SIZE::<u8>: usize = SIZE::<u8>()
+
 // Full name: std::vec::Vec::<T, A>::append_elements::<u8, Global>
 fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *const [u8])
 {
@@ -3939,7 +3999,7 @@ fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *co
         storage_live(len_5);
         len_5 = copy ((*self_1)).len;
         storage_live(_10);
-        _10 = copy len_5 <= const 9223372036854775807usize;
+        _10 = copy len_5 <= copy MAX_SLICE_LEN::<u8>;
         assert(move _10 == true) else undefined_behavior;
         storage_dead(_10);
         storage_live(_6);
@@ -3980,7 +4040,7 @@ fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *co
         _13 = cast<*const [u8], *const ()>(copy other_2);
         storage_live(_14);
         _14 = cast<*mut u8, *mut ()>(copy dst_8);
-        _12 = std::ptr::copy_nonoverlapping::precondition_check(move _13, move _14, const 1usize, const 1usize, copy count_3) -> bb7 (unwind: bb8);
+        _12 = std::ptr::copy_nonoverlapping::precondition_check(move _13, move _14, copy SIZE::<u8>, copy ALIGN::<u8>, copy count_3) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -4256,6 +4316,20 @@ pub fn panic(expr_1: &'_ str) -> !
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<u8>
+pub fn IS_ZST::<u8>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<u8>
+pub const IS_ZST::<u8>: bool = IS_ZST::<u8>()
+
 // Full name: std::intrinsics::ptr_offset_from_unsigned::<u8>
 pub fn ptr_offset_from_unsigned::<u8>(ptr_1: *const u8, base_2: *const u8) -> usize
 = <intrinsic:ptr_offset_from_unsigned>
@@ -4294,7 +4368,7 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
         storage_live(origin_2);
         self_3 = copy ((*self_1)).ptr;
         origin_2 = transmute<NonNull::<u8>, *const u8>(copy self_3);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZST::<u8> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -4336,14 +4410,14 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
 
     bb5: {
         storage_live(_13);
-        _13 = const 0usize < const 1usize;
+        _13 = const 0usize < copy SIZE::<u8>;
         if move _13 -> bb10 else -> bb11;
     }
 
     bb6: {
         storage_live(_17);
         _17 = transmute<NonNull::<u8>, *mut ()>(copy self_3);
-        _16 = std::slice::from_raw_parts::precondition_check(move _17, const 1usize, const 1usize, copy len_4) -> bb12 (unwind: bb13);
+        _16 = std::slice::from_raw_parts::precondition_check(move _17, copy SIZE::<u8>, copy ALIGN::<u8>, copy len_4) -> bb12 (unwind: bb13);
     }
 
     bb7: {
@@ -4367,7 +4441,7 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
 
     bb10: {
         storage_live(_14);
-        _14 = const 1usize <= const 9223372036854775807usize;
+        _14 = copy SIZE::<u8> <= const 9223372036854775807usize;
         if move _14 -> bb14 else -> bb11;
     }
 
@@ -4690,21 +4764,12 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
     let _0: (); // return
     let self_1: &'_ mut RawVec::<u8, Global>; // arg #1
     let _2: &'_ mut RawVecInner::<Global>; // anonymous local
-    let _3: AlignmentEnum; // anonymous local
-    let _4: Alignment; // anonymous local
-    let _5: Layout; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
         _2 = &two-phase-mut ((*self_1)).inner;
-        storage_live(_3);
-        _3 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_4);
-        _4 = Alignment { _inner_repr_trick: move _3 };
-        storage_live(_5);
-        _5 = Layout { size: const 1usize, align: move _4 };
-        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, move _5) -> bb1 (unwind: bb2);
+        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -5713,9 +5778,6 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
     let _17: bool; // anonymous local
     let _18: bool; // anonymous local
     let _19: PhantomData::<u8>; // anonymous local
-    let _20: AlignmentEnum; // anonymous local
-    let _21: Alignment; // anonymous local
-    let _22: Layout; // anonymous local
 
     bb0: {
         storage_live(_9);
@@ -5726,13 +5788,7 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
         len_3 = copy s_1.metadata;
         storage_live(_7);
         storage_live(_8);
-        storage_live(_20);
-        _20 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_21);
-        _21 = Alignment { _inner_repr_trick: move _20 };
-        storage_live(_22);
-        _22 = Layout { size: const 1usize, align: move _21 };
-        _8 = with_capacity_in::<Global>(copy len_3, move alloc_2, move _22) -> bb1 (unwind: bb2);
+        _8 = with_capacity_in::<Global>(copy len_3, move alloc_2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -5774,7 +5830,7 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
         _12 = cast<*const [u8], *const ()>(copy _9);
         storage_live(_13);
         _13 = transmute<NonNull::<u8>, *mut ()>(copy _10);
-        _11 = std::ptr::copy_nonoverlapping::precondition_check(move _12, move _13, const 1usize, const 1usize, copy len_3) -> bb7 (unwind: bb8);
+        _11 = std::ptr::copy_nonoverlapping::precondition_check(move _12, move _13, copy SIZE::<u8>, copy ALIGN::<u8>, copy len_3) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -5798,7 +5854,7 @@ fn to_vec::<u8, Global>(s_1: &'_ [u8], alloc_2: Global) -> Vec::<u8, Global>
 
     bb9: {
         storage_live(_15);
-        switch const 1usize -> 0usize: bb11, otherwise: bb12;
+        switch copy SIZE::<u8> -> 0usize: bb11, otherwise: bb12;
     }
 
     bb10: {

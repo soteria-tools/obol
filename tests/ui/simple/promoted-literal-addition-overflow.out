@@ -1,6 +1,20 @@
 
 // Final ULLBC:
 
+// Full name: core::num::<impl u32>::MAX
+pub fn MAX() -> u32
+{
+    let _0: u32; // return
+
+    bb0: {
+        _0 = const 4294967295u32;
+        return;
+    }
+}
+
+// Full name: core::num::<impl u32>::MAX
+pub const MAX: u32 = MAX()
+
 // Full name: FakeTrait
 trait FakeTrait
 
@@ -31,7 +45,7 @@ fn overflow() -> &'_ u32
         storage_live(_2);
         storage_live(_3);
         storage_live(_1);
-        _2 = const 4294967295u32 panic.+ const 1u32;
+        _2 = copy MAX panic.+ const 1u32;
         storage_live(_4);
         _4 = &anon_const_0;
         _3 = move _4;

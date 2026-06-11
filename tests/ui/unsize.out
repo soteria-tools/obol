@@ -1178,26 +1178,40 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub fn LAYOUT::<u8>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl0 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 1usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+pub const LAYOUT::<u8>: Layout = LAYOUT::<u8>()
+
 pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ mut RawVec::<u8, Global>)
 {
     let _0: (); // return
     let self_1: &'_ mut RawVec::<u8, Global>; // arg #1
     let _2: &'_ mut RawVecInner::<Global>; // anonymous local
-    let _3: AlignmentEnum; // anonymous local
-    let _4: Alignment; // anonymous local
-    let _5: Layout; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_2);
         _2 = &two-phase-mut ((*self_1)).inner;
-        storage_live(_3);
-        _3 = AlignmentEnum::_Align1Shl0 {  };
-        storage_live(_4);
-        _4 = Alignment { _inner_repr_trick: move _3 };
-        storage_live(_5);
-        _5 = Layout { size: const 1usize, align: move _4 };
-        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, move _5) -> bb1 (unwind: bb2);
+        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1423,6 +1437,98 @@ pub struct PhantomData::<String> {}
 // Full name: std::marker::PhantomData::<[i32; 2usize]>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<[i32; 2usize]> {}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<String>
+pub fn LAYOUT::<String>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl3 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 24usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<String>>
+pub fn LAYOUT::<RcInner::<String>>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl3 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 40usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<[i32; 2usize]>
+pub fn LAYOUT::<[i32; 2usize]>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl2 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 8usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<[i32; 2usize]>>
+pub fn LAYOUT::<RcInner::<[i32; 2usize]>>() -> Layout
+{
+    let _0: Layout; // return
+    let _1: AlignmentEnum; // anonymous local
+    let _2: Alignment; // anonymous local
+    let _3: Layout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = AlignmentEnum::_Align1Shl3 {  };
+        storage_live(_2);
+        _2 = Alignment { _inner_repr_trick: move _1 };
+        storage_live(_3);
+        _3 = Layout { size: const 24usize, align: move _2 };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<[i32; 2usize]>
+pub const LAYOUT::<[i32; 2usize]>: Layout = LAYOUT::<[i32; 2usize]>()
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<String>
+pub const LAYOUT::<String>: Layout = LAYOUT::<String>()
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<[i32; 2usize]>>
+pub const LAYOUT::<RcInner::<[i32; 2usize]>>: Layout = LAYOUT::<RcInner::<[i32; 2usize]>>()
+
+// Full name: std::mem::SizedTypeProperties::LAYOUT::<RcInner::<String>>
+pub const LAYOUT::<RcInner::<String>>: Layout = LAYOUT::<RcInner::<String>>()
 
 // Full name: std::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {
@@ -3364,20 +3470,11 @@ pub fn std::boxed::Box::<T>::new::<[i32; 2usize]>(x_1: [i32; 2usize]) -> Box::<[
     let x_1: [i32; 2usize]; // arg #1
     let ptr_2: *mut [i32; 2usize]; // local
     let _3: *mut u8; // anonymous local
-    let _4: AlignmentEnum; // anonymous local
-    let _5: Alignment; // anonymous local
-    let _6: Layout; // anonymous local
 
     bb0: {
         storage_live(ptr_2);
         storage_live(_3);
-        storage_live(_4);
-        _4 = AlignmentEnum::_Align1Shl2 {  };
-        storage_live(_5);
-        _5 = Alignment { _inner_repr_trick: move _4 };
-        storage_live(_6);
-        _6 = Layout { size: const 8usize, align: move _5 };
-        _3 = box_new_uninit(move _6) -> bb1 (unwind: bb2);
+        _3 = box_new_uninit(copy LAYOUT::<[i32; 2usize]>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3400,22 +3497,13 @@ pub fn std::boxed::Box::<T>::new::<String>(x_1: String) -> Box::<String, Global>
     let _3: *mut u8; // anonymous local
     let _4: *mut String; // anonymous local
     let _5: (); // anonymous local
-    let _6: AlignmentEnum; // anonymous local
-    let _7: Alignment; // anonymous local
-    let _8: Layout; // anonymous local
 
     bb0: {
         storage_live(ptr_2);
         storage_live(_3);
         storage_live(_4);
         storage_live(_5);
-        storage_live(_6);
-        _6 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_7);
-        _7 = Alignment { _inner_repr_trick: move _6 };
-        storage_live(_8);
-        _8 = Layout { size: const 24usize, align: move _7 };
-        _3 = box_new_uninit(move _8) -> bb1 (unwind: bb2);
+        _3 = box_new_uninit(copy LAYOUT::<String>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3445,20 +3533,11 @@ pub fn std::boxed::Box::<T>::new::<RcInner::<[i32; 2usize]>>(x_1: RcInner::<[i32
     let x_1: RcInner::<[i32; 2usize]>; // arg #1
     let ptr_2: *mut RcInner::<[i32; 2usize]>; // local
     let _3: *mut u8; // anonymous local
-    let _4: AlignmentEnum; // anonymous local
-    let _5: Alignment; // anonymous local
-    let _6: Layout; // anonymous local
 
     bb0: {
         storage_live(ptr_2);
         storage_live(_3);
-        storage_live(_4);
-        _4 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_5);
-        _5 = Alignment { _inner_repr_trick: move _4 };
-        storage_live(_6);
-        _6 = Layout { size: const 24usize, align: move _5 };
-        _3 = box_new_uninit(move _6) -> bb1 (unwind: bb2);
+        _3 = box_new_uninit(copy LAYOUT::<RcInner::<[i32; 2usize]>>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3481,22 +3560,13 @@ pub fn std::boxed::Box::<T>::new::<RcInner::<String>>(x_1: RcInner::<String>) ->
     let _3: *mut u8; // anonymous local
     let _4: *mut RcInner::<String>; // anonymous local
     let _5: (); // anonymous local
-    let _6: AlignmentEnum; // anonymous local
-    let _7: Alignment; // anonymous local
-    let _8: Layout; // anonymous local
 
     bb0: {
         storage_live(ptr_2);
         storage_live(_3);
         storage_live(_4);
         storage_live(_5);
-        storage_live(_6);
-        _6 = AlignmentEnum::_Align1Shl3 {  };
-        storage_live(_7);
-        _7 = Alignment { _inner_repr_trick: move _6 };
-        storage_live(_8);
-        _8 = Layout { size: const 40usize, align: move _7 };
-        _3 = box_new_uninit(move _8) -> bb1 (unwind: bb2);
+        _3 = box_new_uninit(copy LAYOUT::<RcInner::<String>>) -> bb1 (unwind: bb2);
     }
 
     bb1: {

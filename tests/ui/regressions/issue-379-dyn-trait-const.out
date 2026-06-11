@@ -81,6 +81,26 @@ fn MyTrait::<S>() -> *const ()
 // Full name: {vtable}::test_crate::MyTrait::<S>
 static MyTrait::<S>: *const () = MyTrait::<S>()
 
+// Full name: test_crate::C
+fn C() -> &'_ (dyn FakeTrait)
+{
+    let _0: &'_ (dyn FakeTrait); // return
+    let _1: &'_ S; // anonymous local
+    let _2: &'_ (dyn FakeTrait); // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = &anon_const_0;
+        storage_live(_2);
+        _2 = unsize_cast<&'_ S, &'_ (dyn FakeTrait), MyTrait::<S>>(move _1);
+        _0 = move _2;
+        return;
+    }
+}
+
+// Full name: test_crate::C
+const C: &'_ (dyn FakeTrait) = C()
+
 // Full name: test_crate::get
 pub fn get() -> &'_ (dyn FakeTrait)
 {
@@ -89,19 +109,13 @@ pub fn get() -> &'_ (dyn FakeTrait)
     let _2: &'_ (dyn FakeTrait); // anonymous local
     let _3: &'_ (dyn FakeTrait); // anonymous local
     let _4: &'_ (dyn FakeTrait); // anonymous local
-    let _5: &'_ S; // anonymous local
-    let _6: &'_ (dyn FakeTrait); // anonymous local
 
     bb0: {
         storage_live(_1);
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);
-        storage_live(_5);
-        _5 = &anon_const_0;
-        storage_live(_6);
-        _6 = unsize_cast<&'_ S, &'_ (dyn FakeTrait), MyTrait::<S>>(move _5);
-        _4 = move _6;
+        _4 = copy C;
         _3 = &(*_4) with_metadata(copy _4.metadata);
         _2 = unsize_cast<&'_ (dyn FakeTrait), &'_ (dyn FakeTrait),  at []>(move _3);
         storage_dead(_3);

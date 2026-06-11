@@ -261,10 +261,17 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 name.name
                     .push(PathElem::Ident("closure_as_fn".into(), Disambiguator::ZERO));
             }
-            TransItemSource::Fun(_) | TransItemSource::Type(..) => 'add_generics: {
+            TransItemSource::Fun(_)
+            | TransItemSource::Type(..)
+            | TransItemSource::NamedConst(..)
+            | TransItemSource::NamedConstFn(..) => 'add_generics: {
                 let (gargs, span) = match src {
                     TransItemSource::Fun(instance) => (instance.args(), instance.def.span()),
                     TransItemSource::Type(adt, gargs) => (gargs.clone().into(), adt.span()),
+                    // Append the const's generic arguments (e.g. the `Self` type of an associated
+                    // const) so that distinct monomorphizations get distinct names.
+                    TransItemSource::NamedConst(def, gargs)
+                    | TransItemSource::NamedConstFn(def, gargs) => (gargs.clone().into(), def.span()),
                     _ => unreachable!(),
                 };
                 if gargs.0.is_empty() {
@@ -447,6 +454,9 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             TransItemSource::ForeignType(def) => Some(def.span()),
             TransItemSource::Fun(instance) => Some(instance.def.span()),
             TransItemSource::Static(stt) | TransItemSource::StaticFn(stt) => Some(stt.span()),
+            TransItemSource::NamedConst(def, _) | TransItemSource::NamedConstFn(def, _) => {
+                Some(def.span())
+            }
             TransItemSource::Global(id, ..) | TransItemSource::GlobalConstFn(id, ..) => {
                 let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
                 match glob_alloc {

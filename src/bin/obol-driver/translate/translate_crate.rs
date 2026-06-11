@@ -36,6 +36,8 @@ pub enum TransItemSource {
     GlobalConstFn(mir::alloc::AllocId, Option<ty::Ty>), // the const initialiser of a global
     Static(mir::mono::StaticDef),                // a synthetic global, created from an static def
     StaticFn(mir::mono::StaticDef),              // the initializer function of a synthetic global
+    NamedConst(ty::ConstDef, MyGenericArgs),     // a named (top-level or associated) const item
+    NamedConstFn(ty::ConstDef, MyGenericArgs),   // the initializer function of a named const
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -58,6 +60,9 @@ impl TransItemSource {
             }
             TransItemSource::Fun(instance) => Some(instance.def.def_id()),
             TransItemSource::Static(stt) | TransItemSource::StaticFn(stt) => Some(stt.0),
+            TransItemSource::NamedConst(def, _) | TransItemSource::NamedConstFn(def, _) => {
+                Some(def.0)
+            }
             TransItemSource::Type(id, _) => Some(id.0),
             TransItemSource::Closure(def, _) => Some(def.def_id()),
             TransItemSource::ClosureAsFn(def, _) => Some(def.def_id()),
@@ -106,6 +111,8 @@ impl TransItemSource {
             }
             TransItemSource::Static(stt) => (9, stt.0.to_index(), 0),
             TransItemSource::StaticFn(stt) => (10, stt.0.to_index(), 0),
+            TransItemSource::NamedConst(def, gargs) => (11, def.0.to_index(), gargs.sort_key()),
+            TransItemSource::NamedConstFn(def, gargs) => (12, def.0.to_index(), gargs.sort_key()),
         }
     }
 }
@@ -139,14 +146,16 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     }
                     TransItemSource::Global(..)
                     | TransItemSource::VTable(..)
-                    | TransItemSource::Static(..) => {
+                    | TransItemSource::Static(..)
+                    | TransItemSource::NamedConst(..) => {
                         ItemId::Global(self.translated.global_decls.reserve_slot())
                     }
                     TransItemSource::Fun(..)
                     | TransItemSource::ClosureAsFn(..)
                     | TransItemSource::VTableInit(..)
                     | TransItemSource::GlobalConstFn(..)
-                    | TransItemSource::StaticFn(..) => {
+                    | TransItemSource::StaticFn(..)
+                    | TransItemSource::NamedConstFn(..) => {
                         ItemId::Fun(self.translated.fun_decls.reserve_slot())
                     }
                 };
@@ -299,6 +308,30 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             .as_fun()
             .unwrap()
     }
+
+    pub(crate) fn register_named_const(
+        &mut self,
+        src: &Option<DepSource>,
+        def: ty::ConstDef,
+        args: MyGenericArgs,
+    ) -> GlobalDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::NamedConst(def, args))
+            .as_global()
+            .unwrap()
+    }
+
+    pub(crate) fn register_named_const_fn(
+        &mut self,
+        src: &Option<DepSource>,
+        def: ty::ConstDef,
+        args: MyGenericArgs,
+    ) -> FunDeclId {
+        *self
+            .register_and_enqueue_id(src, TransItemSource::NamedConstFn(def, args))
+            .as_fun()
+            .unwrap()
+    }
 }
 
 // Id and item reference registration.
@@ -417,6 +450,26 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
     ) -> FunDeclId {
         let src = self.make_dep_source(span);
         self.t_ctx.register_global_from_static_fn(&src, stt)
+    }
+
+    pub(crate) fn register_named_const(
+        &mut self,
+        span: Span,
+        def: ty::ConstDef,
+        args: MyGenericArgs,
+    ) -> GlobalDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx.register_named_const(&src, def, args)
+    }
+
+    pub(crate) fn register_named_const_fn(
+        &mut self,
+        span: Span,
+        def: ty::ConstDef,
+        args: MyGenericArgs,
+    ) -> FunDeclId {
+        let src = self.make_dep_source(span);
+        self.t_ctx.register_named_const_fn(&src, def, args)
     }
 }
 

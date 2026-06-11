@@ -666,10 +666,17 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                         kind: ConstantExprKind::Opaque("Unhandled: ty".into()),
                         ty: ty.clone(),
                     },
-                    ty::ConstantKind::Unevaluated(_) => ConstantExpr {
-                        kind: ConstantExprKind::Opaque("Unhandled: uneval".into()),
-                        ty: ty.clone(),
-                    },
+                    ty::ConstantKind::Unevaluated(uneval) => {
+                        let id =
+                            self.register_named_const(span, uneval.def, uneval.args.clone().into());
+                        ConstantExpr {
+                            kind: ConstantExprKind::Global(GlobalDeclRef {
+                                id,
+                                generics: Box::new(GenericArgs::empty()),
+                            }),
+                            ty: ty.clone(),
+                        }
+                    }
                 };
                 Ok((Operand::Const(Box::new(cexpr)), ty))
             }

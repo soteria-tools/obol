@@ -3,6 +3,7 @@
 //! us to handle, and easier to maintain - rustc's representation can evolve
 //! independently.
 
+extern crate rustc_hir;
 extern crate rustc_middle;
 extern crate rustc_public;
 
@@ -10,6 +11,53 @@ use super::translate_ctx::*;
 use charon_lib::ast::*;
 use charon_lib::{raise_error, register_error};
 use rustc_public::{CrateDef, mir, rustc_internal};
+
+pub(crate) fn is_named_const(
+    tcx: rustc_middle::ty::TyCtxt<'_>,
+    def_id: rustc_hir::def_id::DefId,
+) -> bool {
+    matches!(
+        tcx.def_kind(def_id),
+        rustc_hir::def::DefKind::Const { .. } | rustc_hir::def::DefKind::AssocConst { .. }
+    )
+}
+
+/// A MIR `MutVisitor` that evaluates every const operand to its value — exactly like
+/// rustc_public's `BodyBuilder` does when producing a stable body — *except* references to named
+/// const items, which it leaves as `Const::Unevaluated`. We keep those unevaluated so that
+/// `translate_operand` can emit a reference to a `GlobalKind::NamedConst` global instead of
+/// inlining the value.
+struct NamedConstPreservingEvaluator<'tcx> {
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+    typing_env: rustc_middle::ty::TypingEnv<'tcx>,
+}
+
+impl<'tcx> rustc_middle::mir::visit::MutVisitor<'tcx> for NamedConstPreservingEvaluator<'tcx> {
+    fn tcx(&self) -> rustc_middle::ty::TyCtxt<'tcx> {
+        self.tcx
+    }
+
+    fn visit_const_operand(
+        &mut self,
+        constant: &mut rustc_middle::mir::ConstOperand<'tcx>,
+        location: rustc_middle::mir::Location,
+    ) {
+        if let rustc_middle::mir::Const::Unevaluated(uneval, _) = constant.const_
+            && uneval.promoted.is_none()
+            && is_named_const(self.tcx, uneval.def)
+        {
+            // Leave references to named const items unevaluated.
+            return;
+        }
+        let const_ = constant.const_;
+        match const_.eval(self.tcx, self.typing_env, constant.span) {
+            Ok(val) => constant.const_ = rustc_middle::mir::Const::Val(val, const_.ty()),
+            Err(rustc_middle::mir::interpret::ErrorHandled::Reported(..)) => {}
+            Err(rustc_middle::mir::interpret::ErrorHandled::TooGeneric(..)) => {}
+        }
+        self.super_const_operand(constant, location);
+    }
+}
 
 impl ItemTransCtx<'_, '_> {
     pub fn requires_caller_location(&self, instance: mir::mono::Instance) -> bool {
@@ -86,37 +134,54 @@ impl ItemTransCtx<'_, '_> {
     }
 
     /// Get the (monomorphic) MIR body of this instance, if it exists.
+    ///
+    /// We deliberately do *not* use rustc_public's `Instance::body`: that goes through
+    /// `BodyBuilder`, which evaluates every const operand. That would discard the information
+    /// that a constant refers to a named const item. Instead we fetch the MIR ourselves,
+    /// and run our own [`NamedConstPreservingEvaluator`].
     pub fn get_body(&mut self, def: mir::mono::Instance) -> Option<rustc_public::mir::Body> {
-        if let Some(body) = def.body() {
-            // we can't rely on "has_body", as in some cases it returns false even when there is a body.
-            Some(body)
-        } else {
-            let tcx = self.t_ctx.tcx;
-            let inner_id = rustc_public::rustc_internal::internal(tcx, def.def.def_id());
-            let mir_available = tcx.is_mir_available(inner_id);
-            let is_global = tcx.is_static(inner_id);
+        let tcx = self.t_ctx.tcx;
+        let instance = rustc_internal::internal(tcx, def);
+        let typing_env = rustc_middle::ty::TypingEnv::fully_monomorphized();
 
-            let body_internal = if mir_available && !is_global {
-                let body = tcx.optimized_mir(inner_id).clone();
-                Some(body)
-            } else if (is_global && !tcx.is_trivial_const(inner_id)) || tcx.is_const_fn(inner_id) {
-                let body = tcx.mir_for_ctfe(inner_id).clone();
-                Some(body)
+        use rustc_middle::ty::InstanceKind;
+        let body_internal = if !matches!(
+            instance.def,
+            InstanceKind::Intrinsic(..) | InstanceKind::Virtual(..)
+        ) && def.body().is_some()
+        {
+            // A body is available and this isn't an intrinsic/virtual instance (for which
+            // `instance_mir` would try—and fail—to build a shim). `instance_mir` handles shims
+            // (drop glue, clone, fn-ptr shims, …) and ctfe bodies just like `BodyBuilder`, but we
+            // then skip its const evaluation.
+            Some(tcx.instance_mir(instance.def).clone())
+        } else {
+            // `def.body()` returns `None` for some items that still have usable MIR (notably
+            // enum-variant constructors, and intrinsics with a fallback body). Fall back to the
+            // raw MIR query — unlike `instance_mir`, this never tries to build a shim.
+            let def_id = instance.def_id();
+            if tcx.is_mir_available(def_id) && !tcx.is_static(def_id) {
+                Some(tcx.optimized_mir(def_id).clone())
+            } else if (tcx.is_static(def_id) && !tcx.is_trivial_const(def_id))
+                || tcx.is_const_fn(def_id)
+            {
+                Some(tcx.mir_for_ctfe(def_id).clone())
             } else {
                 None
-            };
-            body_internal.map(|b| {
-                // `optimized_mir`/`mir_for_ctfe` return the *generic* MIR. We instantiate it with
-                // the instance's arguments so that the resulting body is monomorphic.
-                let instance = rustc_internal::internal(tcx, def);
-                let b = instance.instantiate_mir_and_normalize_erasing_regions(
-                    tcx,
-                    rustc_middle::ty::TypingEnv::fully_monomorphized(),
-                    rustc_middle::ty::EarlyBinder::bind(b),
-                );
-                rustc_public::rustc_internal::stable(b)
-            })
-        }
+            }
+        };
+
+        body_internal.map(|b| {
+            // The MIR is generic; instantiate it with the instance's arguments so it is monomorphic.
+            let mut b = instance.instantiate_mir_and_normalize_erasing_regions(
+                tcx,
+                typing_env,
+                rustc_middle::ty::EarlyBinder::bind(b),
+            );
+            use rustc_middle::mir::visit::MutVisitor;
+            NamedConstPreservingEvaluator { tcx, typing_env }.visit_body(&mut b);
+            rustc_public::rustc_internal::stable(b)
+        })
     }
 
     /// Translate the names of the arguments of this definition, if they are available,

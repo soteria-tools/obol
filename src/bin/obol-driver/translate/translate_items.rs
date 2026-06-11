@@ -9,6 +9,7 @@ use rustc_public::{CrateDef, mir, ty};
 use charon_lib::{ast::*, raise_error, register_error};
 
 use crate::translate::{
+    my_gen_args::MyGenericArgs,
     translate_body::BodyTransCtx,
     translate_crate::TransItemSource,
     translate_ctx::{ItemTransCtx, TranslateCtx},
@@ -182,6 +183,20 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     unreachable!()
                 };
                 let decl = bt_ctx.translate_global_from_static_fn(id, item_meta, *stt)?;
+                self.translated.fun_decls.set_slot(id, decl);
+            }
+            TransItemSource::NamedConst(def, args) => {
+                let Some(ItemId::Global(id)) = trans_id else {
+                    unreachable!()
+                };
+                let decl = bt_ctx.translate_named_const(id, item_meta, *def, args.clone())?;
+                self.translated.global_decls.set_slot(id, decl);
+            }
+            TransItemSource::NamedConstFn(def, args) => {
+                let Some(ItemId::Fun(id)) = trans_id else {
+                    unreachable!()
+                };
+                let decl = bt_ctx.translate_named_const_fn(id, item_meta, *def, args.clone())?;
                 self.translated.fun_decls.set_slot(id, decl);
             }
         }
@@ -595,6 +610,78 @@ impl ItemTransCtx<'_, '_> {
         let alloc = def.eval_initializer()?;
         let (const_expr, ty) = self.translate_alloc_to_const(span, &alloc, Some(def.ty()))?;
         let global_id = self.register_global_from_static(span, def);
+        self.make_trivial_return_function(def_id, item_meta, span, const_expr, ty, global_id)
+    }
+
+    pub fn translate_named_const(
+        mut self,
+        def_id: GlobalDeclId,
+        item_meta: ItemMeta,
+        const_def: ty::ConstDef,
+        args: MyGenericArgs,
+    ) -> Result<GlobalDecl, Error> {
+        let span = item_meta.span;
+        let tcx = self.t_ctx.tcx;
+        let internal_def = rustc_public::rustc_internal::internal(tcx, const_def.def_id());
+        let gargs: ty::GenericArgs = args.clone().into();
+        let internal_args = rustc_public::rustc_internal::internal(tcx, gargs);
+        let typing_env = rustc_middle::ty::TypingEnv::fully_monomorphized();
+        // Normalize so that e.g. array-length consts in the type get evaluated.
+        let unnorm_ty = tcx.type_of(internal_def).instantiate(tcx, internal_args);
+        let internal_ty = tcx
+            .try_normalize_erasing_regions(typing_env, unnorm_ty)
+            .unwrap_or_else(|_| unnorm_ty.skip_normalization());
+        let rty = rustc_public::rustc_internal::stable(internal_ty);
+        let ty = self.translate_ty(span, rty)?;
+        let initializer = self.register_named_const_fn(span, const_def, args);
+
+        Ok(GlobalDecl {
+            def_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            ty,
+            src: ItemSource::TopLevel,
+            global_kind: GlobalKind::NamedConst,
+            init: initializer,
+        })
+    }
+
+    pub fn translate_named_const_fn(
+        mut self,
+        def_id: FunDeclId,
+        item_meta: ItemMeta,
+        const_def: ty::ConstDef,
+        args: MyGenericArgs,
+    ) -> Result<FunDecl, Error> {
+        let span = item_meta.span;
+        let tcx = self.t_ctx.tcx;
+        let internal_def = rustc_public::rustc_internal::internal(tcx, const_def.def_id());
+        let gargs: ty::GenericArgs = args.clone().into();
+        let internal_args = rustc_public::rustc_internal::internal(tcx, gargs);
+        let typing_env = rustc_middle::ty::TypingEnv::fully_monomorphized();
+        // Normalize so that e.g. array-length consts in the type get evaluated.
+        let unnorm_ty = tcx.type_of(internal_def).instantiate(tcx, internal_args);
+        let internal_ty = tcx
+            .try_normalize_erasing_regions(typing_env, unnorm_ty)
+            .unwrap_or_else(|_| unnorm_ty.skip_normalization());
+
+        // Evaluate the const to its value (this is what we inlined before; now it becomes the
+        // initializer of the named global).
+        let uneval = rustc_middle::mir::UnevaluatedConst::new(internal_def, internal_args);
+        let cnst = rustc_middle::mir::Const::Unevaluated(uneval, internal_ty);
+        let eval_span = tcx.def_span(internal_def);
+        let const_expr = match cnst.eval(tcx, typing_env, eval_span) {
+            Ok(val) => {
+                let evaluated = rustc_middle::mir::Const::Val(val, internal_ty);
+                let stable_const = rustc_public::rustc_internal::stable(evaluated);
+                self.translate_const_value(span, &stable_const)?
+            }
+            Err(e) => {
+                raise_error!(self, span, "Could not evaluate named const: {:?}", e)
+            }
+        };
+        let ty = const_expr.ty.clone();
+        let global_id = self.register_named_const(span, const_def, args);
         self.make_trivial_return_function(def_id, item_meta, span, const_expr, ty, global_id)
     }
 }

@@ -885,6 +885,22 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     }
 }
 
+// Full name: std::mem::SizedTypeProperties::SIZE::<uint8x8_t>
+#[lang_item("mem_size_const")]
+pub fn SIZE::<uint8x8_t>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 8usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::SIZE::<uint8x8_t>
+#[lang_item("mem_size_const")]
+pub const SIZE::<uint8x8_t>: usize = SIZE::<uint8x8_t>()
+
 // Full name: std::mem::MaybeDangling::<uint8x8_t>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<uint8x8_t> {
@@ -947,11 +963,11 @@ pub fn read_unaligned::<uint8x8_t>(src_1: *const uint8x8_t) -> uint8x8_t
         _8 = cast<*const uint8x8_t, *const ()>(copy src_1);
         storage_live(_9);
         _9 = cast<*mut MaybeUninit::<uint8x8_t>, *mut ()>(copy _6);
-        _7 = std::ptr::copy_nonoverlapping::precondition_check(move _8, move _9, const 1usize, const 1usize, const 8usize) -> bb3 (unwind: bb4);
+        _7 = std::ptr::copy_nonoverlapping::precondition_check(move _8, move _9, const 1usize, const 1usize, copy SIZE::<uint8x8_t>) -> bb3 (unwind: bb4);
     }
 
     bb2: {
-        copy_nonoverlapping(copy src_3, copy dst_4, const 8usize);
+        copy_nonoverlapping(copy src_3, copy dst_4, copy SIZE::<uint8x8_t>);
         storage_dead(dst_4);
         storage_dead(src_3);
         storage_live(self_5);
@@ -1072,11 +1088,11 @@ pub fn write_unaligned::<uint8x8_t>(dst_1: *mut uint8x8_t, src_2: uint8x8_t)
         _7 = cast<*const uint8x8_t, *const ()>(copy _4);
         storage_live(_8);
         _8 = cast<*mut uint8x8_t, *mut ()>(copy dst_1);
-        _6 = std::ptr::copy_nonoverlapping::precondition_check(move _7, move _8, const 1usize, const 1usize, const 8usize) -> bb3 (unwind: bb4);
+        _6 = std::ptr::copy_nonoverlapping::precondition_check(move _7, move _8, const 1usize, const 1usize, copy SIZE::<uint8x8_t>) -> bb3 (unwind: bb4);
     }
 
     bb2: {
-        copy_nonoverlapping(copy src_3, copy dst_5, const 8usize);
+        copy_nonoverlapping(copy src_3, copy dst_5, copy SIZE::<uint8x8_t>);
         storage_dead(dst_5);
         storage_dead(src_3);
         return;
@@ -3571,18 +3587,6 @@ pub struct ManuallyDrop::<[u8; 2usize]> {
   value: MaybeDangling::<[u8; 2usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 1usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 1usize]> {
-  0: [u8; 1usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 1usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 1usize]> {
-  value: MaybeDangling::<[u8; 1usize]>,
-}
-
 // Full name: std::mem::MaybeDangling::<[u8; 4usize]>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<[u8; 4usize]> {
@@ -3605,6 +3609,18 @@ pub struct MaybeDangling::<[u8; 8usize]> {
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<[u8; 8usize]> {
   value: MaybeDangling::<[u8; 8usize]>,
+}
+
+// Full name: std::mem::MaybeDangling::<[u8; 1usize]>
+#[lang_item("maybe_dangling")]
+pub struct MaybeDangling::<[u8; 1usize]> {
+  0: [u8; 1usize],
+}
+
+// Full name: std::mem::ManuallyDrop::<[u8; 1usize]>
+#[lang_item("manually_drop")]
+pub struct ManuallyDrop::<[u8; 1usize]> {
+  value: MaybeDangling::<[u8; 1usize]>,
 }
 
 // Full name: std::mem::MaybeUninit::<[u8; 8usize]>
@@ -3634,6 +3650,36 @@ pub union MaybeUninit::<[u8; 1usize]> {
   uninit: (),
   value: ManuallyDrop::<[u8; 1usize]>,
 }
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<(u32, u32)>
+#[lang_item("mem_align_const")]
+pub fn ALIGN::<(u32, u32)>() -> usize
+{
+    let _0: usize; // return
+
+    bb0: {
+        _0 = const 4usize;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::ALIGN::<(u32, u32)>
+#[lang_item("mem_align_const")]
+pub const ALIGN::<(u32, u32)>: usize = ALIGN::<(u32, u32)>()
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<(u32, u32)>
+pub fn IS_ZST::<(u32, u32)>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: std::mem::SizedTypeProperties::IS_ZST::<(u32, u32)>
+pub const IS_ZST::<(u32, u32)>: bool = IS_ZST::<(u32, u32)>()
 
 fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_2: usize)
 {
@@ -3822,6 +3868,20 @@ struct hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure {
   upvar_0: &'_ hashbrown::map::make_hasher::{closure#0}::closure,
 }
 
+// Full name: hashbrown::raw::SizedTypeProperties::IS_ZERO_SIZED::<(u32, u32)>
+fn IS_ZERO_SIZED::<(u32, u32)>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: hashbrown::raw::SizedTypeProperties::IS_ZERO_SIZED::<(u32, u32)>
+const IS_ZERO_SIZED::<(u32, u32)>: bool = IS_ZERO_SIZED::<(u32, u32)>()
+
 fn hashbrown::map::make_hasher::{closure#0}::<u32, u32, RandomState, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> u64, (&'_ RandomState,)>(_1: &'_ hashbrown::map::make_hasher::{closure#0}::closure, spread_args_2: (&'_ (u32, u32),)) -> u64
 {
     let _0: u64; // return
@@ -3892,7 +3952,7 @@ fn hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), G
         _9 = copy ((*table_3)).ctrl;
         base_8 = transmute<NonNull::<u8>, NonNull::<(u32, u32)>>(copy _9);
         storage_live(ptr_10);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -3906,7 +3966,7 @@ fn hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), G
     bb2: {
         storage_live(self_12);
         self_12 = transmute<NonNull::<u8>, *mut (u32, u32)>(copy _9);
-        if const false -> bb4 else -> bb5;
+        if copy IS_ZST::<(u32, u32)> -> bb4 else -> bb5;
     }
 
     bb3: {
@@ -3915,7 +3975,7 @@ fn hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), G
         storage_dead(base_8);
         storage_dead(_9);
         storage_live(_16);
-        if const false -> bb6 else -> bb7;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb6 else -> bb7;
     }
 
     bb4: {
@@ -3935,14 +3995,14 @@ fn hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), G
     }
 
     bb6: {
-        _16 = transmute<usize, *mut (u32, u32)>(const 4usize);
+        _16 = transmute<usize, *mut (u32, u32)>(copy ALIGN::<(u32, u32)>);
         goto bb9;
     }
 
     bb7: {
         storage_live(self_17);
         self_17 = transmute<NonNull::<(u32, u32)>, *mut (u32, u32)>(copy self_13);
-        if const false -> bb10 else -> bb11;
+        if copy IS_ZST::<(u32, u32)> -> bb10 else -> bb11;
     }
 
     bb8: {
@@ -4195,7 +4255,7 @@ fn hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, has
         _9 = copy (((*self_7)).table).ctrl;
         base_8 = transmute<NonNull::<u8>, NonNull::<(u32, u32)>>(copy _9);
         storage_live(ptr_10);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -4209,7 +4269,7 @@ fn hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, has
     bb2: {
         storage_live(self_12);
         self_12 = transmute<NonNull::<u8>, *mut (u32, u32)>(copy _9);
-        if const false -> bb4 else -> bb5;
+        if copy IS_ZST::<(u32, u32)> -> bb4 else -> bb5;
     }
 
     bb3: {
@@ -4218,7 +4278,7 @@ fn hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, has
         storage_dead(base_8);
         storage_dead(_9);
         storage_live(_16);
-        if const false -> bb6 else -> bb7;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb6 else -> bb7;
     }
 
     bb4: {
@@ -4238,14 +4298,14 @@ fn hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, has
     }
 
     bb6: {
-        _16 = transmute<usize, *mut (u32, u32)>(const 4usize);
+        _16 = transmute<usize, *mut (u32, u32)>(copy ALIGN::<(u32, u32)>);
         goto bb9;
     }
 
     bb7: {
         storage_live(self_17);
         self_17 = transmute<NonNull::<(u32, u32)>, *mut (u32, u32)>(copy self_13);
-        if const false -> bb10 else -> bb11;
+        if copy IS_ZST::<(u32, u32)> -> bb10 else -> bb11;
     }
 
     bb8: {
@@ -4416,7 +4476,7 @@ fn hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u
         _9 = copy (((*self_7)).table).ctrl;
         base_8 = transmute<NonNull::<u8>, NonNull::<(u32, u32)>>(copy _9);
         storage_live(ptr_10);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -4430,7 +4490,7 @@ fn hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u
     bb2: {
         storage_live(self_12);
         self_12 = transmute<NonNull::<u8>, *mut (u32, u32)>(copy _9);
-        if const false -> bb4 else -> bb5;
+        if copy IS_ZST::<(u32, u32)> -> bb4 else -> bb5;
     }
 
     bb3: {
@@ -4439,7 +4499,7 @@ fn hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u
         storage_dead(base_8);
         storage_dead(_9);
         storage_live(_16);
-        if const false -> bb6 else -> bb7;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb6 else -> bb7;
     }
 
     bb4: {
@@ -4459,14 +4519,14 @@ fn hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u
     }
 
     bb6: {
-        _16 = transmute<usize, *mut (u32, u32)>(const 4usize);
+        _16 = transmute<usize, *mut (u32, u32)>(copy ALIGN::<(u32, u32)>);
         goto bb9;
     }
 
     bb7: {
         storage_live(self_17);
         self_17 = transmute<NonNull::<(u32, u32)>, *mut (u32, u32)>(copy self_13);
-        if const false -> bb10 else -> bb11;
+        if copy IS_ZST::<(u32, u32)> -> bb10 else -> bb11;
     }
 
     bb8: {
@@ -6867,7 +6927,7 @@ fn find::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closu
         _14 = copy (((*self_1)).table).ctrl;
         base_13 = transmute<NonNull::<u8>, NonNull::<(u32, u32)>>(copy _14);
         storage_live(ptr_15);
-        if const false -> bb7 else -> bb8;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb7 else -> bb8;
     }
 
     bb5: {
@@ -6890,7 +6950,7 @@ fn find::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closu
     bb8: {
         storage_live(self_17);
         self_17 = transmute<NonNull::<u8>, *mut (u32, u32)>(copy _14);
-        if const false -> bb10 else -> bb11;
+        if copy IS_ZST::<(u32, u32)> -> bb10 else -> bb11;
     }
 
     bb9: {
@@ -7020,7 +7080,7 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Globa
         storage_live(bucket_16);
         bucket_16 = move ((_11 as variant Option::<Bucket::<(u32, u32)>>::Some).0).ptr;
         storage_live(_14);
-        if const false -> bb12 else -> bb13;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb12 else -> bb13;
     }
 
     bb10: {
@@ -7034,14 +7094,14 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Globa
     }
 
     bb12: {
-        _14 = transmute<usize, *mut (u32, u32)>(const 4usize);
+        _14 = transmute<usize, *mut (u32, u32)>(copy ALIGN::<(u32, u32)>);
         goto bb14;
     }
 
     bb13: {
         storage_live(self_15);
         self_15 = transmute<NonNull::<(u32, u32)>, *mut (u32, u32)>(copy bucket_16);
-        if const false -> bb15 else -> bb16;
+        if copy IS_ZST::<(u32, u32)> -> bb15 else -> bb16;
     }
 
     bb14: {
@@ -7210,7 +7270,7 @@ fn insert_tagged_at_index::<(u32, u32), Global>(self_1: &'_ mut RawTable::<(u32,
         _25 = copy (((*self_1)).table).ctrl;
         base_24 = transmute<NonNull::<u8>, NonNull::<(u32, u32)>>(copy _25);
         storage_live(ptr_26);
-        if const false -> bb1 else -> bb2;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -7224,7 +7284,7 @@ fn insert_tagged_at_index::<(u32, u32), Global>(self_1: &'_ mut RawTable::<(u32,
     bb2: {
         storage_live(self_28);
         self_28 = transmute<NonNull::<u8>, *mut (u32, u32)>(copy _25);
-        if const false -> bb4 else -> bb5;
+        if copy IS_ZST::<(u32, u32)> -> bb4 else -> bb5;
     }
 
     bb3: {
@@ -7234,7 +7294,7 @@ fn insert_tagged_at_index::<(u32, u32), Global>(self_1: &'_ mut RawTable::<(u32,
         storage_dead(base_24);
         storage_dead(_25);
         storage_live(self_32);
-        if const false -> bb6 else -> bb7;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb6 else -> bb7;
     }
 
     bb4: {
@@ -7254,14 +7314,14 @@ fn insert_tagged_at_index::<(u32, u32), Global>(self_1: &'_ mut RawTable::<(u32,
     }
 
     bb6: {
-        self_32 = transmute<usize, *mut (u32, u32)>(const 4usize);
+        self_32 = transmute<usize, *mut (u32, u32)>(copy ALIGN::<(u32, u32)>);
         goto bb9;
     }
 
     bb7: {
         storage_live(self_33);
         self_33 = transmute<NonNull::<(u32, u32)>, *mut (u32, u32)>(copy self_29);
-        if const false -> bb10 else -> bb11;
+        if copy IS_ZST::<(u32, u32)> -> bb10 else -> bb11;
     }
 
     bb8: {
@@ -10101,6 +10161,43 @@ fn new_uninitialized::<Global>(alloc_1: &'_ Global, table_layout_2: TableLayout,
     }
 }
 
+// Full name: anon_const_9
+fn anon_const_9() -> u8
+{
+    let _0: u8; // return
+
+    bb0: {
+        _0 = const 255u8;
+        return;
+    }
+}
+
+// Full name: anon_const_9
+const anon_const_9: u8 = anon_const_9()
+
+// Full name: hashbrown::raw::RawTableInner::NEW
+fn NEW() -> RawTableInner
+{
+    let _0: RawTableInner; // return
+    let _1: *const u8 is !null; // anonymous local
+    let _2: NonNull::<u8>; // anonymous local
+    let _3: RawTableInner; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = &raw const anon_const_9;
+        storage_live(_2);
+        _2 = NonNull::<u8> { pointer: move _1 };
+        storage_live(_3);
+        _3 = RawTableInner { bucket_mask: const 0usize, ctrl: move _2, growth_left: const 0usize, items: const 0usize };
+        _0 = move _3;
+        return;
+    }
+}
+
+// Full name: hashbrown::raw::RawTableInner::NEW
+const NEW: RawTableInner = NEW()
+
 // Full name: hashbrown::raw::capacity_to_buckets
 fn capacity_to_buckets(cap_1: usize, table_layout_2: TableLayout) -> Option::<usize>
 {
@@ -10455,20 +10552,6 @@ fn capacity_to_buckets(cap_1: usize, table_layout_2: TableLayout) -> Option::<us
     }
 }
 
-// Full name: anon_const_9
-fn anon_const_9() -> u8
-{
-    let _0: u8; // return
-
-    bb0: {
-        _0 = const 255u8;
-        return;
-    }
-}
-
-// Full name: anon_const_9
-const anon_const_9: u8 = anon_const_9()
-
 // Full name: hashbrown::raw::RawTableInner::fallible_with_capacity::<Global>
 fn fallible_with_capacity::<Global>(alloc_1: &'_ Global, table_layout_2: TableLayout, capacity_3: usize, fallibility_4: Fallibility) -> Result::<RawTableInner, TryReserveError>
 {
@@ -10512,9 +10595,6 @@ fn fallible_with_capacity::<Global>(alloc_1: &'_ Global, table_layout_2: TableLa
     let _37: (); // anonymous local
     let self_38: *mut MaybeUninit::<Tag>; // local
     let _39: *mut [MaybeUninit::<Tag>]; // anonymous local
-    let _40: *const u8 is !null; // anonymous local
-    let _41: NonNull::<u8>; // anonymous local
-    let _42: RawTableInner; // anonymous local
 
     bb0: {
         storage_live(buckets_9);
@@ -10525,13 +10605,7 @@ fn fallible_with_capacity::<Global>(alloc_1: &'_ Global, table_layout_2: TableLa
     }
 
     bb1: {
-        storage_live(_40);
-        _40 = &raw const anon_const_9;
-        storage_live(_41);
-        _41 = NonNull::<u8> { pointer: move _40 };
-        storage_live(_42);
-        _42 = RawTableInner { bucket_mask: const 0usize, ctrl: move _41, growth_left: const 0usize, items: const 0usize };
-        _0 = Result::<RawTableInner, TryReserveError>::Ok { 0: move _42 };
+        _0 = Result::<RawTableInner, TryReserveError>::Ok { 0: copy NEW };
         goto bb5;
     }
 
@@ -11398,6 +11472,37 @@ fn closure_as_fn(arg1_1: *mut u8)
     }
 }
 
+// Full name: hashbrown::raw::RawTable::<T, A>::TABLE_LAYOUT::<(u32, u32), Global>
+fn TABLE_LAYOUT::<(u32, u32), Global>() -> TableLayout
+{
+    let _0: TableLayout; // return
+    let _1: TableLayout; // anonymous local
+
+    bb0: {
+        storage_live(_1);
+        _1 = TableLayout { size: const 8usize, ctrl_align: const 8usize };
+        _0 = move _1;
+        return;
+    }
+}
+
+// Full name: hashbrown::raw::RawTable::<T, A>::TABLE_LAYOUT::<(u32, u32), Global>
+const TABLE_LAYOUT::<(u32, u32), Global>: TableLayout = TABLE_LAYOUT::<(u32, u32), Global>()
+
+// Full name: hashbrown::raw::SizedTypeProperties::NEEDS_DROP::<(u32, u32)>
+fn NEEDS_DROP::<(u32, u32)>() -> bool
+{
+    let _0: bool; // return
+
+    bb0: {
+        _0 = const false;
+        return;
+    }
+}
+
+// Full name: hashbrown::raw::SizedTypeProperties::NEEDS_DROP::<(u32, u32)>
+const NEEDS_DROP::<(u32, u32)>: bool = NEEDS_DROP::<(u32, u32)>()
+
 // Full name: hashbrown::raw::RawTable::<T, A>::reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>
 fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>(self_1: &'_ mut RawTable::<(u32, u32), Global>, additional_2: usize, hasher_3: hashbrown::map::make_hasher::{closure#0}::closure, fallibility_4: Fallibility) -> Result::<(), TryReserveError>
 {
@@ -11415,7 +11520,6 @@ fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}
     let _11: Option::<unsafe fn(*mut u8)>; // anonymous local
     let _12: unsafe fn(*mut u8); // anonymous local
     let _13: Option::<unsafe fn(*mut u8)>; // anonymous local
-    let _14: TableLayout; // anonymous local
 
     bb0: {
         storage_live(_5);
@@ -11432,7 +11536,7 @@ fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}
         _8 = &_9;
         _7 = unsize_cast<&'_ hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, &'_ (dyn FakeTrait), Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>>(copy _8);
         storage_live(_11);
-        if const false -> bb1 else -> bb2;
+        if copy NEEDS_DROP::<(u32, u32)> -> bb1 else -> bb2;
     }
 
     bb1: {
@@ -11451,9 +11555,7 @@ fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}
     }
 
     bb3: {
-        storage_live(_14);
-        _14 = TableLayout { size: const 8usize, ctrl_align: const 8usize };
-        _0 = reserve_rehash_inner::<Global>(move _5, move _6, move additional_2, move _7, move fallibility_4, move _14, move _11) -> bb4 (unwind: bb5);
+        _0 = reserve_rehash_inner::<Global>(move _5, move _6, move additional_2, move _7, move fallibility_4, copy TABLE_LAYOUT::<(u32, u32), Global>, move _11) -> bb4 (unwind: bb5);
     }
 
     bb4: {
@@ -11623,7 +11725,7 @@ fn find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_ke
         _18 = copy (((*self_1)).table).ctrl;
         base_17 = transmute<NonNull::<u8>, NonNull::<(u32, u32)>>(copy _18);
         storage_live(ptr_19);
-        if const false -> bb7 else -> bb8;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb7 else -> bb8;
     }
 
     bb5: {
@@ -11649,7 +11751,7 @@ fn find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_ke
     bb8: {
         storage_live(self_21);
         self_21 = transmute<NonNull::<u8>, *mut (u32, u32)>(copy _18);
-        if const false -> bb11 else -> bb12;
+        if copy IS_ZST::<(u32, u32)> -> bb11 else -> bb12;
     }
 
     bb9: {
@@ -11784,7 +11886,7 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Gl
         bucket_14 = move (_11 as variant Result::<Bucket::<(u32, u32)>, usize>::Ok).0;
         storage_live(_15);
         storage_live(_30);
-        if const false -> bb9 else -> bb10;
+        if copy IS_ZERO_SIZED::<(u32, u32)> -> bb9 else -> bb10;
     }
 
     bb6: {
@@ -11826,7 +11928,7 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Gl
     }
 
     bb9: {
-        _30 = transmute<usize, *mut (u32, u32)>(const 4usize);
+        _30 = transmute<usize, *mut (u32, u32)>(copy ALIGN::<(u32, u32)>);
         goto bb12;
     }
 
@@ -11836,7 +11938,7 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Gl
         self_32 = copy (bucket_14).ptr;
         self_31 = transmute<NonNull::<(u32, u32)>, *mut (u32, u32)>(copy self_32);
         storage_dead(self_32);
-        if const false -> bb13 else -> bb14;
+        if copy IS_ZST::<(u32, u32)> -> bb13 else -> bb14;
     }
 
     bb11: {
