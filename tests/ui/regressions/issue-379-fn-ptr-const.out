@@ -1,4 +1,3 @@
-Item test_crate::target caused errors; ignoring. Any { .. }
 
 // Final ULLBC:
 
@@ -26,16 +25,13 @@ pub fn get() -> *const ()
 {
     let _0: *const (); // return
     let _1: Holder; // anonymous local
-    let _2: *const (); // anonymous local
-    let _3: Holder; // anonymous local
+    let _2: Holder; // anonymous local
 
     bb0: {
         storage_live(_1);
         storage_live(_2);
-        _2 = &raw const target;
-        storage_live(_3);
-        _3 = Holder { 0: move _2 };
-        _1 = move _3;
+        _2 = Holder { 0: const fnptr(target) };
+        _1 = move _2;
         _0 = copy (_1).0;
         storage_dead(_1);
         return;

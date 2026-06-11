@@ -248,6 +248,15 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             ConstantExprKind::Ref(Box::new(sub_constant), metadata)
                         }
                     }
+                    // The pointer points directly at a function (e.g. `f as *mut ()`
+                    GlobalAlloc::Function(instance) => {
+                        let id = self.register_fun_decl_id(span, instance);
+                        let generics = self.translate_generic_args(span, &instance.args())?;
+                        ConstantExprKind::FnPtr(FnPtr {
+                            generics: Box::new(generics),
+                            kind: Box::new(FnPtrKind::Fun(FunId::Regular(id))),
+                        })
+                    }
                     _ => {
                         let (metadata, dyn_self_ty) = match subty.kind() {
                             TyKind::Slice(_) => {
