@@ -5,7 +5,7 @@ use clap::Parser;
 use obol_lib::args::{CliOpts, OBOL_ARGS, ObolCli};
 use std::{env, process::ExitStatus};
 
-use crate::toolchain::toolchain_path;
+use crate::toolchain::{toolchain_path, toolchain_version};
 
 mod toolchain;
 
@@ -18,6 +18,11 @@ fn main() -> Result<()> {
         ObolCli::ToolchainPath => {
             let path = toolchain_path()?;
             println!("{}", path.display());
+            ExitStatus::default()
+        }
+        ObolCli::ToolchainVersion => {
+            let version = toolchain_version();
+            println!("{}", version);
             ExitStatus::default()
         }
         ObolCli::Version(opts) => {

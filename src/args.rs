@@ -21,6 +21,8 @@ pub enum ObolCli {
     Cargo(CliOpts),
     /// Print the path to the rustc toolchain used by obol.
     ToolchainPath,
+    /// Print the version of the rustc toolchain used by obol.
+    ToolchainVersion,
     /// Print the version of Obol (or Charon, if flag provided)
     Version(VersionOpts),
 }
