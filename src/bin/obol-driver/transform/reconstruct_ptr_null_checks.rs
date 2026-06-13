@@ -33,11 +33,12 @@
 //! - the transmuted value is used nowhere else (necessary for soundness)
 
 use charon_lib::ast::Visitor;
+use std::collections::HashSet;
 use std::ops::ControlFlow::{self, Continue};
 
 use charon_lib::ids::IndexVec;
 use charon_lib::transform::TransformCtx;
-use charon_lib::transform::ctx::UllbcPass;
+use charon_lib::transform::ctx::{BodyTransformCtx, UllbcPass};
 use charon_lib::ullbc_ast::*;
 
 /// Count how many times each local appears in the body, ignoring `StorageLive`/`StorageDead`
@@ -116,27 +117,25 @@ fn feeds_null_check(block: &BlockData, local: LocalId) -> bool {
     })
 }
 
-/// If `st` is a `transmute` of a sized (thin) pointer into a `usize`/`isize` whose result is used
-/// exactly twice and whose unique other use is a null-check (a `switch [0, _]` or a `== 0` /
-/// `!= 0` within `block`), return the assigned place, the pointer type, the target integer type
-/// and the transmuted operand.
-fn match_transmuted_null_check<'a>(
+/// Whether `st` is a `transmute` of a sized (thin) pointer into a `usize`/`isize` whose result is
+/// used exactly twice and whose unique other use is a null-check (a `switch [0, _]` or a `== 0` /
+/// `!= 0` within `block`). When it is, return the local the transmute result is assigned to.
+fn match_transmuted_null_check(
     ctx: &TransformCtx,
     usages: &IndexVec<LocalId, usize>,
-    block: &'a BlockData,
-    st: &'a Statement,
-) -> Option<(&'a Place, &'a Ty, LiteralTy, &'a Operand)> {
+    block: &BlockData,
+    st: &Statement,
+) -> Option<LocalId> {
     let StatementKind::Assign(
         place,
-        Rvalue::UnaryOp(UnOp::Cast(CastKind::Transmute(src_ty, tgt_ty)), op),
+        Rvalue::UnaryOp(UnOp::Cast(CastKind::Transmute(src_ty, tgt_ty)), _),
     ) = &st.kind
     else {
         return None;
     };
     let result = place.as_local()?;
-    let TyKind::Literal(
-        tgt_lit_ty @ (LiteralTy::UInt(UIntTy::Usize) | LiteralTy::Int(IntTy::Isize)),
-    ) = tgt_ty.kind()
+    let TyKind::Literal(LiteralTy::UInt(UIntTy::Usize) | LiteralTy::Int(IntTy::Isize)) =
+        tgt_ty.kind()
     else {
         return None;
     };
@@ -152,52 +151,74 @@ fn match_transmuted_null_check<'a>(
     if !feeds_null_check(block, result) {
         return None;
     }
-    Some((place, src_ty, *tgt_lit_ty, op))
+    Some(result)
 }
 
 pub struct Transform;
 
 impl UllbcPass for Transform {
-    fn transform_body(&self, ctx: &mut TransformCtx, b: &mut ExprBody) {
-        let usages = count_local_usages(b);
+    fn transform_function(&self, ctx: &mut TransformCtx, decl: &mut FunDecl) {
+        let Some(body) = decl.body.as_unstructured() else {
+            return;
+        };
 
-        let locals = &mut b.locals;
-        for block in b.body.iter_mut() {
-            let mut idx = 0;
-            while idx < block.statements.len() {
-                let Some((dest, src_ty, tgt_lit_ty, operand)) =
-                    match_transmuted_null_check(ctx, &usages, block, &block.statements[idx])
-                        .map(|(place, ty, lit, op)| (place.clone(), ty.clone(), lit, op.clone()))
-                else {
-                    idx += 1;
-                    continue;
-                };
-                let span = block.statements[idx].span;
+        // Find the transmute results to rewrite up front: the rewrite below runs per-statement and
+        // can't see the block terminator, but recognizing the null-check needs it (the `switch`
+        // shape) and needs the body-wide usage counts.
+        let usages = count_local_usages(body);
+        let targets: HashSet<LocalId> = body
+            .body
+            .iter()
+            .flat_map(|block| {
+                block
+                    .statements
+                    .iter()
+                    .filter_map(|st| match_transmuted_null_check(ctx, &usages, block, st))
+            })
+            .collect();
+        if targets.is_empty() {
+            return;
+        }
 
-                // `(p != null) as usize` is `0` exactly when `transmute::<_, usize>(p)` is, so the
-                // downstream null-check is left untouched.
-                let tmp = locals.new_var(None, Ty::mk_bool());
-                let tmp_local = tmp.as_local().unwrap();
-                let null_ptr = Operand::Const(Box::new(ConstantExpr {
-                    kind: ConstantExprKind::PtrNoProvenance(0),
-                    ty: src_ty,
-                }));
-                let is_not_null = Rvalue::BinaryOp(BinOp::Ne, operand, null_ptr);
-                let cast = Rvalue::UnaryOp(
+        decl.transform_ullbc_statements(ctx, |ctx, st: &mut Statement| {
+            let StatementKind::Assign(
+                place,
+                Rvalue::UnaryOp(UnOp::Cast(CastKind::Transmute(src_ty, tgt_ty)), op),
+            ) = &st.kind
+            else {
+                return;
+            };
+            let Some(result) = place.as_local() else {
+                return;
+            };
+            if !targets.contains(&result) {
+                return;
+            }
+            let TyKind::Literal(tgt_lit_ty) = tgt_ty.kind() else {
+                return;
+            };
+            let tgt_lit_ty = *tgt_lit_ty;
+            let dest = place.clone();
+            let src_ty = src_ty.clone();
+            let operand = op.clone();
+
+            // `(p != null) as usize` is `0` exactly when `transmute::<_, usize>(p)` is, so the
+            // downstream null-check is left untouched. `fresh_var` inserts the temp's `StorageLive`;
+            // we reuse the transmute statement's own slot for the matching `StorageDead`.
+            let tmp = ctx.fresh_var(None, Ty::mk_bool());
+            let null_ptr = Operand::Const(Box::new(ConstantExpr {
+                kind: ConstantExprKind::PtrNoProvenance(0),
+                ty: src_ty,
+            }));
+            ctx.insert_assn_stmt(tmp.clone(), Rvalue::BinaryOp(BinOp::Ne, operand, null_ptr));
+            ctx.insert_assn_stmt(
+                dest,
+                Rvalue::UnaryOp(
                     UnOp::Cast(CastKind::Scalar(LiteralTy::Bool, tgt_lit_ty)),
                     Operand::Move(tmp.clone()),
-                );
-                let new_statements = [
-                    StatementKind::StorageLive(tmp_local),
-                    StatementKind::Assign(tmp, is_not_null),
-                    StatementKind::Assign(dest, cast),
-                    StatementKind::StorageDead(tmp_local),
-                ]
-                .map(|kind| Statement::new(span, kind));
-                let num_new = new_statements.len();
-                block.statements.splice(idx..=idx, new_statements);
-                idx += num_new;
-            }
-        }
+                ),
+            );
+            st.kind = StatementKind::StorageDead(tmp.as_local().unwrap());
+        });
     }
 }
