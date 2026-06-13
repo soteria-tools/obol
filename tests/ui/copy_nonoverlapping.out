@@ -802,6 +802,10 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
     let _26: usize; // anonymous local
     let _27: *const str; // anonymous local
     let _28: &'_ [u8]; // anonymous local
+    let _29: bool; // anonymous local
+    let _30: bool; // anonymous local
+    let _31: *const (); // anonymous local
+    let _32: *mut (); // anonymous local
 
     bb0: {
         storage_live(zero_size_7);
@@ -856,7 +860,12 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
     bb9: {
         storage_live(_16);
         storage_live(_17);
-        _17 = transmute<*const (), usize>(copy src_1);
+        storage_live(_29);
+        storage_live(_31);
+        _31 = cast<usize, *const ()>(const 0usize);
+        _29 = copy src_1 != move _31;
+        _17 = cast<bool, usize>(move _29);
+        storage_dead(_29);
         _16 = move _17 == const 0usize;
         storage_dead(_17);
         _8 = ~(move _16);
@@ -948,7 +957,12 @@ fn precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: 
     bb21: {
         storage_live(_19);
         storage_live(_20);
-        _20 = transmute<*mut (), usize>(copy dst_2);
+        storage_live(_30);
+        storage_live(_32);
+        _32 = cast<usize, *mut ()>(const 0usize);
+        _30 = copy dst_2 != move _32;
+        _20 = cast<bool, usize>(move _30);
+        storage_dead(_30);
         _19 = move _20 == const 0usize;
         storage_dead(_20);
         _10 = ~(move _19);

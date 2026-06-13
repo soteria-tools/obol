@@ -1083,6 +1083,10 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     let _26: usize; // anonymous local
     let _27: *const str; // anonymous local
     let _28: &'_ [u8]; // anonymous local
+    let _29: bool; // anonymous local
+    let _30: bool; // anonymous local
+    let _31: *const (); // anonymous local
+    let _32: *mut (); // anonymous local
 
     bb0: {
         storage_live(zero_size_7);
@@ -1137,7 +1141,12 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     bb9: {
         storage_live(_16);
         storage_live(_17);
-        _17 = transmute<*const (), usize>(copy src_1);
+        storage_live(_29);
+        storage_live(_31);
+        _31 = cast<usize, *const ()>(const 0usize);
+        _29 = copy src_1 != move _31;
+        _17 = cast<bool, usize>(move _29);
+        storage_dead(_29);
         _16 = move _17 == const 0usize;
         storage_dead(_17);
         _8 = ~(move _16);
@@ -1229,7 +1238,12 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     bb21: {
         storage_live(_19);
         storage_live(_20);
-        _20 = transmute<*mut (), usize>(copy dst_2);
+        storage_live(_30);
+        storage_live(_32);
+        _32 = cast<usize, *mut ()>(const 0usize);
+        _30 = copy dst_2 != move _32;
+        _20 = cast<bool, usize>(move _30);
+        storage_dead(_30);
         _19 = move _20 == const 0usize;
         storage_dead(_20);
         _10 = ~(move _19);
@@ -1717,13 +1731,20 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
     let _11: usize; // anonymous local
     let _12: *const str; // anonymous local
     let _13: &'_ [u8]; // anonymous local
+    let _14: bool; // anonymous local
+    let _15: *mut (); // anonymous local
 
     bb0: {
         storage_live(msg_2);
         storage_live(_3);
         _0 = ();
         storage_live(_5);
-        _5 = transmute<*mut (), usize>(copy ptr_1);
+        storage_live(_14);
+        storage_live(_15);
+        _15 = cast<usize, *mut ()>(const 0usize);
+        _14 = copy ptr_1 != move _15;
+        _5 = cast<bool, usize>(move _14);
+        storage_dead(_14);
         switch copy _5 -> 0usize: bb1, otherwise: bb2;
     }
 
@@ -1866,11 +1887,13 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     let _34: bool; // anonymous local
     let _35: bool; // anonymous local
     let _36: bool; // anonymous local
-    let _37: Option::<NonNull::<u8>>; // anonymous local
-    let _38: AllocError; // anonymous local
-    let _39: Result::<NonNull::<u8>, AllocError>; // anonymous local
+    let _37: bool; // anonymous local
+    let _38: *mut u8; // anonymous local
+    let _39: Option::<NonNull::<u8>>; // anonymous local
     let _40: AllocError; // anonymous local
-    let _41: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
+    let _41: Result::<NonNull::<u8>, AllocError>; // anonymous local
+    let _42: AllocError; // anonymous local
+    let _43: Result::<NonNull::<[u8]>, AllocError>; // anonymous local
 
     bb0: {
         storage_live(raw_ptr_6);
@@ -1990,20 +2013,25 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         storage_live(self_8);
         storage_live(self_9);
         storage_live(_23);
-        _23 = transmute<*mut u8, usize>(copy raw_ptr_6);
+        storage_live(_37);
+        storage_live(_38);
+        _38 = cast<usize, *mut u8>(const 0usize);
+        _37 = copy raw_ptr_6 != move _38;
+        _23 = cast<bool, usize>(move _37);
+        storage_dead(_37);
         switch copy _23 -> 0usize: bb20, otherwise: bb21;
     }
 
     bb20: {
         storage_dead(_23);
-        storage_live(_37);
-        _37 = Option::<NonNull::<u8>>::None {  };
-        self_9 = move _37;
-        storage_live(_38);
-        _38 = AllocError {  };
         storage_live(_39);
-        _39 = Result::<NonNull::<u8>, AllocError>::Err { 0: move _38 };
-        self_8 = move _39;
+        _39 = Option::<NonNull::<u8>>::None {  };
+        self_9 = move _39;
+        storage_live(_40);
+        _40 = AllocError {  };
+        storage_live(_41);
+        _41 = Result::<NonNull::<u8>, AllocError>::Err { 0: move _40 };
+        self_8 = move _41;
         storage_dead(self_9);
         storage_dead(self_8);
         storage_live(_32);
@@ -2011,11 +2039,11 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
         _32 = @discriminant(_10);
         _33 = copy _32 == const 1isize;
         assert(move _33 == true) else undefined_behavior;
-        storage_live(_40);
-        _40 = AllocError {  };
-        storage_live(_41);
-        _41 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: move _40 };
-        _0 = move _41;
+        storage_live(_42);
+        _42 = AllocError {  };
+        storage_live(_43);
+        _43 = Result::<NonNull::<[u8]>, AllocError>::Err { 0: move _42 };
+        _0 = move _43;
         storage_dead(_33);
         storage_dead(_32);
         storage_dead(_7);

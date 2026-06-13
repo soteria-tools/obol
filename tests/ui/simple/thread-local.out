@@ -539,6 +539,8 @@ fn precondition_check(addr_1: *const (), align_2: usize, is_zst_3: bool)
     let _16: usize; // anonymous local
     let _17: *const str; // anonymous local
     let _18: &'_ [u8]; // anonymous local
+    let _19: bool; // anonymous local
+    let _20: *const (); // anonymous local
 
     bb0: {
         storage_live(msg_5);
@@ -574,7 +576,12 @@ fn precondition_check(addr_1: *const (), align_2: usize, is_zst_3: bool)
     bb6: {
         storage_live(_9);
         storage_live(_10);
-        _10 = transmute<*const (), usize>(copy addr_1);
+        storage_live(_19);
+        storage_live(_20);
+        _20 = cast<usize, *const ()>(const 0usize);
+        _19 = copy addr_1 != move _20;
+        _10 = cast<bool, usize>(move _19);
+        storage_dead(_19);
         _9 = move _10 == const 0usize;
         storage_dead(_10);
         _4 = ~(move _9);
@@ -1185,11 +1192,13 @@ pub fn try_with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ 
     let v_17: &'_ u32; // local
     let _18: isize; // anonymous local
     let _19: bool; // anonymous local
-    let _20: Option::<&'_ u32>; // anonymous local
-    let _21: AccessError; // anonymous local
-    let _22: Result::<&'_ u32, AccessError>; // anonymous local
+    let _20: bool; // anonymous local
+    let _21: *const u32; // anonymous local
+    let _22: Option::<&'_ u32>; // anonymous local
     let _23: AccessError; // anonymous local
-    let _24: Option::<&'_ mut Option::<u32>>; // anonymous local
+    let _24: Result::<&'_ u32, AccessError>; // anonymous local
+    let _25: AccessError; // anonymous local
+    let _26: Option::<&'_ mut Option::<u32>>; // anonymous local
 
     bb0: {
         storage_live(_8);
@@ -1202,15 +1211,20 @@ pub fn try_with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ 
         storage_live(self_6);
         storage_live(_7);
         _7 = copy ((*self_1)).inner;
-        storage_live(_24);
-        _24 = Option::<&'_ mut Option::<u32>>::None {  };
-        self_6 = (copy _7)(move _24) -> bb1 (unwind: bb2);
+        storage_live(_26);
+        _26 = Option::<&'_ mut Option::<u32>>::None {  };
+        self_6 = (copy _7)(move _26) -> bb1 (unwind: bb2);
     }
 
     bb1: {
         storage_dead(_7);
         storage_live(_15);
-        _15 = transmute<*const u32, usize>(copy self_6);
+        storage_live(_20);
+        storage_live(_21);
+        _21 = cast<usize, *const u32>(const 0usize);
+        _20 = copy self_6 != move _21;
+        _15 = cast<bool, usize>(move _20);
+        storage_dead(_20);
         switch copy _15 -> 0usize: bb3, otherwise: bb4;
     }
 
@@ -1220,15 +1234,15 @@ pub fn try_with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ 
 
     bb3: {
         storage_dead(_15);
-        storage_live(_20);
-        _20 = Option::<&'_ u32>::None {  };
-        self_5 = move _20;
-        storage_dead(self_6);
-        storage_live(_21);
-        _21 = AccessError {  };
         storage_live(_22);
-        _22 = Result::<&'_ u32, AccessError>::Err { 0: move _21 };
-        self_4 = move _22;
+        _22 = Option::<&'_ u32>::None {  };
+        self_5 = move _22;
+        storage_dead(self_6);
+        storage_live(_23);
+        _23 = AccessError {  };
+        storage_live(_24);
+        _24 = Result::<&'_ u32, AccessError>::Err { 0: move _23 };
+        self_4 = move _24;
         storage_dead(self_5);
         storage_dead(self_4);
         storage_live(_18);
@@ -1236,9 +1250,9 @@ pub fn try_with::<u32, test_crate::main::{closure#0}::closure, u32>(self_1: &'_ 
         _18 = @discriminant(_8);
         _19 = copy _18 == const 1isize;
         assert(move _19 == true) else undefined_behavior;
-        storage_live(_23);
-        _23 = AccessError {  };
-        _0 = Result::<u32, AccessError>::Err { 0: move _23 };
+        storage_live(_25);
+        _25 = AccessError {  };
+        _0 = Result::<u32, AccessError>::Err { 0: move _25 };
         storage_dead(_19);
         storage_dead(_18);
         storage_dead(_3);

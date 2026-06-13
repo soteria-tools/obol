@@ -441,6 +441,8 @@ fn precondition_check(data_1: *mut (), size_2: usize, align_3: usize, len_4: usi
     let _20: usize; // anonymous local
     let _21: *const str; // anonymous local
     let _22: &'_ [u8]; // anonymous local
+    let _23: bool; // anonymous local
+    let _24: *mut (); // anonymous local
 
     bb0: {
         storage_live(msg_8);
@@ -464,7 +466,12 @@ fn precondition_check(data_1: *mut (), size_2: usize, align_3: usize, len_4: usi
     bb3: {
         storage_live(_12);
         storage_live(_13);
-        _13 = transmute<*mut (), usize>(copy data_1);
+        storage_live(_23);
+        storage_live(_24);
+        _24 = cast<usize, *mut ()>(const 0usize);
+        _23 = copy data_1 != move _24;
+        _13 = cast<bool, usize>(move _23);
+        storage_dead(_23);
         _12 = move _13 == const 0usize;
         storage_dead(_13);
         _5 = ~(move _12);
