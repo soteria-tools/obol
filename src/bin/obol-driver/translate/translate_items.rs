@@ -429,7 +429,9 @@ impl ItemTransCtx<'_, '_> {
 
                 // Some statics don't have a body, such as non-generics in the sysroot. For those
                 // we evaluate the value directly; otherwise we call the initializer function.
-                let value = if instance.has_body() {
+                // Foreign/extern statics have no in-crate initializer to evaluate either, so we likewise
+                // call a body-less extern initializer function.
+                let value = if instance.has_body() || instance.is_foreign_item() {
                     let init = self.register_fun_decl_id(span, instance);
                     self.call_initializer(init, translated_ty.clone())
                 } else {
@@ -505,13 +507,22 @@ impl ItemTransCtx<'_, '_> {
         let item_kind = ItemSource::TopLevel;
         trace!("Translating global type");
 
-        // Evaluate the static's initializer directly into the global's value.
         let span = self.translate_span_from_smir(&def.span());
-        let alloc = def.eval_initializer()?;
-        let (value, ty) = self.translate_alloc_to_const(span, &alloc, Some(def.ty()))?;
+        let internal_def_id = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def_id());
+        let (value, ty) = if self.t_ctx.tcx.is_foreign_item(internal_def_id) {
+            // Foreign/extern statics have no in-crate initializer to evaluate.
+            // Emit a call to a body-less extern initializer function.
+            let ty = self.translate_ty(span, def.ty())?;
+            let instance: mir::mono::Instance = def.into();
+            let init = self.register_fun_decl_id(span, instance);
+            (self.call_initializer(init, ty.clone()), ty)
+        } else {
+            // Evaluate the static's initializer directly into the global's value.
+            let alloc = def.eval_initializer()?;
+            self.translate_alloc_to_const(span, &alloc, Some(def.ty()))?
+        };
 
         // Distinguish thread-local statics (`#[thread_local]`) from regular ones.
-        let internal_def_id = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def.def_id());
         let global_kind = if self.t_ctx.tcx.is_thread_local_static(internal_def_id) {
             GlobalKind::ThreadLocal
         } else {

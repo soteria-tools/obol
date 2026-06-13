@@ -80,6 +80,22 @@ impl ItemTransCtx<'_, '_> {
         def: mir::mono::Instance,
         span: Span,
     ) -> Result<FunSig, Error> {
+        // Foreign `extern` statics have no `CrateItem`/MIR body and aren't functions,
+        // so `fn_abi` below would ICE. When such a static is used as a global
+        // initializer we model it as a body-less function returning the static's type.
+        let internal_def_id = rustc_internal::internal(self.t_ctx.tcx, def.def.def_id());
+        if self.t_ctx.tcx.is_foreign_item(internal_def_id)
+            && self.t_ctx.tcx.is_static(internal_def_id)
+        {
+            let output = self.translate_ty(span, def.ty())?;
+            return Ok(FunSig {
+                is_unsafe: false,
+                abi: Abi::rust(),
+                inputs: vec![],
+                output,
+            });
+        }
+
         // CrateItem::try_from fails for Shim/Intrinsic/Virtual instances (which have no
         // CrateItem) and for InstanceKind::Item items that have no MIR body (e.g. extern
         // functions, constructors).  In all cases, skip the item-kind check and fall through

@@ -1,2 +1,63 @@
-Item test_crate::FOO caused errors; ignoring. Any { .. }
-Item test_crate::BAR caused errors; ignoring. Any { .. }
+
+// Final ULLBC:
+
+// Full name: std::option::Option::<*const i32>
+#[lang_item("Option")]
+pub enum Option::<*const i32> {
+  None,
+  Some(0: *const i32),
+}
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: test_crate::FOO
+fn FOO() -> i32
+= <extern:FOO>
+
+// Full name: test_crate::FOO
+static FOO: i32 = FOO()
+
+// Full name: test_crate::BAR
+fn BAR() -> Option::<*const i32>
+= <extern:BAR>
+
+// Full name: test_crate::BAR
+static BAR: Option::<*const i32> = BAR()
+
+// Full name: test_crate::main
+fn main()
+{
+    let _0: (); // return
+    let foo_1: i32; // local
+    let _2: *mut i32; // anonymous local
+    let bar_3: Option::<*const i32>; // local
+    let _4: *const Option::<*const i32>; // anonymous local
+    let _5: *mut i32; // anonymous local
+    let _6: *const Option::<*const i32>; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(foo_1);
+        storage_live(_2);
+        storage_live(_5);
+        _5 = &raw mut FOO;
+        _2 = move _5;
+        foo_1 = copy (*_2);
+        storage_dead(_2);
+        storage_live(bar_3);
+        storage_live(_4);
+        storage_live(_6);
+        _6 = &raw const BAR;
+        _4 = move _6;
+        bar_3 = copy (*_4);
+        storage_dead(_4);
+        _0 = ();
+        storage_dead(bar_3);
+        storage_dead(foo_1);
+        return;
+    }
+}
+
+
+
