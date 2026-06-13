@@ -1,0 +1,2 @@
+Item test_crate::FOO caused errors; ignoring. Any { .. }
+Item test_crate::BAR caused errors; ignoring. Any { .. }
