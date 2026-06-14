@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel in-progress runs for the same ref when new commits are pushed.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # `rust-toolchain.toml` pins the nightly channel and the components obol
+      # needs (rustc-dev, llvm-tools, rust-src, ...). `rustup show` honours that
+      # file and installs the toolchain together with all required components.
+      - name: Install pinned Rust toolchain
+        run: rustup show
+
+      - name: Cache cargo registry and build artifacts
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --release --locked
+
+      # `IN_CI=1` makes the UI test harness verify the committed snapshots
+      # instead of overwriting them.
+      - name: Run tests
+        env:
+          IN_CI: "1"
+        run: cargo test --release --locked
