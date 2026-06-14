@@ -27,14 +27,33 @@ use std::fmt::Debug;
 use std::hash::Hash;
 use std::path::PathBuf;
 
+/// The type recorded alongside a `Global`'s allocation. It is only used to translate the
+/// allocation's bytes; it is deliberately *not* part of the global's identity. A given allocation
+/// is a single object, so every pointer into it must resolve to the same global no matter which
+/// pointee type a particular pointer views it through (e.g. `&Aligned` vs a `*const u8` into it) —
+/// otherwise pointer identity/sharing across constants is lost. Globals are therefore identified by
+/// their allocation id alone, and the first registration's type wins.
+#[derive(Clone, Debug)]
+pub struct GlobalTy(pub Option<ty::Ty>);
+
+impl PartialEq for GlobalTy {
+    fn eq(&self, _other: &Self) -> bool {
+        true
+    }
+}
+impl Eq for GlobalTy {}
+impl std::hash::Hash for GlobalTy {
+    fn hash<H: std::hash::Hasher>(&self, _state: &mut H) {}
+}
+
 /// The id of an untranslated item. Note that a given `DefId` may show up as multiple different
 /// item sources, e.g. a constant will have both a `Global` version (for the constant itself) and a
 /// `FunDecl` one (for its initializer function).
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum TransItemSource {
-    Global(mir::alloc::AllocId, Option<ty::Ty>), // the static or const itself, with its type
-    Static(mir::mono::StaticDef),                // a synthetic global, created from an static def
-    NamedConst(ty::ConstDef, MyGenericArgs),     // a named (top-level or associated) const item
+    Global(mir::alloc::AllocId, GlobalTy), // the static or const itself, with its type
+    Static(mir::mono::StaticDef),          // a synthetic global, created from an static def
+    NamedConst(ty::ConstDef, MyGenericArgs), // a named (top-level or associated) const item
     Fun(mir::mono::Instance),
     Type(ty::AdtDef, MyGenericArgs),
     Closure(ty::ClosureDef, MyGenericArgs),
@@ -87,9 +106,7 @@ impl TransItemSource {
         }
 
         match self {
-            TransItemSource::Global(id, ty) => {
-                (0, id.to_index(), ty.map(|t| t.to_index()).unwrap_or(0))
-            }
+            TransItemSource::Global(id, _) => (0, id.to_index(), 0),
             TransItemSource::Fun(instance) => {
                 (1, instance.def.to_index(), key_instance(&instance.kind))
             }
@@ -222,7 +239,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         ty: Option<ty::Ty>,
     ) -> GlobalDeclId {
         *self
-            .register_and_enqueue_id(src, TransItemSource::Global(stt, ty))
+            .register_and_enqueue_id(src, TransItemSource::Global(stt, GlobalTy(ty)))
             .as_global()
             .unwrap()
     }

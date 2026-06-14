@@ -10130,7 +10130,7 @@ fn new_uninitialized::<Global>(alloc_1: &'_ Global, table_layout_2: TableLayout,
 }
 
 // Full name: anon_const_9
-const anon_const_9: u8 = 255u8
+const anon_const_9: u64 = 18446744073709551615u64
 
 // Full name: hashbrown::raw::RawTableInner::NEW
 const NEW: RawTableInner = RawTableInner { bucket_mask: 0usize, ctrl: NonNull::<u8> { pointer: &raw const anon_const_9 }, growth_left: 0usize, items: 0usize }

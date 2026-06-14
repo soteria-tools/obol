@@ -130,6 +130,35 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         self.translate_ty(span, maybe_uninit)
     }
 
+    /// Build the rustc type `[uN; size / N]` describing a raw constant
+    /// allocation of `size` bytes with alignment `align`, where the element
+    /// width `N` matches the alignment so the array's layout has both the right
+    /// size *and* the right alignment. Used to faithfully represent anonymous
+    /// constant allocations whose pointee type is smaller than the allocation
+    /// itself (e.g. hashbrown's `Group::static_empty`, a `*const u8` into a
+    /// larger, over-aligned `[u8; N]`).
+    pub fn raw_alloc_ty(&mut self, size: usize, align: usize) -> Result<ty::Ty, Error> {
+        let (elem, elem_size) = match align {
+            16 if size % 16 == 0 => (ty::UintTy::U128, 16),
+            8 if size % 8 == 0 => (ty::UintTy::U64, 8),
+            4 if size % 4 == 0 => (ty::UintTy::U32, 4),
+            2 if size % 2 == 0 => (ty::UintTy::U16, 2),
+            _ => {
+                raise_error!(
+                    self,
+                    Span::dummy(),
+                    "Cannot represent raw allocation of size {size} and alignment {align}"
+                );
+            }
+        };
+        let elem_ty = ty::Ty::from_rigid_kind(ty::RigidTy::Uint(elem));
+        if elem_size == size {
+            return Ok(elem_ty);
+        }
+        let len_cg = ty::TyConst::try_from_target_usize((size / elem_size) as u64)?;
+        Ok(ty::Ty::new_array_with_const_len(elem_ty, len_cg))
+    }
+
     /// Translate a Ty.
     ///
     /// Typically used in this module to translate the fields of a structure/

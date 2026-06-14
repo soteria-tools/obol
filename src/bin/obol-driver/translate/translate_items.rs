@@ -117,7 +117,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let Some(ItemId::Global(id)) = trans_id else {
                     unreachable!()
                 };
-                let global_decl = bt_ctx.translate_global(id, item_meta, &def, *ty)?;
+                let global_decl = bt_ctx.translate_global(id, item_meta, &def, ty.0)?;
                 self.translated.global_decls.set_slot(id, global_decl);
             }
             TransItemSource::Closure(def, generics) => {

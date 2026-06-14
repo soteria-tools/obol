@@ -313,6 +313,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             // for a `&dyn Trait` the pointee type is unsized; use the concrete
                             // type recovered from the vtable so we register a sized global.
                             (_, Some(dyn_self_ty)) => dyn_self_ty,
+                            // if we don't know the exact type, we create a dummy type
+                            // that should match
+                            (GlobalAlloc::Memory(mem), _)
+                                if let Some(inner) =
+                                    rty.kind().builtin_deref(true).map(|d| d.ty)
+                                    && let Ok(layout) = inner.layout()
+                                    && !layout.shape().is_unsized()
+                                    && mem.bytes.len() > layout.shape().size.bytes() as usize =>
+                            {
+                                self.raw_alloc_ty(mem.bytes.len(), mem.align as usize)?
+                            }
                             _ => rty.kind().builtin_deref(true).unwrap().ty,
                         };
 
