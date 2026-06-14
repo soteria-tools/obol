@@ -93,7 +93,7 @@ pub fn in_toolchain(program: impl AsRef<OsStr>) -> Result<Command> {
         Command::new(program)
     } else {
         if !toolchain.is_installed()? {
-            println!("The required toolchain is not installed. Installing...");
+            eprintln!("The required toolchain is not installed. Installing...");
             toolchain.install()?;
         }
         toolchain.run(program)
