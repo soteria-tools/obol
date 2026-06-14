@@ -1,3 +1,7 @@
 [toolchain]
 channel = "nightly-2026-06-01"
 components = ["llvm-tools", "rustc-dev", "rust-src", "rustfmt", "miri"]
+# Targets the cross-compilation UI tests compile against (e.g.
+# `tests/ui/cross_compile_32_bit.rs`, `cross_compile_big_endian.rs`). `rustup
+# show` installs these alongside the toolchain so CI can build for them.
+targets = ["i686-unknown-linux-gnu", "powerpc64-unknown-linux-gnu"]
