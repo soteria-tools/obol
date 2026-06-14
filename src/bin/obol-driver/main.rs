@@ -90,6 +90,8 @@ fn run_passes(ctx: &mut TransformCtx) {
         // Replace TypeId construction constants with ConstantExprKind::TypeId(T) before
         // simplify_constants desugars them into statement sequences.
         transform::uneval_typeid::Transform::new(ctx),
+        // Reconstruct pointer null-checks to avoid reasoning about pointer-to-integer transmutations.
+        CowBox::Borrowed(&transform::reconstruct_ptr_null_checks::Transform),
         // Desugar the constants to other values/operands as much as possible.
         CowBox::Borrowed(&simplify_output::simplify_constants::Transform),
         // Remove locals of type `()` which show up a lot.

@@ -967,6 +967,7 @@ dependencies = [
  "assert_cmd",
  "charon",
  "clap",
+ "derive_generic_visitor",
  "dot-writer",
  "home",
  "indoc",
