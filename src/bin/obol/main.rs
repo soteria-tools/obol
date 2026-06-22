@@ -15,6 +15,10 @@ fn main() -> Result<()> {
     let res = match opts {
         ObolCli::Rustc(opts) => translate_without_cargo(opts)?,
         ObolCli::Cargo(opts) => translate_with_cargo(opts)?,
+        ObolCli::ListTargets => {
+            list_targets()?;
+            ExitStatus::default()
+        }
         ObolCli::ToolchainPath => {
             let path = toolchain_path()?;
             println!("{}", path.display());
@@ -114,6 +118,47 @@ fn translate_without_cargo(mut options: CliOpts) -> Result<ExitStatus> {
         .expect("could not run obol-driver")
         .wait()
         .expect("failed to wait for obol-driver?"))
+}
+
+/// List the targets of the cargo project in the current directory, printing
+/// them as a JSON array of `{ "name": ..., "kind": ... }` objects. This wraps
+/// `cargo metadata`, keeping only the workspace's own targets.
+fn list_targets() -> Result<()> {
+    ensure_rustup();
+
+    let mut cmd = toolchain::in_toolchain("cargo")?;
+    cmd.args(["metadata", "--no-deps", "--format-version", "1"]);
+    let output = cmd.output().expect("could not run cargo metadata");
+    if !output.status.success() {
+        anyhow::bail!(
+            "`cargo metadata` failed:\n{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+
+    let meta: serde_json::Value = serde_json::from_slice(&output.stdout)?;
+    let mut targets: Vec<serde_json::Value> = Vec::new();
+    if let Some(packages) = meta["packages"].as_array() {
+        for package in packages {
+            let Some(pkg_targets) = package["targets"].as_array() else {
+                continue;
+            };
+            for target in pkg_targets {
+                let name = target["name"].as_str().unwrap_or_default();
+                // `kind` is an array (e.g. `["lib"]`, `["bin"]`); we only care
+                // about the primary kind.
+                let kind = target["kind"]
+                    .as_array()
+                    .and_then(|kinds| kinds.first())
+                    .and_then(|kind| kind.as_str())
+                    .unwrap_or_default();
+                targets.push(serde_json::json!({ "name": name, "kind": kind }));
+            }
+        }
+    }
+
+    println!("{}", serde_json::Value::Array(targets));
+    Ok(())
 }
 
 fn get_rustc_version() -> Result<rustc_version::VersionMeta> {

@@ -19,6 +19,10 @@ pub enum ObolCli {
     Rustc(CliOpts),
     /// Runs obol on a cargo project.
     Cargo(CliOpts),
+    /// List the targets (lib, bins, examples, tests) of a cargo project, as a
+    /// JSON array of `{ "name": ..., "kind": ... }` objects. Run from within the
+    /// crate directory.
+    ListTargets,
     /// Print the path to the rustc toolchain used by obol.
     ToolchainPath,
     /// Print the version of the rustc toolchain used by obol.
