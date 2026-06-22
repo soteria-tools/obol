@@ -42,6 +42,9 @@ struct MagicComments {
     rustc_opts: Vec<String>,
     /// Whether we should store the test output in a file and check it.
     check_output: bool,
+    /// Whether to skip this test when running in CI (`IN_CI=1`). Used for tests whose output
+    /// depends on the host architecture (and so differs between local dev machines and CI).
+    skip_in_ci: bool,
     /// A list of paths to files that must be compiled as dependencies for this test.
     auxiliary_crates: Vec<PathBuf>,
 }
@@ -53,6 +56,8 @@ static HELP_STRING: &str = unindent!(
     - `//@ known-panic`: a test that is expected to panic.
     - `//@ ignore-warnings`: a test for which warnings should be ignored (instead of erroring).
     - `//@ skip`: skip the test.
+    - `//@ skip-in-ci`: skip the test when running in CI (`IN_CI=1`); useful for output that
+         depends on the host architecture.
 
     Other comments can be used to control the behavior of charon:
     - `//@ obol-args=<obol cli options>`
@@ -72,6 +77,7 @@ fn parse_magic_comments(input_path: &std::path::Path) -> anyhow::Result<MagicCom
         obol_opts: Vec::new(),
         rustc_opts: Vec::new(),
         check_output: true,
+        skip_in_ci: false,
         auxiliary_crates: Vec::new(),
     };
     for line in read_to_string(input_path)?.lines() {
@@ -91,6 +97,8 @@ fn parse_magic_comments(input_path: &std::path::Path) -> anyhow::Result<MagicCom
             comments.test_kind = TestKind::Skip;
         } else if line == "no-check-output" {
             comments.check_output = false;
+        } else if line == "skip-in-ci" {
+            comments.skip_in_ci = true;
         } else if let Some(charon_opts) = line.strip_prefix("obol-args=") {
             comments
                 .obol_opts
@@ -134,7 +142,9 @@ fn setup_test(input_path: PathBuf) -> anyhow::Result<Trial> {
         .to_owned();
     let expected = input_path.with_extension("out");
     let magic_comments = parse_magic_comments(&input_path)?;
-    let ignore = matches!(magic_comments.test_kind, TestKind::Skip);
+    let in_ci = std::env::var("IN_CI").as_deref() == Ok("1");
+    let ignore = matches!(magic_comments.test_kind, TestKind::Skip)
+        || (magic_comments.skip_in_ci && in_ci);
     let case = Case {
         input_path,
         expected,
