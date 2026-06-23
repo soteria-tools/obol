@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::ptr::drop_glue::<i32>
+// Full name: core::ptr::drop_glue::<i32>
 #[lang_item("drop_glue")]
 fn drop_glue::<i32>(_1: &'_ mut i32)
 {
@@ -20,7 +20,9 @@ trait FakeTrait
 // Full name: anon_const_0
 const anon_const_0: i32 = 42i32
 
-// Full name: <i32 as test_crate::Trait>::another
+trait test_crate::Trait
+
+// Full name: test_crate::{impl test_crate::Trait for i32}::another
 fn another(self_1: &'_ i32)
 {
     let _0: (); // return
@@ -33,7 +35,8 @@ fn another(self_1: &'_ i32)
     }
 }
 
-fn <i32 as test_crate::Trait>::consume(self_1: &'_ i32)
+// Full name: test_crate::{impl test_crate::Trait for i32}::consume
+fn impl_Trait_for_i32::consume(self_1: &'_ i32)
 {
     let _0: (); // return
     let self_1: &'_ i32; // arg #1
@@ -45,8 +48,7 @@ fn <i32 as test_crate::Trait>::consume(self_1: &'_ i32)
     }
 }
 
-// Full name: {vtable}::test_crate::Trait::<i32>
-fn Trait::<i32>() -> *const ()
+fn {vtable}::test_crate::Trait::<i32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -68,7 +70,7 @@ fn Trait::<i32>() -> *const ()
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as test_crate::Trait>::consume_4 = cast<<i32 as test_crate::Trait>::consume, *const ()>(const <i32 as test_crate::Trait>::consume);
+        <i32 as test_crate::Trait>::consume_4 = cast<impl_Trait_for_i32::consume, *const ()>(const impl_Trait_for_i32::consume);
         <i32 as test_crate::Trait>::another_5 = cast<another, *const ()>(const another);
         entry_array_6 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Trait>::consume_4, move <i32 as test_crate::Trait>::another_5];
         entry_array_ref_7 = &raw const entry_array_6;
@@ -77,11 +79,15 @@ fn Trait::<i32>() -> *const ()
     }
 }
 
-// Full name: {vtable}::test_crate::Trait::<i32>
-static Trait::<i32>: *const () = Trait::<i32>()
+static {vtable}::test_crate::Trait::<i32>: *const () = {vtable}::test_crate::Trait::<i32>()
 
 fn test_crate::Trait::consume::<(dyn FakeTrait)>(_1: &'_ (dyn FakeTrait))
 = <opaque>
+
+// Full name: test_crate::{impl test_crate::Trait for i32}
+impl "impl_Trait_for_i32" test_crate::Trait for i32 {
+    non-dyn-compatible
+}
 
 // Full name: test_crate::main
 fn main()
@@ -108,7 +114,7 @@ fn main()
         _6 = move _8;
         _3 = &(*_6);
         _2 = &(*_3);
-        b_1 = unsize_cast<&'_ i32, &'_ (dyn FakeTrait), Trait::<i32>>(move _2);
+        b_1 = unsize_cast<&'_ i32, &'_ (dyn FakeTrait), {vtable}::test_crate::Trait::<i32>>(move _2);
         storage_dead(_2);
         storage_dead(_3);
         storage_live(_4);

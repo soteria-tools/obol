@@ -1,10 +1,10 @@
 
 // Final ULLBC:
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -14,30 +14,30 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
@@ -53,24 +53,31 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::fmt::{Arguments::<'_>}::from_str::<'_>
 pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -114,7 +121,9 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
     }
 }
 
-// Full name: std::ptr::drop_glue::<&'_ isize>
+trait core::fmt::Debug
+
+// Full name: core::ptr::drop_glue::<&'_ isize>
 #[lang_item("drop_glue")]
 fn drop_glue::<&'_ isize>(_1: &'_ mut &'_ isize)
 {
@@ -127,16 +136,20 @@ fn drop_glue::<&'_ isize>(_1: &'_ mut &'_ isize)
     }
 }
 
-pub fn core::fmt::num::imp::<impl std::fmt::Display for isize>::fmt(_1: &'_ isize, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::imp::{impl Display for isize}::fmt
+pub fn impl_Display_for_isize::fmt(_1: &'_ isize, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::UpperHex for isize>::fmt(_1: &'_ isize, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl UpperHex for isize}::fmt
+pub fn impl_UpperHex_for_isize::fmt(_1: &'_ isize, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::LowerHex for isize>::fmt(_1: &'_ isize, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl LowerHex for isize}::fmt
+pub fn impl_LowerHex_for_isize::fmt(_1: &'_ isize, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::Debug for isize>::fmt(self_1: &'_ isize, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl core::fmt::Debug for isize}::fmt
+pub fn impl_Debug_for_isize::fmt(self_1: &'_ isize, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ isize; // arg #1
@@ -167,17 +180,17 @@ pub fn core::fmt::num::<impl std::fmt::Debug for isize>::fmt(self_1: &'_ isize, 
 
     bb2: {
         storage_dead(_3);
-        _0 = core::fmt::num::<impl std::fmt::LowerHex for isize>::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
+        _0 = impl_LowerHex_for_isize::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
     }
 
     bb3: {
         storage_dead(_5);
-        _0 = core::fmt::num::imp::<impl std::fmt::Display for isize>::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
+        _0 = impl_Display_for_isize::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
     }
 
     bb4: {
         storage_dead(_5);
-        _0 = core::fmt::num::<impl std::fmt::UpperHex for isize>::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
+        _0 = impl_UpperHex_for_isize::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
     }
 
     bb5: {
@@ -197,7 +210,8 @@ pub fn core::fmt::num::<impl std::fmt::Debug for isize>::fmt(self_1: &'_ isize, 
     }
 }
 
-pub fn <&T as std::fmt::Debug>::fmt::<'_, isize>(self_1: &'_ &'_ isize, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}::fmt::<'_, isize>
+pub fn {impl core::fmt::Debug for &'_ T}::fmt::<'_, isize>(self_1: &'_ &'_ isize, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ &'_ isize; // arg #1
@@ -207,7 +221,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, isize>(self_1: &'_ &'_ isize, f_2: &'_
     bb0: {
         storage_live(_3);
         _3 = copy (*self_1);
-        _0 = core::fmt::num::<impl std::fmt::Debug for isize>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+        _0 = impl_Debug_for_isize::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -219,8 +233,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, isize>(self_1: &'_ &'_ isize, f_2: &'_
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<&'_ isize>
-fn Debug::<&'_ isize>() -> *const ()
+fn {vtable}::core::fmt::Debug::<&'_ isize>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -240,7 +253,7 @@ fn Debug::<&'_ isize>() -> *const ()
         drop_1 = cast<drop_glue::<&'_ isize>, *const ()>(const drop_glue::<&'_ isize>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&isize as std::fmt::Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, isize>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, isize>);
+        <&isize as std::fmt::Debug>::fmt_4 = cast<{impl core::fmt::Debug for &'_ T}::fmt::<'_, isize>, *const ()>(const {impl core::fmt::Debug for &'_ T}::fmt::<'_, isize>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&isize as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -248,23 +261,56 @@ fn Debug::<&'_ isize>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<&'_ isize>
-static Debug::<&'_ isize>: *const () = Debug::<&'_ isize>()
+static {vtable}::core::fmt::Debug::<&'_ isize>: *const () = {vtable}::core::fmt::Debug::<&'_ isize>()
 
-// Full name: std::intrinsics::abort
+// Full name: core::fmt::Display
+trait Display
+
+// Full name: core::fmt::LowerHex
+trait LowerHex
+
+// Full name: core::fmt::UpperHex
+trait UpperHex
+
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}
+impl<'_, _, T> core::fmt::Debug for &'_ T {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl LowerHex for isize}
+impl "impl_LowerHex_for_isize" LowerHex for isize {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl UpperHex for isize}
+impl "impl_UpperHex_for_isize" UpperHex for isize {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl core::fmt::Debug for isize}
+impl "impl_Debug_for_isize" core::fmt::Debug for isize {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::imp::{impl Display for isize}
+impl "impl_Display_for_isize" Display for isize {
+    non-dyn-compatible
+}
+
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -273,25 +319,34 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::option::Option::<u32>
+// Full name: core::option::Option::<u32>
 #[lang_item("Option")]
 pub enum Option::<u32> {
   None,
   Some(0: u32),
 }
 
-// Full name: std::option::Option::<Arguments::<'_>>
+// Full name: core::option::Option::<Arguments::<'_>>
 #[lang_item("Option")]
 pub enum Option::<Arguments::<'_>> {
   None,
   Some(0: Arguments::<'_>),
 }
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -309,7 +364,7 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: core::panic::PanicInfo::<'_>
+// Full name: core::panic::panic_info::PanicInfo::<'_>
 #[lang_item("panic_info")]
 pub struct PanicInfo::<'_> {
   message: &'_ Arguments::<'_>,
@@ -318,7 +373,16 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: core::panic::PanicInfo::<'a>::new::<'_>
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>
 fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
@@ -482,11 +546,11 @@ pub fn assert_failed::<isize, isize>(kind_1: AssertKind, left_2: &'_ isize, righ
         storage_live(_5);
         storage_live(_6);
         _6 = &left_2;
-        _5 = unsize_cast<&'_ &'_ isize, &'_ (dyn FakeTrait), Debug::<&'_ isize>>(copy _6);
+        _5 = unsize_cast<&'_ &'_ isize, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<&'_ isize>>(copy _6);
         storage_live(_7);
         storage_live(_8);
         _8 = &right_3;
-        _7 = unsize_cast<&'_ &'_ isize, &'_ (dyn FakeTrait), Debug::<&'_ isize>>(copy _8);
+        _7 = unsize_cast<&'_ &'_ isize, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<&'_ isize>>(copy _8);
         _0 = assert_failed_inner(move kind_1, move _5, move _7, move args_4) -> bb1 (unwind: bb2);
     }
 

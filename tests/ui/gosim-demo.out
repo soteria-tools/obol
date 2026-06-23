@@ -1,10 +1,10 @@
 
 // Final ULLBC:
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -14,36 +14,36 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
@@ -59,24 +59,31 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
   args: NonNull::<Argument::<'_>>,
 }
 
-pub fn std::fmt::Arguments::<'a>::new::<'_, 7usize, 1usize>(template_1: &'_ [u8; 7usize], args_2: &'_ [Argument::<'_>; 1usize]) -> Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+pub fn core::fmt::{Arguments::<'_>}::new::<'_, 7usize, 1usize>(template_1: &'_ [u8; 7usize], args_2: &'_ [Argument::<'_>; 1usize]) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
     let template_1: &'_ [u8; 7usize]; // arg #1
@@ -96,16 +103,37 @@ pub fn std::fmt::Arguments::<'a>::new::<'_, 7usize, 1usize>(template_1: &'_ [u8;
     }
 }
 
-pub fn core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::Debug
+trait Debug
+
+// Full name: core::fmt::Display
+trait Display
+
+// Full name: core::fmt::LowerHex
+trait LowerHex
+
+// Full name: core::fmt::UpperHex
+trait UpperHex
+
+// Full name: core::fmt::{impl Debug for &'_ T}
+impl<'_, _, T> Debug for &'_ T {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::imp::{impl Display for i32}::fmt
+pub fn impl_Display_for_i32::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl UpperHex for i32}::fmt
+pub fn impl_UpperHex_for_i32::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl LowerHex for i32}::fmt
+pub fn impl_LowerHex_for_i32::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl Debug for i32}::fmt
+pub fn impl_Debug_for_i32::fmt(self_1: &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ i32; // arg #1
@@ -136,17 +164,17 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
 
     bb2: {
         storage_dead(_3);
-        _0 = core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
+        _0 = impl_LowerHex_for_i32::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
     }
 
     bb3: {
         storage_dead(_5);
-        _0 = core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
+        _0 = impl_Display_for_i32::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
     }
 
     bb4: {
         storage_dead(_5);
-        _0 = core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
+        _0 = impl_UpperHex_for_i32::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
     }
 
     bb5: {
@@ -166,7 +194,8 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
     }
 }
 
-pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl Debug for &'_ T}::fmt::<'_, i32>
+pub fn {impl Debug for &'_ T}::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ &'_ i32; // arg #1
@@ -176,7 +205,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut
     bb0: {
         storage_live(_3);
         _3 = copy (*self_1);
-        _0 = core::fmt::num::<impl std::fmt::Debug for i32>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+        _0 = impl_Debug_for_i32::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -188,7 +217,33 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut
     }
 }
 
-// Full name: core::fmt::rt::Argument::<'_>::new_debug::<'_, &'_ i32>
+// Full name: core::fmt::num::{impl LowerHex for i32}
+impl "impl_LowerHex_for_i32" LowerHex for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl UpperHex for i32}
+impl "impl_UpperHex_for_i32" UpperHex for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl Debug for i32}
+impl "impl_Debug_for_i32" Debug for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::imp::{impl Display for i32}
+impl "impl_Display_for_i32" Display for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::rt::Argument::<'_>
+#[lang_item("format_argument")]
+pub struct Argument::<'_> {
+  ty: ArgumentType::<'_>,
+}
+
+// Full name: core::fmt::rt::{Argument::<'_>}::new_debug::<'_, &'_ i32>
 pub fn new_debug::<'_, &'_ i32>(x_1: &'_ &'_ i32) -> Argument::<'_>
 {
     let _0: Argument::<'_>; // return
@@ -208,7 +263,7 @@ pub fn new_debug::<'_, &'_ i32>(x_1: &'_ &'_ i32) -> Argument::<'_>
         _3 = transmute<*const &'_ i32, NonNull::<()>>(copy _6);
         storage_live(_4);
         storage_live(_5);
-        _5 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, fn(&'_ &'_ i32, &'_ mut Formatter::<'_>) -> Result::<(), Error>>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
+        _5 = cast<{impl Debug for &'_ T}::fmt::<'_, i32>, fn(&'_ &'_ i32, &'_ mut Formatter::<'_>) -> Result::<(), Error>>(const {impl Debug for &'_ T}::fmt::<'_, i32>);
         _4 = transmute<fn(&'_ &'_ i32, &'_ mut Formatter::<'_>) -> Result::<(), Error>, unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>>(copy _5);
         storage_dead(_5);
         storage_live(_7);
@@ -222,20 +277,20 @@ pub fn new_debug::<'_, &'_ i32>(x_1: &'_ &'_ i32) -> Argument::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -244,15 +299,22 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::marker::PhantomData::<&'_ i32>
+// Full name: core::iter::traits::collect::IntoIterator
+trait IntoIterator
+
+// Full name: core::iter::traits::iterator::Iterator
+#[lang_item("iterator")]
+trait Iterator
+
+// Full name: core::marker::PhantomData::<&'_ i32>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ i32> {}
 
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<i32>
+// Full name: core::mem::SizedTypeProperties::IS_ZST::<i32>
 pub const IS_ZST::<i32>: bool = false
 
 // Full name: core::panic::panic_info::PanicInfo::<'_>
@@ -264,11 +326,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+fn core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
     let message_1: &'_ Arguments::<'_>; // arg #1
@@ -282,7 +344,7 @@ fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments:
     }
 }
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -300,7 +362,7 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -349,7 +411,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 
     bb5: {
         _7 = &(*_8);
-        pi_4 = core::panic::panic_info::PanicInfo::<'a>::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+        pi_4 = core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -432,7 +494,7 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-// Full name: core::num::<impl usize>::unchecked_sub::precondition_check
+// Full name: core::num::{usize}::unchecked_sub::precondition_check
 fn precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
@@ -516,31 +578,54 @@ fn precondition_check(lhs_1: usize, rhs_2: usize)
     }
 }
 
-// Full name: std::option::Option::<&'_ i32>
+// Full name: core::option::Option::<&'_ i32>
 #[lang_item("Option")]
 pub enum Option::<&'_ i32> {
   None,
   Some(0: &'_ i32),
 }
 
-// Full name: std::ptr::NonNull::<i32>
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::ptr::non_null::NonNull::<i32>
 pub struct NonNull::<i32> {
   pointer: *const i32 is !null,
 }
 
-// Full name: std::ptr::NonNull::<[i32]>
+// Full name: core::ptr::non_null::NonNull::<[i32]>
 pub struct NonNull::<[i32]> {
   pointer: *const [i32] is !null,
 }
 
-// Full name: std::slice::Iter::<'_, i32>
+// Full name: core::slice::iter::{impl IntoIterator for &'_ [T]}
+impl<'a, _, T> IntoIterator for &'_ [T] {
+    non-dyn-compatible
+}
+
+// Full name: core::slice::iter::Iter::<'_, i32>
 pub struct Iter::<'_, i32> {
   ptr: NonNull::<i32>,
   end_or_len: *const i32,
   _marker: PhantomData::<&'_ i32>,
 }
 
-// Full name: core::slice::iter::<impl std::iter::IntoIterator for &'a [T]>::into_iter::<'_, i32>
+// Full name: core::slice::iter::{impl IntoIterator for &'_ [T]}::into_iter::<'_, i32>
 pub fn into_iter::<'_, i32>(self_1: &'_ [i32]) -> Iter::<'_, i32>
 {
     let _0: Iter::<'_, i32>; // return
@@ -604,7 +689,12 @@ pub fn into_iter::<'_, i32>(self_1: &'_ [i32]) -> Iter::<'_, i32>
     }
 }
 
-// Full name: <std::slice::Iter<'a, T> as std::iter::Iterator>::next::<'_, i32>
+// Full name: core::slice::iter::{impl Iterator for Iter::<'_, _>}
+impl<'a, _, T> Iterator for Iter::<'_, _> {
+    non-dyn-compatible
+}
+
+// Full name: core::slice::iter::{impl Iterator for Iter::<'_, _>}::next::<'_, i32>
 pub fn next::<'_, i32>(self_1: &'_ mut Iter::<'_, i32>) -> Option::<&'_ i32>
 {
     let _0: Option::<&'_ i32>; // return
@@ -730,7 +820,7 @@ pub fn next::<'_, i32>(self_1: &'_ mut Iter::<'_, i32>) -> Option::<&'_ i32>
     }
 }
 
-// Full name: std::io::_eprint
+// Full name: std::io::stdio::_eprint
 pub fn _eprint(_1: Arguments::<'_>)
 = <missing>
 
@@ -852,7 +942,7 @@ fn debug_slice::<i32>(slice_1: &'_ [i32])
         storage_live(_20);
         _20 = &args_14;
         _19 = &(*_20);
-        _11 = std::fmt::Arguments::<'a>::new::<'_, 7usize, 1usize>(move _17, move _19) -> bb11 (unwind: bb12);
+        _11 = core::fmt::{Arguments::<'_>}::new::<'_, 7usize, 1usize>(move _17, move _19) -> bb11 (unwind: bb12);
     }
 
     bb10: {

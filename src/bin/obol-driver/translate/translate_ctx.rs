@@ -50,9 +50,10 @@ pub struct TranslateCtx<'tcx> {
 
     /// Context for tracking and reporting errors.
     pub errors: RefCell<ErrorCtx>,
-    /// The declarations we came accross and which we haven't translated yet. We keep them sorted
-    /// to make the output order a bit more stable.
-    pub items_to_translate: BTreeSet<TransItemSource>,
+    /// The declarations we came accross and which we haven't translated yet, sorted (by
+    /// `TransItemSource::sort_key`) for stable output. The `ItemId` is part of the key so that
+    /// sources whose `sort_key` collides aren't dropped from the queue.
+    pub items_to_translate: BTreeSet<((usize, usize, usize), ItemId)>,
     /// The declaration we've already processed (successfully or not).
     pub processed: HashSet<TransItemSource>,
     /// Cache the names to compute them only once each.

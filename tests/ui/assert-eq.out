@@ -1,47 +1,19 @@
 
 // Final ULLBC:
 
-// Full name: std::fmt::Error
-pub struct Error {}
+// Full name: core::fmt::Error
+pub opaque type Error
 
-// Full name: std::fmt::FormattingOptions
-pub struct FormattingOptions {
-  flags: u32,
-  width: u16,
-  precision: u16,
-}
+// Full name: core::fmt::Formatter::<'_>
+pub opaque type Formatter::<'_>
 
-// Full name: FakeTrait
-trait FakeTrait
-
-// Full name: std::fmt::Formatter::<'_>
-pub struct Formatter::<'_> {
-  options: FormattingOptions,
-  buf: &'_ mut (dyn FakeTrait),
-}
-
-// Full name: core::fmt::rt::Argument::<'_>
-#[lang_item("format_argument")]
-pub opaque type Argument::<'_>
-
-// Full name: std::ptr::NonNull::<Argument::<'_>>
-pub struct NonNull::<Argument::<'_>> {
-  pointer: *const Argument::<'_> is !null,
-}
-
-// Full name: std::ptr::NonNull::<u8>
-pub struct NonNull::<u8> {
-  pointer: *const u8 is !null,
-}
-
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
-pub struct Arguments::<'_> {
-  template: NonNull::<u8>,
-  args: NonNull::<Argument::<'_>>,
-}
+pub opaque type Arguments::<'_>
 
-// Full name: std::ptr::drop_glue::<&'_ i32>
+trait core::fmt::Debug
+
+// Full name: core::ptr::drop_glue::<&'_ i32>
 #[lang_item("drop_glue")]
 fn drop_glue::<&'_ i32>(_1: &'_ mut &'_ i32)
 {
@@ -54,39 +26,17 @@ fn drop_glue::<&'_ i32>(_1: &'_ mut &'_ i32)
     }
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}::fmt::<'_, i32>
+pub fn fmt::<'_, i32>(_1: &'_ &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <opaque>
 
-pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
-{
-    let _0: Result::<(), Error>; // return
-    let self_1: &'_ &'_ i32; // arg #1
-    let f_2: &'_ mut Formatter::<'_>; // arg #2
-    let _3: &'_ i32; // anonymous local
-
-    bb0: {
-        storage_live(_3);
-        _3 = copy (*self_1);
-        _0 = core::fmt::num::<impl std::fmt::Debug for i32>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
-    }
-
-    bb1: {
-        return;
-    }
-
-    bb2: {
-        unwind_continue;
-    }
-}
-
-// Full name: {vtable}::std::fmt::Debug::<&'_ i32>
-fn Debug::<&'_ i32>() -> *const ()
+fn {vtable}::core::fmt::Debug::<&'_ i32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -106,7 +56,7 @@ fn Debug::<&'_ i32>() -> *const ()
         drop_1 = cast<drop_glue::<&'_ i32>, *const ()>(const drop_glue::<&'_ i32>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&i32 as std::fmt::Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, i32>);
+        <&i32 as std::fmt::Debug>::fmt_4 = cast<fmt::<'_, i32>, *const ()>(const fmt::<'_, i32>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&i32 as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -114,10 +64,14 @@ fn Debug::<&'_ i32>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<&'_ i32>
-static Debug::<&'_ i32>: *const () = Debug::<&'_ i32>()
+static {vtable}::core::fmt::Debug::<&'_ i32>: *const () = {vtable}::core::fmt::Debug::<&'_ i32>()
 
-// Full name: std::option::Option::<Arguments::<'_>>
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}
+impl<'_, _, T> core::fmt::Debug for &'_ T {
+    non-dyn-compatible
+}
+
+// Full name: core::option::Option::<Arguments::<'_>>
 #[lang_item("Option")]
 pub enum Option::<Arguments::<'_>> {
   None,
@@ -130,6 +84,9 @@ pub enum AssertKind {
   Ne,
   Match,
 }
+
+// Full name: FakeTrait
+trait FakeTrait
 
 // Full name: core::panicking::assert_failed_inner
 fn assert_failed_inner(_1: AssertKind, _2: &'_ (dyn FakeTrait), _3: &'_ (dyn FakeTrait), _4: Option::<Arguments::<'_>>) -> !
@@ -152,11 +109,11 @@ pub fn assert_failed::<i32, i32>(kind_1: AssertKind, left_2: &'_ i32, right_3: &
         storage_live(_5);
         storage_live(_6);
         _6 = &left_2;
-        _5 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ i32>>(copy _6);
+        _5 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<&'_ i32>>(copy _6);
         storage_live(_7);
         storage_live(_8);
         _8 = &right_3;
-        _7 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ i32>>(copy _8);
+        _7 = unsize_cast<&'_ &'_ i32, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<&'_ i32>>(copy _8);
         _0 = assert_failed_inner(move kind_1, move _5, move _7, move args_4) -> bb1 (unwind: bb2);
     }
 

@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::ptr::null::<()>
+// Full name: core::ptr::null::<()>
 pub fn null::<()>() -> *const ()
 {
     let _0: *const (); // return

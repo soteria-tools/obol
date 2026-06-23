@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: core::num::<impl u8>::wrapping_add
+// Full name: core::num::{u8}::wrapping_add
 pub fn wrapping_add(self_1: u8, rhs_2: u8) -> u8
 {
     let _0: u8; // return
@@ -14,7 +14,7 @@ pub fn wrapping_add(self_1: u8, rhs_2: u8) -> u8
     }
 }
 
-// Full name: core::num::<impl u8>::wrapping_sub
+// Full name: core::num::{u8}::wrapping_sub
 pub fn wrapping_sub(self_1: u8, rhs_2: u8) -> u8
 {
     let _0: u8; // return
@@ -27,7 +27,7 @@ pub fn wrapping_sub(self_1: u8, rhs_2: u8) -> u8
     }
 }
 
-// Full name: core::num::<impl u8>::wrapping_mul
+// Full name: core::num::{u8}::wrapping_mul
 pub fn wrapping_mul(self_1: u8, rhs_2: u8) -> u8
 {
     let _0: u8; // return

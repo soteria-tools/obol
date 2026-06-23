@@ -1,14 +1,12 @@
 
 // Final ULLBC:
 
-// Full name: test_crate::foo::{constant#0}::{closure#0}::closure
-struct closure {}
+struct test_crate::foo::{const}::closure::closure {}
 
-// Full name: test_crate::foo::{constant#0}::{closure#0}::<(), i8, extern "rust-call" fn(((),)), ()>
-fn {closure#0}::<(), i8, extern "rust-call" fn(((),)), ()>(_1: &'_ closure, spread_args_2: ((),))
+fn test_crate::foo::{const}::closure::<(), i8, extern "rust-call" fn(((),)), ()>(_1: &'_ test_crate::foo::{const}::closure::closure, spread_args_2: ((),))
 {
     let _0: (); // return
-    let _1: &'_ closure; // arg #1
+    let _1: &'_ test_crate::foo::{const}::closure::closure; // arg #1
     let spread_args_2: ((),); // arg #2
     let x_3: (); // local
 
@@ -21,19 +19,19 @@ fn {closure#0}::<(), i8, extern "rust-call" fn(((),)), ()>(_1: &'_ closure, spre
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<closure, ((),)>
-pub fn call_once::<closure, ((),)>(_1: closure, _2: ((),))
+// Full name: core::ops::function::FnOnce::call_once::<test_crate::foo::{const}::closure::closure, ((),)>
+pub fn call_once::<test_crate::foo::{const}::closure::closure, ((),)>(_1: test_crate::foo::{const}::closure::closure, _2: ((),))
 {
     let _0: (); // return
-    let _1: closure; // arg #1
+    let _1: test_crate::foo::{const}::closure::closure; // arg #1
     let _2: ((),); // arg #2
-    let _3: &'_ mut closure; // anonymous local
+    let _3: &'_ mut test_crate::foo::{const}::closure::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _0 = ();
         _3 = &mut _1;
-        _0 = {closure#0}::<(), i8, extern "rust-call" fn(((),)), ()>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = test_crate::foo::{const}::closure::<(), i8, extern "rust-call" fn(((),)), ()>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -48,21 +46,21 @@ pub fn call_once::<closure, ((),)>(_1: closure, _2: ((),))
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::foo::{constant#0}::{closure#0}::closure_as_fn
+// Full name: test_crate::foo::{const}::closure::closure_as_fn
 fn closure_as_fn(arg1_1: ())
 {
     let _0: (); // return
     let arg1_1: (); // arg #1
     let args_2: ((),); // local
-    let state_3: closure; // local
+    let state_3: test_crate::foo::{const}::closure::closure; // local
 
     bb0: {
         storage_live(args_2);
         storage_live(state_3);
         _0 = ();
         args_2 = (move arg1_1,);
-        state_3 = closure {  };
-        _0 = call_once::<closure, ((),)>(move state_3, move args_2) -> bb1 (unwind: bb2);
+        state_3 = test_crate::foo::{const}::closure::closure {  };
+        _0 = call_once::<test_crate::foo::{const}::closure::closure, ((),)>(move state_3, move args_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -88,7 +86,7 @@ fn foo::<()>(x_1: ())
         _0 = ();
         storage_live(f_2);
         storage_live(_5);
-        _5 = cast<closure_as_fn<closure, ((),)>, fn(())>(const closure_as_fn<closure, ((),)>);
+        _5 = cast<closure_as_fn<test_crate::foo::{const}::closure::closure, ((),)>, fn(())>(const closure_as_fn<test_crate::foo::{const}::closure::closure, ((),)>);
         f_2 = move _5;
         storage_live(_3);
         _3 = copy f_2;

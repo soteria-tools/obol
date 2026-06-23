@@ -1,17 +1,17 @@
 
 // Final ULLBC:
 
-// Full name: std::arch::aarch64::int8x8_t
+// Full name: core::core_arch::arm_shared::neon::int8x8_t
 pub struct int8x8_t {
   0: [i8; 8usize],
 }
 
-// Full name: std::arch::aarch64::uint8x8_t
+// Full name: core::core_arch::arm_shared::neon::uint8x8_t
 pub struct uint8x8_t {
   0: [u8; 8usize],
 }
 
-// Full name: std::intrinsics::simd::simd_ge::<int8x8_t, uint8x8_t>
+// Full name: core::intrinsics::simd::simd_ge::<int8x8_t, uint8x8_t>
 pub fn simd_ge::<int8x8_t, uint8x8_t>(x_1: int8x8_t, y_2: int8x8_t) -> uint8x8_t
 = <intrinsic:simd_ge>
 
@@ -20,7 +20,7 @@ struct Simd::<i8, 8usize> {
   0: [i8; 8usize],
 }
 
-fn core::core_arch::simd::Simd::<T, 8>::new::<i8>(x0_1: i8, x1_2: i8, x2_3: i8, x3_4: i8, x4_5: i8, x5_6: i8, x6_7: i8, x7_8: i8) -> Simd::<i8, 8usize>
+fn core::core_arch::simd::{Simd::<_, 8usize>}::new::<i8>(x0_1: i8, x1_2: i8, x2_3: i8, x3_4: i8, x4_5: i8, x5_6: i8, x6_7: i8, x7_8: i8) -> Simd::<i8, 8usize>
 {
     let _0: Simd::<i8, 8usize>; // return
     let x0_1: i8; // arg #1
@@ -42,7 +42,7 @@ fn core::core_arch::simd::Simd::<T, 8>::new::<i8>(x0_1: i8, x1_2: i8, x2_3: i8, 
     }
 }
 
-// Full name: std::arch::aarch64::vcgez_s8
+// Full name: core::core_arch::aarch64::neon::generated::vcgez_s8
 pub fn vcgez_s8(a_1: int8x8_t) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -52,7 +52,7 @@ pub fn vcgez_s8(a_1: int8x8_t) -> uint8x8_t
 
     bb0: {
         storage_live(b_2);
-        b_2 = core::core_arch::simd::Simd::<T, 8>::new::<i8>(const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8) -> bb1 (unwind: bb2);
+        b_2 = core::core_arch::simd::{Simd::<_, 8usize>}::new::<i8>(const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -76,11 +76,11 @@ pub fn vcgez_s8(a_1: int8x8_t) -> uint8x8_t
     }
 }
 
-// Full name: std::intrinsics::simd::simd_lt::<int8x8_t, uint8x8_t>
+// Full name: core::intrinsics::simd::simd_lt::<int8x8_t, uint8x8_t>
 pub fn simd_lt::<int8x8_t, uint8x8_t>(x_1: int8x8_t, y_2: int8x8_t) -> uint8x8_t
 = <intrinsic:simd_lt>
 
-// Full name: std::arch::aarch64::vcltz_s8
+// Full name: core::core_arch::aarch64::neon::generated::vcltz_s8
 pub fn vcltz_s8(a_1: int8x8_t) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -90,7 +90,7 @@ pub fn vcltz_s8(a_1: int8x8_t) -> uint8x8_t
 
     bb0: {
         storage_live(b_2);
-        b_2 = core::core_arch::simd::Simd::<T, 8>::new::<i8>(const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8) -> bb1 (unwind: bb2);
+        b_2 = core::core_arch::simd::{Simd::<_, 8usize>}::new::<i8>(const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8, const 0i8) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -114,16 +114,16 @@ pub fn vcltz_s8(a_1: int8x8_t) -> uint8x8_t
     }
 }
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -132,35 +132,35 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
   precision: u16,
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
@@ -178,17 +178,17 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
@@ -204,11 +204,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+fn core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
     let message_1: &'_ Arguments::<'_>; // arg #1
@@ -222,11 +222,11 @@ fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments:
     }
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -244,11 +244,11 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -297,7 +297,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 
     bb5: {
         _7 = &(*_8);
-        pi_4 = core::panic::panic_info::PanicInfo::<'a>::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+        pi_4 = core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -380,7 +380,7 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+// Full name: core::fmt::{Arguments::<'_>}::from_str::<'_>
 pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -460,14 +460,14 @@ pub fn panic_nounwind(expr_1: &'_ str) -> !
     }
 }
 
-// Full name: std::option::Option::<usize>
+// Full name: core::option::Option::<usize>
 #[lang_item("Option")]
 pub enum Option::<usize> {
   None,
   Some(0: usize),
 }
 
-// Full name: std::intrinsics::cold_path
+// Full name: core::intrinsics::cold_path
 pub fn cold_path()
 = <intrinsic:cold_path>
 
@@ -577,11 +577,11 @@ fn runtime(src_1: *const (), dst_2: *const (), size_3: usize, count_4: usize) ->
     }
 }
 
-// Full name: std::intrinsics::ctpop::<usize>
+// Full name: core::intrinsics::ctpop::<usize>
 pub fn ctpop::<usize>(x_1: usize) -> u32
 = <intrinsic:ctpop>
 
-// Full name: std::ptr::const_ptr::<impl *const T>::is_aligned_to::<()>
+// Full name: core::ptr::const_ptr::{*const T}::is_aligned_to::<()>
 pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
 {
     let _0: bool; // return
@@ -679,7 +679,7 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
     }
 }
 
-fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: usize, count_5: usize)
+fn core::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: usize, count_5: usize)
 {
     let _0: (); // return
     let src_1: *const (); // arg #1
@@ -899,34 +899,34 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     }
 }
 
-// Full name: std::mem::SizedTypeProperties::SIZE::<uint8x8_t>
+// Full name: core::mem::SizedTypeProperties::SIZE::<uint8x8_t>
 #[lang_item("mem_size_const")]
 pub const SIZE::<uint8x8_t>: usize = 8usize
 
-// Full name: std::mem::MaybeDangling::<uint8x8_t>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<uint8x8_t>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<uint8x8_t> {
   0: uint8x8_t,
 }
 
-// Full name: std::mem::ManuallyDrop::<uint8x8_t>
+// Full name: core::mem::manually_drop::ManuallyDrop::<uint8x8_t>
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<uint8x8_t> {
   value: MaybeDangling::<uint8x8_t>,
 }
 
-// Full name: std::mem::MaybeUninit::<uint8x8_t>
+// Full name: core::mem::maybe_uninit::MaybeUninit::<uint8x8_t>
 #[lang_item("maybe_uninit")]
 pub union MaybeUninit::<uint8x8_t> {
   uninit: (),
   value: ManuallyDrop::<uint8x8_t>,
 }
 
-// Full name: std::intrinsics::assert_inhabited::<uint8x8_t>
+// Full name: core::intrinsics::assert_inhabited::<uint8x8_t>
 pub fn assert_inhabited::<uint8x8_t>()
 = <intrinsic:assert_inhabited>
 
-// Full name: std::ptr::read_unaligned::<uint8x8_t>
+// Full name: core::ptr::read_unaligned::<uint8x8_t>
 pub fn read_unaligned::<uint8x8_t>(src_1: *const uint8x8_t) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -965,7 +965,7 @@ pub fn read_unaligned::<uint8x8_t>(src_1: *const uint8x8_t) -> uint8x8_t
         _8 = cast<*const uint8x8_t, *const ()>(copy src_1);
         storage_live(_9);
         _9 = cast<*mut MaybeUninit::<uint8x8_t>, *mut ()>(copy _6);
-        _7 = std::ptr::copy_nonoverlapping::precondition_check(move _8, move _9, const 1usize, const 1usize, copy SIZE::<uint8x8_t>) -> bb3 (unwind: bb4);
+        _7 = core::ptr::copy_nonoverlapping::precondition_check(move _8, move _9, const 1usize, const 1usize, copy SIZE::<uint8x8_t>) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -1005,7 +1005,7 @@ pub fn read_unaligned::<uint8x8_t>(src_1: *const uint8x8_t) -> uint8x8_t
     }
 }
 
-pub fn std::ptr::const_ptr::<impl *const T>::cast::<u8, uint8x8_t>(self_1: *const u8) -> *const uint8x8_t
+pub fn core::ptr::const_ptr::{*const T}::cast::<u8, uint8x8_t>(self_1: *const u8) -> *const uint8x8_t
 {
     let _0: *const uint8x8_t; // return
     let self_1: *const u8; // arg #1
@@ -1016,7 +1016,7 @@ pub fn std::ptr::const_ptr::<impl *const T>::cast::<u8, uint8x8_t>(self_1: *cons
     }
 }
 
-// Full name: std::arch::aarch64::vld1_u8
+// Full name: core::core_arch::aarch64::neon::generated::vld1_u8
 pub fn vld1_u8(ptr_1: *const u8) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -1025,7 +1025,7 @@ pub fn vld1_u8(ptr_1: *const u8) -> uint8x8_t
 
     bb0: {
         storage_live(_2);
-        _2 = std::ptr::const_ptr::<impl *const T>::cast::<u8, uint8x8_t>(move ptr_1) -> bb1 (unwind: bb2);
+        _2 = core::ptr::const_ptr::{*const T}::cast::<u8, uint8x8_t>(move ptr_1) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1046,7 +1046,7 @@ pub fn vld1_u8(ptr_1: *const u8) -> uint8x8_t
     }
 }
 
-pub fn std::ptr::mut_ptr::<impl *mut T>::cast::<u8, uint8x8_t>(self_1: *mut u8) -> *mut uint8x8_t
+pub fn core::ptr::mut_ptr::{*mut T}::cast::<u8, uint8x8_t>(self_1: *mut u8) -> *mut uint8x8_t
 {
     let _0: *mut uint8x8_t; // return
     let self_1: *mut u8; // arg #1
@@ -1057,7 +1057,7 @@ pub fn std::ptr::mut_ptr::<impl *mut T>::cast::<u8, uint8x8_t>(self_1: *mut u8) 
     }
 }
 
-// Full name: std::ptr::write_unaligned::<uint8x8_t>
+// Full name: core::ptr::write_unaligned::<uint8x8_t>
 pub fn write_unaligned::<uint8x8_t>(dst_1: *mut uint8x8_t, src_2: uint8x8_t)
 {
     let _0: (); // return
@@ -1090,7 +1090,7 @@ pub fn write_unaligned::<uint8x8_t>(dst_1: *mut uint8x8_t, src_2: uint8x8_t)
         _7 = cast<*const uint8x8_t, *const ()>(copy _4);
         storage_live(_8);
         _8 = cast<*mut uint8x8_t, *mut ()>(copy dst_1);
-        _6 = std::ptr::copy_nonoverlapping::precondition_check(move _7, move _8, const 1usize, const 1usize, copy SIZE::<uint8x8_t>) -> bb3 (unwind: bb4);
+        _6 = core::ptr::copy_nonoverlapping::precondition_check(move _7, move _8, const 1usize, const 1usize, copy SIZE::<uint8x8_t>) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -1111,7 +1111,7 @@ pub fn write_unaligned::<uint8x8_t>(dst_1: *mut uint8x8_t, src_2: uint8x8_t)
     }
 }
 
-// Full name: std::arch::aarch64::vst1_u8
+// Full name: core::core_arch::aarch64::neon::generated::vst1_u8
 pub fn vst1_u8(ptr_1: *mut u8, a_2: uint8x8_t)
 {
     let _0: (); // return
@@ -1122,7 +1122,7 @@ pub fn vst1_u8(ptr_1: *mut u8, a_2: uint8x8_t)
     bb0: {
         _0 = ();
         storage_live(_3);
-        _3 = std::ptr::mut_ptr::<impl *mut T>::cast::<u8, uint8x8_t>(move ptr_1) -> bb1 (unwind: bb2);
+        _3 = core::ptr::mut_ptr::{*mut T}::cast::<u8, uint8x8_t>(move ptr_1) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1143,11 +1143,11 @@ pub fn vst1_u8(ptr_1: *mut u8, a_2: uint8x8_t)
     }
 }
 
-// Full name: std::intrinsics::simd::simd_eq::<uint8x8_t, uint8x8_t>
+// Full name: core::intrinsics::simd::simd_eq::<uint8x8_t, uint8x8_t>
 pub fn simd_eq::<uint8x8_t, uint8x8_t>(x_1: uint8x8_t, y_2: uint8x8_t) -> uint8x8_t
 = <intrinsic:simd_eq>
 
-// Full name: std::arch::aarch64::vceq_u8
+// Full name: core::core_arch::arm_shared::neon::generated::vceq_u8
 pub fn vceq_u8(a_1: uint8x8_t, b_2: uint8x8_t) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -1167,11 +1167,11 @@ pub fn vceq_u8(a_1: uint8x8_t, b_2: uint8x8_t) -> uint8x8_t
     }
 }
 
-// Full name: std::intrinsics::simd::simd_splat::<uint8x8_t, u8>
+// Full name: core::intrinsics::simd::simd_splat::<uint8x8_t, u8>
 pub fn simd_splat::<uint8x8_t, u8>(value_1: u8) -> uint8x8_t
 = <intrinsic:simd_splat>
 
-// Full name: std::arch::aarch64::uint8x8_t::splat
+// Full name: core::core_arch::arm_shared::neon::{uint8x8_t}::splat
 fn splat(value_1: u8) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -1190,7 +1190,7 @@ fn splat(value_1: u8) -> uint8x8_t
     }
 }
 
-// Full name: std::arch::aarch64::vdup_n_u8
+// Full name: core::core_arch::arm_shared::neon::generated::vdup_n_u8
 pub fn vdup_n_u8(value_1: u8) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -1209,16 +1209,16 @@ pub fn vdup_n_u8(value_1: u8) -> uint8x8_t
     }
 }
 
-// Full name: std::arch::aarch64::uint64x1_t
+// Full name: core::core_arch::arm_shared::neon::uint64x1_t
 pub struct uint64x1_t {
   0: [u64; 1usize],
 }
 
-// Full name: std::intrinsics::simd::simd_extract::<uint64x1_t, u64>
+// Full name: core::intrinsics::simd::simd_extract::<uint64x1_t, u64>
 pub fn simd_extract::<uint64x1_t, u64>(x_1: uint64x1_t, idx_2: u32) -> u64
 = <intrinsic:simd_extract>
 
-// Full name: std::arch::aarch64::vget_lane_u64::<0i32>
+// Full name: core::core_arch::arm_shared::neon::generated::vget_lane_u64::<0i32>
 pub fn vget_lane_u64::<0i32>(v_1: uint64x1_t) -> u64
 {
     let _0: u64; // return
@@ -1237,11 +1237,11 @@ pub fn vget_lane_u64::<0i32>(v_1: uint64x1_t) -> u64
     }
 }
 
-// Full name: std::intrinsics::simd::simd_or::<uint8x8_t>
+// Full name: core::intrinsics::simd::simd_or::<uint8x8_t>
 pub fn simd_or::<uint8x8_t>(x_1: uint8x8_t, y_2: uint8x8_t) -> uint8x8_t
 = <intrinsic:simd_or>
 
-// Full name: std::arch::aarch64::vorr_u8
+// Full name: core::core_arch::arm_shared::neon::generated::vorr_u8
 pub fn vorr_u8(a_1: uint8x8_t, b_2: uint8x8_t) -> uint8x8_t
 {
     let _0: uint8x8_t; // return
@@ -1261,7 +1261,7 @@ pub fn vorr_u8(a_1: uint8x8_t, b_2: uint8x8_t) -> uint8x8_t
     }
 }
 
-// Full name: std::arch::aarch64::vreinterpret_s8_u8
+// Full name: core::core_arch::arm_shared::neon::generated::vreinterpret_s8_u8
 pub fn vreinterpret_s8_u8(a_1: uint8x8_t) -> int8x8_t
 {
     let _0: int8x8_t; // return
@@ -1273,7 +1273,7 @@ pub fn vreinterpret_s8_u8(a_1: uint8x8_t) -> int8x8_t
     }
 }
 
-// Full name: std::arch::aarch64::vreinterpret_u64_u8
+// Full name: core::core_arch::arm_shared::neon::generated::vreinterpret_u64_u8
 pub fn vreinterpret_u64_u8(a_1: uint8x8_t) -> uint64x1_t
 {
     let _0: uint64x1_t; // return
@@ -1285,7 +1285,7 @@ pub fn vreinterpret_u64_u8(a_1: uint8x8_t) -> uint64x1_t
     }
 }
 
-// Full name: std::mem::alignment::AlignmentEnum
+// Full name: core::mem::alignment::AlignmentEnum
 enum AlignmentEnum {
   _Align1Shl0,
   _Align1Shl1,
@@ -1353,22 +1353,33 @@ enum AlignmentEnum {
   _Align1Shl63,
 }
 
-// Full name: std::mem::Alignment
+// Full name: core::mem::alignment::Alignment
 pub struct Alignment {
   _inner_repr_trick: AlignmentEnum,
 }
 
-// Full name: std::alloc::Layout
+// Full name: core::alloc::layout::Layout
 #[lang_item("alloc_layout")]
 pub struct Layout {
   size: usize,
   align: Alignment,
 }
 
-// Full name: std::alloc::AllocError
+// Full name: core::alloc::AllocError
 pub struct AllocError {}
 
-// Full name: <T as std::borrow::Borrow<T>>::borrow::<u32>
+// Full name: core::alloc::Allocator
+trait Allocator
+
+// Full name: core::borrow::Borrow
+trait Borrow
+
+// Full name: core::borrow::{impl Borrow<T> for T}
+impl<T> "impl_Borrow_for_T" Borrow<T> for T {
+    non-dyn-compatible
+}
+
+// Full name: core::borrow::{impl Borrow<T> for T}::borrow::<u32>
 pub fn borrow::<u32>(self_1: &'_ u32) -> &'_ u32
 {
     let _0: &'_ u32; // return
@@ -1380,7 +1391,11 @@ pub fn borrow::<u32>(self_1: &'_ u32) -> &'_ u32
     }
 }
 
-// Full name: std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt
+// Full name: core::cmp::PartialEq
+#[lang_item("eq")]
+trait PartialEq
+
+// Full name: core::cmp::impls::{impl PartialOrd<usize> for usize}::lt
 pub fn lt(self_1: &'_ usize, other_2: &'_ usize) -> bool
 {
     let _0: bool; // return
@@ -1401,7 +1416,7 @@ pub fn lt(self_1: &'_ usize, other_2: &'_ usize) -> bool
     }
 }
 
-// Full name: std::cmp::Ord::max::<usize>
+// Full name: core::cmp::Ord::max::<usize>
 pub fn max::<usize>(self_1: usize, other_2: usize) -> usize
 {
     let _0: usize; // return
@@ -1457,7 +1472,7 @@ pub fn max::<usize>(self_1: usize, other_2: usize) -> usize
     }
 }
 
-// Full name: std::cmp::Ord::min::<usize>
+// Full name: core::cmp::Ord::min::<usize>
 pub fn min::<usize>(self_1: usize, other_2: usize) -> usize
 {
     let _0: usize; // return
@@ -1513,7 +1528,16 @@ pub fn min::<usize>(self_1: usize, other_2: usize) -> usize
     }
 }
 
-// Full name: std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq
+// Full name: core::cmp::PartialOrd
+#[lang_item("partial_ord")]
+trait PartialOrd
+
+// Full name: core::cmp::impls::{impl PartialEq<u32> for u32}
+impl "impl_PartialEq_u32_for_u32" PartialEq<u32> for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::cmp::impls::{impl PartialEq<u32> for u32}::eq
 pub fn eq(self_1: &'_ u32, other_2: &'_ u32) -> bool
 {
     let _0: bool; // return
@@ -1534,26 +1558,48 @@ pub fn eq(self_1: &'_ u32, other_2: &'_ u32) -> bool
     }
 }
 
-// Full name: std::convert::Infallible
+// Full name: core::cmp::impls::{impl PartialOrd<usize> for usize}
+impl "impl_PartialOrd_usize_for_usize" PartialOrd<usize> for usize {
+    non-dyn-compatible
+}
+
+// Full name: core::convert::Infallible
 pub enum Infallible {
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-pub fn <str as std::fmt::Display>::fmt(_1: &'_ str, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::fmt::Display
+trait Display
+
+// Full name: core::fmt::{impl Display for &'_ T}
+impl<'_, _, T> Display for &'_ T {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::{impl Display for str}::fmt
+pub fn impl_Display_for_str::fmt(_1: &'_ str, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn <&T as std::fmt::Display>::fmt::<'_, str>(self_1: &'_ &'_ str, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl Display for &'_ T}::fmt::<'_, str>
+pub fn {impl Display for &'_ T}::fmt::<'_, str>(self_1: &'_ &'_ str, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ &'_ str; // arg #1
@@ -1563,7 +1609,7 @@ pub fn <&T as std::fmt::Display>::fmt::<'_, str>(self_1: &'_ &'_ str, f_2: &'_ m
     bb0: {
         storage_live(_3);
         _3 = copy (*self_1);
-        _0 = <str as std::fmt::Display>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+        _0 = impl_Display_for_str::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1575,7 +1621,17 @@ pub fn <&T as std::fmt::Display>::fmt::<'_, str>(self_1: &'_ &'_ str, f_2: &'_ m
     }
 }
 
-// Full name: std::marker::PhantomData::<Sip13Rounds>
+// Full name: core::fmt::{impl Display for str}
+impl "impl_Display_for_str" Display for str {
+    non-dyn-compatible
+}
+
+// Full name: core::hash::Hash
+trait Hash
+
+trait core::hash::Hasher
+
+// Full name: core::marker::PhantomData::<Sip13Rounds>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<Sip13Rounds> {}
 
@@ -1587,8 +1643,7 @@ struct State {
   v3: u64,
 }
 
-// Full name: core::hash::sip::Hasher::<Sip13Rounds>
-struct Hasher::<Sip13Rounds> {
+struct core::hash::sip::Hasher::<Sip13Rounds> {
   k0: u64,
   k1: u64,
   length: usize,
@@ -1598,21 +1653,21 @@ struct Hasher::<Sip13Rounds> {
   _marker: PhantomData::<Sip13Rounds>,
 }
 
-// Full name: std::hash::SipHasher13
+// Full name: core::hash::sip::SipHasher13
 pub struct SipHasher13 {
-  hasher: Hasher::<Sip13Rounds>,
+  hasher: core::hash::sip::Hasher::<Sip13Rounds>,
 }
 
-// Full name: std::hash::DefaultHasher
+// Full name: std::hash::random::DefaultHasher
 pub struct DefaultHasher {
   0: SipHasher13,
 }
 
-// Full name: std::intrinsics::rotate_left::<u64>
+// Full name: core::intrinsics::rotate_left::<u64>
 pub fn rotate_left::<u64>(x_1: u64, shift_2: u32) -> u64
 = <intrinsic:rotate_left>
 
-// Full name: <core::hash::sip::Sip13Rounds as core::hash::sip::Sip>::c_rounds
+// Full name: core::hash::sip::{impl Sip for Sip13Rounds}::c_rounds
 fn c_rounds(state_1: &'_ mut State)
 {
     let _0: (); // return
@@ -1792,7 +1847,8 @@ fn c_rounds(state_1: &'_ mut State)
     }
 }
 
-fn <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(this_1: usize, len_2: usize)
+// Full name: core::slice::index::{impl SliceIndex<[T]> for usize}::get_unchecked::precondition_check
+fn impl_SliceIndex_slice_for_usize::get_unchecked::precondition_check(this_1: usize, len_2: usize)
 {
     let _0: (); // return
     let this_1: usize; // arg #1
@@ -1981,7 +2037,7 @@ fn u8to64_le(buf_1: &'_ [u8], start_2: usize, len_3: usize) -> u64
         _42 = cast<*const u8, *const ()>(copy src_9);
         storage_live(_43);
         _43 = cast<*mut u32, *mut ()>(copy _14);
-        _41 = std::ptr::copy_nonoverlapping::precondition_check(move _42, move _43, const 1usize, const 1usize, const 4usize) -> bb6 (unwind: bb7);
+        _41 = core::ptr::copy_nonoverlapping::precondition_check(move _42, move _43, const 1usize, const 1usize, const 4usize) -> bb6 (unwind: bb7);
     }
 
     bb4: {
@@ -2057,7 +2113,7 @@ fn u8to64_le(buf_1: &'_ [u8], start_2: usize, len_3: usize) -> u64
         _46 = cast<*const u8, *const ()>(copy src_22);
         storage_live(_47);
         _47 = cast<*mut u16, *mut ()>(copy _27);
-        _45 = std::ptr::copy_nonoverlapping::precondition_check(move _46, move _47, const 1usize, const 1usize, const 2usize) -> bb13 (unwind: bb14);
+        _45 = core::ptr::copy_nonoverlapping::precondition_check(move _46, move _47, const 1usize, const 1usize, const 2usize) -> bb13 (unwind: bb14);
     }
 
     bb11: {
@@ -2124,7 +2180,7 @@ fn u8to64_le(buf_1: &'_ [u8], start_2: usize, len_3: usize) -> u64
     bb17: {
         storage_live(_50);
         _50 = copy buf_1.metadata;
-        _49 = <usize as std::slice::SliceIndex<[T]>>::get_unchecked::precondition_check(copy index_36, move _50) -> bb20 (unwind: bb21);
+        _49 = impl_SliceIndex_slice_for_usize::get_unchecked::precondition_check(copy index_36, move _50) -> bb20 (unwind: bb21);
     }
 
     bb18: {
@@ -2170,10 +2226,11 @@ fn u8to64_le(buf_1: &'_ [u8], start_2: usize, len_3: usize) -> u64
     }
 }
 
-pub fn <core::hash::sip::Hasher<S> as std::hash::Hasher>::write::<Sip13Rounds>(self_1: &'_ mut Hasher::<Sip13Rounds>, msg_2: &'_ [u8])
+// Full name: core::hash::sip::{impl core::hash::Hasher for core::hash::sip::Hasher::<_>}::write::<Sip13Rounds>
+pub fn {impl core::hash::Hasher for core::hash::sip::Hasher::<_>}::write::<Sip13Rounds>(self_1: &'_ mut core::hash::sip::Hasher::<Sip13Rounds>, msg_2: &'_ [u8])
 {
     let _0: (); // return
-    let self_1: &'_ mut Hasher::<Sip13Rounds>; // arg #1
+    let self_1: &'_ mut core::hash::sip::Hasher::<Sip13Rounds>; // arg #1
     let msg_2: &'_ [u8]; // arg #2
     let length_3: usize; // local
     let needed_4: usize; // local
@@ -2358,7 +2415,7 @@ pub fn <core::hash::sip::Hasher<S> as std::hash::Hasher>::write::<Sip13Rounds>(s
         _37 = cast<*const u8, *const ()>(copy src_26);
         storage_live(_38);
         _38 = cast<*mut u64, *mut ()>(copy _30);
-        _36 = std::ptr::copy_nonoverlapping::precondition_check(move _37, move _38, const 1usize, const 1usize, const 8usize) -> bb20 (unwind: bb21);
+        _36 = core::ptr::copy_nonoverlapping::precondition_check(move _37, move _38, const 1usize, const 1usize, const 8usize) -> bb20 (unwind: bb21);
     }
 
     bb14: {
@@ -2430,18 +2487,19 @@ pub fn <core::hash::sip::Hasher<S> as std::hash::Hasher>::write::<Sip13Rounds>(s
     }
 }
 
-pub fn <std::hash::DefaultHasher as std::hash::Hasher>::write(self_1: &'_ mut DefaultHasher, msg_2: &'_ [u8])
+// Full name: std::hash::random::{impl core::hash::Hasher for DefaultHasher}::write
+pub fn impl_Hasher_for_DefaultHasher::write(self_1: &'_ mut DefaultHasher, msg_2: &'_ [u8])
 {
     let _0: (); // return
     let self_1: &'_ mut DefaultHasher; // arg #1
     let msg_2: &'_ [u8]; // arg #2
-    let _3: &'_ mut Hasher::<Sip13Rounds>; // anonymous local
+    let _3: &'_ mut core::hash::sip::Hasher::<Sip13Rounds>; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_3);
         _3 = &two-phase-mut (((*self_1)).0).hasher;
-        _0 = <core::hash::sip::Hasher<S> as std::hash::Hasher>::write::<Sip13Rounds>(move _3, move msg_2) -> bb1 (unwind: bb2);
+        _0 = {impl core::hash::Hasher for core::hash::sip::Hasher::<_>}::write::<Sip13Rounds>(move _3, move msg_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2454,7 +2512,7 @@ pub fn <std::hash::DefaultHasher as std::hash::Hasher>::write(self_1: &'_ mut De
     }
 }
 
-// Full name: std::hash::Hasher::write_u32::<DefaultHasher>
+// Full name: core::hash::Hasher::write_u32::<DefaultHasher>
 pub fn write_u32::<DefaultHasher>(self_1: &'_ mut DefaultHasher, i_2: u32)
 {
     let _0: (); // return
@@ -2472,7 +2530,7 @@ pub fn write_u32::<DefaultHasher>(self_1: &'_ mut DefaultHasher, i_2: u32)
         _5 = transmute<u32, [u8; 4usize]>(copy i_2);
         _4 = &_5;
         _3 = unsize_cast<&'_ [u8; 4usize], &'_ [u8], 4usize>(copy _4);
-        _0 = <std::hash::DefaultHasher as std::hash::Hasher>::write(move self_1, move _3) -> bb1 (unwind: bb2);
+        _0 = impl_Hasher_for_DefaultHasher::write(move self_1, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2487,7 +2545,10 @@ pub fn write_u32::<DefaultHasher>(self_1: &'_ mut DefaultHasher, i_2: u32)
     }
 }
 
-// Full name: <core::hash::sip::Sip13Rounds as core::hash::sip::Sip>::d_rounds
+// Full name: core::hash::BuildHasher
+trait BuildHasher
+
+// Full name: core::hash::sip::{impl Sip for Sip13Rounds}::d_rounds
 fn d_rounds(state_1: &'_ mut State)
 {
     let _0: (); // return
@@ -3003,10 +3064,11 @@ fn d_rounds(state_1: &'_ mut State)
     }
 }
 
-pub fn <core::hash::sip::Hasher<S> as std::hash::Hasher>::finish::<Sip13Rounds>(self_1: &'_ Hasher::<Sip13Rounds>) -> u64
+// Full name: core::hash::sip::{impl core::hash::Hasher for core::hash::sip::Hasher::<_>}::finish::<Sip13Rounds>
+pub fn {impl core::hash::Hasher for core::hash::sip::Hasher::<_>}::finish::<Sip13Rounds>(self_1: &'_ core::hash::sip::Hasher::<Sip13Rounds>) -> u64
 {
     let _0: u64; // return
-    let self_1: &'_ Hasher::<Sip13Rounds>; // arg #1
+    let self_1: &'_ core::hash::sip::Hasher::<Sip13Rounds>; // arg #1
     let state_2: State; // local
     let b_3: u64; // local
     let _4: u64; // anonymous local
@@ -3097,16 +3159,17 @@ pub fn <core::hash::sip::Hasher<S> as std::hash::Hasher>::finish::<Sip13Rounds>(
     }
 }
 
-pub fn <std::hash::DefaultHasher as std::hash::Hasher>::finish(self_1: &'_ DefaultHasher) -> u64
+// Full name: std::hash::random::{impl core::hash::Hasher for DefaultHasher}::finish
+pub fn impl_Hasher_for_DefaultHasher::finish(self_1: &'_ DefaultHasher) -> u64
 {
     let _0: u64; // return
     let self_1: &'_ DefaultHasher; // arg #1
-    let _2: &'_ Hasher::<Sip13Rounds>; // anonymous local
+    let _2: &'_ core::hash::sip::Hasher::<Sip13Rounds>; // anonymous local
 
     bb0: {
         storage_live(_2);
         _2 = &(((*self_1)).0).hasher;
-        _0 = <core::hash::sip::Hasher<S> as std::hash::Hasher>::finish::<Sip13Rounds>(move _2) -> bb1 (unwind: bb2);
+        _0 = {impl core::hash::Hasher for core::hash::sip::Hasher::<_>}::finish::<Sip13Rounds>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3119,17 +3182,17 @@ pub fn <std::hash::DefaultHasher as std::hash::Hasher>::finish(self_1: &'_ Defau
     }
 }
 
-// Full name: std::hash::RandomState
+// Full name: std::hash::random::RandomState
 pub struct RandomState {
   k0: u64,
   k1: u64,
 }
 
-// Full name: core::hash::sip::Hasher::<S>::reset::<Sip13Rounds>
-fn reset::<Sip13Rounds>(self_1: &'_ mut Hasher::<Sip13Rounds>)
+// Full name: core::hash::sip::{core::hash::sip::Hasher::<_>}::reset::<Sip13Rounds>
+fn reset::<Sip13Rounds>(self_1: &'_ mut core::hash::sip::Hasher::<Sip13Rounds>)
 {
     let _0: (); // return
-    let self_1: &'_ mut Hasher::<Sip13Rounds>; // arg #1
+    let self_1: &'_ mut core::hash::sip::Hasher::<Sip13Rounds>; // arg #1
     let _2: u64; // anonymous local
     let _3: u64; // anonymous local
     let _4: u64; // anonymous local
@@ -3159,7 +3222,7 @@ fn reset::<Sip13Rounds>(self_1: &'_ mut Hasher::<Sip13Rounds>)
     }
 }
 
-// Full name: <std::hash::RandomState as std::hash::BuildHasher>::build_hasher
+// Full name: std::hash::random::{impl BuildHasher for RandomState}::build_hasher
 pub fn build_hasher(self_1: &'_ RandomState) -> DefaultHasher
 {
     let _0: DefaultHasher; // return
@@ -3167,11 +3230,11 @@ pub fn build_hasher(self_1: &'_ RandomState) -> DefaultHasher
     let _2: SipHasher13; // anonymous local
     let key0_3: u64; // local
     let key1_4: u64; // local
-    let _5: Hasher::<Sip13Rounds>; // anonymous local
-    let state_6: Hasher::<Sip13Rounds>; // local
+    let _5: core::hash::sip::Hasher::<Sip13Rounds>; // anonymous local
+    let state_6: core::hash::sip::Hasher::<Sip13Rounds>; // local
     let _7: State; // anonymous local
     let _8: (); // anonymous local
-    let _9: &'_ mut Hasher::<Sip13Rounds>; // anonymous local
+    let _9: &'_ mut core::hash::sip::Hasher::<Sip13Rounds>; // anonymous local
     let _10: PhantomData::<Sip13Rounds>; // anonymous local
 
     bb0: {
@@ -3187,7 +3250,7 @@ pub fn build_hasher(self_1: &'_ RandomState) -> DefaultHasher
         _7 = State { v0: const 0u64, v2: const 0u64, v1: const 0u64, v3: const 0u64 };
         storage_live(_10);
         _10 = PhantomData::<Sip13Rounds> {  };
-        state_6 = Hasher::<Sip13Rounds> { k0: copy key0_3, k1: copy key1_4, length: const 0usize, state: move _7, tail: const 0u64, ntail: const 0usize, _marker: move _10 };
+        state_6 = core::hash::sip::Hasher::<Sip13Rounds> { k0: copy key0_3, k1: copy key1_4, length: const 0usize, state: move _7, tail: const 0u64, ntail: const 0usize, _marker: move _10 };
         storage_dead(_7);
         storage_live(_9);
         _9 = &two-phase-mut state_6;
@@ -3212,7 +3275,8 @@ pub fn build_hasher(self_1: &'_ RandomState) -> DefaultHasher
     }
 }
 
-pub fn core::hash::impls::<impl std::hash::Hash for u32>::hash::<DefaultHasher>(self_1: &'_ u32, state_2: &'_ mut DefaultHasher)
+// Full name: core::hash::impls::{impl Hash for u32}::hash::<DefaultHasher>
+pub fn impl_Hash_for_u32::hash::<DefaultHasher>(self_1: &'_ u32, state_2: &'_ mut DefaultHasher)
 {
     let _0: (); // return
     let self_1: &'_ u32; // arg #1
@@ -3236,7 +3300,8 @@ pub fn core::hash::impls::<impl std::hash::Hash for u32>::hash::<DefaultHasher>(
     }
 }
 
-pub fn core::hash::impls::<impl std::hash::Hash for &T>::hash::<'_, u32, DefaultHasher>(self_1: &'_ &'_ u32, state_2: &'_ mut DefaultHasher)
+// Full name: core::hash::impls::{impl Hash for &'_ T}::hash::<'_, u32, DefaultHasher>
+pub fn {impl Hash for &'_ T}::hash::<'_, u32, DefaultHasher>(self_1: &'_ &'_ u32, state_2: &'_ mut DefaultHasher)
 {
     let _0: (); // return
     let self_1: &'_ &'_ u32; // arg #1
@@ -3249,7 +3314,7 @@ pub fn core::hash::impls::<impl std::hash::Hash for &T>::hash::<'_, u32, Default
         storage_live(_4);
         _0 = ();
         _4 = copy (*self_1);
-        _3 = core::hash::impls::<impl std::hash::Hash for u32>::hash::<DefaultHasher>(move _4, move state_2) -> bb1 (unwind: bb2);
+        _3 = impl_Hash_for_u32::hash::<DefaultHasher>(move _4, move state_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -3261,7 +3326,7 @@ pub fn core::hash::impls::<impl std::hash::Hash for &T>::hash::<'_, u32, Default
     }
 }
 
-// Full name: std::hash::BuildHasher::hash_one::<RandomState, &'_ u32>
+// Full name: core::hash::BuildHasher::hash_one::<RandomState, &'_ u32>
 pub fn hash_one::<RandomState, &'_ u32>(self_1: &'_ RandomState, x_2: &'_ u32) -> u64
 {
     let _0: u64; // return
@@ -3284,7 +3349,7 @@ pub fn hash_one::<RandomState, &'_ u32>(self_1: &'_ RandomState, x_2: &'_ u32) -
         _5 = &x_2;
         storage_live(_6);
         _6 = &mut hasher_3;
-        _4 = core::hash::impls::<impl std::hash::Hash for &T>::hash::<'_, u32, DefaultHasher>(move _5, move _6) -> bb3 (unwind: bb2);
+        _4 = {impl Hash for &'_ T}::hash::<'_, u32, DefaultHasher>(move _5, move _6) -> bb3 (unwind: bb2);
     }
 
     bb2: {
@@ -3296,7 +3361,7 @@ pub fn hash_one::<RandomState, &'_ u32>(self_1: &'_ RandomState, x_2: &'_ u32) -
         storage_dead(_6);
         storage_live(_7);
         _7 = &hasher_3;
-        _0 = <std::hash::DefaultHasher as std::hash::Hasher>::finish(move _7) -> bb4 (unwind: bb2);
+        _0 = impl_Hasher_for_DefaultHasher::finish(move _7) -> bb4 (unwind: bb2);
     }
 
     bb4: {
@@ -3306,18 +3371,41 @@ pub fn hash_one::<RandomState, &'_ u32>(self_1: &'_ RandomState, x_2: &'_ u32) -
     }
 }
 
+// Full name: core::hash::impls::{impl Hash for u32}
+impl "impl_Hash_for_u32" Hash for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::hash::impls::{impl Hash for &'_ T}
+impl<'_, _, T> Hash for &'_ T {
+    non-dyn-compatible
+}
+
+// Full name: core::hash::sip::{impl core::hash::Hasher for core::hash::sip::Hasher::<_>}
+impl<S> core::hash::Hasher for core::hash::sip::Hasher::<_> {
+    non-dyn-compatible
+}
+
+// Full name: core::hash::sip::Sip
+trait Sip
+
 // Full name: core::hash::sip::Sip13Rounds
 struct Sip13Rounds {}
 
-// Full name: std::intrinsics::ctlz::<u64>
+// Full name: core::hash::sip::{impl Sip for Sip13Rounds}
+impl "impl_Sip_for_Sip13Rounds" Sip for Sip13Rounds {
+    non-dyn-compatible
+}
+
+// Full name: core::intrinsics::ctlz::<u64>
 pub fn ctlz::<u64>(x_1: u64) -> u32
 = <intrinsic:ctlz>
 
-// Full name: std::intrinsics::ctlz_nonzero::<usize>
+// Full name: core::intrinsics::ctlz_nonzero::<usize>
 pub fn ctlz_nonzero::<usize>(x_1: usize) -> u32
 = <intrinsic:ctlz_nonzero>
 
-// Full name: std::intrinsics::cttz_nonzero::<u64>
+// Full name: core::intrinsics::cttz_nonzero::<u64>
 pub fn cttz_nonzero::<u64>(x_1: u64) -> u32
 = <intrinsic:cttz_nonzero>
 
@@ -3329,11 +3417,11 @@ struct RawTableInner {
   items: usize,
 }
 
-// Full name: std::intrinsics::typed_swap_nonoverlapping::<RawTableInner>
+// Full name: core::intrinsics::typed_swap_nonoverlapping::<RawTableInner>
 pub fn typed_swap_nonoverlapping::<RawTableInner>(x_1: *mut RawTableInner, y_2: *mut RawTableInner)
 = <intrinsic:typed_swap_nonoverlapping>
 
-// Full name: std::intrinsics::size_of_val::<[u8]>
+// Full name: core::intrinsics::size_of_val::<[u8]>
 pub fn size_of_val::<[u8]>(ptr_1: *const [u8]) -> usize
 = <intrinsic:size_of_val>
 
@@ -3342,41 +3430,41 @@ struct Tag {
   0: u8,
 }
 
-// Full name: std::intrinsics::copy::<Tag>
+// Full name: core::intrinsics::copy::<Tag>
 pub fn copy::<Tag>(src_1: *const Tag, dst_2: *mut Tag, count_3: usize)
 = <intrinsic:copy>
 
-// Full name: std::mem::MaybeDangling::<Tag>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<Tag>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<Tag> {
   0: Tag,
 }
 
-// Full name: std::mem::ManuallyDrop::<Tag>
+// Full name: core::mem::manually_drop::ManuallyDrop::<Tag>
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<Tag> {
   value: MaybeDangling::<Tag>,
 }
 
-// Full name: std::mem::MaybeUninit::<Tag>
+// Full name: core::mem::maybe_uninit::MaybeUninit::<Tag>
 #[lang_item("maybe_uninit")]
 pub union MaybeUninit::<Tag> {
   uninit: (),
   value: ManuallyDrop::<Tag>,
 }
 
-// Full name: std::intrinsics::write_bytes::<MaybeUninit::<Tag>>
+// Full name: core::intrinsics::write_bytes::<MaybeUninit::<Tag>>
 pub fn write_bytes::<MaybeUninit::<Tag>>(dst_1: *mut MaybeUninit::<Tag>, val_2: u8, count_3: usize)
 = <intrinsic:write_bytes>
 
-// Full name: std::ops::Range::<usize>
+// Full name: core::ops::range::Range::<usize>
 #[lang_item("Range")]
 pub struct Range::<usize> {
   start: usize,
   end: usize,
 }
 
-// Full name: std::iter::StepBy::<Range::<usize>>
+// Full name: core::iter::adapters::step_by::StepBy::<Range::<usize>>
 pub struct StepBy::<Range::<usize>> {
   iter: Range::<usize>,
   step_minus_one: usize,
@@ -3419,7 +3507,7 @@ pub fn panic(expr_1: &'_ str) -> !
     }
 }
 
-// Full name: <std::ops::Range<usize> as std::iter::adapters::step_by::SpecRangeSetup<std::ops::Range<usize>>>::setup
+// Full name: core::iter::adapters::step_by::{impl SpecRangeSetup<Range::<usize>> for Range::<usize>}::setup
 fn setup(r_1: Range::<usize>, step_2: usize) -> Range::<usize>
 {
     let _0: Range::<usize>; // return
@@ -3520,7 +3608,7 @@ fn setup(r_1: Range::<usize>, step_2: usize) -> Range::<usize>
     }
 }
 
-fn std::iter::StepBy::<I>::new::<Range::<usize>>(iter_1: Range::<usize>, step_2: usize) -> StepBy::<Range::<usize>>
+fn core::iter::adapters::step_by::{StepBy::<_>}::new::<Range::<usize>>(iter_1: Range::<usize>, step_2: usize) -> StepBy::<Range::<usize>>
 {
     let _0: StepBy::<Range::<usize>>; // return
     let iter_1: Range::<usize>; // arg #1
@@ -3573,94 +3661,102 @@ fn std::iter::StepBy::<I>::new::<Range::<usize>>(iter_1: Range::<usize>, step_2:
     }
 }
 
-// Full name: std::marker::PhantomData::<(u32, u32)>
+// Full name: core::iter::adapters::step_by::SpecRangeSetup
+trait SpecRangeSetup
+
+// Full name: core::iter::adapters::step_by::{impl SpecRangeSetup<Range::<usize>> for Range::<usize>}
+impl SpecRangeSetup<Range::<usize>> for Range::<usize> {
+    non-dyn-compatible
+}
+
+// Full name: core::marker::PhantomData::<(u32, u32)>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<(u32, u32)> {}
 
-// Full name: std::mem::MaybeDangling::<[u8; 2usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 2usize]> {
-  0: [u8; 2usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 2usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 2usize]> {
-  value: MaybeDangling::<[u8; 2usize]>,
-}
-
-// Full name: std::mem::MaybeDangling::<[u8; 4usize]>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<[u8; 4usize]>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<[u8; 4usize]> {
   0: [u8; 4usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 4usize]>
+// Full name: core::mem::manually_drop::ManuallyDrop::<[u8; 4usize]>
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<[u8; 4usize]> {
   value: MaybeDangling::<[u8; 4usize]>,
 }
 
-// Full name: std::mem::MaybeDangling::<[u8; 8usize]>
-#[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<[u8; 8usize]> {
-  0: [u8; 8usize],
-}
-
-// Full name: std::mem::ManuallyDrop::<[u8; 8usize]>
-#[lang_item("manually_drop")]
-pub struct ManuallyDrop::<[u8; 8usize]> {
-  value: MaybeDangling::<[u8; 8usize]>,
-}
-
-// Full name: std::mem::MaybeDangling::<[u8; 1usize]>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<[u8; 1usize]>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<[u8; 1usize]> {
   0: [u8; 1usize],
 }
 
-// Full name: std::mem::ManuallyDrop::<[u8; 1usize]>
+// Full name: core::mem::manually_drop::ManuallyDrop::<[u8; 1usize]>
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<[u8; 1usize]> {
   value: MaybeDangling::<[u8; 1usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 8usize]>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<[u8; 2usize]>
+#[lang_item("maybe_dangling")]
+pub struct MaybeDangling::<[u8; 2usize]> {
+  0: [u8; 2usize],
+}
+
+// Full name: core::mem::manually_drop::ManuallyDrop::<[u8; 2usize]>
+#[lang_item("manually_drop")]
+pub struct ManuallyDrop::<[u8; 2usize]> {
+  value: MaybeDangling::<[u8; 2usize]>,
+}
+
+// Full name: core::mem::maybe_dangling::MaybeDangling::<[u8; 8usize]>
+#[lang_item("maybe_dangling")]
+pub struct MaybeDangling::<[u8; 8usize]> {
+  0: [u8; 8usize],
+}
+
+// Full name: core::mem::manually_drop::ManuallyDrop::<[u8; 8usize]>
+#[lang_item("manually_drop")]
+pub struct ManuallyDrop::<[u8; 8usize]> {
+  value: MaybeDangling::<[u8; 8usize]>,
+}
+
+// Full name: core::mem::maybe_uninit::MaybeUninit::<[u8; 8usize]>
 #[lang_item("maybe_uninit")]
 pub union MaybeUninit::<[u8; 8usize]> {
   uninit: (),
   value: ManuallyDrop::<[u8; 8usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 4usize]>
+// Full name: core::mem::maybe_uninit::MaybeUninit::<[u8; 4usize]>
 #[lang_item("maybe_uninit")]
 pub union MaybeUninit::<[u8; 4usize]> {
   uninit: (),
   value: ManuallyDrop::<[u8; 4usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 2usize]>
+// Full name: core::mem::maybe_uninit::MaybeUninit::<[u8; 2usize]>
 #[lang_item("maybe_uninit")]
 pub union MaybeUninit::<[u8; 2usize]> {
   uninit: (),
   value: ManuallyDrop::<[u8; 2usize]>,
 }
 
-// Full name: std::mem::MaybeUninit::<[u8; 1usize]>
+// Full name: core::mem::maybe_uninit::MaybeUninit::<[u8; 1usize]>
 #[lang_item("maybe_uninit")]
 pub union MaybeUninit::<[u8; 1usize]> {
   uninit: (),
   value: ManuallyDrop::<[u8; 1usize]>,
 }
 
-// Full name: std::mem::SizedTypeProperties::ALIGN::<(u32, u32)>
+// Full name: core::mem::SizedTypeProperties::ALIGN::<(u32, u32)>
 #[lang_item("mem_align_const")]
 pub const ALIGN::<(u32, u32)>: usize = 4usize
 
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<(u32, u32)>
+// Full name: core::mem::SizedTypeProperties::IS_ZST::<(u32, u32)>
 pub const IS_ZST::<(u32, u32)>: bool = false
 
-fn core::num::<impl usize>::unchecked_add::precondition_check(lhs_1: usize, rhs_2: usize)
+fn core::num::{usize}::unchecked_add::precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
     let lhs_1: usize; // arg #1
@@ -3753,12 +3849,12 @@ pub struct NonZeroU64Inner {
   0: u64 is 1u64..=18446744073709551615u64,
 }
 
-// Full name: std::num::NonZero::<u64>
+// Full name: core::num::nonzero::NonZero::<u64>
 pub struct NonZero::<u64> {
   0: NonZeroU64Inner,
 }
 
-// Full name: std::num::NonZero::<usize>
+// Full name: core::num::nonzero::NonZero::<usize>
 pub struct NonZero::<usize> {
   0: NonZeroUsizeInner,
 }
@@ -3769,18 +3865,18 @@ struct TableLayout {
   ctrl_align: usize,
 }
 
-// Full name: std::alloc::Global
+// Full name: alloc::alloc::Global
 #[lang_item("global_alloc_ty")]
 pub struct Global {}
 
-struct hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure {
+struct hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure {
   upvar_0: &'_ Global,
   upvar_1: TableLayout,
 }
 
-// Full name: hashbrown::scopeguard::ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>
-struct ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure> {
-  dropfn: hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure,
+// Full name: hashbrown::scopeguard::ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>
+struct ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure> {
+  dropfn: hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure,
   value: RawTableInner,
 }
 
@@ -3790,70 +3886,74 @@ pub enum TryReserveError {
   AllocError(layout: Layout),
 }
 
-// Full name: std::result::Result::<Infallible, TryReserveError>
+// Full name: core::result::Result::<Infallible, TryReserveError>
 pub enum Result::<Infallible, TryReserveError> {
   Ok(0: Infallible),
   Err(0: TryReserveError),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>
-pub enum ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>> {
-  Continue(0: ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>),
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>
+pub enum ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>> {
+  Continue(0: ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>),
   Break(0: Result::<Infallible, TryReserveError>),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, TryReserveError>, RawTableInner>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, TryReserveError>, RawTableInner>
 pub enum ControlFlow::<Result::<Infallible, TryReserveError>, RawTableInner> {
   Continue(0: RawTableInner),
   Break(0: Result::<Infallible, TryReserveError>),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, TryReserveError>, usize>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, TryReserveError>, usize>
 pub enum ControlFlow::<Result::<Infallible, TryReserveError>, usize> {
   Continue(0: usize),
   Break(0: Result::<Infallible, TryReserveError>),
 }
 
-// Full name: std::option::Option::<Infallible>
+// Full name: core::option::Option::<Infallible>
 #[lang_item("Option")]
 pub enum Option::<Infallible> {
   None,
   Some(0: Infallible),
 }
 
-// Full name: std::ops::ControlFlow::<Option::<Infallible>, usize>
+// Full name: core::ops::control_flow::ControlFlow::<Option::<Infallible>, usize>
 pub enum ControlFlow::<Option::<Infallible>, usize> {
   Continue(0: usize),
   Break(0: Option::<Infallible>),
 }
 
-// Full name: std::result::Result::<Infallible, AllocError>
+// Full name: core::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {
   Ok(0: Infallible),
   Err(0: AllocError),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>
 pub enum ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>> {
   Continue(0: NonNull::<u8>),
   Break(0: Result::<Infallible, AllocError>),
 }
 
-struct hashbrown::map::make_hasher::{closure#0}::closure {
+// Full name: core::ops::drop::Drop
+#[lang_item("drop")]
+trait Drop
+
+struct hashbrown::map::make_hasher::closure::closure {
   upvar_0: &'_ RandomState,
 }
 
-struct hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure {
-  upvar_0: &'_ hashbrown::map::make_hasher::{closure#0}::closure,
+struct hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure {
+  upvar_0: &'_ hashbrown::map::make_hasher::closure::closure,
 }
 
 // Full name: hashbrown::raw::SizedTypeProperties::IS_ZERO_SIZED::<(u32, u32)>
 const IS_ZERO_SIZED::<(u32, u32)>: bool = false
 
-fn hashbrown::map::make_hasher::{closure#0}::<u32, u32, RandomState, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> u64, (&'_ RandomState,)>(_1: &'_ hashbrown::map::make_hasher::{closure#0}::closure, spread_args_2: (&'_ (u32, u32),)) -> u64
+fn hashbrown::map::make_hasher::closure::<u32, u32, RandomState, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> u64, (&'_ RandomState,)>(_1: &'_ hashbrown::map::make_hasher::closure::closure, spread_args_2: (&'_ (u32, u32),)) -> u64
 {
     let _0: u64; // return
-    let _1: &'_ hashbrown::map::make_hasher::{closure#0}::closure; // arg #1
+    let _1: &'_ hashbrown::map::make_hasher::closure::closure; // arg #1
     let spread_args_2: (&'_ (u32, u32),); // arg #2
     let val_3: &'_ (u32, u32); // local
     let val_4: &'_ u32; // local
@@ -3879,21 +3979,21 @@ fn hashbrown::map::make_hasher::{closure#0}::<u32, u32, RandomState, i8, extern 
     }
 }
 
-// Full name: std::ptr::NonNull::<(u32, u32)>
+// Full name: core::ptr::non_null::NonNull::<(u32, u32)>
 pub struct NonNull::<(u32, u32)> {
   pointer: *const (u32, u32) is !null,
 }
 
-fn hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>(_1: &'_ hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, spread_args_2: (&'_ mut RawTableInner, usize)) -> u64
+fn hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::closure::closure,)>(_1: &'_ hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, spread_args_2: (&'_ mut RawTableInner, usize)) -> u64
 {
     let _0: u64; // return
-    let _1: &'_ hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure; // arg #1
+    let _1: &'_ hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure; // arg #1
     let spread_args_2: (&'_ mut RawTableInner, usize); // arg #2
     let table_3: &'_ mut RawTableInner; // local
     let index_4: usize; // local
     let _5: (&'_ (u32, u32),); // anonymous local
     let _6: &'_ (u32, u32); // anonymous local
-    let _7: &'_ hashbrown::map::make_hasher::{closure#0}::closure; // anonymous local
+    let _7: &'_ hashbrown::map::make_hasher::closure::closure; // anonymous local
     let base_8: NonNull::<(u32, u32)>; // local
     let _9: NonNull::<u8>; // anonymous local
     let ptr_10: *mut (u32, u32); // local
@@ -3982,7 +4082,7 @@ fn hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), G
         _6 = &(*_16);
         storage_dead(_16);
         _5 = (copy _6,);
-        _0 = hashbrown::map::make_hasher::{closure#0}::<u32, u32, RandomState, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> u64, (&'_ RandomState,)>(move _7, move _5) -> bb12 (unwind: bb13);
+        _0 = hashbrown::map::make_hasher::closure::<u32, u32, RandomState, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> u64, (&'_ RandomState,)>(move _7, move _5) -> bb12 (unwind: bb13);
     }
 
     bb10: {
@@ -4011,12 +4111,12 @@ fn hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), G
     }
 }
 
-// Full name: std::ptr::drop_glue::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure>
+// Full name: core::ptr::drop_glue::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure>
 #[lang_item("drop_glue")]
-fn drop_glue::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure>(_1: &'_ mut hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure)
+fn drop_glue::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure>(_1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure)
 {
     let _0: (); // return
-    let _1: &'_ mut hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure; // arg #1
+    let _1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure; // arg #1
 
     bb0: {
         _0 = ();
@@ -4024,18 +4124,18 @@ fn drop_glue::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::cl
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>
-pub fn call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>(_1: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, _2: (&'_ mut RawTableInner, usize)) -> u64
+// Full name: core::ops::function::FnOnce::call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>
+pub fn call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>(_1: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, _2: (&'_ mut RawTableInner, usize)) -> u64
 {
     let _0: u64; // return
-    let _1: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure; // arg #1
+    let _1: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure; // arg #1
     let _2: (&'_ mut RawTableInner, usize); // arg #2
-    let _3: &'_ mut hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure; // anonymous local
+    let _3: &'_ mut hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _3 = &mut _1;
-        _0 = hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::closure::closure,)>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4047,15 +4147,15 @@ pub fn call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>
-pub fn call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>(_1: *mut hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, _2: (&'_ mut RawTableInner, usize)) -> u64
+// Full name: core::ops::function::FnOnce::call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>
+pub fn call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>(_1: *mut hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, _2: (&'_ mut RawTableInner, usize)) -> u64
 {
     let _0: u64; // return
-    let _1: *mut hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure; // arg #1
+    let _1: *mut hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure; // arg #1
     let _2: (&'_ mut RawTableInner, usize); // arg #2
 
     bb0: {
-        _0 = call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>(move (*_1), move _2) -> bb1 (unwind: bb2);
+        _0 = call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>(move (*_1), move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4067,9 +4167,9 @@ pub fn call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}
     }
 }
 
-// Full name: {vtable}::std::ops::Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>
+// Full name: {vtable}::core::ops::function::Fn::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>
 #[lang_item("r#fn")]
-fn Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>() -> *const ()
+fn Fn::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -4090,12 +4190,12 @@ fn Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, 
         storage_live(hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6);
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
-        drop_1 = cast<drop_glue::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure>, *const ()>(const drop_glue::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure>);
+        drop_1 = cast<drop_glue::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure>, *const ()>(const drop_glue::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <{closure@hashbrown::raw::RawTable<(u32, u32)>::reserve_rehash<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(&mut hashbrown::raw::RawTableInner, usize)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>);
-        hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>);
-        hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6 = cast<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::{closure#0}::closure,)>);
+        <{closure@hashbrown::raw::RawTable<(u32, u32)>::reserve_rehash<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(&mut hashbrown::raw::RawTableInner, usize)>>::call_once_4 = cast<call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>, *const ()>(const call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::closure::closure,)>, *const ()>(const hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::closure::closure,)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6 = cast<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::closure::closure,)>, *const ()>(const hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((&'_ mut RawTableInner, usize)) -> u64, (&'_ hashbrown::map::make_hasher::closure::closure,)>);
         entry_array_7 = [move drop_1, move size_2, move align_3, move <{closure@hashbrown::raw::RawTable<(u32, u32)>::reserve_rehash<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(&mut hashbrown::raw::RawTableInner, usize)>>::call_once_4, move hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5, move hashbrown::raw::RawTable::<(u32, u32)>::reserve_rehash::<{closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_6];
         entry_array_ref_8 = &raw const entry_array_7;
         vtable_0 = cast<*const [*const (); 6usize], *const ()>(move entry_array_ref_8);
@@ -4103,11 +4203,11 @@ fn Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, 
     }
 }
 
-// Full name: {vtable}::std::ops::Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>
+// Full name: {vtable}::core::ops::function::Fn::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>
 #[lang_item("r#fn")]
-static Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>: *const () = Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>()
+static Fn::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>: *const () = Fn::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>()
 
-// Full name: std::ops::Fn::call::<(dyn FakeTrait), (&'_ mut RawTableInner, usize)>
+// Full name: core::ops::function::Fn::call::<(dyn FakeTrait), (&'_ mut RawTableInner, usize)>
 pub fn call::<(dyn FakeTrait), (&'_ mut RawTableInner, usize)>(_1: &'_ (dyn FakeTrait), _2: &'_ mut RawTableInner, _3: usize) -> u64
 = <opaque>
 
@@ -4118,16 +4218,16 @@ struct RawTable::<(u32, u32), Global> {
   marker: PhantomData::<(u32, u32)>,
 }
 
-struct hashbrown::map::equivalent_key::{closure#0}::closure {
+struct hashbrown::map::equivalent_key::closure::closure {
   upvar_0: &'_ u32,
 }
 
-struct hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure {
-  upvar_0: &'_ mut hashbrown::map::equivalent_key::{closure#0}::closure,
+struct hashbrown::raw::{RawTable::<_, _>}::find::closure::closure {
+  upvar_0: &'_ mut hashbrown::map::equivalent_key::closure::closure,
   upvar_1: &'_ RawTable::<(u32, u32), Global>,
 }
 
-// Full name: <Q as hashbrown::Equivalent<K>>::equivalent::<u32, u32>
+// Full name: hashbrown::{impl Equivalent<K> for Q}::equivalent::<u32, u32>
 pub fn equivalent::<u32, u32>(self_1: &'_ u32, key_2: &'_ u32) -> bool
 {
     let _0: bool; // return
@@ -4158,10 +4258,10 @@ pub fn equivalent::<u32, u32>(self_1: &'_ u32, key_2: &'_ u32) -> bool
     }
 }
 
-fn hashbrown::map::equivalent_key::{closure#0}::<u32, u32, u32, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> bool, (&'_ u32,)>(_1: &'_ hashbrown::map::equivalent_key::{closure#0}::closure, spread_args_2: (&'_ (u32, u32),)) -> bool
+fn hashbrown::map::equivalent_key::closure::<u32, u32, u32, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> bool, (&'_ u32,)>(_1: &'_ hashbrown::map::equivalent_key::closure::closure, spread_args_2: (&'_ (u32, u32),)) -> bool
 {
     let _0: bool; // return
-    let _1: &'_ hashbrown::map::equivalent_key::{closure#0}::closure; // arg #1
+    let _1: &'_ hashbrown::map::equivalent_key::closure::closure; // arg #1
     let spread_args_2: (&'_ (u32, u32),); // arg #2
     let x_3: &'_ (u32, u32); // local
     let _4: &'_ u32; // anonymous local
@@ -4187,15 +4287,15 @@ fn hashbrown::map::equivalent_key::{closure#0}::<u32, u32, u32, i8, extern "rust
     }
 }
 
-fn hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>(_1: &'_ mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, spread_args_2: (usize,)) -> bool
+fn hashbrown::raw::{RawTable::<_, _>}::find::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>(_1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, spread_args_2: (usize,)) -> bool
 {
     let _0: bool; // return
-    let _1: &'_ mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure; // arg #1
+    let _1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure; // arg #1
     let spread_args_2: (usize,); // arg #2
     let index_3: usize; // local
     let _4: (&'_ (u32, u32),); // anonymous local
     let _5: &'_ (u32, u32); // anonymous local
-    let _6: &'_ mut hashbrown::map::equivalent_key::{closure#0}::closure; // anonymous local
+    let _6: &'_ mut hashbrown::map::equivalent_key::closure::closure; // anonymous local
     let self_7: &'_ RawTable::<(u32, u32), Global>; // local
     let base_8: NonNull::<(u32, u32)>; // local
     let _9: NonNull::<u8>; // anonymous local
@@ -4285,7 +4385,7 @@ fn hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, has
         _5 = &(*_16);
         storage_dead(_16);
         _4 = (copy _5,);
-        _0 = hashbrown::map::equivalent_key::{closure#0}::<u32, u32, u32, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> bool, (&'_ u32,)>(move _6, move _4) -> bb12 (unwind: bb13);
+        _0 = hashbrown::map::equivalent_key::closure::<u32, u32, u32, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> bool, (&'_ u32,)>(move _6, move _4) -> bb12 (unwind: bb13);
     }
 
     bb10: {
@@ -4314,12 +4414,12 @@ fn hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, has
     }
 }
 
-// Full name: std::ptr::drop_glue::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure>
+// Full name: core::ptr::drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure>
 #[lang_item("drop_glue")]
-fn drop_glue::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure>(_1: &'_ mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure)
+fn drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure>(_1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure)
 {
     let _0: (); // return
-    let _1: &'_ mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure; // arg #1
+    let _1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure; // arg #1
 
     bb0: {
         _0 = ();
@@ -4327,18 +4427,18 @@ fn drop_glue::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure>(_1:
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>
-pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>(_1: hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, _2: (usize,)) -> bool
+// Full name: core::ops::function::FnOnce::call_once::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>
+pub fn call_once::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>(_1: hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, _2: (usize,)) -> bool
 {
     let _0: bool; // return
-    let _1: hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure; // arg #1
+    let _1: hashbrown::raw::{RawTable::<_, _>}::find::closure::closure; // arg #1
     let _2: (usize,); // arg #2
-    let _3: &'_ mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure; // anonymous local
+    let _3: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _3 = &mut _1;
-        _0 = hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = hashbrown::raw::{RawTable::<_, _>}::find::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4350,15 +4450,15 @@ pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure,
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>
-pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>(_1: *mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, _2: (usize,)) -> bool
+// Full name: core::ops::function::FnOnce::call_once::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>
+pub fn call_once::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>(_1: *mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, _2: (usize,)) -> bool
 {
     let _0: bool; // return
-    let _1: *mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure; // arg #1
+    let _1: *mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure; // arg #1
     let _2: (usize,); // arg #2
 
     bb0: {
-        _0 = call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>(move (*_1), move _2) -> bb1 (unwind: bb2);
+        _0 = call_once::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>(move (*_1), move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4370,9 +4470,9 @@ pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure,
     }
 }
 
-// Full name: {vtable}::std::ops::FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>
+// Full name: {vtable}::core::ops::function::FnMut::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>
 #[lang_item("fn_mut")]
-fn FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>() -> *const ()
+fn FnMut::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -4391,11 +4491,11 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,
         storage_live(hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5);
         storage_live(entry_array_6);
         storage_live(entry_array_ref_7);
-        drop_1 = cast<drop_glue::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure>, *const ()>(const drop_glue::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure>);
+        drop_1 = cast<drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure>, *const ()>(const drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure>);
         size_2 = transmute<usize, *const ()>(const 16usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <{closure@hashbrown::raw::RawTable<(u32, u32)>::find<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>);
-        hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::find::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>);
+        <{closure@hashbrown::raw::RawTable<(u32, u32)>::find<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::{RawTable::<_, _>}::find::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::{RawTable::<_, _>}::find::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>);
         entry_array_6 = [move drop_1, move size_2, move align_3, move <{closure@hashbrown::raw::RawTable<(u32, u32)>::find<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4, move hashbrown::raw::RawTable::<(u32, u32)>::find::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}>::{closure#0}_5];
         entry_array_ref_7 = &raw const entry_array_6;
         vtable_0 = cast<*const [*const (); 5usize], *const ()>(move entry_array_ref_7);
@@ -4403,20 +4503,20 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,
     }
 }
 
-struct hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure {
-  upvar_0: &'_ mut hashbrown::map::equivalent_key::{closure#0}::closure,
+struct hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure {
+  upvar_0: &'_ mut hashbrown::map::equivalent_key::closure::closure,
   upvar_1: &'_ RawTable::<(u32, u32), Global>,
 }
 
-fn hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>(_1: &'_ mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, spread_args_2: (usize,)) -> bool
+fn hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, hashbrown::map::make_hasher::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>(_1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, spread_args_2: (usize,)) -> bool
 {
     let _0: bool; // return
-    let _1: &'_ mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure; // arg #1
+    let _1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure; // arg #1
     let spread_args_2: (usize,); // arg #2
     let index_3: usize; // local
     let _4: (&'_ (u32, u32),); // anonymous local
     let _5: &'_ (u32, u32); // anonymous local
-    let _6: &'_ mut hashbrown::map::equivalent_key::{closure#0}::closure; // anonymous local
+    let _6: &'_ mut hashbrown::map::equivalent_key::closure::closure; // anonymous local
     let self_7: &'_ RawTable::<(u32, u32), Global>; // local
     let base_8: NonNull::<(u32, u32)>; // local
     let _9: NonNull::<u8>; // anonymous local
@@ -4506,7 +4606,7 @@ fn hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u
         _5 = &(*_16);
         storage_dead(_16);
         _4 = (copy _5,);
-        _0 = hashbrown::map::equivalent_key::{closure#0}::<u32, u32, u32, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> bool, (&'_ u32,)>(move _6, move _4) -> bb12 (unwind: bb13);
+        _0 = hashbrown::map::equivalent_key::closure::<u32, u32, u32, i8, extern "rust-call" fn((&'_ (u32, u32),)) -> bool, (&'_ u32,)>(move _6, move _4) -> bb12 (unwind: bb13);
     }
 
     bb10: {
@@ -4535,12 +4635,12 @@ fn hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u
     }
 }
 
-// Full name: std::ptr::drop_glue::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure>
+// Full name: core::ptr::drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure>
 #[lang_item("drop_glue")]
-fn drop_glue::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure>(_1: &'_ mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure)
+fn drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure>(_1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure)
 {
     let _0: (); // return
-    let _1: &'_ mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure; // arg #1
+    let _1: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure; // arg #1
 
     bb0: {
         _0 = ();
@@ -4548,18 +4648,18 @@ fn drop_glue::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{clo
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>
-pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>(_1: hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, _2: (usize,)) -> bool
+// Full name: core::ops::function::FnOnce::call_once::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>
+pub fn call_once::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>(_1: hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, _2: (usize,)) -> bool
 {
     let _0: bool; // return
-    let _1: hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure; // arg #1
+    let _1: hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure; // arg #1
     let _2: (usize,); // arg #2
-    let _3: &'_ mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure; // anonymous local
+    let _3: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _3 = &mut _1;
-        _0 = hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, hashbrown::map::make_hasher::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4571,15 +4671,15 @@ pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>
-pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>(_1: *mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, _2: (usize,)) -> bool
+// Full name: core::ops::function::FnOnce::call_once::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>
+pub fn call_once::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>(_1: *mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, _2: (usize,)) -> bool
 {
     let _0: bool; // return
-    let _1: *mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure; // arg #1
+    let _1: *mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure; // arg #1
     let _2: (usize,); // arg #2
 
     bb0: {
-        _0 = call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>(move (*_1), move _2) -> bb1 (unwind: bb2);
+        _0 = call_once::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>(move (*_1), move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4591,9 +4691,9 @@ pub fn call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::
     }
 }
 
-// Full name: {vtable}::std::ops::FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>
+// Full name: {vtable}::core::ops::function::FnMut::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>
 #[lang_item("fn_mut")]
-fn FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>() -> *const ()
+fn FnMut::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -4612,11 +4712,11 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure
         storage_live(hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5);
         storage_live(entry_array_6);
         storage_live(entry_array_ref_7);
-        drop_1 = cast<drop_glue::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure>, *const ()>(const drop_glue::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure>);
+        drop_1 = cast<drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure>, *const ()>(const drop_glue::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure>);
         size_2 = transmute<usize, *const ()>(const 16usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <{closure@hashbrown::raw::RawTable<(u32, u32)>::find_or_find_insert_index<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>);
-        hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::{closure#0}::closure, &'_ RawTable::<(u32, u32), Global>)>);
+        <{closure@hashbrown::raw::RawTable<(u32, u32)>::find_or_find_insert_index<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4 = cast<call_once::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>, *const ()>(const call_once::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>);
+        hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5 = cast<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, hashbrown::map::make_hasher::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>, *const ()>(const hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, hashbrown::map::make_hasher::closure::closure, i16, extern "rust-call" fn((usize,)) -> bool, (&'_ mut hashbrown::map::equivalent_key::closure::closure, &'_ RawTable::<(u32, u32), Global>)>);
         entry_array_6 = [move drop_1, move size_2, move align_3, move <{closure@hashbrown::raw::RawTable<(u32, u32)>::find_or_find_insert_index<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}} as std::ops::FnOnce<(usize,)>>::call_once_4, move hashbrown::raw::RawTable::<(u32, u32)>::find_or_find_insert_index::<{closure@hashbrown::map::equivalent_key<u32, u32, u32>::{closure#0}}, {closure@hashbrown::map::make_hasher<u32, u32, std::hash::RandomState>::{closure#0}}>::{closure#0}_5];
         entry_array_ref_7 = &raw const entry_array_6;
         vtable_0 = cast<*const [*const (); 5usize], *const ()>(move entry_array_ref_7);
@@ -4624,21 +4724,21 @@ fn FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure
     }
 }
 
-// Full name: {vtable}::std::ops::FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>
+// Full name: {vtable}::core::ops::function::FnMut::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>
 #[lang_item("fn_mut")]
-static FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>: *const () = FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>()
+static FnMut::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>: *const () = FnMut::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>()
 
-// Full name: {vtable}::std::ops::FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>
+// Full name: {vtable}::core::ops::function::FnMut::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>
 #[lang_item("fn_mut")]
-static FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>: *const () = FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>()
+static FnMut::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>: *const () = FnMut::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>()
 
-// Full name: std::ops::FnMut::call_mut::<(dyn FakeTrait), (usize,)>
+// Full name: core::ops::function::FnMut::call_mut::<(dyn FakeTrait), (usize,)>
 pub fn call_mut::<(dyn FakeTrait), (usize,)>(_1: &'_ mut (dyn FakeTrait), _2: usize) -> bool
 = <opaque>
 
-struct hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure {}
+struct hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure {}
 
-// Full name: std::ptr::drop_glue::<(u32, u32)>
+// Full name: core::ptr::drop_glue::<(u32, u32)>
 #[lang_item("drop_glue")]
 fn drop_glue::<(u32, u32)>(_1: &'_ mut (u32, u32))
 {
@@ -4651,11 +4751,10 @@ fn drop_glue::<(u32, u32)>(_1: &'_ mut (u32, u32))
     }
 }
 
-// Full name: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((*mut u8,)), ()>
-fn {closure#1}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((*mut u8,)), ()>(_1: &'_ hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure, spread_args_2: (*mut u8,))
+fn hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((*mut u8,)), ()>(_1: &'_ hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure, spread_args_2: (*mut u8,))
 {
     let _0: (); // return
-    let _1: &'_ hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure; // arg #1
+    let _1: &'_ hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure; // arg #1
     let spread_args_2: (*mut u8,); // arg #2
     let ptr_3: *mut u8; // local
     let to_drop_4: *mut (u32, u32); // local
@@ -4683,19 +4782,19 @@ fn {closure#1}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::c
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure, (*mut u8,)>
-pub fn call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure, (*mut u8,)>(_1: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure, _2: (*mut u8,))
+// Full name: core::ops::function::FnOnce::call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure, (*mut u8,)>
+pub fn call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure, (*mut u8,)>(_1: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure, _2: (*mut u8,))
 {
     let _0: (); // return
-    let _1: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure; // arg #1
+    let _1: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure; // arg #1
     let _2: (*mut u8,); // arg #2
-    let _3: &'_ mut hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure; // anonymous local
+    let _3: &'_ mut hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _0 = ();
         _3 = &mut _1;
-        _0 = {closure#1}::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure, i8, extern "rust-call" fn((*mut u8,)), ()>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure, i8, extern "rust-call" fn((*mut u8,)), ()>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4707,21 +4806,25 @@ pub fn call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}
     }
 }
 
-// Full name: std::option::Option::<&'_ u32>
+// Full name: core::ops::index::Index
+#[lang_item("index")]
+trait Index
+
+// Full name: core::option::Option::<&'_ u32>
 #[lang_item("Option")]
 pub enum Option::<&'_ u32> {
   None,
   Some(0: &'_ u32),
 }
 
-// Full name: std::option::Option::<u32>
+// Full name: core::option::Option::<u32>
 #[lang_item("Option")]
 pub enum Option::<u32> {
   None,
   Some(0: u32),
 }
 
-// Full name: std::option::Option::<&'_ (u32, u32)>
+// Full name: core::option::Option::<&'_ (u32, u32)>
 #[lang_item("Option")]
 pub enum Option::<&'_ (u32, u32)> {
   None,
@@ -4733,42 +4836,42 @@ struct Bucket::<(u32, u32)> {
   ptr: NonNull::<(u32, u32)>,
 }
 
-// Full name: std::option::Option::<Bucket::<(u32, u32)>>
+// Full name: core::option::Option::<Bucket::<(u32, u32)>>
 #[lang_item("Option")]
 pub enum Option::<Bucket::<(u32, u32)>> {
   None,
   Some(0: Bucket::<(u32, u32)>),
 }
 
-// Full name: std::option::Option::<NonZero::<u64>>
+// Full name: core::option::Option::<NonZero::<u64>>
 #[lang_item("Option")]
 pub enum Option::<NonZero::<u64>> {
   None,
   Some(0: NonZero::<u64>),
 }
 
-// Full name: std::option::Option::<unsafe fn(*mut u8)>
+// Full name: core::option::Option::<unsafe fn(*mut u8)>
 #[lang_item("Option")]
 pub enum Option::<unsafe fn(*mut u8)> {
   None,
   Some(0: unsafe fn(*mut u8)),
 }
 
-// Full name: std::option::Option::<NonZero::<usize>>
+// Full name: core::option::Option::<NonZero::<usize>>
 #[lang_item("Option")]
 pub enum Option::<NonZero::<usize>> {
   None,
   Some(0: NonZero::<usize>),
 }
 
-// Full name: std::option::Option::<(Layout, usize)>
+// Full name: core::option::Option::<(Layout, usize)>
 #[lang_item("Option")]
 pub enum Option::<(Layout, usize)> {
   None,
   Some(0: (Layout, usize)),
 }
 
-// Full name: std::option::Option::<NonNull::<u8>>
+// Full name: core::option::Option::<NonNull::<u8>>
 #[lang_item("Option")]
 pub enum Option::<NonNull::<u8>> {
   None,
@@ -4778,7 +4881,7 @@ pub enum Option::<NonNull::<u8>> {
 // Full name: anon_const_3
 const anon_const_3: [u8; 2usize] = [192u8, 0u8]
 
-// Full name: std::rt::panic_display::<&'_ str>
+// Full name: core::panicking::panic_display::<&'_ str>
 #[lang_item("panic_display")]
 pub fn panic_display::<&'_ str>(x_1: &'_ &'_ str) -> !
 {
@@ -4811,7 +4914,7 @@ pub fn panic_display::<&'_ str>(x_1: &'_ &'_ str) -> !
         _8 = transmute<*const &'_ str, NonNull::<()>>(copy _11);
         storage_live(_9);
         storage_live(_10);
-        _10 = cast<<&T as std::fmt::Display>::fmt::<'_, str>, fn(&'_ &'_ str, &'_ mut Formatter::<'_>) -> Result::<(), Error>>(const <&T as std::fmt::Display>::fmt::<'_, str>);
+        _10 = cast<{impl Display for &'_ T}::fmt::<'_, str>, fn(&'_ &'_ str, &'_ mut Formatter::<'_>) -> Result::<(), Error>>(const {impl Display for &'_ T}::fmt::<'_, str>);
         _9 = transmute<fn(&'_ &'_ str, &'_ mut Formatter::<'_>) -> Result::<(), Error>, unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>>(copy _10);
         storage_dead(_10);
         storage_live(_14);
@@ -4848,7 +4951,7 @@ pub fn panic_display::<&'_ str>(x_1: &'_ &'_ str) -> !
     }
 }
 
-// Full name: std::option::expect_failed
+// Full name: core::option::expect_failed
 fn expect_failed(msg_1: &'_ str) -> !
 {
     let _0: !; // return
@@ -4873,6 +4976,24 @@ fn expect_failed(msg_1: &'_ str) -> !
     }
 }
 
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
 // Full name: core::panicking::AssertKind
 pub enum AssertKind {
   Eq,
@@ -4880,21 +5001,21 @@ pub enum AssertKind {
   Match,
 }
 
-struct hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure {
+struct hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure {
   upvar_0: Option::<unsafe fn(*mut u8)>,
   upvar_1: usize,
 }
 
-// Full name: hashbrown::scopeguard::ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>
-struct ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure> {
-  dropfn: hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure,
+// Full name: hashbrown::scopeguard::ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>
+struct ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure> {
+  dropfn: hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure,
   value: &'_ mut RawTableInner,
 }
 
-fn hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::<i16, extern "rust-call" fn((&'_ mut &'_ mut RawTableInner,)), (Option::<unsafe fn(*mut u8)>, usize)>(_1: &'_ mut hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure, spread_args_2: (&'_ mut &'_ mut RawTableInner,))
+fn hashbrown::raw::{RawTableInner}::rehash_in_place::closure::<i16, extern "rust-call" fn((&'_ mut &'_ mut RawTableInner,)), (Option::<unsafe fn(*mut u8)>, usize)>(_1: &'_ mut hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure, spread_args_2: (&'_ mut &'_ mut RawTableInner,))
 {
     let _0: (); // return
-    let _1: &'_ mut hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure; // arg #1
+    let _1: &'_ mut hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure; // arg #1
     let spread_args_2: (&'_ mut &'_ mut RawTableInner,); // arg #2
     let self__3: &'_ mut &'_ mut RawTableInner; // local
     let iter_4: Range::<usize>; // local
@@ -5166,13 +5287,13 @@ fn hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::<i16, extern "ru
     }
 }
 
-// Full name: <hashbrown::scopeguard::ScopeGuard<T, F> as std::ops::Drop>::drop::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>
-pub fn drop::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>(self_1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>)
+// Full name: hashbrown::scopeguard::{impl Drop for ScopeGuard::<_, _>}::drop::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>
+pub fn drop::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>(self_1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>)
 {
     let _0: (); // return
-    let self_1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>; // arg #1
+    let self_1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>; // arg #1
     let _2: (); // anonymous local
-    let _3: &'_ mut hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure; // anonymous local
+    let _3: &'_ mut hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure; // anonymous local
     let _4: (&'_ mut &'_ mut RawTableInner,); // anonymous local
     let _5: &'_ mut &'_ mut RawTableInner; // anonymous local
 
@@ -5185,7 +5306,7 @@ pub fn drop::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_pl
         storage_live(_5);
         _5 = &mut ((*self_1)).value;
         _4 = (copy _5,);
-        _2 = hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::<i16, extern "rust-call" fn((&'_ mut &'_ mut RawTableInner,)), (Option::<unsafe fn(*mut u8)>, usize)>(move _3, move _4) -> bb1 (unwind: bb2);
+        _2 = hashbrown::raw::{RawTableInner}::rehash_in_place::closure::<i16, extern "rust-call" fn((&'_ mut &'_ mut RawTableInner,)), (Option::<unsafe fn(*mut u8)>, usize)>(move _3, move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -5200,13 +5321,13 @@ pub fn drop::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_pl
     }
 }
 
-// Full name: std::ptr::drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>>
+// Full name: core::ptr::drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>>
 #[lang_item("drop_glue")]
-fn drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>>(_1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>)
+fn drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>>(_1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>)
 {
     let _0: (); // return
-    let _1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>; // arg #1
-    let _2: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>; // anonymous local
+    let _1: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>; // arg #1
+    let _2: &'_ mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>; // anonymous local
     let _3: (); // anonymous local
 
     bb0: {
@@ -5214,7 +5335,7 @@ fn drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner
         storage_live(_3);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = drop::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>(move _2) -> bb1 (unwind: bb2);
+        _3 = drop::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -5226,7 +5347,7 @@ fn drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner
     }
 }
 
-// Full name: hashbrown::raw::TableLayout::calculate_layout_for
+// Full name: hashbrown::raw::{TableLayout}::calculate_layout_for
 fn calculate_layout_for(self_1: TableLayout, buckets_2: usize) -> Option::<(Layout, usize)>
 {
     let _0: Option::<(Layout, usize)>; // return
@@ -5521,7 +5642,7 @@ fn calculate_layout_for(self_1: TableLayout, buckets_2: usize) -> Option::<(Layo
 fn __rust_dealloc(_1: NonNull::<u8>, _2: usize, _3: Alignment)
 = <extern:__rust_dealloc>
 
-// Full name: <std::alloc::Global as std::alloc::Allocator>::deallocate
+// Full name: alloc::alloc::{impl Allocator for Global}::deallocate
 pub fn deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
 {
     let _0: (); // return
@@ -5559,10 +5680,10 @@ pub fn deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
     }
 }
 
-fn hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::<Global, i16, extern "rust-call" fn((&'_ mut RawTableInner,)), (&'_ Global, TableLayout)>(_1: &'_ mut hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure, spread_args_2: (&'_ mut RawTableInner,))
+fn hashbrown::raw::{RawTableInner}::prepare_resize::closure::<Global, i16, extern "rust-call" fn((&'_ mut RawTableInner,)), (&'_ Global, TableLayout)>(_1: &'_ mut hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure, spread_args_2: (&'_ mut RawTableInner,))
 {
     let _0: (); // return
-    let _1: &'_ mut hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure; // arg #1
+    let _1: &'_ mut hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure; // arg #1
     let spread_args_2: (&'_ mut RawTableInner,); // arg #2
     let self__3: &'_ mut RawTableInner; // local
     let table_layout_4: TableLayout; // local
@@ -5668,13 +5789,13 @@ fn hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::<Global, i16, ext
     }
 }
 
-// Full name: <hashbrown::scopeguard::ScopeGuard<T, F> as std::ops::Drop>::drop::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>
-pub fn drop::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>(self_1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>)
+// Full name: hashbrown::scopeguard::{impl Drop for ScopeGuard::<_, _>}::drop::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>
+pub fn drop::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>(self_1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>)
 {
     let _0: (); // return
-    let self_1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // arg #1
+    let self_1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // arg #1
     let _2: (); // anonymous local
-    let _3: &'_ mut hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure; // anonymous local
+    let _3: &'_ mut hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure; // anonymous local
     let _4: (&'_ mut RawTableInner,); // anonymous local
     let _5: &'_ mut RawTableInner; // anonymous local
 
@@ -5687,7 +5808,7 @@ pub fn drop::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{clo
         storage_live(_5);
         _5 = &mut ((*self_1)).value;
         _4 = (copy _5,);
-        _2 = hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::<Global, i16, extern "rust-call" fn((&'_ mut RawTableInner,)), (&'_ Global, TableLayout)>(move _3, move _4) -> bb1 (unwind: bb2);
+        _2 = hashbrown::raw::{RawTableInner}::prepare_resize::closure::<Global, i16, extern "rust-call" fn((&'_ mut RawTableInner,)), (&'_ Global, TableLayout)>(move _3, move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -5702,13 +5823,13 @@ pub fn drop::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{clo
     }
 }
 
-// Full name: std::ptr::drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>
+// Full name: core::ptr::drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>
 #[lang_item("drop_glue")]
-fn drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>(_1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>)
+fn drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>(_1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>)
 {
     let _0: (); // return
-    let _1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // arg #1
-    let _2: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // anonymous local
+    let _1: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // arg #1
+    let _2: &'_ mut ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // anonymous local
     let _3: (); // anonymous local
 
     bb0: {
@@ -5716,7 +5837,7 @@ fn drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepar
         storage_live(_3);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = drop::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>(move _2) -> bb1 (unwind: bb2);
+        _3 = drop::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -5728,7 +5849,7 @@ fn drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepar
     }
 }
 
-// Full name: std::ptr::swap_chunk::<8usize>
+// Full name: core::ptr::swap_chunk::<8usize>
 fn swap_chunk::<8usize>(x_1: &'_ mut MaybeUninit::<[u8; 8usize]>, y_2: &'_ mut MaybeUninit::<[u8; 8usize]>)
 {
     let _0: (); // return
@@ -5751,7 +5872,7 @@ fn swap_chunk::<8usize>(x_1: &'_ mut MaybeUninit::<[u8; 8usize]>, y_2: &'_ mut M
     }
 }
 
-// Full name: std::ptr::swap_chunk::<4usize>
+// Full name: core::ptr::swap_chunk::<4usize>
 fn swap_chunk::<4usize>(x_1: &'_ mut MaybeUninit::<[u8; 4usize]>, y_2: &'_ mut MaybeUninit::<[u8; 4usize]>)
 {
     let _0: (); // return
@@ -5774,7 +5895,7 @@ fn swap_chunk::<4usize>(x_1: &'_ mut MaybeUninit::<[u8; 4usize]>, y_2: &'_ mut M
     }
 }
 
-// Full name: std::ptr::swap_chunk::<2usize>
+// Full name: core::ptr::swap_chunk::<2usize>
 fn swap_chunk::<2usize>(x_1: &'_ mut MaybeUninit::<[u8; 2usize]>, y_2: &'_ mut MaybeUninit::<[u8; 2usize]>)
 {
     let _0: (); // return
@@ -5797,7 +5918,7 @@ fn swap_chunk::<2usize>(x_1: &'_ mut MaybeUninit::<[u8; 2usize]>, y_2: &'_ mut M
     }
 }
 
-// Full name: std::ptr::swap_chunk::<1usize>
+// Full name: core::ptr::swap_chunk::<1usize>
 fn swap_chunk::<1usize>(x_1: &'_ mut MaybeUninit::<[u8; 1usize]>, y_2: &'_ mut MaybeUninit::<[u8; 1usize]>)
 {
     let _0: (); // return
@@ -5820,7 +5941,7 @@ fn swap_chunk::<1usize>(x_1: &'_ mut MaybeUninit::<[u8; 1usize]>, y_2: &'_ mut M
     }
 }
 
-// Full name: std::ptr::swap_nonoverlapping_bytes::swap_nonoverlapping_short
+// Full name: core::ptr::swap_nonoverlapping_bytes::swap_nonoverlapping_short
 fn swap_nonoverlapping_short(x_1: *mut u8, y_2: *mut u8, bytes_3: NonZero::<usize>)
 {
     let _0: (); // return
@@ -6022,7 +6143,7 @@ fn swap_nonoverlapping_short(x_1: *mut u8, y_2: *mut u8, bytes_3: NonZero::<usiz
     }
 }
 
-// Full name: std::ptr::swap_nonoverlapping_bytes::swap_nonoverlapping_chunks::<8usize>
+// Full name: core::ptr::swap_nonoverlapping_bytes::swap_nonoverlapping_chunks::<8usize>
 fn swap_nonoverlapping_chunks::<8usize>(x_1: *mut MaybeUninit::<[u8; 8usize]>, y_2: *mut MaybeUninit::<[u8; 8usize]>, chunks_3: NonZero::<usize>)
 {
     let _0: (); // return
@@ -6087,7 +6208,7 @@ fn swap_nonoverlapping_chunks::<8usize>(x_1: *mut MaybeUninit::<[u8; 8usize]>, y
     }
 
     bb4: {
-        _18 = core::num::<impl usize>::unchecked_add::precondition_check(copy old_14, const 1usize) -> bb5 (unwind: bb6);
+        _18 = core::num::{usize}::unchecked_add::precondition_check(copy old_14, const 1usize) -> bb5 (unwind: bb6);
     }
 
     bb5: {
@@ -6129,7 +6250,7 @@ fn swap_nonoverlapping_chunks::<8usize>(x_1: *mut MaybeUninit::<[u8; 8usize]>, y
     }
 }
 
-// Full name: std::ptr::swap_nonoverlapping_bytes
+// Full name: core::ptr::swap_nonoverlapping_bytes
 fn swap_nonoverlapping_bytes(x_1: *mut u8, y_2: *mut u8, bytes_3: NonZero::<usize>)
 {
     let _0: (); // return
@@ -6247,12 +6368,12 @@ fn swap_nonoverlapping_bytes(x_1: *mut u8, y_2: *mut u8, bytes_3: NonZero::<usiz
     }
 }
 
-// Full name: std::ptr::NonNull::<[u8]>
+// Full name: core::ptr::non_null::NonNull::<[u8]>
 pub struct NonNull::<[u8]> {
   pointer: *const [u8] is !null,
 }
 
-fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
+fn core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(ptr_1: *mut ())
 {
     let _0: (); // return
     let ptr_1: *mut (); // arg #1
@@ -6331,64 +6452,72 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
     }
 }
 
-// Full name: std::result::Result::<Bucket::<(u32, u32)>, usize>
+// Full name: core::result::Result::<Bucket::<(u32, u32)>, usize>
 pub enum Result::<Bucket::<(u32, u32)>, usize> {
   Ok(0: Bucket::<(u32, u32)>),
   Err(0: usize),
 }
 
-// Full name: std::result::Result::<usize, usize>
+// Full name: core::result::Result::<usize, usize>
 pub enum Result::<usize, usize> {
   Ok(0: usize),
   Err(0: usize),
 }
 
-// Full name: std::result::Result::<(), TryReserveError>
+// Full name: core::result::Result::<(), TryReserveError>
 pub enum Result::<(), TryReserveError> {
   Ok(0: ()),
   Err(0: TryReserveError),
 }
 
-// Full name: std::result::Result::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>, TryReserveError>
-pub enum Result::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>, TryReserveError> {
-  Ok(0: ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>),
+// Full name: core::result::Result::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>, TryReserveError>
+pub enum Result::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>, TryReserveError> {
+  Ok(0: ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>),
   Err(0: TryReserveError),
 }
 
-// Full name: std::result::Result::<RawTableInner, TryReserveError>
+// Full name: core::result::Result::<RawTableInner, TryReserveError>
 pub enum Result::<RawTableInner, TryReserveError> {
   Ok(0: RawTableInner),
   Err(0: TryReserveError),
 }
 
-// Full name: std::result::Result::<usize, Infallible>
+// Full name: core::result::Result::<usize, Infallible>
 pub enum Result::<usize, Infallible> {
   Ok(0: usize),
   Err(0: Infallible),
 }
 
-// Full name: std::result::Result::<usize, TryReserveError>
+// Full name: core::result::Result::<usize, TryReserveError>
 pub enum Result::<usize, TryReserveError> {
   Ok(0: usize),
   Err(0: TryReserveError),
 }
 
-// Full name: std::result::Result::<NonNull::<[u8]>, ()>
+// Full name: core::result::Result::<NonNull::<[u8]>, ()>
 pub enum Result::<NonNull::<[u8]>, ()> {
   Ok(0: NonNull::<[u8]>),
   Err(0: ()),
 }
 
-// Full name: std::result::Result::<NonNull::<[u8]>, AllocError>
+// Full name: core::result::Result::<NonNull::<[u8]>, AllocError>
 pub enum Result::<NonNull::<[u8]>, AllocError> {
   Ok(0: NonNull::<[u8]>),
   Err(0: AllocError),
 }
 
-// Full name: std::result::Result::<NonNull::<u8>, AllocError>
+// Full name: core::result::Result::<NonNull::<u8>, AllocError>
 pub enum Result::<NonNull::<u8>, AllocError> {
   Ok(0: NonNull::<u8>),
   Err(0: AllocError),
+}
+
+// Full name: core::slice::index::SliceIndex
+trait SliceIndex
+
+// Full name: core::slice::index::{impl SliceIndex<[T]> for usize}
+impl<T> "impl_SliceIndex_slice_for_usize" SliceIndex<[T]> for usize {
+    non-dyn-compatible
 }
 
 pub struct hashbrown::map::HashMap::<u32, u32, RandomState, Global> {
@@ -6396,7 +6525,7 @@ pub struct hashbrown::map::HashMap::<u32, u32, RandomState, Global> {
   table: RawTable::<(u32, u32), Global>,
 }
 
-pub struct std::collections::HashMap::<u32, u32, RandomState, Global> {
+pub struct std::collections::hash::map::HashMap::<u32, u32, RandomState, Global> {
   base: hashbrown::map::HashMap::<u32, u32, RandomState, Global>,
 }
 
@@ -6416,7 +6545,7 @@ struct BitMask {
   0: u64,
 }
 
-// Full name: hashbrown::control::group::neon::Group::match_tag
+// Full name: hashbrown::control::group::neon::{Group}::match_tag
 fn match_tag(self_1: Group, tag_2: Tag) -> BitMask
 {
     let _0: BitMask; // return
@@ -6486,7 +6615,7 @@ struct BitMaskIter {
   0: BitMask,
 }
 
-// Full name: hashbrown::raw::RawTableInner::find_inner
+// Full name: hashbrown::raw::{RawTableInner}::find_inner
 fn find_inner(self_1: &'_ RawTableInner, hash_2: u64, eq_3: &'_ mut (dyn FakeTrait)) -> Option::<usize>
 {
     let _0: Option::<usize>; // return
@@ -6816,19 +6945,19 @@ fn find_inner(self_1: &'_ RawTableInner, hash_2: u64, eq_3: &'_ mut (dyn FakeTra
     }
 }
 
-// Full name: hashbrown::raw::RawTable::<T, A>::find::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure>
-fn find::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure>(self_1: &'_ RawTable::<(u32, u32), Global>, hash_2: u64, eq_3: hashbrown::map::equivalent_key::{closure#0}::closure) -> Option::<Bucket::<(u32, u32)>>
+// Full name: hashbrown::raw::{RawTable::<_, _>}::find::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure>
+fn find::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure>(self_1: &'_ RawTable::<(u32, u32), Global>, hash_2: u64, eq_3: hashbrown::map::equivalent_key::closure::closure) -> Option::<Bucket::<(u32, u32)>>
 {
     let _0: Option::<Bucket::<(u32, u32)>>; // return
     let self_1: &'_ RawTable::<(u32, u32), Global>; // arg #1
     let hash_2: u64; // arg #2
-    let eq_3: hashbrown::map::equivalent_key::{closure#0}::closure; // arg #3
+    let eq_3: hashbrown::map::equivalent_key::closure::closure; // arg #3
     let result_4: Option::<usize>; // local
     let _5: &'_ RawTableInner; // anonymous local
     let _6: &'_ mut (dyn FakeTrait); // anonymous local
-    let _7: &'_ mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure; // anonymous local
-    let _8: hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure; // anonymous local
-    let _9: &'_ mut hashbrown::map::equivalent_key::{closure#0}::closure; // anonymous local
+    let _7: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure; // anonymous local
+    let _8: hashbrown::raw::{RawTable::<_, _>}::find::closure::closure; // anonymous local
+    let _9: &'_ mut hashbrown::map::equivalent_key::closure::closure; // anonymous local
     let _10: isize; // anonymous local
     let index_11: usize; // local
     let _12: Bucket::<(u32, u32)>; // anonymous local
@@ -6852,10 +6981,10 @@ fn find::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closu
         storage_live(_8);
         storage_live(_9);
         _9 = &mut eq_3;
-        _8 = hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure { upvar_0: copy _9, upvar_1: copy self_1 };
+        _8 = hashbrown::raw::{RawTable::<_, _>}::find::closure::closure { upvar_0: copy _9, upvar_1: copy self_1 };
         storage_dead(_9);
         _7 = &mut _8;
-        _6 = unsize_cast<&'_ mut hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, &'_ mut (dyn FakeTrait), FnMut::<hashbrown::raw::RawTable::<T, A>::find::{closure#0}::closure, (usize,)>>(copy _7);
+        _6 = unsize_cast<&'_ mut hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, &'_ mut (dyn FakeTrait), FnMut::<hashbrown::raw::{RawTable::<_, _>}::find::closure::closure, (usize,)>>(copy _7);
         result_4 = find_inner(move _5, move hash_2, move _6) -> bb1 (unwind: bb2);
     }
 
@@ -6950,7 +7079,7 @@ fn find::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closu
     }
 }
 
-pub fn hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Global, u32>(self_1: &'_ hashbrown::map::HashMap::<u32, u32, RandomState, Global>, k_2: &'_ u32) -> Option::<&'_ u32>
+pub fn hashbrown::map::{hashbrown::map::HashMap::<_, _, _, _>}::get::<u32, u32, RandomState, Global, u32>(self_1: &'_ hashbrown::map::HashMap::<u32, u32, RandomState, Global>, k_2: &'_ u32) -> Option::<&'_ u32>
 {
     let _0: Option::<&'_ u32>; // return
     let self_1: &'_ hashbrown::map::HashMap::<u32, u32, RandomState, Global>; // arg #1
@@ -6959,7 +7088,7 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Globa
     let hash_builder_4: &'_ RandomState; // local
     let _5: Option::<&'_ (u32, u32)>; // anonymous local
     let self_6: &'_ RawTable::<(u32, u32), Global>; // local
-    let eq_7: hashbrown::map::equivalent_key::{closure#0}::closure; // local
+    let eq_7: hashbrown::map::equivalent_key::closure::closure; // local
     let v_8: &'_ u32; // local
     let _9: &'_ (u32, u32); // anonymous local
     let _10: usize; // anonymous local
@@ -7005,11 +7134,11 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Globa
         storage_live(self_6);
         self_6 = &((*self_1)).table;
         storage_live(eq_7);
-        eq_7 = hashbrown::map::equivalent_key::{closure#0}::closure { upvar_0: copy k_2 };
+        eq_7 = hashbrown::map::equivalent_key::closure::closure { upvar_0: copy k_2 };
         storage_live(_12);
         storage_live(_13);
         storage_live(_11);
-        _11 = find::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure>(move self_6, move hash_3, move eq_7) -> bb6 (unwind: bb7);
+        _11 = find::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure>(move self_6, move hash_3, move eq_7) -> bb6 (unwind: bb7);
     }
 
     bb5: {
@@ -7099,17 +7228,17 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Globa
     }
 }
 
-pub fn std::collections::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Global, u32>(self_1: &'_ std::collections::HashMap::<u32, u32, RandomState, Global>, k_2: &'_ u32) -> Option::<&'_ u32>
+pub fn std::collections::hash::map::{std::collections::hash::map::HashMap::<_, _, _, _>}::get::<u32, u32, RandomState, Global, u32>(self_1: &'_ std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>, k_2: &'_ u32) -> Option::<&'_ u32>
 {
     let _0: Option::<&'_ u32>; // return
-    let self_1: &'_ std::collections::HashMap::<u32, u32, RandomState, Global>; // arg #1
+    let self_1: &'_ std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>; // arg #1
     let k_2: &'_ u32; // arg #2
     let _3: &'_ hashbrown::map::HashMap::<u32, u32, RandomState, Global>; // anonymous local
 
     bb0: {
         storage_live(_3);
         _3 = &((*self_1)).base;
-        _0 = hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Global, u32>(move _3, move k_2) -> bb1 (unwind: bb2);
+        _0 = hashbrown::map::{hashbrown::map::HashMap::<_, _, _, _>}::get::<u32, u32, RandomState, Global, u32>(move _3, move k_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -7122,7 +7251,7 @@ pub fn std::collections::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Glo
     }
 }
 
-// Full name: hashbrown::raw::RawTable::<T, A>::insert_tagged_at_index::<(u32, u32), Global>
+// Full name: hashbrown::raw::{RawTable::<_, _>}::insert_tagged_at_index::<(u32, u32), Global>
 fn insert_tagged_at_index::<(u32, u32), Global>(self_1: &'_ mut RawTable::<(u32, u32), Global>, tag_2: Tag, index_3: usize, value_4: (u32, u32)) -> Bucket::<(u32, u32)>
 {
     let bucket_0: Bucket::<(u32, u32)>; // return
@@ -7313,7 +7442,7 @@ fn insert_tagged_at_index::<(u32, u32), Global>(self_1: &'_ mut RawTable::<(u32,
     }
 }
 
-// Full name: hashbrown::control::group::neon::Group::match_empty_or_deleted
+// Full name: hashbrown::control::group::neon::{Group}::match_empty_or_deleted
 fn match_empty_or_deleted(self_1: Group) -> BitMask
 {
     let _0: BitMask; // return
@@ -7373,7 +7502,7 @@ fn match_empty_or_deleted(self_1: Group) -> BitMask
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::find_insert_index_in_group
+// Full name: hashbrown::raw::{RawTableInner}::find_insert_index_in_group
 fn find_insert_index_in_group(self_1: &'_ RawTableInner, group_2: &'_ Group, probe_seq_3: &'_ ProbeSeq) -> Option::<usize>
 {
     let _0: Option::<usize>; // return
@@ -7515,7 +7644,7 @@ fn find_insert_index_in_group(self_1: &'_ RawTableInner, group_2: &'_ Group, pro
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::fix_insert_index
+// Full name: hashbrown::raw::{RawTableInner}::fix_insert_index
 fn fix_insert_index(self_1: &'_ RawTableInner, index_2: usize) -> usize
 {
     let _0: usize; // return
@@ -7689,7 +7818,7 @@ fn fix_insert_index(self_1: &'_ RawTableInner, index_2: usize) -> usize
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::find_or_find_insert_index_inner
+// Full name: hashbrown::raw::{RawTableInner}::find_or_find_insert_index_inner
 fn find_or_find_insert_index_inner(self_1: &'_ RawTableInner, hash_2: u64, eq_3: &'_ mut (dyn FakeTrait)) -> Result::<usize, usize>
 {
     let _0: Result::<usize, usize>; // return
@@ -8100,7 +8229,7 @@ fn find_or_find_insert_index_inner(self_1: &'_ RawTableInner, hash_2: u64, eq_3:
     }
 }
 
-// Full name: hashbrown::control::group::neon::Group::convert_special_to_empty_and_full_to_deleted
+// Full name: hashbrown::control::group::neon::{Group}::convert_special_to_empty_and_full_to_deleted
 fn convert_special_to_empty_and_full_to_deleted(self_1: Group) -> Group
 {
     let _0: Group; // return
@@ -8160,7 +8289,7 @@ fn convert_special_to_empty_and_full_to_deleted(self_1: Group) -> Group
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::prepare_rehash_in_place
+// Full name: hashbrown::raw::{RawTableInner}::prepare_rehash_in_place
 fn prepare_rehash_in_place(self_1: &'_ mut RawTableInner)
 {
     let _0: (); // return
@@ -8242,7 +8371,7 @@ fn prepare_rehash_in_place(self_1: &'_ mut RawTableInner)
         storage_dead(_21);
         self_3 = Range::<usize> { start: const 0usize, end: move _4 };
         storage_dead(_4);
-        iter_2 = std::iter::StepBy::<I>::new::<Range::<usize>>(move self_3, const 8usize) -> bb1 (unwind: bb2);
+        iter_2 = core::iter::adapters::step_by::{StepBy::<_>}::new::<Range::<usize>>(move self_3, const 8usize) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -8467,7 +8596,7 @@ fn prepare_rehash_in_place(self_1: &'_ mut RawTableInner)
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::find_insert_index
+// Full name: hashbrown::raw::{RawTableInner}::find_insert_index
 fn find_insert_index(self_1: &'_ RawTableInner, hash_2: u64) -> usize
 {
     let _0: usize; // return
@@ -8606,7 +8735,7 @@ fn find_insert_index(self_1: &'_ RawTableInner, hash_2: u64) -> usize
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::rehash_in_place
+// Full name: hashbrown::raw::{RawTableInner}::rehash_in_place
 fn rehash_in_place(self_1: &'_ mut RawTableInner, hasher_2: &'_ (dyn FakeTrait), size_of_3: usize, drop_4: Option::<unsafe fn(*mut u8)>)
 {
     let _0: (); // return
@@ -8615,8 +8744,8 @@ fn rehash_in_place(self_1: &'_ mut RawTableInner, hasher_2: &'_ (dyn FakeTrait),
     let size_of_3: usize; // arg #3
     let drop_4: Option::<unsafe fn(*mut u8)>; // arg #4
     let _5: (); // anonymous local
-    let guard_6: ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>; // local
-    let dropfn_7: hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure; // local
+    let guard_6: ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>; // local
+    let dropfn_7: hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure; // local
     let iter_8: Range::<usize>; // local
     let _9: usize; // anonymous local
     let _10: Option::<usize>; // anonymous local
@@ -8743,7 +8872,7 @@ fn rehash_in_place(self_1: &'_ mut RawTableInner, hasher_2: &'_ (dyn FakeTrait),
     let t_131: Option::<unsafe fn(*mut u8)>; // local
     let t_132: usize; // local
     let _133: *const *const (); // anonymous local
-    let _134: *mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>; // anonymous local
+    let _134: *mut ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>; // anonymous local
     let _135: (); // anonymous local
     let _136: Tag; // anonymous local
     let _137: Tag; // anonymous local
@@ -8778,8 +8907,8 @@ fn rehash_in_place(self_1: &'_ mut RawTableInner, hasher_2: &'_ (dyn FakeTrait),
     bb1: {
         storage_live(guard_6);
         storage_live(dropfn_7);
-        dropfn_7 = hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure { upvar_0: copy drop_4, upvar_1: copy size_of_3 };
-        guard_6 = ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure> { dropfn: copy dropfn_7, value: copy self_1 };
+        dropfn_7 = hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure { upvar_0: copy drop_4, upvar_1: copy size_of_3 };
+        guard_6 = ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure> { dropfn: copy dropfn_7, value: copy self_1 };
         storage_dead(dropfn_7);
         storage_live(_9);
         self_25 = copy (guard_6).value;
@@ -8942,7 +9071,7 @@ fn rehash_in_place(self_1: &'_ mut RawTableInner, hasher_2: &'_ (dyn FakeTrait),
 
     bb13: {
         _134 = &raw mut guard_6;
-        _135 = drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::RawTableInner::rehash_in_place::{closure#0}::closure>>(move _134) -> bb15 (unwind: bb16);
+        _135 = drop_glue::<ScopeGuard::<&'_ mut RawTableInner, hashbrown::raw::{RawTableInner}::rehash_in_place::closure::closure>>(move _134) -> bb15 (unwind: bb16);
     }
 
     bb14: {
@@ -9270,7 +9399,7 @@ struct FullBucketsIndices {
   items: usize,
 }
 
-// Full name: hashbrown::control::group::neon::Group::match_full
+// Full name: hashbrown::control::group::neon::{Group}::match_full
 fn match_full(self_1: Group) -> BitMask
 {
     let _0: BitMask; // return
@@ -9330,7 +9459,7 @@ fn match_full(self_1: Group) -> BitMask
     }
 }
 
-// Full name: hashbrown::raw::FullBucketsIndices::next_impl
+// Full name: hashbrown::raw::{FullBucketsIndices}::next_impl
 fn next_impl(self_1: &'_ mut FullBucketsIndices) -> Option::<usize>
 {
     let _0: Option::<usize>; // return
@@ -9539,11 +9668,11 @@ enum Fallibility {
   Infallible,
 }
 
-// Full name: hashbrown::raw::Fallibility::alloc_err
+// Full name: hashbrown::raw::{Fallibility}::alloc_err
 fn alloc_err(_1: Fallibility, _2: Layout) -> TryReserveError
 = <missing>
 
-// Full name: hashbrown::raw::Fallibility::capacity_overflow
+// Full name: hashbrown::raw::{Fallibility}::capacity_overflow
 fn capacity_overflow(_1: Fallibility) -> TryReserveError
 = <missing>
 
@@ -9559,7 +9688,7 @@ fn __rust_alloc_zeroed(_1: usize, _2: Alignment) -> *mut u8
 fn __rust_alloc(_1: usize, _2: Alignment) -> *mut u8
 = <extern:__rust_alloc>
 
-// Full name: std::alloc::Global::alloc_impl_runtime
+// Full name: alloc::alloc::{Global}::alloc_impl_runtime
 fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u8]>, AllocError>
 {
     let _0: Result::<NonNull::<[u8]>, AllocError>; // return
@@ -9644,7 +9773,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb3: {
         storage_live(_17);
         _17 = transmute<Alignment, *mut ()>(copy _13);
-        _16 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _17) -> bb7 (unwind: bb8);
+        _16 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _17) -> bb7 (unwind: bb8);
     }
 
     bb4: {
@@ -9774,7 +9903,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb22: {
         storage_live(_25);
         _25 = cast<*mut u8, *mut ()>(copy raw_ptr_6);
-        _24 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _25) -> bb24 (unwind: bb25);
+        _24 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _25) -> bb24 (unwind: bb25);
     }
 
     bb23: {
@@ -9816,7 +9945,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb26: {
         storage_live(_31);
         _31 = transmute<NonNull::<u8>, *mut ()>(copy ptr_11);
-        _30 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _31) -> bb28 (unwind: bb29);
+        _30 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _31) -> bb28 (unwind: bb29);
     }
 
     bb27: {
@@ -9837,7 +9966,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     }
 }
 
-// Full name: <std::alloc::Global as std::alloc::Allocator>::allocate
+// Full name: alloc::alloc::{impl Allocator for Global}::allocate
 pub fn allocate(self_1: &'_ Global, layout_2: Layout) -> Result::<NonNull::<[u8]>, AllocError>
 {
     let _0: Result::<NonNull::<[u8]>, AllocError>; // return
@@ -9857,7 +9986,7 @@ pub fn allocate(self_1: &'_ Global, layout_2: Layout) -> Result::<NonNull::<[u8]
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::new_uninitialized::<Global>
+// Full name: hashbrown::raw::{RawTableInner}::new_uninitialized::<Global>
 fn new_uninitialized::<Global>(alloc_1: &'_ Global, table_layout_2: TableLayout, buckets_3: usize, fallibility_4: Fallibility) -> Result::<RawTableInner, TryReserveError>
 {
     let _0: Result::<RawTableInner, TryReserveError>; // return
@@ -10132,7 +10261,7 @@ fn new_uninitialized::<Global>(alloc_1: &'_ Global, table_layout_2: TableLayout,
 // Full name: anon_const_9
 const anon_const_9: u64 = 18446744073709551615u64
 
-// Full name: hashbrown::raw::RawTableInner::NEW
+// Full name: hashbrown::raw::{RawTableInner}::NEW
 const NEW: RawTableInner = RawTableInner { bucket_mask: 0usize, ctrl: NonNull::<u8> { pointer: &raw const anon_const_9 }, growth_left: 0usize, items: 0usize }
 
 // Full name: hashbrown::raw::capacity_to_buckets
@@ -10489,7 +10618,7 @@ fn capacity_to_buckets(cap_1: usize, table_layout_2: TableLayout) -> Option::<us
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::fallible_with_capacity::<Global>
+// Full name: hashbrown::raw::{RawTableInner}::fallible_with_capacity::<Global>
 fn fallible_with_capacity::<Global>(alloc_1: &'_ Global, table_layout_2: TableLayout, capacity_3: usize, fallibility_4: Fallibility) -> Result::<RawTableInner, TryReserveError>
 {
     let _0: Result::<RawTableInner, TryReserveError>; // return
@@ -10715,7 +10844,7 @@ fn fallible_with_capacity::<Global>(alloc_1: &'_ Global, table_layout_2: TableLa
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::resize_inner::<Global>
+// Full name: hashbrown::raw::{RawTableInner}::resize_inner::<Global>
 fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, capacity_3: usize, hasher_4: &'_ (dyn FakeTrait), fallibility_5: Fallibility, layout_6: TableLayout) -> Result::<(), TryReserveError>
 {
     let _0: Result::<(), TryReserveError>; // return
@@ -10725,11 +10854,11 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
     let hasher_4: &'_ (dyn FakeTrait); // arg #4
     let fallibility_5: Fallibility; // arg #5
     let layout_6: TableLayout; // arg #6
-    let new_table_7: ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // local
-    let _8: ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>; // anonymous local
-    let self_9: Result::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>, TryReserveError>; // local
+    let new_table_7: ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // local
+    let _8: ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>; // anonymous local
+    let self_9: Result::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>, TryReserveError>; // local
     let residual_10: Result::<Infallible, TryReserveError>; // local
-    let val_11: ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // local
+    let val_11: ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // local
     let self_12: FullBucketsIndices; // local
     let iter_13: FullBucketsIndices; // local
     let nxt_14: Option::<usize>; // local
@@ -10749,8 +10878,8 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
     let self_28: Result::<RawTableInner, TryReserveError>; // local
     let residual_29: Result::<Infallible, TryReserveError>; // local
     let new_table_30: RawTableInner; // local
-    let _31: ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // anonymous local
-    let dropfn_32: hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure; // local
+    let _31: ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // anonymous local
+    let dropfn_32: hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure; // local
     let _33: isize; // anonymous local
     let v_34: RawTableInner; // local
     let e_35: TryReserveError; // local
@@ -10758,7 +10887,7 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
     let _37: isize; // anonymous local
     let e_38: TryReserveError; // local
     let _39: bool; // anonymous local
-    let v_40: ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // local
+    let v_40: ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // local
     let e_41: TryReserveError; // local
     let _42: Result::<Infallible, TryReserveError>; // anonymous local
     let self_43: *mut Tag; // local
@@ -10815,9 +10944,9 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
     let _94: *mut RawTableInner; // anonymous local
     let _95: *mut RawTableInner; // anonymous local
     let old_ctrl_96: u8; // local
-    let _97: *mut ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // anonymous local
+    let _97: *mut ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // anonymous local
     let _98: (); // anonymous local
-    let _99: *mut ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>; // anonymous local
+    let _99: *mut ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>; // anonymous local
     let _100: (); // anonymous local
     let _101: *const *const (); // anonymous local
     let _102: Option::<usize>; // anonymous local
@@ -10864,19 +10993,19 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
         storage_dead(_27);
         storage_live(_31);
         storage_live(dropfn_32);
-        dropfn_32 = hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure { upvar_0: copy alloc_2, upvar_1: copy layout_6 };
-        _31 = ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure> { dropfn: copy dropfn_32, value: copy new_table_30 };
+        dropfn_32 = hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure { upvar_0: copy alloc_2, upvar_1: copy layout_6 };
+        _31 = ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure> { dropfn: copy dropfn_32, value: copy new_table_30 };
         storage_dead(dropfn_32);
-        self_9 = Result::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>, TryReserveError>::Ok { 0: move _31 };
+        self_9 = Result::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>, TryReserveError>::Ok { 0: move _31 };
         storage_dead(_31);
         storage_dead(new_table_30);
         storage_live(v_40);
-        v_40 = move (self_9 as variant Result::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>, TryReserveError>::Ok).0;
-        _8 = ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>::Continue { 0: copy v_40 };
+        v_40 = move (self_9 as variant Result::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>, TryReserveError>::Ok).0;
+        _8 = ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>::Continue { 0: copy v_40 };
         storage_dead(v_40);
         storage_dead(self_9);
         storage_live(val_11);
-        val_11 = move (_8 as variant ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>::Continue).0;
+        val_11 = move (_8 as variant ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>::Continue).0;
         new_table_7 = move val_11;
         storage_dead(val_11);
         storage_dead(_8);
@@ -10916,7 +11045,7 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
         assert(move _39 == true) else undefined_behavior;
         storage_live(e_38);
         e_38 = copy (residual_29 as variant Result::<Infallible, TryReserveError>::Err).0;
-        self_9 = Result::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>, TryReserveError>::Err { 0: copy e_38 };
+        self_9 = Result::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>, TryReserveError>::Err { 0: copy e_38 };
         storage_dead(e_38);
         storage_dead(_39);
         storage_dead(_37);
@@ -10924,15 +11053,15 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
         storage_dead(_27);
         storage_dead(new_table_30);
         storage_live(e_41);
-        e_41 = move (self_9 as variant Result::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>, TryReserveError>::Err).0;
+        e_41 = move (self_9 as variant Result::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>, TryReserveError>::Err).0;
         storage_live(_42);
         _42 = Result::<Infallible, TryReserveError>::Err { 0: copy e_41 };
-        _8 = ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>::Break { 0: move _42 };
+        _8 = ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>::Break { 0: move _42 };
         storage_dead(_42);
         storage_dead(e_41);
         storage_dead(self_9);
         storage_live(residual_10);
-        residual_10 = move (_8 as variant ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>::Break).0;
+        residual_10 = move (_8 as variant ControlFlow::<Result::<Infallible, TryReserveError>, ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>::Break).0;
         storage_live(_56);
         storage_live(_58);
         _56 = @discriminant(residual_10);
@@ -10964,7 +11093,7 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
 
     bb7: {
         _97 = &raw mut new_table_7;
-        _98 = drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>(move _97) -> bb10 (unwind: bb11);
+        _98 = drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>(move _97) -> bb10 (unwind: bb11);
     }
 
     bb8: {
@@ -11059,7 +11188,7 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
         _103 = Result::<(), TryReserveError>::Ok { 0: const () };
         _0 = move _103;
         _99 = &raw mut new_table_7;
-        _100 = drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::RawTableInner::prepare_resize::{closure#0}::closure>>(move _99) -> bb20 (unwind: bb21);
+        _100 = drop_glue::<ScopeGuard::<RawTableInner, hashbrown::raw::{RawTableInner}::prepare_resize::closure::closure>>(move _99) -> bb20 (unwind: bb21);
     }
 
     bb18: {
@@ -11214,7 +11343,7 @@ fn resize_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, ca
     }
 }
 
-// Full name: hashbrown::raw::RawTableInner::reserve_rehash_inner::<Global>
+// Full name: hashbrown::raw::{RawTableInner}::reserve_rehash_inner::<Global>
 fn reserve_rehash_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Global, additional_3: usize, hasher_4: &'_ (dyn FakeTrait), fallibility_5: Fallibility, layout_6: TableLayout, drop_7: Option::<unsafe fn(*mut u8)>) -> Result::<(), TryReserveError>
 {
     let _0: Result::<(), TryReserveError>; // return
@@ -11383,21 +11512,21 @@ fn reserve_rehash_inner::<Global>(self_1: &'_ mut RawTableInner, alloc_2: &'_ Gl
     }
 }
 
-// Full name: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure_as_fn
+// Full name: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure_as_fn
 fn closure_as_fn(arg1_1: *mut u8)
 {
     let _0: (); // return
     let arg1_1: *mut u8; // arg #1
     let args_2: (*mut u8,); // local
-    let state_3: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure; // local
+    let state_3: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure; // local
 
     bb0: {
         storage_live(args_2);
         storage_live(state_3);
         _0 = ();
         args_2 = (move arg1_1,);
-        state_3 = hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure {  };
-        _0 = call_once::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#1}::closure, (*mut u8,)>(move state_3, move args_2) -> bb1 (unwind: bb2);
+        state_3 = hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure {  };
+        _0 = call_once::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure#1::closure, (*mut u8,)>(move state_3, move args_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -11409,26 +11538,26 @@ fn closure_as_fn(arg1_1: *mut u8)
     }
 }
 
-// Full name: hashbrown::raw::RawTable::<T, A>::TABLE_LAYOUT::<(u32, u32), Global>
+// Full name: hashbrown::raw::{RawTable::<_, _>}::TABLE_LAYOUT::<(u32, u32), Global>
 const TABLE_LAYOUT::<(u32, u32), Global>: TableLayout = TableLayout { size: 8usize, ctrl_align: 8usize }
 
 // Full name: hashbrown::raw::SizedTypeProperties::NEEDS_DROP::<(u32, u32)>
 const NEEDS_DROP::<(u32, u32)>: bool = false
 
-// Full name: hashbrown::raw::RawTable::<T, A>::reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>
-fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>(self_1: &'_ mut RawTable::<(u32, u32), Global>, additional_2: usize, hasher_3: hashbrown::map::make_hasher::{closure#0}::closure, fallibility_4: Fallibility) -> Result::<(), TryReserveError>
+// Full name: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure>
+fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure>(self_1: &'_ mut RawTable::<(u32, u32), Global>, additional_2: usize, hasher_3: hashbrown::map::make_hasher::closure::closure, fallibility_4: Fallibility) -> Result::<(), TryReserveError>
 {
     let _0: Result::<(), TryReserveError>; // return
     let self_1: &'_ mut RawTable::<(u32, u32), Global>; // arg #1
     let additional_2: usize; // arg #2
-    let hasher_3: hashbrown::map::make_hasher::{closure#0}::closure; // arg #3
+    let hasher_3: hashbrown::map::make_hasher::closure::closure; // arg #3
     let fallibility_4: Fallibility; // arg #4
     let _5: &'_ mut RawTableInner; // anonymous local
     let _6: &'_ Global; // anonymous local
     let _7: &'_ (dyn FakeTrait); // anonymous local
-    let _8: &'_ hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure; // anonymous local
-    let _9: hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure; // anonymous local
-    let _10: &'_ hashbrown::map::make_hasher::{closure#0}::closure; // anonymous local
+    let _8: &'_ hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure; // anonymous local
+    let _9: hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure; // anonymous local
+    let _10: &'_ hashbrown::map::make_hasher::closure::closure; // anonymous local
     let _11: Option::<unsafe fn(*mut u8)>; // anonymous local
     let _12: unsafe fn(*mut u8); // anonymous local
     let _13: Option::<unsafe fn(*mut u8)>; // anonymous local
@@ -11443,10 +11572,10 @@ fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}
         storage_live(_9);
         storage_live(_10);
         _10 = &hasher_3;
-        _9 = hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure { upvar_0: copy _10 };
+        _9 = hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure { upvar_0: copy _10 };
         storage_dead(_10);
         _8 = &_9;
-        _7 = unsize_cast<&'_ hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, &'_ (dyn FakeTrait), Fn::<hashbrown::raw::RawTable::<T, A>::reserve_rehash::{closure#0}::closure, (&'_ mut RawTableInner, usize)>>(copy _8);
+        _7 = unsize_cast<&'_ hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, &'_ (dyn FakeTrait), Fn::<hashbrown::raw::{RawTable::<_, _>}::reserve_rehash::closure::closure, (&'_ mut RawTableInner, usize)>>(copy _8);
         storage_live(_11);
         if copy NEEDS_DROP::<(u32, u32)> -> bb1 else -> bb2;
     }
@@ -11485,17 +11614,17 @@ fn reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}
     }
 }
 
-// Full name: hashbrown::raw::RawTable::<T, A>::reserve::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>
-fn reserve::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>(self_1: &'_ mut RawTable::<(u32, u32), Global>, additional_2: usize, hasher_3: hashbrown::map::make_hasher::{closure#0}::closure)
+// Full name: hashbrown::raw::{RawTable::<_, _>}::reserve::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure>
+fn reserve::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure>(self_1: &'_ mut RawTable::<(u32, u32), Global>, additional_2: usize, hasher_3: hashbrown::map::make_hasher::closure::closure)
 {
     let _0: (); // return
     let self_1: &'_ mut RawTable::<(u32, u32), Global>; // arg #1
     let additional_2: usize; // arg #2
-    let hasher_3: hashbrown::map::make_hasher::{closure#0}::closure; // arg #3
+    let hasher_3: hashbrown::map::make_hasher::closure::closure; // arg #3
     let b_4: bool; // local
     let _5: usize; // anonymous local
     let result_6: Result::<(), TryReserveError>; // local
-    let _7: hashbrown::map::make_hasher::{closure#0}::closure; // anonymous local
+    let _7: hashbrown::map::make_hasher::closure::closure; // anonymous local
     let _8: bool; // anonymous local
     let _9: (); // anonymous local
     let _10: isize; // anonymous local
@@ -11532,7 +11661,7 @@ fn reserve::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closu
         _7 = move hasher_3;
         storage_live(_12);
         _12 = Fallibility::Infallible {  };
-        result_6 = reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>(move self_1, move additional_2, move _7, move _12) -> bb6 (unwind: bb7);
+        result_6 = reserve_rehash::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure>(move self_1, move additional_2, move _7, move _12) -> bb6 (unwind: bb7);
     }
 
     bb4: {
@@ -11563,21 +11692,21 @@ fn reserve::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closu
     }
 }
 
-// Full name: hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure>
-fn find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure>(self_1: &'_ mut RawTable::<(u32, u32), Global>, hash_2: u64, eq_3: hashbrown::map::equivalent_key::{closure#0}::closure, hasher_4: hashbrown::map::make_hasher::{closure#0}::closure) -> Result::<Bucket::<(u32, u32)>, usize>
+// Full name: hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, hashbrown::map::make_hasher::closure::closure>
+fn find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, hashbrown::map::make_hasher::closure::closure>(self_1: &'_ mut RawTable::<(u32, u32), Global>, hash_2: u64, eq_3: hashbrown::map::equivalent_key::closure::closure, hasher_4: hashbrown::map::make_hasher::closure::closure) -> Result::<Bucket::<(u32, u32)>, usize>
 {
     let _0: Result::<Bucket::<(u32, u32)>, usize>; // return
     let self_1: &'_ mut RawTable::<(u32, u32), Global>; // arg #1
     let hash_2: u64; // arg #2
-    let eq_3: hashbrown::map::equivalent_key::{closure#0}::closure; // arg #3
-    let hasher_4: hashbrown::map::make_hasher::{closure#0}::closure; // arg #4
+    let eq_3: hashbrown::map::equivalent_key::closure::closure; // arg #3
+    let hasher_4: hashbrown::map::make_hasher::closure::closure; // arg #4
     let _5: (); // anonymous local
     let _6: Result::<usize, usize>; // anonymous local
     let _7: &'_ RawTableInner; // anonymous local
     let _8: &'_ mut (dyn FakeTrait); // anonymous local
-    let _9: &'_ mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure; // anonymous local
-    let _10: hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure; // anonymous local
-    let _11: &'_ mut hashbrown::map::equivalent_key::{closure#0}::closure; // anonymous local
+    let _9: &'_ mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure; // anonymous local
+    let _10: hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure; // anonymous local
+    let _11: &'_ mut hashbrown::map::equivalent_key::closure::closure; // anonymous local
     let _12: &'_ RawTable::<(u32, u32), Global>; // anonymous local
     let _13: isize; // anonymous local
     let index_14: usize; // local
@@ -11595,7 +11724,7 @@ fn find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_ke
     bb0: {
         storage_live(_5);
         storage_live(_13);
-        _5 = reserve::<(u32, u32), Global, hashbrown::map::make_hasher::{closure#0}::closure>(copy self_1, const 1usize, move hasher_4) -> bb1 (unwind: bb2);
+        _5 = reserve::<(u32, u32), Global, hashbrown::map::make_hasher::closure::closure>(copy self_1, const 1usize, move hasher_4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -11609,11 +11738,11 @@ fn find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_ke
         _11 = &mut eq_3;
         storage_live(_12);
         _12 = &(*self_1);
-        _10 = hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure { upvar_0: copy _11, upvar_1: copy _12 };
+        _10 = hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure { upvar_0: copy _11, upvar_1: copy _12 };
         storage_dead(_12);
         storage_dead(_11);
         _9 = &mut _10;
-        _8 = unsize_cast<&'_ mut hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, &'_ mut (dyn FakeTrait), FnMut::<hashbrown::raw::RawTable::<T, A>::find_or_find_insert_index::{closure#0}::closure, (usize,)>>(copy _9);
+        _8 = unsize_cast<&'_ mut hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, &'_ mut (dyn FakeTrait), FnMut::<hashbrown::raw::{RawTable::<_, _>}::find_or_find_insert_index::closure::closure, (usize,)>>(copy _9);
         _6 = find_or_find_insert_index_inner(move _7, move hash_2, move _8) -> bb3 (unwind: bb2);
     }
 
@@ -11709,7 +11838,7 @@ fn find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_ke
     }
 }
 
-pub fn hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Global>(self_1: &'_ mut hashbrown::map::HashMap::<u32, u32, RandomState, Global>, k_2: u32, v_3: u32) -> Option::<u32>
+pub fn hashbrown::map::{hashbrown::map::HashMap::<_, _, _, _>}::insert::<u32, u32, RandomState, Global>(self_1: &'_ mut hashbrown::map::HashMap::<u32, u32, RandomState, Global>, k_2: u32, v_3: u32) -> Option::<u32>
 {
     let _0: Option::<u32>; // return
     let self_1: &'_ mut hashbrown::map::HashMap::<u32, u32, RandomState, Global>; // arg #1
@@ -11718,9 +11847,9 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Gl
     let hash_4: u64; // local
     let hash_builder_5: &'_ RandomState; // local
     let val_6: &'_ u32; // local
-    let equivalent_7: hashbrown::map::equivalent_key::{closure#0}::closure; // local
+    let equivalent_7: hashbrown::map::equivalent_key::closure::closure; // local
     let k_8: &'_ u32; // local
-    let hasher_9: hashbrown::map::make_hasher::{closure#0}::closure; // local
+    let hasher_9: hashbrown::map::make_hasher::closure::closure; // local
     let hash_builder_10: &'_ RandomState; // local
     let _11: Result::<Bucket::<(u32, u32)>, usize>; // anonymous local
     let _12: &'_ mut RawTable::<(u32, u32), Global>; // anonymous local
@@ -11766,17 +11895,17 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Gl
         storage_live(equivalent_7);
         storage_live(k_8);
         k_8 = &k_2;
-        equivalent_7 = hashbrown::map::equivalent_key::{closure#0}::closure { upvar_0: copy k_8 };
+        equivalent_7 = hashbrown::map::equivalent_key::closure::closure { upvar_0: copy k_8 };
         storage_dead(k_8);
         storage_live(hasher_9);
         storage_live(hash_builder_10);
         hash_builder_10 = &((*self_1)).hash_builder;
-        hasher_9 = hashbrown::map::make_hasher::{closure#0}::closure { upvar_0: copy hash_builder_10 };
+        hasher_9 = hashbrown::map::make_hasher::closure::closure { upvar_0: copy hash_builder_10 };
         storage_dead(hash_builder_10);
         storage_live(_11);
         storage_live(_12);
         _12 = &two-phase-mut ((*self_1)).table;
-        _11 = find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_key::{closure#0}::closure, hashbrown::map::make_hasher::{closure#0}::closure>(move _12, copy hash_4, move equivalent_7, move hasher_9) -> bb3 (unwind: bb2);
+        _11 = find_or_find_insert_index::<(u32, u32), Global, hashbrown::map::equivalent_key::closure::closure, hashbrown::map::make_hasher::closure::closure>(move _12, copy hash_4, move equivalent_7, move hasher_9) -> bb3 (unwind: bb2);
     }
 
     bb2: {
@@ -11905,10 +12034,10 @@ pub fn hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Gl
     }
 }
 
-pub fn std::collections::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Global>(self_1: &'_ mut std::collections::HashMap::<u32, u32, RandomState, Global>, k_2: u32, v_3: u32) -> Option::<u32>
+pub fn std::collections::hash::map::{std::collections::hash::map::HashMap::<_, _, _, _>}::insert::<u32, u32, RandomState, Global>(self_1: &'_ mut std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>, k_2: u32, v_3: u32) -> Option::<u32>
 {
     let _0: Option::<u32>; // return
-    let self_1: &'_ mut std::collections::HashMap::<u32, u32, RandomState, Global>; // arg #1
+    let self_1: &'_ mut std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>; // arg #1
     let k_2: u32; // arg #2
     let v_3: u32; // arg #3
     let _4: &'_ mut hashbrown::map::HashMap::<u32, u32, RandomState, Global>; // anonymous local
@@ -11916,7 +12045,7 @@ pub fn std::collections::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, 
     bb0: {
         storage_live(_4);
         _4 = &two-phase-mut ((*self_1)).base;
-        _0 = hashbrown::map::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Global>(move _4, move k_2, move v_3) -> bb1 (unwind: bb2);
+        _0 = hashbrown::map::{hashbrown::map::HashMap::<_, _, _, _>}::insert::<u32, u32, RandomState, Global>(move _4, move k_2, move v_3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -11929,11 +12058,16 @@ pub fn std::collections::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, 
     }
 }
 
-// Full name: <std::collections::HashMap<K, V, S, A> as std::ops::Index<&Q>>::index::<'_, u32, u32, u32, RandomState, Global>
-pub fn index::<'_, u32, u32, u32, RandomState, Global>(self_1: &'_ std::collections::HashMap::<u32, u32, RandomState, Global>, key_2: &'_ u32) -> &'_ u32
+// Full name: std::collections::hash::map::{impl Index<&'_ Q> for std::collections::hash::map::HashMap::<_, _, missing(@Type4), missing(@Type5)>}
+impl<'_, _, K, Q, V, S, A> Index<&'_ Q> for std::collections::hash::map::HashMap::<_, _, missing(@Type4), missing(@Type5)> {
+    non-dyn-compatible
+}
+
+// Full name: std::collections::hash::map::{impl Index<&'_ Q> for std::collections::hash::map::HashMap::<_, _, missing(@Type4), missing(@Type5)>}::index::<'_, u32, u32, u32, RandomState, Global>
+pub fn index::<'_, u32, u32, u32, RandomState, Global>(self_1: &'_ std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>, key_2: &'_ u32) -> &'_ u32
 {
     let val_0: &'_ u32; // return
-    let self_1: &'_ std::collections::HashMap::<u32, u32, RandomState, Global>; // arg #1
+    let self_1: &'_ std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>; // arg #1
     let key_2: &'_ u32; // arg #2
     let self_3: Option::<&'_ u32>; // local
     let _4: &'_ hashbrown::map::HashMap::<u32, u32, RandomState, Global>; // anonymous local
@@ -11945,7 +12079,7 @@ pub fn index::<'_, u32, u32, u32, RandomState, Global>(self_1: &'_ std::collecti
         storage_live(self_3);
         storage_live(_4);
         _4 = &((*self_1)).base;
-        self_3 = hashbrown::map::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Global, u32>(move _4, move key_2) -> bb1 (unwind: bb2);
+        self_3 = hashbrown::map::{hashbrown::map::HashMap::<_, _, _, _>}::get::<u32, u32, RandomState, Global, u32>(move _4, move key_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -11983,28 +12117,56 @@ pub fn index::<'_, u32, u32, u32, RandomState, Global>(self_1: &'_ std::collecti
     }
 }
 
+// Full name: std::hash::random::{impl BuildHasher for RandomState}
+impl "impl_BuildHasher_for_RandomState" BuildHasher for RandomState {
+    non-dyn-compatible
+}
+
+// Full name: std::hash::random::{impl core::hash::Hasher for DefaultHasher}
+impl "impl_Hasher_for_DefaultHasher" core::hash::Hasher for DefaultHasher {
+    non-dyn-compatible
+}
+
+// Full name: alloc::alloc::{impl Allocator for Global}
+impl "impl_Allocator_for_Global" Allocator for Global {
+    non-dyn-compatible
+}
+
 // Full name: anon_const_0
 const anon_const_0: u32 = 22u32
 
 // Full name: anon_const_1
 const anon_const_1: u32 = 22u32
 
+// Full name: hashbrown::Equivalent
+trait Equivalent
+
+// Full name: hashbrown::{impl Equivalent<K> for Q}
+impl<Q, K> "impl_Equivalent_for_T" Equivalent<K> for Q {
+    non-dyn-compatible
+}
+
+// Full name: hashbrown::scopeguard::{impl Drop for ScopeGuard::<_, _>}
+impl<T, F> Drop for ScopeGuard::<_, _> {
+    non-dyn-compatible
+}
+
 // Full name: test_crate::get_or_insert
-pub fn get_or_insert(map_1: &'_ mut std::collections::HashMap::<u32, u32, RandomState, Global>) -> &'_ u32
+pub fn get_or_insert(map_1: &'_ mut std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>) -> &'_ u32
 {
     let _0: &'_ u32; // return
-    let map_1: &'_ mut std::collections::HashMap::<u32, u32, RandomState, Global>; // arg #1
+    let map_1: &'_ mut std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>; // arg #1
     let _2: Option::<&'_ u32>; // anonymous local
-    let _3: &'_ std::collections::HashMap::<u32, u32, RandomState, Global>; // anonymous local
+    let _3: &'_ std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>; // anonymous local
     let _4: &'_ u32; // anonymous local
     let _5: &'_ u32; // anonymous local
     let _6: isize; // anonymous local
     let v_7: &'_ u32; // local
     let _8: Option::<u32>; // anonymous local
-    let _9: &'_ mut std::collections::HashMap::<u32, u32, RandomState, Global>; // anonymous local
+    let _9: &'_ mut std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>; // anonymous local
     let _10: &'_ u32; // anonymous local
     let _11: &'_ u32; // anonymous local
-    let _12: &'_ std::collections::HashMap::<u32, u32, RandomState, Global>; // anonymous local
+    let _12: &'_ std::collections::hash::map::HashMap::<u32, u32, RandomState, Global>; // anonymous local
     let _13: &'_ u32; // anonymous local
     let _14: &'_ u32; // anonymous local
     let _15: &'_ u32; // anonymous local
@@ -12026,7 +12188,7 @@ pub fn get_or_insert(map_1: &'_ mut std::collections::HashMap::<u32, u32, Random
         _16 = move _17;
         _5 = &(*_16);
         _4 = &(*_5);
-        _2 = std::collections::HashMap::<K, V, S, A>::get::<u32, u32, RandomState, Global, u32>(move _3, move _4) -> bb1 (unwind: bb2);
+        _2 = std::collections::hash::map::{std::collections::hash::map::HashMap::<_, _, _, _>}::get::<u32, u32, RandomState, Global, u32>(move _3, move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -12044,7 +12206,7 @@ pub fn get_or_insert(map_1: &'_ mut std::collections::HashMap::<u32, u32, Random
         storage_live(_8);
         storage_live(_9);
         _9 = &two-phase-mut (*map_1);
-        _8 = std::collections::HashMap::<K, V, S, A>::insert::<u32, u32, RandomState, Global>(move _9, const 22u32, const 33u32) -> bb6 (unwind: bb7);
+        _8 = std::collections::hash::map::{std::collections::hash::map::HashMap::<_, _, _, _>}::insert::<u32, u32, RandomState, Global>(move _9, const 22u32, const 33u32) -> bb6 (unwind: bb7);
     }
 
     bb4: {

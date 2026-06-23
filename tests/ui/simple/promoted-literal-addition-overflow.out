@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: core::num::<impl u32>::MAX
+// Full name: core::num::{u32}::MAX
 pub const MAX: u32 = 4294967295u32
 
 // Full name: FakeTrait

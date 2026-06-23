@@ -4,7 +4,15 @@
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: <() as test_crate::Trait>::method::<()>
+// Full name: test_crate::Trait
+trait Trait
+
+// Full name: test_crate::{impl Trait for ()}
+impl "impl_Trait_for_unit" Trait for () {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Trait for ()}::method::<()>
 fn method::<()>()
 {
     let _0: (); // return

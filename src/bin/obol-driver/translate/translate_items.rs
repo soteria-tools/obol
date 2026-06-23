@@ -178,6 +178,20 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 let decl = bt_ctx.translate_named_const(id, item_meta, *def, args.clone())?;
                 self.translated.global_decls.set_slot(id, decl);
             }
+            TransItemSource::TraitDecl(_) => {
+                let Some(ItemId::TraitDecl(id)) = trans_id else {
+                    unreachable!()
+                };
+                let decl = bt_ctx.translate_trait_decl(id, item_meta)?;
+                self.translated.trait_decls.set_slot(id, decl);
+            }
+            TransItemSource::TraitImpl(impl_def_id) => {
+                let Some(ItemId::TraitImpl(id)) = trans_id else {
+                    unreachable!()
+                };
+                let decl = bt_ctx.translate_trait_impl(id, item_meta, *impl_def_id)?;
+                self.translated.trait_impls.set_slot(id, decl);
+            }
         }
         Ok(())
     }
@@ -583,6 +597,131 @@ impl ItemTransCtx<'_, '_> {
             src: ItemSource::TopLevel,
             global_kind: GlobalKind::NamedConst,
             value,
+        })
+    }
+
+    /// Build a definition's generic parameters so the variables in its name render with their
+    /// source names rather than as `missing(@TypeN)`.
+    ///
+    /// `translate_ty`/`translate_tyconst` map a `Param` to a free var whose id is rustc's *combined*
+    /// index over all generic parameters. Charon stores each kind in its own (`Vec`-backed) vector,
+    /// so we place each param at that combined index in the relevant vector, padding the slots that
+    /// belong to other-kind params (never looked up there) to keep the indexing dense.
+    pub(crate) fn translate_def_generic_params(
+        &mut self,
+        def_id: rustc_public::DefId,
+    ) -> GenericParams {
+        use rustc_middle::ty::GenericParamDefKind;
+        let internal = rustc_public::rustc_internal::internal(self.t_ctx.tcx, def_id);
+        let generics = self.t_ctx.tcx.generics_of(internal);
+        // Const generic params need a type, but we only use these params for naming and never
+        // inspect it; use an error type so it can't be mistaken for a real one.
+        let placeholder_ty = || TyKind::Error("const generic param type".to_string()).into_ty();
+        let mut params = GenericParams::empty();
+        for param in &generics.own_params {
+            let index = param.index as usize;
+            let name = param.name.to_string();
+            match param.kind {
+                GenericParamDefKind::Lifetime => {
+                    while params.regions.len() < index {
+                        let i = RegionId::from_raw(params.regions.len());
+                        params.regions.push(RegionParam {
+                            index: i,
+                            name: None,
+                            mutability: LifetimeMutability::Unknown,
+                        });
+                    }
+                    params.regions.push(RegionParam {
+                        index: RegionId::from_raw(index),
+                        name: Some(name),
+                        mutability: LifetimeMutability::Unknown,
+                    });
+                }
+                GenericParamDefKind::Type { .. } => {
+                    while params.types.len() < index {
+                        let i = TypeVarId::from_raw(params.types.len());
+                        params.types.push(TypeParam {
+                            index: i,
+                            name: "_".to_string(),
+                        });
+                    }
+                    params.types.push(TypeParam {
+                        index: TypeVarId::from_raw(index),
+                        name,
+                    });
+                }
+                GenericParamDefKind::Const { .. } => {
+                    while params.const_generics.len() < index {
+                        let i = ConstGenericVarId::from_raw(params.const_generics.len());
+                        params.const_generics.push(ConstGenericParam {
+                            index: i,
+                            name: "_".to_string(),
+                            ty: placeholder_ty(),
+                        });
+                    }
+                    params.const_generics.push(ConstGenericParam {
+                        index: ConstGenericVarId::from_raw(index),
+                        name,
+                        ty: placeholder_ty(),
+                    });
+                }
+            }
+        }
+        params
+    }
+
+    /// Barebones trait declaration: just enough for its name to be referenced from a
+    /// `PathElem::Impl`. We omit the trait's contents, which we never use.
+    pub fn translate_trait_decl(
+        self,
+        trans_id: TraitDeclId,
+        item_meta: ItemMeta,
+    ) -> Result<TraitDecl, Error> {
+        Ok(TraitDecl {
+            def_id: trans_id,
+            item_meta,
+            generics: GenericParams::empty(),
+            implied_clauses: vec![].into(),
+            consts: IndexMap::new(),
+            types: IndexMap::new(),
+            methods: IndexMap::new(),
+            vtable: None,
+        })
+    }
+
+    /// Barebones trait implementation: records which trait is implemented and its arguments (so the
+    /// impl renders as `{impl Trait for Ty}`), but omits the implemented items.
+    pub fn translate_trait_impl(
+        mut self,
+        trans_id: TraitImplId,
+        item_meta: ItemMeta,
+        impl_def_id: rustc_public::DefId,
+    ) -> Result<TraitImpl, Error> {
+        let span = item_meta.span;
+        let internal = rustc_public::rustc_internal::internal(self.t_ctx.tcx, impl_def_id);
+        let trait_ref = self.t_ctx.tcx.impl_trait_ref(internal).skip_binder();
+        let trait_ref = rustc_public::rustc_internal::stable(trait_ref);
+
+        let trait_decl_id = self.register_trait_decl_id(span, trait_ref.def_id);
+        // The args only feed the impl's name; degrade to empty rather than failing the item if some
+        // argument can't be translated.
+        let generics = self
+            .translate_generic_args(span, &trait_ref.args())
+            .unwrap_or_else(|_| GenericArgs::empty());
+
+        Ok(TraitImpl {
+            def_id: trans_id,
+            item_meta,
+            impl_trait: TraitDeclRef {
+                id: trait_decl_id,
+                generics: Box::new(generics),
+            },
+            generics: self.translate_def_generic_params(impl_def_id),
+            implied_trait_refs: vec![].into(),
+            consts: IndexMap::new(),
+            types: IndexMap::new(),
+            methods: IndexMap::new(),
+            vtable: None,
         })
     }
 }

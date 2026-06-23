@@ -1,14 +1,14 @@
 
 // Final ULLBC:
 
-// Full name: std::option::Option::<NonNull::<Node::<u8>>>
+// Full name: core::option::Option::<NonNull::<Node::<u8>>>
 #[lang_item("Option")]
 pub enum Option::<NonNull::<Node::<u8>>> {
   None,
   Some(0: NonNull::<Node::<u8>>),
 }
 
-// Full name: std::ptr::NonNull::<Node::<u8>>
+// Full name: core::ptr::non_null::NonNull::<Node::<u8>>
 pub struct NonNull::<Node::<u8>> {
   pointer: *const Node::<u8> is !null,
 }
@@ -27,7 +27,7 @@ pub struct LinkedList::<u8> {
   head: Option::<NonNull::<Node::<u8>>>,
 }
 
-// Full name: test_crate::LinkedList::<T>::new::<u8>
+// Full name: test_crate::{LinkedList::<_>}::new::<u8>
 fn new::<u8>() -> LinkedList::<u8>
 {
     let _0: LinkedList::<u8>; // return

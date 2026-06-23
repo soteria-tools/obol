@@ -16,7 +16,15 @@ const anon_const_2: () = ()
 // Full name: anon_const_3
 const anon_const_3: () = ()
 
-// Full name: <() as test_crate::Trait>::method1
+// Full name: test_crate::Trait
+trait Trait
+
+// Full name: test_crate::{impl Trait for ()}
+impl "impl_Trait_for_unit" Trait for () {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Trait for ()}::method1
 fn method1(self_1: (), _other_2: &'_ u32) -> bool
 {
     let _0: bool; // return
@@ -29,7 +37,15 @@ fn method1(self_1: (), _other_2: &'_ u32) -> bool
     }
 }
 
-// Full name: <&'a () as test_crate::MyCompare<&'a ()>>::compare::<'_>
+// Full name: test_crate::MyCompare
+trait MyCompare
+
+// Full name: test_crate::{impl MyCompare<&'_ ()> for &'_ ()}
+impl<'a> MyCompare<&'_ ()> for &'_ () {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl MyCompare<&'_ ()> for &'_ ()}::compare::<'_>
 fn compare::<'_>(self_1: &'_ (), _other_2: &'_ ()) -> bool
 {
     let _0: bool; // return
@@ -118,7 +134,15 @@ fn main()
     }
 }
 
-// Full name: <() as test_crate::Foo>::foo
+// Full name: test_crate::Foo
+trait Foo
+
+// Full name: test_crate::{impl Foo for ()}
+impl "impl_Foo_for_unit" Foo for () {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Foo for ()}::foo
 fn foo(x_1: &'_ (), y_2: &'_ ()) -> &'_ ()
 {
     let _0: &'_ (); // return

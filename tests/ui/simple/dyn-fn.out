@@ -1,14 +1,12 @@
 
 // Final ULLBC:
 
-// Full name: test_crate::gives_fn::{closure#0}::closure
-struct closure {}
+struct test_crate::gives_fn::closure::closure {}
 
-// Full name: test_crate::gives_fn::{closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>
-fn {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>(_1: &'_ closure, spread_args_2: (&'_ mut u32,)) -> bool
+fn test_crate::gives_fn::closure::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>(_1: &'_ test_crate::gives_fn::closure::closure, spread_args_2: (&'_ mut u32,)) -> bool
 {
     let _0: bool; // return
-    let _1: &'_ closure; // arg #1
+    let _1: &'_ test_crate::gives_fn::closure::closure; // arg #1
     let spread_args_2: (&'_ mut u32,); // arg #2
     let counter_3: &'_ mut u32; // local
     let _4: u32; // anonymous local
@@ -24,12 +22,12 @@ fn {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>(_1: &'_ 
     }
 }
 
-// Full name: std::ptr::drop_glue::<closure>
+// Full name: core::ptr::drop_glue::<test_crate::gives_fn::closure::closure>
 #[lang_item("drop_glue")]
-fn drop_glue::<closure>(_1: &'_ mut closure)
+fn drop_glue::<test_crate::gives_fn::closure::closure>(_1: &'_ mut test_crate::gives_fn::closure::closure)
 {
     let _0: (); // return
-    let _1: &'_ mut closure; // arg #1
+    let _1: &'_ mut test_crate::gives_fn::closure::closure; // arg #1
 
     bb0: {
         _0 = ();
@@ -37,18 +35,18 @@ fn drop_glue::<closure>(_1: &'_ mut closure)
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<closure, (&'_ mut u32,)>
-pub fn call_once::<closure, (&'_ mut u32,)>(_1: closure, _2: (&'_ mut u32,)) -> bool
+// Full name: core::ops::function::FnOnce::call_once::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>
+pub fn call_once::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>(_1: test_crate::gives_fn::closure::closure, _2: (&'_ mut u32,)) -> bool
 {
     let _0: bool; // return
-    let _1: closure; // arg #1
+    let _1: test_crate::gives_fn::closure::closure; // arg #1
     let _2: (&'_ mut u32,); // arg #2
-    let _3: &'_ mut closure; // anonymous local
+    let _3: &'_ mut test_crate::gives_fn::closure::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _3 = &mut _1;
-        _0 = {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = test_crate::gives_fn::closure::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -60,15 +58,15 @@ pub fn call_once::<closure, (&'_ mut u32,)>(_1: closure, _2: (&'_ mut u32,)) -> 
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<closure, (&'_ mut u32,)>
-pub fn call_once::<closure, (&'_ mut u32,)>(_1: *mut closure, _2: (&'_ mut u32,)) -> bool
+// Full name: core::ops::function::FnOnce::call_once::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>
+pub fn call_once::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>(_1: *mut test_crate::gives_fn::closure::closure, _2: (&'_ mut u32,)) -> bool
 {
     let _0: bool; // return
-    let _1: *mut closure; // arg #1
+    let _1: *mut test_crate::gives_fn::closure::closure; // arg #1
     let _2: (&'_ mut u32,); // arg #2
 
     bb0: {
-        _0 = call_once::<closure, (&'_ mut u32,)>(move (*_1), move _2) -> bb1 (unwind: bb2);
+        _0 = call_once::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>(move (*_1), move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -80,9 +78,9 @@ pub fn call_once::<closure, (&'_ mut u32,)>(_1: *mut closure, _2: (&'_ mut u32,)
     }
 }
 
-// Full name: {vtable}::std::ops::Fn::<closure, (&'_ mut u32,)>
+// Full name: {vtable}::core::ops::function::Fn::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>
 #[lang_item("r#fn")]
-fn Fn::<closure, (&'_ mut u32,)>() -> *const ()
+fn Fn::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -103,12 +101,12 @@ fn Fn::<closure, (&'_ mut u32,)>() -> *const ()
         storage_live(test_crate::gives_fn::{closure#0}_6);
         storage_live(entry_array_7);
         storage_live(entry_array_ref_8);
-        drop_1 = cast<drop_glue::<closure>, *const ()>(const drop_glue::<closure>);
+        drop_1 = cast<drop_glue::<test_crate::gives_fn::closure::closure>, *const ()>(const drop_glue::<test_crate::gives_fn::closure::closure>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <{closure@tests/ui/simple/dyn-fn.rs:7:15: 7:24} as std::ops::FnOnce<(&mut u32,)>>::call_once_4 = cast<call_once::<closure, (&'_ mut u32,)>, *const ()>(const call_once::<closure, (&'_ mut u32,)>);
-        test_crate::gives_fn::{closure#0}_5 = cast<{closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>, *const ()>(const {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>);
-        test_crate::gives_fn::{closure#0}_6 = cast<{closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>, *const ()>(const {closure#0}::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>);
+        <{closure@tests/ui/simple/dyn-fn.rs:7:15: 7:24} as std::ops::FnOnce<(&mut u32,)>>::call_once_4 = cast<call_once::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>, *const ()>(const call_once::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>);
+        test_crate::gives_fn::{closure#0}_5 = cast<test_crate::gives_fn::closure::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>, *const ()>(const test_crate::gives_fn::closure::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>);
+        test_crate::gives_fn::{closure#0}_6 = cast<test_crate::gives_fn::closure::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>, *const ()>(const test_crate::gives_fn::closure::<i8, extern "rust-call" fn((&'_ mut u32,)) -> bool, ()>);
         entry_array_7 = [move drop_1, move size_2, move align_3, move <{closure@tests/ui/simple/dyn-fn.rs:7:15: 7:24} as std::ops::FnOnce<(&mut u32,)>>::call_once_4, move test_crate::gives_fn::{closure#0}_5, move test_crate::gives_fn::{closure#0}_6];
         entry_array_ref_8 = &raw const entry_array_7;
         vtable_0 = cast<*const [*const (); 6usize], *const ()>(move entry_array_ref_8);
@@ -116,19 +114,19 @@ fn Fn::<closure, (&'_ mut u32,)>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::ops::Fn::<closure, (&'_ mut u32,)>
+// Full name: {vtable}::core::ops::function::Fn::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>
 #[lang_item("r#fn")]
-static Fn::<closure, (&'_ mut u32,)>: *const () = Fn::<closure, (&'_ mut u32,)>()
+static Fn::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>: *const () = Fn::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>()
 
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::ops::Fn::call::<(dyn FakeTrait), (&'_ mut u32,)>
+// Full name: core::ops::function::Fn::call::<(dyn FakeTrait), (&'_ mut u32,)>
 pub fn call::<(dyn FakeTrait), (&'_ mut u32,)>(_1: &'_ (dyn FakeTrait), _2: &'_ mut u32) -> bool
 = <opaque>
 
 // Full name: anon_const_0
-const anon_const_0: closure = closure {  }
+const anon_const_0: test_crate::gives_fn::closure::closure = test_crate::gives_fn::closure::closure {  }
 
 // Full name: test_crate::takes_fn
 fn takes_fn(f_1: &'_ (dyn FakeTrait))
@@ -199,10 +197,10 @@ fn gives_fn()
 {
     let _0: (); // return
     let _1: &'_ (dyn FakeTrait); // anonymous local
-    let _2: &'_ closure; // anonymous local
-    let _3: &'_ closure; // anonymous local
-    let _4: &'_ closure; // anonymous local
-    let _5: &'_ closure; // anonymous local
+    let _2: &'_ test_crate::gives_fn::closure::closure; // anonymous local
+    let _3: &'_ test_crate::gives_fn::closure::closure; // anonymous local
+    let _4: &'_ test_crate::gives_fn::closure::closure; // anonymous local
+    let _5: &'_ test_crate::gives_fn::closure::closure; // anonymous local
 
     bb0: {
         storage_live(_4);
@@ -215,7 +213,7 @@ fn gives_fn()
         _4 = move _5;
         _3 = &(*_4);
         _2 = &(*_3);
-        _1 = unsize_cast<&'_ closure, &'_ (dyn FakeTrait), Fn::<closure, (&'_ mut u32,)>>(move _2);
+        _1 = unsize_cast<&'_ test_crate::gives_fn::closure::closure, &'_ (dyn FakeTrait), Fn::<test_crate::gives_fn::closure::closure, (&'_ mut u32,)>>(move _2);
         storage_dead(_2);
         _0 = takes_fn(move _1) -> bb1 (unwind: bb2);
     }

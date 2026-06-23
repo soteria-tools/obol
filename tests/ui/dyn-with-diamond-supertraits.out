@@ -1,7 +1,16 @@
 
 // Final ULLBC:
 
-// Full name: <&i32 as std::ops::Add<i32>>::add::<'_>
+// Full name: core::ops::arith::Add
+#[lang_item("add")]
+trait Add
+
+// Full name: core::ops::arith::{impl Add<i32> for &'_ i32}
+impl<'_> Add<i32> for &'_ i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::ops::arith::{impl Add<i32> for &'_ i32}::add::<'_>
 pub fn add::<'_>(self_1: &'_ i32, other_2: i32) -> i32
 {
     let _0: i32; // return
@@ -22,7 +31,7 @@ pub fn add::<'_>(self_1: &'_ i32, other_2: i32) -> i32
     }
 }
 
-// Full name: std::ptr::drop_glue::<i32>
+// Full name: core::ptr::drop_glue::<i32>
 #[lang_item("drop_glue")]
 fn drop_glue::<i32>(_1: &'_ mut i32)
 {
@@ -41,7 +50,9 @@ trait FakeTrait
 // Full name: anon_const_0
 const anon_const_0: i32 = 97i32
 
-// Full name: <i32 as test_crate::Super<i32>>::super_method
+trait test_crate::Super
+
+// Full name: test_crate::{impl test_crate::Super<i32> for i32}::super_method
 fn super_method(self_1: &'_ i32, arg_2: i32) -> i32
 {
     let _0: i32; // return
@@ -69,8 +80,7 @@ fn super_method(self_1: &'_ i32, arg_2: i32) -> i32
     }
 }
 
-// Full name: {vtable}::test_crate::Super::<i32, i32>
-fn Super::<i32, i32>() -> *const ()
+fn {vtable}::test_crate::Super::<i32, i32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -98,10 +108,17 @@ fn Super::<i32, i32>() -> *const ()
     }
 }
 
-// Full name: {vtable}::test_crate::Super::<i32, i32>
-static Super::<i32, i32>: *const () = Super::<i32, i32>()
+static {vtable}::test_crate::Super::<i32, i32>: *const () = {vtable}::test_crate::Super::<i32, i32>()
 
-// Full name: <i32 as test_crate::Internal>::internal_method
+// Full name: test_crate::Internal
+trait Internal
+
+// Full name: test_crate::Left
+trait Left
+
+trait test_crate::Right
+
+// Full name: test_crate::{impl Internal for i32}::internal_method
 fn internal_method(self_1: &'_ i32) -> i32
 {
     let _0: i32; // return
@@ -120,7 +137,7 @@ fn internal_method(self_1: &'_ i32) -> i32
     }
 }
 
-// Full name: <i32 as test_crate::Right<i32>>::right_method
+// Full name: test_crate::{impl test_crate::Right<i32> for i32}::right_method
 fn right_method(self_1: &'_ i32) -> i32
 {
     let _0: i32; // return
@@ -183,8 +200,7 @@ fn right_method(self_1: &'_ i32) -> i32
     }
 }
 
-// Full name: {vtable}::test_crate::Right::<i32, i32>
-fn Right::<i32, i32>() -> *const ()
+fn {vtable}::test_crate::Right::<i32, i32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -211,17 +227,18 @@ fn Right::<i32, i32>() -> *const ()
         <i32 as test_crate::Internal>::internal_method_4 = cast<internal_method, *const ()>(const internal_method);
         <i32 as test_crate::Super<i32>>::super_method_5 = cast<super_method, *const ()>(const super_method);
         <i32 as test_crate::Right<i32>>::right_method_6 = cast<right_method, *const ()>(const right_method);
-        entry_array_7 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Internal>::internal_method_4, move <i32 as test_crate::Super<i32>>::super_method_5, copy Super::<i32, i32>, move <i32 as test_crate::Right<i32>>::right_method_6];
+        entry_array_7 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Internal>::internal_method_4, move <i32 as test_crate::Super<i32>>::super_method_5, copy {vtable}::test_crate::Super::<i32, i32>, move <i32 as test_crate::Right<i32>>::right_method_6];
         entry_array_ref_8 = &raw const entry_array_7;
         vtable_0 = cast<*const [*const (); 7usize], *const ()>(move entry_array_ref_8);
         return;
     }
 }
 
-// Full name: {vtable}::test_crate::Right::<i32, i32>
-static Right::<i32, i32>: *const () = Right::<i32, i32>()
+static {vtable}::test_crate::Right::<i32, i32>: *const () = {vtable}::test_crate::Right::<i32, i32>()
 
-// Full name: <i32 as test_crate::Left>::left_method
+trait test_crate::Join
+
+// Full name: test_crate::{impl Left for i32}::left_method
 fn left_method(self_1: &'_ i32) -> i32
 {
     let _0: i32; // return
@@ -240,7 +257,8 @@ fn left_method(self_1: &'_ i32) -> i32
     }
 }
 
-fn <i32 as test_crate::Join<i32>>::join_method(self_1: &'_ i32) -> (i32, i32)
+// Full name: test_crate::{impl test_crate::Join<i32> for i32}::join_method
+fn impl_Join_i32_for_i32::join_method(self_1: &'_ i32) -> (i32, i32)
 {
     let _0: (i32, i32); // return
     let self_1: &'_ i32; // arg #1
@@ -281,8 +299,7 @@ fn <i32 as test_crate::Join<i32>>::join_method(self_1: &'_ i32) -> (i32, i32)
     }
 }
 
-// Full name: {vtable}::test_crate::Join::<i32, i32>
-fn Join::<i32, i32>() -> *const ()
+fn {vtable}::test_crate::Join::<i32, i32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -314,19 +331,43 @@ fn Join::<i32, i32>() -> *const ()
         <i32 as test_crate::Left>::left_method_5 = cast<left_method, *const ()>(const left_method);
         <i32 as test_crate::Super<i32>>::super_method_6 = cast<super_method, *const ()>(const super_method);
         <i32 as test_crate::Right<i32>>::right_method_7 = cast<right_method, *const ()>(const right_method);
-        <i32 as test_crate::Join<i32>>::join_method_8 = cast<<i32 as test_crate::Join<i32>>::join_method, *const ()>(const <i32 as test_crate::Join<i32>>::join_method);
-        entry_array_9 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Internal>::internal_method_4, move <i32 as test_crate::Left>::left_method_5, move <i32 as test_crate::Super<i32>>::super_method_6, copy Super::<i32, i32>, move <i32 as test_crate::Right<i32>>::right_method_7, copy Right::<i32, i32>, move <i32 as test_crate::Join<i32>>::join_method_8];
+        <i32 as test_crate::Join<i32>>::join_method_8 = cast<impl_Join_i32_for_i32::join_method, *const ()>(const impl_Join_i32_for_i32::join_method);
+        entry_array_9 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Internal>::internal_method_4, move <i32 as test_crate::Left>::left_method_5, move <i32 as test_crate::Super<i32>>::super_method_6, copy {vtable}::test_crate::Super::<i32, i32>, move <i32 as test_crate::Right<i32>>::right_method_7, copy {vtable}::test_crate::Right::<i32, i32>, move <i32 as test_crate::Join<i32>>::join_method_8];
         entry_array_ref_10 = &raw const entry_array_9;
         vtable_0 = cast<*const [*const (); 10usize], *const ()>(move entry_array_ref_10);
         return;
     }
 }
 
-// Full name: {vtable}::test_crate::Join::<i32, i32>
-static Join::<i32, i32>: *const () = Join::<i32, i32>()
+static {vtable}::test_crate::Join::<i32, i32>: *const () = {vtable}::test_crate::Join::<i32, i32>()
 
 fn test_crate::Join::join_method::<(dyn FakeTrait), i32>(_1: &'_ (dyn FakeTrait)) -> (i32, i32)
 = <opaque>
+
+// Full name: test_crate::{impl test_crate::Super<i32> for i32}
+impl "impl_Super_i32_for_i32" test_crate::Super<i32> for i32 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Internal for i32}
+impl "impl_Internal_for_i32" Internal for i32 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Left for i32}
+impl "impl_Left_for_i32" Left for i32 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl test_crate::Right<i32> for i32}
+impl "impl_Right_i32_for_i32" test_crate::Right<i32> for i32 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl test_crate::Join<i32> for i32}
+impl "impl_Join_i32_for_i32" test_crate::Join<i32> for i32 {
+    non-dyn-compatible
+}
 
 // Full name: test_crate::main
 fn main()
@@ -353,7 +394,7 @@ fn main()
         _6 = move _8;
         _3 = &(*_6);
         _2 = &(*_3);
-        v_1 = unsize_cast<&'_ i32, &'_ (dyn FakeTrait), Join::<i32, i32>>(move _2);
+        v_1 = unsize_cast<&'_ i32, &'_ (dyn FakeTrait), {vtable}::test_crate::Join::<i32, i32>>(move _2);
         storage_dead(_2);
         storage_dead(_3);
         storage_live(_4);

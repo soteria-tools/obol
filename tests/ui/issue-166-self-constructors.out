@@ -10,7 +10,7 @@ enum Foo {
   B(0: usize),
 }
 
-// Full name: test_crate::Foo::b
+// Full name: test_crate::{Foo}::b
 pub fn b() -> Foo
 {
     let _0: Foo; // return
@@ -26,7 +26,12 @@ struct Bar::<'_> {
   r: &'_ i32,
 }
 
-// Full name: test_crate::Bar::<'a>::new::<'_>
+// Full name: test_crate::Bar::<'_>
+struct Bar::<'_> {
+  r: &'_ i32,
+}
+
+// Full name: test_crate::{Bar::<'_>}::new::<'_>
 fn new::<'_>(r_1: &'_ i32) -> Bar::<'_>
 {
     let _0: Bar::<'_>; // return

@@ -1,26 +1,26 @@
 
 // Final ULLBC:
 
-// Full name: std::marker::PhantomData::<List::<&'_ mut u32>>
+// Full name: core::marker::PhantomData::<List::<&'_ mut u32>>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<List::<&'_ mut u32>> {}
 
-// Full name: std::alloc::Global
+// Full name: alloc::alloc::Global
 #[lang_item("global_alloc_ty")]
 pub struct Global {}
 
-// Full name: std::ptr::NonNull::<List::<&'_ mut u32>>
+// Full name: core::ptr::non_null::NonNull::<List::<&'_ mut u32>>
 pub struct NonNull::<List::<&'_ mut u32>> {
   pointer: *const List::<&'_ mut u32> is !null,
 }
 
-// Full name: std::ptr::Unique::<List::<&'_ mut u32>>
+// Full name: core::ptr::unique::Unique::<List::<&'_ mut u32>>
 pub struct Unique::<List::<&'_ mut u32>> {
   pointer: NonNull::<List::<&'_ mut u32>>,
   _marker: PhantomData::<List::<&'_ mut u32>>,
 }
 
-// Full name: std::boxed::Box::<List::<&'_ mut u32>, Global>
+// Full name: alloc::boxed::Box::<List::<&'_ mut u32>, Global>
 #[lang_item("owned_box")]
 pub struct Box::<List::<&'_ mut u32>, Global> {
   0: Unique::<List::<&'_ mut u32>>,

@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::char::MAX
+// Full name: core::char::MAX
 pub const MAX: char = 􏿿
 
 // Full name: FakeTrait

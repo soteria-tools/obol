@@ -4,7 +4,7 @@
 // Full name: test_crate::MyStruct
 pub struct MyStruct {}
 
-// Full name: std::ptr::drop_glue::<MyStruct>
+// Full name: core::ptr::drop_glue::<MyStruct>
 #[lang_item("drop_glue")]
 fn drop_glue::<MyStruct>(_1: &'_ mut MyStruct)
 {
@@ -23,7 +23,10 @@ trait FakeTrait
 // Full name: anon_const_0
 const anon_const_0: MyStruct = MyStruct {  }
 
-pub fn <test_crate::MyStruct as test_crate::MyTrait>::foo(self_1: &'_ MyStruct)
+trait test_crate::MyTrait
+
+// Full name: test_crate::{impl test_crate::MyTrait for MyStruct}::foo
+pub fn impl_MyTrait_for_MyStruct::foo(self_1: &'_ MyStruct)
 {
     let _0: (); // return
     let self_1: &'_ MyStruct; // arg #1
@@ -35,8 +38,7 @@ pub fn <test_crate::MyStruct as test_crate::MyTrait>::foo(self_1: &'_ MyStruct)
     }
 }
 
-// Full name: {vtable}::test_crate::MyTrait::<MyStruct>
-fn MyTrait::<MyStruct>() -> *const ()
+fn {vtable}::test_crate::MyTrait::<MyStruct>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -56,7 +58,7 @@ fn MyTrait::<MyStruct>() -> *const ()
         drop_1 = cast<drop_glue::<MyStruct>, *const ()>(const drop_glue::<MyStruct>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <test_crate::MyStruct as test_crate::MyTrait>::foo_4 = cast<<test_crate::MyStruct as test_crate::MyTrait>::foo, *const ()>(const <test_crate::MyStruct as test_crate::MyTrait>::foo);
+        <test_crate::MyStruct as test_crate::MyTrait>::foo_4 = cast<impl_MyTrait_for_MyStruct::foo, *const ()>(const impl_MyTrait_for_MyStruct::foo);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <test_crate::MyStruct as test_crate::MyTrait>::foo_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -64,11 +66,15 @@ fn MyTrait::<MyStruct>() -> *const ()
     }
 }
 
-// Full name: {vtable}::test_crate::MyTrait::<MyStruct>
-static MyTrait::<MyStruct>: *const () = MyTrait::<MyStruct>()
+static {vtable}::test_crate::MyTrait::<MyStruct>: *const () = {vtable}::test_crate::MyTrait::<MyStruct>()
 
 pub fn test_crate::MyTrait::foo::<(dyn FakeTrait)>(_1: &'_ (dyn FakeTrait))
 = <opaque>
+
+// Full name: test_crate::{impl test_crate::MyTrait for MyStruct}
+impl "impl_MyTrait_for_MyStruct" test_crate::MyTrait for MyStruct {
+    non-dyn-compatible
+}
 
 // Full name: test_crate::main
 fn main()
@@ -95,7 +101,7 @@ fn main()
         _6 = move _8;
         _3 = &(*_6);
         _2 = &(*_3);
-        x_1 = unsize_cast<&'_ MyStruct, &'_ (dyn FakeTrait), MyTrait::<MyStruct>>(move _2);
+        x_1 = unsize_cast<&'_ MyStruct, &'_ (dyn FakeTrait), {vtable}::test_crate::MyTrait::<MyStruct>>(move _2);
         storage_dead(_2);
         storage_dead(_3);
         storage_live(_4);

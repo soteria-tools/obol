@@ -1,10 +1,10 @@
 
 // Final ULLBC:
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -14,24 +14,24 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
@@ -47,24 +47,31 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::fmt::{Arguments::<'_>}::from_str::<'_>
 pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -108,14 +115,18 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
     }
 }
 
+// Full name: core::ops::drop::Drop
+#[lang_item("drop")]
+trait Drop
+
 // Full name: test_crate::Foo
 struct Foo {}
 
-// Full name: std::io::_print
+// Full name: std::io::stdio::_print
 pub fn _print(_1: Arguments::<'_>)
 = <missing>
 
-// Full name: <test_crate::Foo as std::ops::Drop>::drop
+// Full name: test_crate::{impl Drop for Foo}::drop
 pub fn drop(self_1: &'_ mut Foo)
 {
     let _0: (); // return
@@ -150,7 +161,7 @@ pub fn drop(self_1: &'_ mut Foo)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Foo>
+// Full name: core::ptr::drop_glue::<Foo>
 #[lang_item("drop_glue")]
 fn drop_glue::<Foo>(_1: &'_ mut Foo)
 {
@@ -174,6 +185,11 @@ fn drop_glue::<Foo>(_1: &'_ mut Foo)
     bb2: {
         unwind_continue;
     }
+}
+
+// Full name: test_crate::{impl Drop for Foo}
+impl "impl_Drop_for_Foo" Drop for Foo {
+    non-dyn-compatible
 }
 
 // Full name: test_crate::main

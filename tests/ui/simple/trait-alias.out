@@ -1,13 +1,22 @@
 
 // Final ULLBC:
 
+// Full name: core::clone::Clone
+#[lang_item("clone")]
+trait Clone
+
 // Full name: FakeTrait
 trait FakeTrait
 
 // Full name: test_crate::Struct
 struct Struct {}
 
-// Full name: <test_crate::Struct as std::clone::Clone>::clone
+// Full name: test_crate::{impl Clone for Struct}
+impl "impl_Clone_for_Struct" Clone for Struct {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Clone for Struct}::clone
 pub fn clone(self_1: &'_ Struct) -> Struct
 {
     let _0: Struct; // return

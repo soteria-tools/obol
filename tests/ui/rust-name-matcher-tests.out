@@ -26,7 +26,7 @@ struct Generic::<&'_ str> {
   value: &'_ str,
 }
 
-// Full name: test_crate::Generic::<T>::new::<i32>
+// Full name: test_crate::{Generic::<_>}::new::<i32>
 fn new::<i32>(value_1: i32) -> Generic::<i32>
 {
     let _0: Generic::<i32>; // return
@@ -42,7 +42,7 @@ fn new::<i32>(value_1: i32) -> Generic::<i32>
     }
 }
 
-// Full name: test_crate::Generic::<T>::new::<&'_ str>
+// Full name: test_crate::{Generic::<_>}::new::<&'_ str>
 fn new::<&'_ str>(value_1: &'_ str) -> Generic::<&'_ str>
 {
     let _0: Generic::<&'_ str>; // return
@@ -58,7 +58,7 @@ fn new::<&'_ str>(value_1: &'_ str) -> Generic::<&'_ str>
     }
 }
 
-// Full name: test_crate::Generic::<T>::get::<i32>
+// Full name: test_crate::{Generic::<_>}::get::<i32>
 fn get::<i32>(self_1: &'_ Generic::<i32>) -> &'_ i32
 {
     let _0: &'_ i32; // return

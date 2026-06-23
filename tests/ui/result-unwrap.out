@@ -1,10 +1,10 @@
 
 // Final ULLBC:
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -14,13 +14,15 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::ptr::drop_glue::<u32>
+trait core::fmt::Debug
+
+// Full name: core::ptr::drop_glue::<u32>
 #[lang_item("drop_glue")]
 fn drop_glue::<u32>(_1: &'_ mut u32)
 {
@@ -33,22 +35,26 @@ fn drop_glue::<u32>(_1: &'_ mut u32)
     }
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-pub fn core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::imp::{impl Display for u32}::fmt
+pub fn impl_Display_for_u32::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl UpperHex for u32}::fmt
+pub fn impl_UpperHex_for_u32::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl LowerHex for u32}::fmt
+pub fn impl_LowerHex_for_u32::fmt(_1: &'_ u32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::Debug for u32>::fmt(self_1: &'_ u32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl core::fmt::Debug for u32}::fmt
+pub fn impl_Debug_for_u32::fmt(self_1: &'_ u32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ u32; // arg #1
@@ -79,17 +85,17 @@ pub fn core::fmt::num::<impl std::fmt::Debug for u32>::fmt(self_1: &'_ u32, f_2:
 
     bb2: {
         storage_dead(_3);
-        _0 = core::fmt::num::<impl std::fmt::LowerHex for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
+        _0 = impl_LowerHex_for_u32::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
     }
 
     bb3: {
         storage_dead(_5);
-        _0 = core::fmt::num::imp::<impl std::fmt::Display for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
+        _0 = impl_Display_for_u32::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
     }
 
     bb4: {
         storage_dead(_5);
-        _0 = core::fmt::num::<impl std::fmt::UpperHex for u32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
+        _0 = impl_UpperHex_for_u32::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
     }
 
     bb5: {
@@ -109,8 +115,7 @@ pub fn core::fmt::num::<impl std::fmt::Debug for u32>::fmt(self_1: &'_ u32, f_2:
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<u32>
-fn Debug::<u32>() -> *const ()
+fn {vtable}::core::fmt::Debug::<u32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -130,7 +135,7 @@ fn Debug::<u32>() -> *const ()
         drop_1 = cast<drop_glue::<u32>, *const ()>(const drop_glue::<u32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        core::fmt::num::<impl std::fmt::Debug for u32>::fmt_4 = cast<core::fmt::num::<impl std::fmt::Debug for u32>::fmt, *const ()>(const core::fmt::num::<impl std::fmt::Debug for u32>::fmt);
+        core::fmt::num::<impl std::fmt::Debug for u32>::fmt_4 = cast<impl_Debug_for_u32::fmt, *const ()>(const impl_Debug_for_u32::fmt);
         entry_array_5 = [move drop_1, move size_2, move align_3, move core::fmt::num::<impl std::fmt::Debug for u32>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -138,20 +143,48 @@ fn Debug::<u32>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<u32>
-static Debug::<u32>: *const () = Debug::<u32>()
+static {vtable}::core::fmt::Debug::<u32>: *const () = {vtable}::core::fmt::Debug::<u32>()
 
-// Full name: std::result::Result::<u32, u32>
+// Full name: core::fmt::Display
+trait Display
+
+// Full name: core::fmt::LowerHex
+trait LowerHex
+
+// Full name: core::fmt::UpperHex
+trait UpperHex
+
+// Full name: core::fmt::num::{impl LowerHex for u32}
+impl "impl_LowerHex_for_u32" LowerHex for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl UpperHex for u32}
+impl "impl_UpperHex_for_u32" UpperHex for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl core::fmt::Debug for u32}
+impl "impl_Debug_for_u32" core::fmt::Debug for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::imp::{impl Display for u32}
+impl "impl_Display_for_u32" Display for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::result::Result::<u32, u32>
 pub enum Result::<u32, u32> {
   Ok(0: u32),
   Err(0: u32),
 }
 
-// Full name: std::result::unwrap_failed
+// Full name: core::result::unwrap_failed
 fn unwrap_failed(_1: &'_ str, _2: &'_ (dyn FakeTrait)) -> !
 = <missing>
 
-pub fn std::result::Result::<T, E>::unwrap::<u32, u32>(self_1: Result::<u32, u32>) -> u32
+pub fn core::result::{Result::<_, _>}::unwrap::<u32, u32>(self_1: Result::<u32, u32>) -> u32
 {
     let t_0: u32; // return
     let self_1: Result::<u32, u32>; // arg #1
@@ -179,7 +212,7 @@ pub fn std::result::Result::<T, E>::unwrap::<u32, u32>(self_1: Result::<u32, u32
         storage_live(_5);
         storage_live(_6);
         _6 = &e_3;
-        _5 = unsize_cast<&'_ u32, &'_ (dyn FakeTrait), Debug::<u32>>(copy _6);
+        _5 = unsize_cast<&'_ u32, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<u32>>(copy _6);
         _4 = unwrap_failed(const "called `Result::unwrap()` on an `Err` value", move _5) -> bb4 (unwind: bb5);
     }
 
@@ -205,7 +238,7 @@ fn test_crate::unwrap(res_1: Result::<u32, u32>) -> u32
     bb0: {
         storage_live(_2);
         _2 = copy res_1;
-        _0 = std::result::Result::<T, E>::unwrap::<u32, u32>(move _2) -> bb1 (unwind: bb2);
+        _0 = core::result::{Result::<_, _>}::unwrap::<u32, u32>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {

@@ -1,15 +1,15 @@
 
 // Final ULLBC:
 
-// Full name: test_crate::sparse_transitions::{closure#0}::closure
+// Full name: test_crate::sparse_transitions::closure::closure
 struct closure {}
 
-// Full name: std::iter::FromFn::<closure>
+// Full name: core::iter::sources::from_fn::FromFn::<closure>
 pub struct FromFn::<closure> {
   0: closure,
 }
 
-// Full name: std::iter::from_fn::<u8, closure>
+// Full name: core::iter::sources::from_fn::from_fn::<u8, closure>
 pub fn from_fn::<u8, closure>(f_1: closure) -> FromFn::<closure>
 {
     let _0: FromFn::<closure>; // return

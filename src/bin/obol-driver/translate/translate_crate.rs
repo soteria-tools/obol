@@ -61,6 +61,8 @@ pub enum TransItemSource {
     ForeignType(ty::ForeignDef),
     VTable(ty::Ty, Option<(ty::TraitDef, MyGenericArgs)>),
     VTableInit(ty::Ty, Option<(ty::TraitDef, MyGenericArgs)>),
+    TraitDecl(DefId),
+    TraitImpl(DefId),
 }
 
 impl TransItemSource {
@@ -85,11 +87,14 @@ impl TransItemSource {
             TransItemSource::VTableInit(_, Some((tr, _))) => Some(tr.0),
             TransItemSource::VTable(_, None) => None,
             TransItemSource::VTableInit(_, None) => None,
+            TransItemSource::TraitDecl(did) => Some(*did),
+            TransItemSource::TraitImpl(did) => Some(*did),
         }
     }
 
-    /// Value with which we order values.
-    fn sort_key(&self) -> impl Ord + Debug {
+    /// Value with which we order values. This key may collide for distinct (under `Eq`) sources, so
+    /// it must not be the sole key of a deduplicating container (see `items_to_translate`).
+    pub(crate) fn sort_key(&self) -> (usize, usize, usize) {
         fn key_instance(k: &mir::mono::InstanceKind) -> usize {
             match k {
                 mir::mono::InstanceKind::Intrinsic => 0,
@@ -120,6 +125,8 @@ impl TransItemSource {
             TransItemSource::VTableInit(ty, t) => (7, ty.to_index(), key_trait(t)),
             TransItemSource::Static(stt) => (9, stt.0.to_index(), 0),
             TransItemSource::NamedConst(def, gargs) => (11, def.0.to_index(), gargs.sort_key()),
+            TransItemSource::TraitDecl(did) => (12, did.to_index(), 0),
+            TransItemSource::TraitImpl(did) => (13, did.to_index(), 0),
         }
     }
 }
@@ -162,6 +169,12 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     | TransItemSource::VTableInit(..) => {
                         ItemId::Fun(self.translated.fun_decls.reserve_slot())
                     }
+                    TransItemSource::TraitDecl(..) => {
+                        ItemId::TraitDecl(self.translated.trait_decls.reserve_slot())
+                    }
+                    TransItemSource::TraitImpl(..) => {
+                        ItemId::TraitImpl(self.translated.trait_impls.reserve_slot())
+                    }
                 };
                 // Add the id to the queue of declarations to translate
                 self.id_map.insert(id.clone(), trans_id);
@@ -181,8 +194,39 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         src: &Option<DepSource>,
         id: TransItemSource,
     ) -> ItemId {
-        self.items_to_translate.insert(id.clone());
-        self.register_id_no_enqueue(src, id)
+        // The queue is keyed by `(sort_key, item_id)`, not the source: `sort_key` collides for some
+        // distinct sources, and a `BTreeSet<TransItemSource>` would silently drop one (reserving its
+        // id but never translating it). We don't enqueue polymorphic items: their bodies can't be
+        // translated monomorphically (layout/normalization failures, even rustc ICEs).
+        let enqueue = !self.source_is_polymorphic(&id);
+        let item_id = self.register_id_no_enqueue(src, id.clone());
+        if enqueue {
+            self.items_to_translate.insert((id.sort_key(), item_id));
+        }
+        item_id
+    }
+
+    /// Whether a query's generic arguments still contain free type/const parameters, i.e. the item
+    /// is not fully monomorphized and so can't have its body translated.
+    fn source_is_polymorphic(&self, id: &TransItemSource) -> bool {
+        let gargs = match id {
+            TransItemSource::Type(_, g)
+            | TransItemSource::Closure(_, g)
+            | TransItemSource::ClosureAsFn(_, g)
+            | TransItemSource::NamedConst(_, g) => g,
+            _ => return false,
+        };
+        self.generic_args_have_params(&gargs.clone().into())
+    }
+
+    /// Whether these generic arguments (recursively) mention any free type or const parameter.
+    pub(crate) fn generic_args_have_params(&self, gargs: &ty::GenericArgs) -> bool {
+        use rustc_middle::ty::TypeVisitableExt;
+        gargs.0.iter().any(|kind| match kind {
+            ty::GenericArgKind::Type(t) => rustc_internal::internal(self.tcx, *t).has_param(),
+            ty::GenericArgKind::Const(c) => rustc_internal::internal(self.tcx, c).has_param(),
+            ty::GenericArgKind::Lifetime(_) => false,
+        })
     }
 
     pub(crate) fn register_type_decl_id(
@@ -411,6 +455,19 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         let src = self.make_dep_source(span);
         self.t_ctx.register_named_const(&src, def, args)
     }
+
+    pub(crate) fn register_trait_decl_id(
+        &mut self,
+        span: Span,
+        trait_def: ty::TraitDef,
+    ) -> TraitDeclId {
+        let src = self.make_dep_source(span);
+        *self
+            .t_ctx
+            .register_and_enqueue_id(&src, TransItemSource::TraitDecl(trait_def.0))
+            .as_trait_decl()
+            .unwrap()
+    }
 }
 
 impl<'tcx> TranslateCtx<'tcx> {
@@ -595,10 +652,34 @@ pub fn translate<'tcx, 'ctx>(
     // Note that the order in which we translate the definitions doesn't matter:
     // we never need to lookup a translated definition, and only use the map
     // from Rust ids to translated ids.
-    while let Some(item_src) = ctx.items_to_translate.pop_first() {
-        trace!("About to translate item: {:?}", item_src);
-        if ctx.processed.insert(item_src.clone()) {
-            ctx.translate_item(&item_src);
+    //
+    // Polymorphic items registered only so a name could refer to them are never enqueued, so they
+    // have no name yet once the queue drains. We name each one (which may enqueue further items, or
+    // register more name-only ones), alternating draining and name-filling until both are stable.
+    loop {
+        while let Some((_, item_id)) = ctx.items_to_translate.pop_first() {
+            let item_src = ctx.reverse_id_map.get(&item_id).unwrap().clone();
+            trace!("About to translate item: {:?}", item_src);
+            if ctx.processed.insert(item_src.clone()) {
+                ctx.translate_item(&item_src);
+            }
+        }
+
+        let missing: Vec<ItemId> = ctx
+            .reverse_id_map
+            .keys()
+            .copied()
+            .filter(|id| !ctx.translated.item_names.contains_key(id))
+            .collect();
+        if missing.is_empty() {
+            break;
+        }
+        for id in missing {
+            let src = ctx.reverse_id_map.get(&id).unwrap().clone();
+            let name = ctx.translate_name(&src).unwrap_or_else(|_| Name {
+                name: vec![PathElem::Ident("unknown".into(), Disambiguator::ZERO)],
+            });
+            ctx.translated.item_names.insert(id, name);
         }
     }
 

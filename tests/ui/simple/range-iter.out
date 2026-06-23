@@ -1,7 +1,16 @@
 
 // Final ULLBC:
 
-// Full name: std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt
+// Full name: core::cmp::PartialOrd
+#[lang_item("partial_ord")]
+trait PartialOrd
+
+// Full name: core::cmp::impls::{impl PartialOrd<usize> for usize}
+impl "impl_PartialOrd_usize_for_usize" PartialOrd<usize> for usize {
+    non-dyn-compatible
+}
+
+// Full name: core::cmp::impls::{impl PartialOrd<usize> for usize}::lt
 pub fn lt(self_1: &'_ usize, other_2: &'_ usize) -> bool
 {
     let _0: bool; // return
@@ -22,10 +31,10 @@ pub fn lt(self_1: &'_ usize, other_2: &'_ usize) -> bool
     }
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -35,24 +44,24 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
@@ -68,37 +77,37 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -107,9 +116,17 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
+
+// Full name: core::iter::range::Step
+trait Step
+
+// Full name: core::iter::range::{impl Step for usize}
+impl "impl_Step_for_usize" Step for usize {
+    non-dyn-compatible
+}
 
 // Full name: core::panic::panic_info::PanicInfo::<'_>
 #[lang_item("panic_info")]
@@ -120,11 +137,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-// Full name: core::panic::panic_info::PanicInfo::<'a>::new::<'_>
+// Full name: core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>
 fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
@@ -139,7 +156,7 @@ fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can
     }
 }
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -157,7 +174,7 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -289,7 +306,7 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-// Full name: core::num::<impl usize>::unchecked_add::precondition_check
+// Full name: core::num::{usize}::unchecked_add::precondition_check
 fn precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
@@ -373,7 +390,7 @@ fn precondition_check(lhs_1: usize, rhs_2: usize)
     }
 }
 
-// Full name: <usize as std::iter::Step>::forward_unchecked
+// Full name: core::iter::range::{impl Step for usize}::forward_unchecked
 pub fn forward_unchecked(start_1: usize, n_2: usize) -> usize
 {
     let _0: usize; // return
@@ -403,21 +420,29 @@ pub fn forward_unchecked(start_1: usize, n_2: usize) -> usize
     }
 }
 
-// Full name: std::option::Option::<usize>
+// Full name: core::iter::range::RangeIteratorImpl
+trait RangeIteratorImpl
+
+// Full name: core::iter::range::{impl RangeIteratorImpl for Range::<_>}
+impl<T> RangeIteratorImpl for Range::<_> {
+    non-dyn-compatible
+}
+
+// Full name: core::option::Option::<usize>
 #[lang_item("Option")]
 pub enum Option::<usize> {
   None,
   Some(0: usize),
 }
 
-// Full name: std::ops::Range::<usize>
+// Full name: core::ops::range::Range::<usize>
 #[lang_item("Range")]
 pub struct Range::<usize> {
   start: usize,
   end: usize,
 }
 
-// Full name: <std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next::<usize>
+// Full name: core::iter::range::{impl RangeIteratorImpl for Range::<_>}::spec_next::<usize>
 fn spec_next::<usize>(self_1: &'_ mut Range::<usize>) -> Option::<usize>
 {
     let _0: Option::<usize>; // return
@@ -479,7 +504,16 @@ fn spec_next::<usize>(self_1: &'_ mut Range::<usize>) -> Option::<usize>
     }
 }
 
-// Full name: std::iter::range::<impl std::iter::Iterator for std::ops::Range<A>>::next::<usize>
+// Full name: core::iter::traits::iterator::Iterator
+#[lang_item("iterator")]
+trait Iterator
+
+// Full name: core::iter::range::{impl Iterator for Range::<_>}
+impl<A> Iterator for Range::<_> {
+    non-dyn-compatible
+}
+
+// Full name: core::iter::range::{impl Iterator for Range::<_>}::next::<usize>
 pub fn next::<usize>(self_1: &'_ mut Range::<usize>) -> Option::<usize>
 {
     let _0: Option::<usize>; // return
@@ -498,7 +532,15 @@ pub fn next::<usize>(self_1: &'_ mut Range::<usize>) -> Option::<usize>
     }
 }
 
-// Full name: <I as std::iter::IntoIterator>::into_iter::<Range::<usize>>
+// Full name: core::iter::traits::collect::IntoIterator
+trait IntoIterator
+
+// Full name: core::iter::traits::collect::{impl IntoIterator for I}
+impl<I> "impl_IntoIterator_for_T" IntoIterator for I {
+    non-dyn-compatible
+}
+
+// Full name: core::iter::traits::collect::{impl IntoIterator for I}::into_iter::<Range::<usize>>
 pub fn into_iter::<Range::<usize>>(self_1: Range::<usize>) -> Range::<usize>
 {
     let _0: Range::<usize>; // return
@@ -508,6 +550,24 @@ pub fn into_iter::<Range::<usize>>(self_1: Range::<usize>) -> Range::<usize>
         _0 = move self_1;
         return;
     }
+}
+
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
 }
 
 // Full name: test_crate::iter

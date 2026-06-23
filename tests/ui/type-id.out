@@ -1,13 +1,13 @@
 
 // Final ULLBC:
 
-// Full name: std::any::TypeId
+// Full name: core::any::TypeId
 #[lang_item("type_id")]
 pub struct TypeId {
   data: [*const (); 2usize],
 }
 
-// Full name: std::any::TypeId::of::<u32>
+// Full name: core::any::{TypeId}::of::<u32>
 pub fn of::<u32>() -> TypeId
 {
     let _0: TypeId; // return
@@ -18,7 +18,7 @@ pub fn of::<u32>() -> TypeId
     }
 }
 
-// Full name: std::intrinsics::type_id::<u32>
+// Full name: core::intrinsics::type_id::<u32>
 pub fn type_id::<u32>() -> TypeId
 = <intrinsic:type_id>
 

@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::result::Result::<bool, ()>
+// Full name: core::result::Result::<bool, ()>
 pub enum Result::<bool, ()> {
   Ok(0: bool),
   Err(0: ()),
@@ -10,7 +10,15 @@ pub enum Result::<bool, ()> {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: <bool as test_crate::From<&bool>>::from::<'_>
+// Full name: test_crate::From
+trait From
+
+// Full name: test_crate::{impl From<&'_ bool> for bool}
+impl<'_> "impl_From_for_bool" From<&'_ bool> for bool {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl From<&'_ bool> for bool}::from::<'_>
 pub fn from::<'_>(v_1: &'_ bool) -> Result::<bool, ()>
 {
     let _0: Result::<bool, ()>; // return

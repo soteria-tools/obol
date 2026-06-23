@@ -1,7 +1,17 @@
 
 // Final ULLBC:
 
-pub fn std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq(self_1: &'_ u32, other_2: &'_ u32) -> bool
+// Full name: core::cmp::PartialEq
+#[lang_item("eq")]
+trait PartialEq
+
+// Full name: core::cmp::impls::{impl PartialEq<u32> for u32}
+impl "impl_PartialEq_u32_for_u32" PartialEq<u32> for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::cmp::impls::{impl PartialEq<u32> for u32}::eq
+pub fn impl_PartialEq_u32_for_u32::eq(self_1: &'_ u32, other_2: &'_ u32) -> bool
 {
     let _0: bool; // return
     let self_1: &'_ u32; // arg #1
@@ -21,14 +31,20 @@ pub fn std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq(self_1: &'_ u32, 
     }
 }
 
-// Full name: std::option::Option::<u32>
+// Full name: core::option::Option::<u32>
 #[lang_item("Option")]
 pub enum Option::<u32> {
   None,
   Some(0: u32),
 }
 
-pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Option::<u32>, other_2: &'_ Option::<u32>) -> bool
+// Full name: core::option::{impl PartialEq<Option::<_>> for Option::<_>}
+impl<T> PartialEq<Option::<_>> for Option::<_> {
+    non-dyn-compatible
+}
+
+// Full name: core::option::{impl PartialEq<Option::<_>> for Option::<_>}::eq::<u32>
+pub fn {impl PartialEq<Option::<_>> for Option::<_>}::eq::<u32>(self_1: &'_ Option::<u32>, other_2: &'_ Option::<u32>) -> bool
 {
     let _0: bool; // return
     let self_1: &'_ Option::<u32>; // arg #1
@@ -76,7 +92,7 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Op
         l_6 = &((*self_1) as variant Option::<u32>::Some).0;
         storage_live(r_7);
         r_7 = &((*other_2) as variant Option::<u32>::Some).0;
-        _0 = std::cmp::impls::<impl std::cmp::PartialEq for u32>::eq(move l_6, move r_7) -> bb7 (unwind: bb8);
+        _0 = impl_PartialEq_u32_for_u32::eq(move l_6, move r_7) -> bb7 (unwind: bb8);
     }
 
     bb7: {
@@ -93,7 +109,11 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(self_1: &'_ Op
 // Full name: FakeTrait
 trait FakeTrait
 
-fn <test_crate::NoOverride<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>()
+// Full name: test_crate::GenericTrait
+trait GenericTrait
+
+// Full name: test_crate::{impl GenericTrait<Option::<_>> for NoOverride::<_>}::other_method::<u32>
+fn {impl GenericTrait<Option::<_>> for NoOverride::<_>}::other_method::<u32>()
 {
     let _0: (); // return
 
@@ -120,7 +140,7 @@ fn test_crate::GenericTrait::provided::<NoOverride::<u32>, Option::<u32>, Option
         _4 = &y_2;
         storage_live(_5);
         _5 = &x_1;
-        _3 = <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(move _4, move _5) -> bb1 (unwind: bb2);
+        _3 = {impl PartialEq<Option::<_>> for Option::<_>}::eq::<u32>(move _4, move _5) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -134,7 +154,7 @@ fn test_crate::GenericTrait::provided::<NoOverride::<u32>, Option::<u32>, Option
     bb3: {
         storage_dead(_5);
         storage_dead(_4);
-        _0 = <test_crate::NoOverride<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>() -> bb5 (unwind: bb2);
+        _0 = {impl GenericTrait<Option::<_>> for NoOverride::<_>}::other_method::<u32>() -> bb5 (unwind: bb2);
     }
 
     bb4: {
@@ -150,7 +170,13 @@ fn test_crate::GenericTrait::provided::<NoOverride::<u32>, Option::<u32>, Option
     }
 }
 
-fn <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>()
+// Full name: test_crate::{impl GenericTrait<Option::<_>> for Override::<_>}
+impl<T> GenericTrait<Option::<_>> for Override::<_> {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl GenericTrait<Option::<_>> for Override::<_>}::other_method::<u32>
+fn {impl GenericTrait<Option::<_>> for Override::<_>}::other_method::<u32>()
 {
     let _0: (); // return
 
@@ -161,7 +187,8 @@ fn <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>
     }
 }
 
-fn <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::provided::<u32, Option::<u32>>(x_1: Option::<u32>, y_2: Option::<u32>)
+// Full name: test_crate::{impl GenericTrait<Option::<_>> for Override::<_>}::provided::<u32, Option::<u32>>
+fn {impl GenericTrait<Option::<_>> for Override::<_>}::provided::<u32, Option::<u32>>(x_1: Option::<u32>, y_2: Option::<u32>)
 {
     let _0: (); // return
     let x_1: Option::<u32>; // arg #1
@@ -177,7 +204,7 @@ fn <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>
         _4 = &y_2;
         storage_live(_5);
         _5 = &x_1;
-        _3 = <std::option::Option<T> as std::cmp::PartialEq>::eq::<u32>(move _4, move _5) -> bb1 (unwind: bb2);
+        _3 = {impl PartialEq<Option::<_>> for Option::<_>}::eq::<u32>(move _4, move _5) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -191,7 +218,7 @@ fn <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>
     bb3: {
         storage_dead(_5);
         storage_dead(_4);
-        _0 = <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::other_method::<u32>() -> bb5 (unwind: bb2);
+        _0 = {impl GenericTrait<Option::<_>> for Override::<_>}::other_method::<u32>() -> bb5 (unwind: bb2);
     }
 
     bb4: {
@@ -212,6 +239,11 @@ struct NoOverride::<u32> {
   0: u32,
 }
 
+// Full name: test_crate::{impl GenericTrait<Option::<_>> for NoOverride::<_>}
+impl<T> GenericTrait<Option::<_>> for NoOverride::<_> {
+    non-dyn-compatible
+}
+
 // Full name: test_crate::main
 fn main()
 {
@@ -230,7 +262,7 @@ fn main()
         _2 = Option::<u32>::Some { 0: const 42u32 };
         storage_live(_3);
         _3 = Option::<u32>::Some { 0: const 42u32 };
-        _1 = <test_crate::Override<T> as test_crate::GenericTrait<std::option::Option<T>>>::provided::<u32, Option::<u32>>(move _2, move _3) -> bb1 (unwind: bb2);
+        _1 = {impl GenericTrait<Option::<_>> for Override::<_>}::provided::<u32, Option::<u32>>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {

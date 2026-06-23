@@ -1,10 +1,17 @@
 
 // Final ULLBC:
 
-// Full name: std::fmt::Error
+// Full name: core::cmp::PartialEq
+#[lang_item("eq")]
+trait PartialEq
+
+// Full name: core::cmp::Eq
+trait Eq
+
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -14,19 +21,28 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn FakeTrait),
+}
+
+// Full name: core::fmt::Debug
+trait Debug
+
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::fmt::Formatter::<'a>::write_str::<'_>
+// Full name: core::fmt::{Formatter::<'_>}::write_str::<'_>
 pub fn write_str::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ str) -> Result::<(), Error>
 = <missing>
 
@@ -36,7 +52,12 @@ enum Foo {
   B,
 }
 
-// Full name: <test_crate::Foo as std::cmp::PartialEq>::eq
+// Full name: test_crate::{impl PartialEq<Foo> for Foo}
+impl "impl_PartialEq_Foo_for_Foo" PartialEq<Foo> for Foo {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl PartialEq<Foo> for Foo}::eq
 pub fn eq(self_1: &'_ Foo, other_2: &'_ Foo) -> bool
 {
     let _0: bool; // return
@@ -73,7 +94,12 @@ pub fn eq(self_1: &'_ Foo, other_2: &'_ Foo) -> bool
     }
 }
 
-// Full name: <test_crate::Foo as std::cmp::Eq>::assert_fields_are_eq
+// Full name: test_crate::{impl Eq for Foo}
+impl "impl_Eq_for_Foo" Eq for Foo {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Eq for Foo}::assert_fields_are_eq
 pub fn assert_fields_are_eq(self_1: &'_ Foo)
 {
     let _0: (); // return
@@ -86,7 +112,12 @@ pub fn assert_fields_are_eq(self_1: &'_ Foo)
     }
 }
 
-// Full name: <test_crate::Foo as std::fmt::Debug>::fmt
+// Full name: test_crate::{impl Debug for Foo}
+impl "impl_Debug_for_Foo" Debug for Foo {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Debug for Foo}::fmt
 pub fn fmt(self_1: &'_ Foo, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return

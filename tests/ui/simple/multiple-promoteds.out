@@ -1,7 +1,16 @@
 
 // Final ULLBC:
 
-// Full name: <&u32 as std::ops::Add<&u32>>::add::<'_, '_>
+// Full name: core::ops::arith::Add
+#[lang_item("add")]
+trait Add
+
+// Full name: core::ops::arith::{impl Add<&'_ u32> for &'_ u32}
+impl<'_, '_> Add<&'_ u32> for &'_ u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::ops::arith::{impl Add<&'_ u32> for &'_ u32}::add::<'_, '_>
 pub fn add::<'_, '_>(self_1: &'_ u32, other_2: &'_ u32) -> u32
 {
     let _0: u32; // return

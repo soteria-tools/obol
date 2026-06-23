@@ -4,7 +4,15 @@
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: <u64 as test_crate::Foo>::bar::<bool>
+// Full name: test_crate::Foo
+trait Foo
+
+// Full name: test_crate::{impl Foo for u64}
+impl "impl_Foo_for_u64" Foo for u64 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Foo for u64}::bar::<bool>
 fn bar::<bool>() -> u64
 {
     let _0: u64; // return

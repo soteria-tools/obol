@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::mem::alignment::AlignmentEnum
+// Full name: core::mem::alignment::AlignmentEnum
 enum AlignmentEnum {
   _Align1Shl0,
   _Align1Shl1,
@@ -69,47 +69,47 @@ enum AlignmentEnum {
   _Align1Shl63,
 }
 
-// Full name: std::mem::Alignment
+// Full name: core::mem::alignment::Alignment
 pub struct Alignment {
   _inner_repr_trick: AlignmentEnum,
 }
 
-// Full name: std::alloc::Layout
+// Full name: core::alloc::layout::Layout
 #[lang_item("alloc_layout")]
 pub struct Layout {
   size: usize,
   align: Alignment,
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
   precision: u16,
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
@@ -127,26 +127,26 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -155,7 +155,7 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
@@ -171,11 +171,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+fn core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
     let message_1: &'_ Arguments::<'_>; // arg #1
@@ -189,11 +189,11 @@ fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments:
     }
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -211,11 +211,11 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -264,7 +264,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 
     bb5: {
         _7 = &(*_8);
-        pi_4 = core::panic::panic_info::PanicInfo::<'a>::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+        pi_4 = core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -347,11 +347,11 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-// Full name: std::intrinsics::ctpop::<usize>
+// Full name: core::intrinsics::ctpop::<usize>
 pub fn ctpop::<usize>(x_1: usize) -> u32
 = <intrinsic:ctpop>
 
-fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
+fn core::mem::alignment::{Alignment}::new_unchecked::precondition_check(align_1: usize)
 {
     let _0: (); // return
     let align_1: usize; // arg #1
@@ -430,7 +430,7 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 }
 
-fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usize, align_2: usize)
+fn core::alloc::layout::{Layout}::from_size_align_unchecked::precondition_check(size_1: usize, align_2: usize)
 {
     let _0: (); // return
     let size_1: usize; // arg #1
@@ -486,7 +486,7 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
     }
 
     bb5: {
-        _9 = std::mem::Alignment::new_unchecked::precondition_check(copy align_2) -> bb6 (unwind: bb8);
+        _9 = core::mem::alignment::{Alignment}::new_unchecked::precondition_check(copy align_2) -> bb6 (unwind: bb8);
     }
 
     bb6: {
@@ -550,14 +550,17 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
     }
 }
 
-// Full name: std::marker::PhantomData::<u8>
+// Full name: core::alloc::Allocator
+trait Allocator
+
+// Full name: core::marker::PhantomData::<u8>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<u8> {}
 
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+// Full name: core::mem::SizedTypeProperties::LAYOUT::<u8>
 pub const LAYOUT::<u8>: Layout = Layout { size: 1usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
-fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
+fn core::num::{usize}::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
     let lhs_1: usize; // arg #1
@@ -645,21 +648,25 @@ pub struct UsizeNoHighBit {
   0: usize is 0usize..=9223372036854775807usize,
 }
 
-// Full name: std::option::Option::<u8>
+// Full name: core::ops::drop::Drop
+#[lang_item("drop")]
+trait Drop
+
+// Full name: core::option::Option::<u8>
 #[lang_item("Option")]
 pub enum Option::<u8> {
   None,
   Some(0: u8),
 }
 
-// Full name: std::option::Option::<(NonNull::<u8>, Layout)>
+// Full name: core::option::Option::<(NonNull::<u8>, Layout)>
 #[lang_item("Option")]
 pub enum Option::<(NonNull::<u8>, Layout)> {
   None,
   Some(0: (NonNull::<u8>, Layout)),
 }
 
-// Full name: std::prelude::v1::Some::<u8>
+// Full name: core::option::Option::Some::<u8>
 pub fn Some::<u8>(_1: u8) -> Option::<u8>
 {
     let _0: Option::<u8>; // return
@@ -671,11 +678,29 @@ pub fn Some::<u8>(_1: u8) -> Option::<u8>
     }
 }
 
-// Full name: std::alloc::Global
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: alloc::alloc::Global
 #[lang_item("global_alloc_ty")]
 pub struct Global {}
 
-// Full name: std::ptr::Unique::<u8>
+// Full name: core::ptr::unique::Unique::<u8>
 pub struct Unique::<u8> {
   pointer: NonNull::<u8>,
   _marker: PhantomData::<u8>,
@@ -694,13 +719,13 @@ struct RawVec::<u8, Global> {
   _marker: PhantomData::<u8>,
 }
 
-// Full name: std::vec::Vec::<u8, Global>
+// Full name: alloc::vec::Vec::<u8, Global>
 pub struct Vec::<u8, Global> {
   buf: RawVec::<u8, Global>,
   len: usize,
 }
 
-// Full name: std::string::String
+// Full name: alloc::string::String
 #[lang_item("String")]
 pub struct String {
   vec: Vec::<u8, Global>,
@@ -712,7 +737,7 @@ struct Foo {
   1: String,
 }
 
-// Full name: std::ptr::drop_glue::<[u8]>
+// Full name: core::ptr::drop_glue::<[u8]>
 #[lang_item("drop_glue")]
 fn drop_glue::<[u8]>(_1: &'_ mut [u8])
 {
@@ -725,7 +750,8 @@ fn drop_glue::<[u8]>(_1: &'_ mut [u8])
     }
 }
 
-pub fn <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>)
+// Full name: alloc::vec::{impl Drop for Vec::<_, _>}::drop::<u8, Global>
+pub fn {impl Drop for Vec::<_, _>}::drop::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>)
 {
     let _0: (); // return
     let self_1: &'_ mut Vec::<u8, Global>; // arg #1
@@ -764,7 +790,7 @@ pub fn <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ m
     }
 }
 
-// Full name: alloc::raw_vec::RawVecInner::<A>::current_memory::<Global>
+// Full name: alloc::raw_vec::{RawVecInner::<_>}::current_memory::<Global>
 fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: Layout) -> Option::<(NonNull::<u8>, Layout)>
 {
     let _0: Option::<(NonNull::<u8>, Layout)>; // return
@@ -834,7 +860,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
     }
 
     bb6: {
-        _12 = core::num::<impl usize>::unchecked_mul::precondition_check(copy self_3, copy rhs_7) -> bb7 (unwind: bb8);
+        _12 = core::num::{usize}::unchecked_mul::precondition_check(copy self_3, copy rhs_7) -> bb7 (unwind: bb8);
     }
 
     bb7: {
@@ -854,7 +880,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
     }
 
     bb9: {
-        _14 = std::alloc::Layout::from_size_align_unchecked::precondition_check(copy alloc_size_6, move align_10) -> bb10 (unwind: bb11);
+        _14 = core::alloc::layout::{Layout}::from_size_align_unchecked::precondition_check(copy alloc_size_6, move align_10) -> bb10 (unwind: bb11);
     }
 
     bb10: {
@@ -882,7 +908,8 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
 fn __rust_dealloc(_1: NonNull::<u8>, _2: usize, _3: Alignment)
 = <extern:__rust_dealloc>
 
-pub fn <std::alloc::Global as std::alloc::Allocator>::deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
+// Full name: alloc::alloc::{impl Allocator for Global}::deallocate
+pub fn impl_Allocator_for_Global::deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
 {
     let _0: (); // return
     let self_1: &'_ Global; // arg #1
@@ -919,7 +946,7 @@ pub fn <std::alloc::Global as std::alloc::Allocator>::deallocate(self_1: &'_ Glo
     }
 }
 
-fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVecInner::<Global>, elem_layout_2: Layout)
+fn alloc::raw_vec::{RawVecInner::<_>}::deallocate::<Global>(self_1: &'_ mut RawVecInner::<Global>, elem_layout_2: Layout)
 {
     let _0: (); // return
     let self_1: &'_ mut RawVecInner::<Global>; // arg #1
@@ -959,7 +986,7 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
         layout_7 = copy (_3 as variant Option::<(NonNull::<u8>, Layout)>::Some).0.1;
         storage_live(_9);
         _9 = &((*self_1)).alloc;
-        _8 = <std::alloc::Global as std::alloc::Allocator>::deallocate(move _9, move ptr_6, move layout_7) -> bb6 (unwind: bb7);
+        _8 = impl_Allocator_for_Global::deallocate(move _9, move ptr_6, move layout_7) -> bb6 (unwind: bb7);
     }
 
     bb4: {
@@ -988,7 +1015,8 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
     }
 }
 
-pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ mut RawVec::<u8, Global>)
+// Full name: alloc::raw_vec::{impl Drop for RawVec::<_, _>}::drop::<u8, Global>
+pub fn {impl Drop for RawVec::<_, _>}::drop::<u8, Global>(self_1: &'_ mut RawVec::<u8, Global>)
 {
     let _0: (); // return
     let self_1: &'_ mut RawVec::<u8, Global>; // arg #1
@@ -998,7 +1026,7 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
         _0 = ();
         storage_live(_2);
         _2 = &two-phase-mut ((*self_1)).inner;
-        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
+        _0 = alloc::raw_vec::{RawVecInner::<_>}::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1011,7 +1039,7 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
     }
 }
 
-// Full name: std::ptr::drop_glue::<RawVec::<u8, Global>>
+// Full name: core::ptr::drop_glue::<RawVec::<u8, Global>>
 #[lang_item("drop_glue")]
 fn drop_glue::<RawVec::<u8, Global>>(_1: &'_ mut RawVec::<u8, Global>)
 {
@@ -1025,7 +1053,7 @@ fn drop_glue::<RawVec::<u8, Global>>(_1: &'_ mut RawVec::<u8, Global>)
         storage_live(_3);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
+        _3 = {impl Drop for RawVec::<_, _>}::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1037,7 +1065,7 @@ fn drop_glue::<RawVec::<u8, Global>>(_1: &'_ mut RawVec::<u8, Global>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Vec::<u8, Global>>
+// Full name: core::ptr::drop_glue::<Vec::<u8, Global>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Vec::<u8, Global>>(_1: &'_ mut Vec::<u8, Global>)
 {
@@ -1059,7 +1087,7 @@ fn drop_glue::<Vec::<u8, Global>>(_1: &'_ mut Vec::<u8, Global>)
         storage_live(_7);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
+        _3 = {impl Drop for Vec::<_, _>}::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1089,7 +1117,7 @@ fn drop_glue::<Vec::<u8, Global>>(_1: &'_ mut Vec::<u8, Global>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<String>
+// Full name: core::ptr::drop_glue::<String>
 #[lang_item("drop_glue")]
 fn drop_glue::<String>(_1: &'_ mut String)
 {
@@ -1115,7 +1143,7 @@ fn drop_glue::<String>(_1: &'_ mut String)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Foo>
+// Full name: core::ptr::drop_glue::<Foo>
 #[lang_item("drop_glue")]
 fn drop_glue::<Foo>(_1: &'_ mut Foo)
 {
@@ -1141,7 +1169,17 @@ fn drop_glue::<Foo>(_1: &'_ mut Foo)
     }
 }
 
-pub fn std::string::String::new() -> String
+// Full name: alloc::alloc::{impl Allocator for Global}
+impl "impl_Allocator_for_Global" Allocator for Global {
+    non-dyn-compatible
+}
+
+// Full name: alloc::raw_vec::{impl Drop for RawVec::<_, _>}
+impl<T, A> Drop for RawVec::<_, _> {
+    non-dyn-compatible
+}
+
+pub fn alloc::string::{String}::new() -> String
 {
     let _0: String; // return
     let _1: Vec::<u8, Global>; // anonymous local
@@ -1180,6 +1218,11 @@ pub fn std::string::String::new() -> String
         storage_dead(_1);
         return;
     }
+}
+
+// Full name: alloc::vec::{impl Drop for Vec::<_, _>}
+impl<T, A> Drop for Vec::<_, _> {
+    non-dyn-compatible
 }
 
 // Full name: anon_const_0
@@ -1280,7 +1323,7 @@ fn main()
         storage_live(_10);
         _10 = copy f_8;
         storage_live(_11);
-        _11 = std::string::String::new() -> bb5 (unwind: bb6);
+        _11 = alloc::string::{String}::new() -> bb5 (unwind: bb6);
     }
 
     bb4: {

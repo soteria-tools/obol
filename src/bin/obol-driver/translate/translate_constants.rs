@@ -794,8 +794,21 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                 }
                 self.translate_tyconst_to_const_expr(span, &evaluated)
             }
-            ty::TyConstKind::Param(..) => {
-                raise_error!(self, span, "Unsupported constant kind: {:?}", v.kind())
+            ty::TyConstKind::Param(param) => {
+                // A free const parameter, only reachable while naming a polymorphic item. Emit a
+                // const-generic variable rather than failing.
+                let id = ConstGenericVarId::from_raw(param.index as usize);
+                let ty = TyKind::Error("Param type".to_string()).into_ty();
+                register_error!(
+                    self,
+                    span,
+                    "translate const: got a const parameter: {:?}",
+                    param
+                );
+                Ok(ConstantExpr {
+                    kind: ConstantExprKind::Var(ConstGenericDbVar::Free(id)),
+                    ty,
+                })
             }
             _ => {
                 raise_error!(

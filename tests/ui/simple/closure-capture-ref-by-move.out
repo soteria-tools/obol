@@ -4,16 +4,14 @@
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::foo::{closure#0}::closure
-struct closure {
+struct test_crate::foo::closure::closure {
   upvar_0: &'_ mut i32,
 }
 
-// Full name: test_crate::foo::{closure#0}::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>
-fn {closure#0}::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>(_1: &'_ mut closure, spread_args_2: ())
+fn test_crate::foo::closure::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>(_1: &'_ mut test_crate::foo::closure::closure, spread_args_2: ())
 {
     let _0: (); // return
-    let _1: &'_ mut closure; // arg #1
+    let _1: &'_ mut test_crate::foo::closure::closure; // arg #1
     let spread_args_2: (); // arg #2
     let _3: (i32, bool); // anonymous local
     let _4: &'_ mut i32; // anonymous local
@@ -43,9 +41,9 @@ fn foo()
     let _0: (); // return
     let x_1: i32; // local
     let rx_2: &'_ mut i32; // local
-    let closure_3: closure; // local
+    let closure_3: test_crate::foo::closure::closure; // local
     let _4: (); // anonymous local
-    let _5: &'_ mut closure; // anonymous local
+    let _5: &'_ mut test_crate::foo::closure::closure; // anonymous local
     let _6: (); // anonymous local
 
     bb0: {
@@ -55,13 +53,13 @@ fn foo()
         storage_live(rx_2);
         rx_2 = &mut x_1;
         storage_live(closure_3);
-        closure_3 = closure { upvar_0: move rx_2 };
+        closure_3 = test_crate::foo::closure::closure { upvar_0: move rx_2 };
         storage_live(_4);
         storage_live(_5);
         _5 = &mut closure_3;
         storage_live(_6);
         _6 = ();
-        _4 = {closure#0}::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>(move _5, move _6) -> bb1 (unwind: bb2);
+        _4 = test_crate::foo::closure::<i16, extern "rust-call" fn(()), (&'_ mut i32,)>(move _5, move _6) -> bb1 (unwind: bb2);
     }
 
     bb1: {

@@ -4,8 +4,7 @@
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::nonzero_disambiguator::my_function
-fn my_function()
+fn test_crate::nonzero_disambiguator::my_function#1()
 {
     let _0: (); // return
 
@@ -16,8 +15,7 @@ fn my_function()
     }
 }
 
-// Full name: test_crate::nonzero_disambiguator::my_function
-fn my_function()
+fn test_crate::nonzero_disambiguator::my_function()
 {
     let _0: (); // return
 
@@ -42,11 +40,11 @@ fn nonzero_disambiguator()
     }
 
     bb1: {
-        _0 = my_function() -> bb3 (unwind: bb4);
+        _0 = test_crate::nonzero_disambiguator::my_function() -> bb3 (unwind: bb4);
     }
 
     bb2: {
-        _0 = my_function() -> bb3 (unwind: bb5);
+        _0 = test_crate::nonzero_disambiguator::my_function#1() -> bb3 (unwind: bb5);
     }
 
     bb3: {

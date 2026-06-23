@@ -1,38 +1,47 @@
 
 // Final ULLBC:
 
+// Full name: core::ops::index::Index
+#[lang_item("index")]
+trait Index
+
+// Full name: core::array::{impl Index<I> for [T; N]}
+impl<T, I, const _ : type_error("const generic param type"), const _ : type_error("const generic param type"), const N : type_error("const generic param type")> "impl_Index_for_array" Index<I> for [T; N] {
+    non-dyn-compatible
+}
+
 // Full name: anon_const_3
 const anon_const_3: [u8; 55usize] = [16u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 101u8, 110u8, 100u8, 32u8, 105u8, 110u8, 100u8, 101u8, 120u8, 32u8, 192u8, 34u8, 32u8, 111u8, 117u8, 116u8, 32u8, 111u8, 102u8, 32u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 102u8, 111u8, 114u8, 32u8, 115u8, 108u8, 105u8, 99u8, 101u8, 32u8, 111u8, 102u8, 32u8, 108u8, 101u8, 110u8, 103u8, 116u8, 104u8, 32u8, 192u8, 0u8]
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
   precision: u16,
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
@@ -50,26 +59,26 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -78,7 +87,7 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
@@ -94,11 +103,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-// Full name: core::panic::panic_info::PanicInfo::<'a>::new::<'_>
+// Full name: core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>
 fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
@@ -113,11 +122,11 @@ fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can
     }
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -135,11 +144,11 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -220,24 +229,23 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
     }
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: core::fmt::num::imp::<impl std::fmt::Display for usize>::fmt
+// Full name: core::fmt::num::imp::{impl Display for usize}::fmt
 pub fn fmt(_1: &'_ usize, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: core::slice::index::slice_index_fail::do_panic::runtime
-fn runtime(end_1: usize, len_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic#3::runtime(end_1: usize, len_2: usize) -> !
 {
     let _0: !; // return
     let end_1: usize; // arg #1
@@ -339,15 +347,14 @@ fn runtime(end_1: usize, len_2: usize) -> !
     }
 }
 
-// Full name: core::slice::index::slice_index_fail::do_panic
-fn do_panic(end_1: usize, len_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic#3(end_1: usize, len_2: usize) -> !
 {
     let _0: !; // return
     let end_1: usize; // arg #1
     let len_2: usize; // arg #2
 
     bb0: {
-        _0 = runtime(move end_1, move len_2) -> bb1 (unwind: bb2);
+        _0 = core::slice::index::slice_index_fail::do_panic#3::runtime(move end_1, move len_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -362,8 +369,7 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 // Full name: anon_const_4
 const anon_const_4: [u8; 40usize] = [22u8, 115u8, 108u8, 105u8, 99u8, 101u8, 32u8, 105u8, 110u8, 100u8, 101u8, 120u8, 32u8, 115u8, 116u8, 97u8, 114u8, 116u8, 115u8, 32u8, 97u8, 116u8, 32u8, 192u8, 13u8, 32u8, 98u8, 117u8, 116u8, 32u8, 101u8, 110u8, 100u8, 115u8, 32u8, 97u8, 116u8, 32u8, 192u8, 0u8]
 
-// Full name: core::slice::index::slice_index_fail::do_panic::runtime
-fn runtime(start_1: usize, end_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic#2::runtime(start_1: usize, end_2: usize) -> !
 {
     let _0: !; // return
     let start_1: usize; // arg #1
@@ -465,15 +471,14 @@ fn runtime(start_1: usize, end_2: usize) -> !
     }
 }
 
-// Full name: core::slice::index::slice_index_fail::do_panic
-fn do_panic(start_1: usize, end_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic#2(start_1: usize, end_2: usize) -> !
 {
     let _0: !; // return
     let start_1: usize; // arg #1
     let end_2: usize; // arg #2
 
     bb0: {
-        _0 = runtime(move start_1, move end_2) -> bb1 (unwind: bb2);
+        _0 = core::slice::index::slice_index_fail::do_panic#2::runtime(move start_1, move end_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -485,8 +490,7 @@ fn do_panic(start_1: usize, end_2: usize) -> !
     }
 }
 
-// Full name: core::slice::index::slice_index_fail::do_panic::runtime
-fn runtime(end_1: usize, len_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic#1::runtime(end_1: usize, len_2: usize) -> !
 {
     let _0: !; // return
     let end_1: usize; // arg #1
@@ -588,15 +592,14 @@ fn runtime(end_1: usize, len_2: usize) -> !
     }
 }
 
-// Full name: core::slice::index::slice_index_fail::do_panic
-fn do_panic(end_1: usize, len_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic#1(end_1: usize, len_2: usize) -> !
 {
     let _0: !; // return
     let end_1: usize; // arg #1
     let len_2: usize; // arg #2
 
     bb0: {
-        _0 = runtime(move end_1, move len_2) -> bb1 (unwind: bb2);
+        _0 = core::slice::index::slice_index_fail::do_panic#1::runtime(move end_1, move len_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -611,8 +614,7 @@ fn do_panic(end_1: usize, len_2: usize) -> !
 // Full name: anon_const_2
 const anon_const_2: [u8; 57usize] = [18u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 115u8, 116u8, 97u8, 114u8, 116u8, 32u8, 105u8, 110u8, 100u8, 101u8, 120u8, 32u8, 192u8, 34u8, 32u8, 111u8, 117u8, 116u8, 32u8, 111u8, 102u8, 32u8, 114u8, 97u8, 110u8, 103u8, 101u8, 32u8, 102u8, 111u8, 114u8, 32u8, 115u8, 108u8, 105u8, 99u8, 101u8, 32u8, 111u8, 102u8, 32u8, 108u8, 101u8, 110u8, 103u8, 116u8, 104u8, 32u8, 192u8, 0u8]
 
-// Full name: core::slice::index::slice_index_fail::do_panic::runtime
-fn runtime(start_1: usize, len_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic::runtime(start_1: usize, len_2: usize) -> !
 {
     let _0: !; // return
     let start_1: usize; // arg #1
@@ -714,15 +716,14 @@ fn runtime(start_1: usize, len_2: usize) -> !
     }
 }
 
-// Full name: core::slice::index::slice_index_fail::do_panic
-fn do_panic(start_1: usize, len_2: usize) -> !
+fn core::slice::index::slice_index_fail::do_panic(start_1: usize, len_2: usize) -> !
 {
     let _0: !; // return
     let start_1: usize; // arg #1
     let len_2: usize; // arg #2
 
     bb0: {
-        _0 = runtime(move start_1, move len_2) -> bb1 (unwind: bb2);
+        _0 = core::slice::index::slice_index_fail::do_panic::runtime(move start_1, move len_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -780,7 +781,7 @@ fn slice_index_fail(start_1: usize, end_2: usize, len_3: usize) -> !
         _8 = copy start_1;
         storage_live(_9);
         _9 = copy len_3;
-        _7 = do_panic(move _8, move _9) -> bb3 (unwind: bb4);
+        _7 = core::slice::index::slice_index_fail::do_panic(move _8, move _9) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -812,7 +813,7 @@ fn slice_index_fail(start_1: usize, end_2: usize, len_3: usize) -> !
         _14 = copy end_2;
         storage_live(_15);
         _15 = copy len_3;
-        _13 = do_panic(move _14, move _15) -> bb7 (unwind: bb8);
+        _13 = core::slice::index::slice_index_fail::do_panic#1(move _14, move _15) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -844,7 +845,7 @@ fn slice_index_fail(start_1: usize, end_2: usize, len_3: usize) -> !
         _20 = copy start_1;
         storage_live(_21);
         _21 = copy end_2;
-        _19 = do_panic(move _20, move _21) -> bb11 (unwind: bb12);
+        _19 = core::slice::index::slice_index_fail::do_panic#2(move _20, move _21) -> bb11 (unwind: bb12);
     }
 
     bb10: {
@@ -855,7 +856,7 @@ fn slice_index_fail(start_1: usize, end_2: usize, len_3: usize) -> !
         _22 = copy end_2;
         storage_live(_23);
         _23 = copy len_3;
-        _0 = do_panic(move _22, move _23) -> bb13 (unwind: bb14);
+        _0 = core::slice::index::slice_index_fail::do_panic#3(move _22, move _23) -> bb13 (unwind: bb14);
     }
 
     bb11: {
@@ -875,21 +876,22 @@ fn slice_index_fail(start_1: usize, end_2: usize, len_3: usize) -> !
     }
 }
 
-// Full name: std::option::Option::<usize>
+// Full name: core::option::Option::<usize>
 #[lang_item("Option")]
 pub enum Option::<usize> {
   None,
   Some(0: usize),
 }
 
-// Full name: std::ops::Range::<usize>
+// Full name: core::ops::range::Range::<usize>
 #[lang_item("Range")]
 pub struct Range::<usize> {
   start: usize,
   end: usize,
 }
 
-pub fn <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index::<u32>(self_1: Range::<usize>, slice_2: &'_ [u32]) -> &'_ [u32]
+// Full name: core::slice::index::{impl SliceIndex<[T]> for Range::<usize>}::index::<u32>
+pub fn {impl SliceIndex<[T]> for Range::<usize>}::index::<u32>(self_1: Range::<usize>, slice_2: &'_ [u32]) -> &'_ [u32]
 {
     let _0: &'_ [u32]; // return
     let self_1: Range::<usize>; // arg #1
@@ -984,14 +986,15 @@ pub fn <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index::<u32>(sel
     }
 }
 
-pub fn core::slice::index::<impl std::ops::Index<I> for [T]>::index::<u32, Range::<usize>>(self_1: &'_ [u32], index_2: Range::<usize>) -> &'_ [u32]
+// Full name: core::slice::index::{impl Index<I> for [T]}::index::<u32, Range::<usize>>
+pub fn impl_Index_for_slice::index::<u32, Range::<usize>>(self_1: &'_ [u32], index_2: Range::<usize>) -> &'_ [u32]
 {
     let _0: &'_ [u32]; // return
     let self_1: &'_ [u32]; // arg #1
     let index_2: Range::<usize>; // arg #2
 
     bb0: {
-        _0 = <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index::<u32>(move index_2, move self_1) -> bb1 (unwind: bb2);
+        _0 = {impl SliceIndex<[T]> for Range::<usize>}::index::<u32>(move index_2, move self_1) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1003,7 +1006,8 @@ pub fn core::slice::index::<impl std::ops::Index<I> for [T]>::index::<u32, Range
     }
 }
 
-pub fn std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32usize>(self_1: &'_ [u32; 32usize], index_2: Range::<usize>) -> &'_ [u32]
+// Full name: core::array::{impl Index<I> for [T; N]}::index::<u32, Range::<usize>, 32usize>
+pub fn impl_Index_for_array::index::<u32, Range::<usize>, 32usize>(self_1: &'_ [u32; 32usize], index_2: Range::<usize>) -> &'_ [u32]
 {
     let _0: &'_ [u32]; // return
     let self_1: &'_ [u32; 32usize]; // arg #1
@@ -1013,7 +1017,7 @@ pub fn std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<us
     bb0: {
         storage_live(_3);
         _3 = unsize_cast<&'_ [u32; 32usize], &'_ [u32], 32usize>(copy self_1);
-        _0 = core::slice::index::<impl std::ops::Index<I> for [T]>::index::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
+        _0 = impl_Index_for_slice::index::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1026,7 +1030,17 @@ pub fn std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<us
     }
 }
 
-pub fn <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index_mut::<u32>(self_1: Range::<usize>, slice_2: &'_ mut [u32]) -> &'_ mut [u32]
+// Full name: core::ops::index::IndexMut
+#[lang_item("index_mut")]
+trait IndexMut
+
+// Full name: core::array::{impl IndexMut<I> for [T; N]}
+impl<T, I, const _ : type_error("const generic param type"), const _ : type_error("const generic param type"), const N : type_error("const generic param type")> "impl_IndexMut_for_array" IndexMut<I> for [T; N] {
+    non-dyn-compatible
+}
+
+// Full name: core::slice::index::{impl SliceIndex<[T]> for Range::<usize>}::index_mut::<u32>
+pub fn {impl SliceIndex<[T]> for Range::<usize>}::index_mut::<u32>(self_1: Range::<usize>, slice_2: &'_ mut [u32]) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
     let self_1: Range::<usize>; // arg #1
@@ -1121,14 +1135,15 @@ pub fn <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index_mut::<u32>
     }
 }
 
-pub fn core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32, Range::<usize>>(self_1: &'_ mut [u32], index_2: Range::<usize>) -> &'_ mut [u32]
+// Full name: core::slice::index::{impl IndexMut<I> for [T]}::index_mut::<u32, Range::<usize>>
+pub fn impl_IndexMut_for_slice::index_mut::<u32, Range::<usize>>(self_1: &'_ mut [u32], index_2: Range::<usize>) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
     let self_1: &'_ mut [u32]; // arg #1
     let index_2: Range::<usize>; // arg #2
 
     bb0: {
-        _0 = <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index_mut::<u32>(move index_2, move self_1) -> bb1 (unwind: bb2);
+        _0 = {impl SliceIndex<[T]> for Range::<usize>}::index_mut::<u32>(move index_2, move self_1) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1140,7 +1155,8 @@ pub fn core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32
     }
 }
 
-pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 32usize>(self_1: &'_ mut [u32; 32usize], index_2: Range::<usize>) -> &'_ mut [u32]
+// Full name: core::array::{impl IndexMut<I> for [T; N]}::index_mut::<u32, Range::<usize>, 32usize>
+pub fn impl_IndexMut_for_array::index_mut::<u32, Range::<usize>, 32usize>(self_1: &'_ mut [u32; 32usize], index_2: Range::<usize>) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
     let self_1: &'_ mut [u32; 32usize]; // arg #1
@@ -1150,7 +1166,7 @@ pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Ran
     bb0: {
         storage_live(_3);
         _3 = unsize_cast<&'_ mut [u32; 32usize], &'_ mut [u32], 32usize>(copy self_1);
-        _0 = core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
+        _0 = impl_IndexMut_for_slice::index_mut::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1163,7 +1179,8 @@ pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Ran
     }
 }
 
-pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 4usize>(self_1: &'_ mut [u32; 4usize], index_2: Range::<usize>) -> &'_ mut [u32]
+// Full name: core::array::{impl IndexMut<I> for [T; N]}::index_mut::<u32, Range::<usize>, 4usize>
+pub fn impl_IndexMut_for_array::index_mut::<u32, Range::<usize>, 4usize>(self_1: &'_ mut [u32; 4usize], index_2: Range::<usize>) -> &'_ mut [u32]
 {
     let _0: &'_ mut [u32]; // return
     let self_1: &'_ mut [u32; 4usize]; // arg #1
@@ -1173,7 +1190,7 @@ pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Ran
     bb0: {
         storage_live(_3);
         _3 = unsize_cast<&'_ mut [u32; 4usize], &'_ mut [u32], 4usize>(copy self_1);
-        _0 = core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
+        _0 = impl_IndexMut_for_slice::index_mut::<u32, Range::<usize>>(move _3, move index_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1186,7 +1203,14 @@ pub fn std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Ran
     }
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::fmt::{Arguments::<'_>}::from_str::<'_>
 pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -1230,6 +1254,32 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
     }
 }
 
+// Full name: core::fmt::Display
+trait Display
+
+// Full name: core::fmt::num::imp::{impl Display for usize}
+impl "impl_Display_for_usize" Display for usize {
+    non-dyn-compatible
+}
+
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
 // Full name: core::panicking::panic
 #[lang_item("panic")]
 pub fn panic(expr_1: &'_ str) -> !
@@ -1266,7 +1316,25 @@ pub fn panic(expr_1: &'_ str) -> !
     }
 }
 
-// Full name: core::slice::<impl [T]>::len::<u32>
+// Full name: core::slice::index::{impl Index<I> for [T]}
+impl<T, I> "impl_Index_for_slice" Index<I> for [T] {
+    non-dyn-compatible
+}
+
+// Full name: core::slice::index::{impl IndexMut<I> for [T]}
+impl<T, I> "impl_IndexMut_for_slice" IndexMut<I> for [T] {
+    non-dyn-compatible
+}
+
+// Full name: core::slice::index::SliceIndex
+trait SliceIndex
+
+// Full name: core::slice::index::{impl SliceIndex<[T]> for Range::<usize>}
+impl<T> SliceIndex<[T]> for Range::<usize> {
+    non-dyn-compatible
+}
+
+// Full name: core::slice::{[T]}::len::<u32>
 #[lang_item("slice_len_fn")]
 pub fn len::<u32>(self_1: &'_ [u32]) -> usize
 {
@@ -1279,7 +1347,7 @@ pub fn len::<u32>(self_1: &'_ [u32]) -> usize
     }
 }
 
-// Full name: core::slice::<impl [T]>::len::<u8>
+// Full name: core::slice::{[T]}::len::<u8>
 #[lang_item("slice_len_fn")]
 pub fn len::<u8>(self_1: &'_ [u8]) -> usize
 {
@@ -1378,7 +1446,7 @@ pub fn slice_subslice_shared_(x_1: &'_ [u32], y_2: usize, z_3: usize) -> &'_ [u3
         _7 = Range::<usize> { start: move _8, end: move _9 };
         storage_dead(_9);
         storage_dead(_8);
-        _5 = core::slice::index::<impl std::ops::Index<I> for [T]>::index::<u32, Range::<usize>>(move _6, move _7) -> bb1 (unwind: bb2);
+        _5 = impl_Index_for_slice::index::<u32, Range::<usize>>(move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1425,7 +1493,7 @@ pub fn slice_subslice_mut_(x_1: &'_ mut [u32], y_2: usize, z_3: usize) -> &'_ mu
         _8 = Range::<usize> { start: move _9, end: move _10 };
         storage_dead(_10);
         storage_dead(_9);
-        _6 = core::slice::index::<impl std::ops::IndexMut<I> for [T]>::index_mut::<u32, Range::<usize>>(move _7, move _8) -> bb1 (unwind: bb2);
+        _6 = impl_IndexMut_for_slice::index_mut::<u32, Range::<usize>>(move _7, move _8) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1508,7 +1576,7 @@ pub fn array_subslice_shared_(x_1: &'_ [u32; 32usize], y_2: usize, z_3: usize) -
         _7 = Range::<usize> { start: move _8, end: move _9 };
         storage_dead(_9);
         storage_dead(_8);
-        _5 = std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32usize>(move _6, move _7) -> bb1 (unwind: bb2);
+        _5 = impl_Index_for_array::index::<u32, Range::<usize>, 32usize>(move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1555,7 +1623,7 @@ pub fn array_subslice_mut_(x_1: &'_ mut [u32; 32usize], y_2: usize, z_3: usize) 
         _8 = Range::<usize> { start: move _9, end: move _10 };
         storage_dead(_10);
         storage_dead(_9);
-        _6 = std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 32usize>(move _7, move _8) -> bb1 (unwind: bb2);
+        _6 = impl_IndexMut_for_array::index_mut::<u32, Range::<usize>, 32usize>(move _7, move _8) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2272,7 +2340,7 @@ pub fn range_all()
         _6 = &mut x_1;
         storage_live(_7);
         _7 = Range::<usize> { start: const 1usize, end: const 3usize };
-        _5 = std::array::<impl std::ops::IndexMut<I> for [T; N]>::index_mut::<u32, Range::<usize>, 4usize>(move _6, move _7) -> bb1 (unwind: bb2);
+        _5 = impl_IndexMut_for_array::index_mut::<u32, Range::<usize>, 4usize>(move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -2706,7 +2774,7 @@ pub fn f4(x_1: &'_ [u32; 32usize], y_2: usize, z_3: usize) -> &'_ [u32]
         _7 = Range::<usize> { start: move _8, end: move _9 };
         storage_dead(_9);
         storage_dead(_8);
-        _5 = std::array::<impl std::ops::Index<I> for [T; N]>::index::<u32, Range::<usize>, 32usize>(move _6, move _7) -> bb1 (unwind: bb2);
+        _5 = impl_Index_for_array::index::<u32, Range::<usize>, 32usize>(move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {

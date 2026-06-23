@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::ptr::from_raw_parts::<[u32], [u32; 2usize]>
+// Full name: core::ptr::metadata::from_raw_parts::<[u32], [u32; 2usize]>
 pub fn from_raw_parts::<[u32], [u32; 2usize]>(data_pointer_1: *const [u32; 2usize], metadata_2: usize) -> *const [u32]
 {
     let _0: *const [u32]; // return

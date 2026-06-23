@@ -1,33 +1,33 @@
 
 // Final ULLBC:
 
-// Full name: std::cell::UnsafeCell::<isize>
+// Full name: core::cell::UnsafeCell::<isize>
 #[lang_item("unsafe_cell")]
 pub struct UnsafeCell::<isize> {
   value: isize,
 }
 
-// Full name: std::cell::Cell::<isize>
+// Full name: core::cell::Cell::<isize>
 pub struct Cell::<isize> {
   value: UnsafeCell::<isize>,
 }
 
-// Full name: std::cell::UnsafeCell::<bool>
+// Full name: core::cell::UnsafeCell::<bool>
 #[lang_item("unsafe_cell")]
 pub struct UnsafeCell::<bool> {
   value: bool,
 }
 
-// Full name: std::cell::RefCell::<bool>
+// Full name: core::cell::RefCell::<bool>
 pub struct RefCell::<bool> {
   borrow: Cell::<isize>,
   value: UnsafeCell::<bool>,
 }
 
-// Full name: std::cell::BorrowError
+// Full name: core::cell::BorrowError
 pub struct BorrowError {}
 
-pub fn std::cell::RefCell::<T>::new::<bool>(value_1: bool) -> RefCell::<bool>
+pub fn core::cell::{RefCell::<_>}::new::<bool>(value_1: bool) -> RefCell::<bool>
 {
     let _0: RefCell::<bool>; // return
     let value_1: bool; // arg #1
@@ -48,57 +48,57 @@ pub fn std::cell::RefCell::<T>::new::<bool>(value_1: bool) -> RefCell::<bool>
     }
 }
 
-// Full name: std::ptr::NonNull::<bool>
+// Full name: core::ptr::non_null::NonNull::<bool>
 pub struct NonNull::<bool> {
   pointer: *const bool is !null,
 }
 
-// Full name: std::cell::BorrowRef::<'_>
+// Full name: core::cell::BorrowRef::<'_>
 struct BorrowRef::<'_> {
   borrow: &'_ Cell::<isize>,
 }
 
-// Full name: std::cell::Ref::<'_, bool>
+// Full name: core::cell::Ref::<'_, bool>
 pub struct Ref::<'_, bool> {
   value: NonNull::<bool>,
   borrow: BorrowRef::<'_>,
 }
 
-// Full name: std::result::Result::<Ref::<'_, bool>, BorrowError>
+// Full name: core::result::Result::<Ref::<'_, bool>, BorrowError>
 pub enum Result::<Ref::<'_, bool>, BorrowError> {
   Ok(0: Ref::<'_, bool>),
   Err(0: BorrowError),
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
   precision: u16,
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
@@ -116,26 +116,26 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -144,7 +144,7 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
@@ -160,11 +160,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+fn core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
     let message_1: &'_ Arguments::<'_>; // arg #1
@@ -178,11 +178,11 @@ fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments:
     }
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -200,11 +200,11 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -253,7 +253,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 
     bb5: {
         _7 = &(*_8);
-        pi_4 = core::panic::panic_info::PanicInfo::<'a>::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+        pi_4 = core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -336,7 +336,7 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-// Full name: std::ptr::NonNull::<T>::new_unchecked::precondition_check
+// Full name: core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check
 fn precondition_check(ptr_1: *mut ())
 {
     let _0: (); // return
@@ -416,14 +416,14 @@ fn precondition_check(ptr_1: *mut ())
     }
 }
 
-// Full name: std::option::Option::<BorrowRef::<'_>>
+// Full name: core::option::Option::<BorrowRef::<'_>>
 #[lang_item("Option")]
 pub enum Option::<BorrowRef::<'_>> {
   None,
   Some(0: BorrowRef::<'_>),
 }
 
-// Full name: std::cell::RefCell::<T>::try_borrow::<bool>
+// Full name: core::cell::{RefCell::<_>}::try_borrow::<bool>
 pub fn try_borrow::<bool>(self_1: &'_ RefCell::<bool>) -> Result::<Ref::<'_, bool>, BorrowError>
 {
     let _0: Result::<Ref::<'_, bool>, BorrowError>; // return
@@ -538,7 +538,21 @@ pub fn try_borrow::<bool>(self_1: &'_ RefCell::<bool>) -> Result::<Ref::<'_, boo
     }
 }
 
-// Full name: <std::cell::BorrowRef<'_> as std::ops::Drop>::drop::<'_>
+// Full name: core::cell::BorrowRef::<'_>
+struct BorrowRef::<'_> {
+  borrow: &'_ Cell::<isize>,
+}
+
+// Full name: core::ops::drop::Drop
+#[lang_item("drop")]
+trait Drop
+
+// Full name: core::cell::{impl Drop for BorrowRef::<'_>}
+impl<'_> Drop for BorrowRef::<'_> {
+    non-dyn-compatible
+}
+
+// Full name: core::cell::{impl Drop for BorrowRef::<'_>}::drop::<'_>
 pub fn drop::<'_>(self_1: &'_ mut BorrowRef::<'_>)
 {
     let _0: (); // return
@@ -581,14 +595,32 @@ pub fn drop::<'_>(self_1: &'_ mut BorrowRef::<'_>)
     }
 }
 
-// Full name: std::option::Option::<&'_ u32>
+// Full name: core::option::Option::<&'_ u32>
 #[lang_item("Option")]
 pub enum Option::<&'_ u32> {
   None,
   Some(0: &'_ u32),
 }
 
-// Full name: std::ptr::drop_glue::<BorrowRef::<'_>>
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::ptr::drop_glue::<BorrowRef::<'_>>
 #[lang_item("drop_glue")]
 fn drop_glue::<BorrowRef::<'_>>(_1: &'_ mut BorrowRef::<'_>)
 {
@@ -614,7 +646,7 @@ fn drop_glue::<BorrowRef::<'_>>(_1: &'_ mut BorrowRef::<'_>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Ref::<'_, bool>>
+// Full name: core::ptr::drop_glue::<Ref::<'_, bool>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Ref::<'_, bool>>(_1: &'_ mut Ref::<'_, bool>)
 {
@@ -640,7 +672,7 @@ fn drop_glue::<Ref::<'_, bool>>(_1: &'_ mut Ref::<'_, bool>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Result::<Ref::<'_, bool>, BorrowError>>
+// Full name: core::ptr::drop_glue::<Result::<Ref::<'_, bool>, BorrowError>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Result::<Ref::<'_, bool>, BorrowError>>(_1: &'_ mut Result::<Ref::<'_, bool>, BorrowError>)
 {
@@ -720,7 +752,7 @@ fn foo()
         storage_live(_5);
         _0 = ();
         storage_live(ref_b_1);
-        ref_b_1 = std::cell::RefCell::<T>::new::<bool>(const false) -> bb1 (unwind: bb2);
+        ref_b_1 = core::cell::{RefCell::<_>}::new::<bool>(const false) -> bb1 (unwind: bb2);
     }
 
     bb1: {

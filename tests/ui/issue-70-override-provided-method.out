@@ -1,7 +1,11 @@
 
 // Final ULLBC:
 
-// Full name: std::cmp::Ordering
+// Full name: core::cmp::PartialEq
+#[lang_item("eq")]
+trait PartialEq
+
+// Full name: core::cmp::Ordering
 #[lang_item("Ordering")]
 pub enum Ordering {
   Less,
@@ -9,7 +13,17 @@ pub enum Ordering {
   Greater,
 }
 
-pub fn std::cmp::impls::<impl std::cmp::PartialEq for i32>::eq(self_1: &'_ i32, other_2: &'_ i32) -> bool
+// Full name: core::cmp::PartialOrd
+#[lang_item("partial_ord")]
+trait PartialOrd
+
+// Full name: core::cmp::impls::{impl PartialEq<i32> for i32}
+impl "impl_PartialEq_i32_for_i32" PartialEq<i32> for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::cmp::impls::{impl PartialEq<i32> for i32}::eq
+pub fn impl_PartialEq_i32_for_i32::eq(self_1: &'_ i32, other_2: &'_ i32) -> bool
 {
     let _0: bool; // return
     let self_1: &'_ i32; // arg #1
@@ -29,14 +43,20 @@ pub fn std::cmp::impls::<impl std::cmp::PartialEq for i32>::eq(self_1: &'_ i32, 
     }
 }
 
-// Full name: std::option::Option::<Ordering>
+// Full name: core::cmp::impls::{impl PartialOrd<u32> for u32}
+impl "impl_PartialOrd_u32_for_u32" PartialOrd<u32> for u32 {
+    non-dyn-compatible
+}
+
+// Full name: core::option::Option::<Ordering>
 #[lang_item("Option")]
 pub enum Option::<Ordering> {
   None,
   Some(0: Ordering),
 }
 
-pub fn std::cmp::impls::<impl std::cmp::PartialOrd for u32>::partial_cmp(self_1: &'_ u32, other_2: &'_ u32) -> Option::<Ordering>
+// Full name: core::cmp::impls::{impl PartialOrd<u32> for u32}::partial_cmp
+pub fn impl_PartialOrd_u32_for_u32::partial_cmp(self_1: &'_ u32, other_2: &'_ u32) -> Option::<Ordering>
 {
     let _0: Option::<Ordering>; // return
     let self_1: &'_ u32; // arg #1
@@ -60,14 +80,20 @@ pub fn std::cmp::impls::<impl std::cmp::PartialOrd for u32>::partial_cmp(self_1:
     }
 }
 
-// Full name: std::option::Option::<i32>
+// Full name: core::option::Option::<i32>
 #[lang_item("Option")]
 pub enum Option::<i32> {
   None,
   Some(0: i32),
 }
 
-pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<i32>(self_1: &'_ Option::<i32>, other_2: &'_ Option::<i32>) -> bool
+// Full name: core::option::{impl PartialEq<Option::<_>> for Option::<_>}
+impl<T> PartialEq<Option::<_>> for Option::<_> {
+    non-dyn-compatible
+}
+
+// Full name: core::option::{impl PartialEq<Option::<_>> for Option::<_>}::eq::<i32>
+pub fn {impl PartialEq<Option::<_>> for Option::<_>}::eq::<i32>(self_1: &'_ Option::<i32>, other_2: &'_ Option::<i32>) -> bool
 {
     let _0: bool; // return
     let self_1: &'_ Option::<i32>; // arg #1
@@ -115,7 +141,7 @@ pub fn <std::option::Option<T> as std::cmp::PartialEq>::eq::<i32>(self_1: &'_ Op
         l_6 = &((*self_1) as variant Option::<i32>::Some).0;
         storage_live(r_7);
         r_7 = &((*other_2) as variant Option::<i32>::Some).0;
-        _0 = std::cmp::impls::<impl std::cmp::PartialEq for i32>::eq(move l_6, move r_7) -> bb7 (unwind: bb8);
+        _0 = impl_PartialEq_i32_for_i32::eq(move l_6, move r_7) -> bb7 (unwind: bb8);
     }
 
     bb7: {
@@ -165,7 +191,7 @@ fn main()
         _7 = &anon_const_1;
         _4 = move _7;
         _3 = &(*_4);
-        _1 = <std::option::Option<T> as std::cmp::PartialEq>::eq::<i32>(move _2, move _3) -> bb1 (unwind: bb2);
+        _1 = {impl PartialEq<Option::<_>> for Option::<_>}::eq::<i32>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -186,7 +212,13 @@ struct Foo {
   0: u32,
 }
 
-pub fn <test_crate::Foo as std::cmp::PartialEq>::eq(self_1: &'_ Foo, other_2: &'_ Foo) -> bool
+// Full name: test_crate::{impl PartialEq<Foo> for Foo}
+impl "impl_PartialEq_Foo_for_Foo" PartialEq<Foo> for Foo {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl PartialEq<Foo> for Foo}::eq
+pub fn impl_PartialEq_Foo_for_Foo::eq(self_1: &'_ Foo, other_2: &'_ Foo) -> bool
 {
     let _0: bool; // return
     let self_1: &'_ Foo; // arg #1
@@ -206,7 +238,13 @@ pub fn <test_crate::Foo as std::cmp::PartialEq>::eq(self_1: &'_ Foo, other_2: &'
     }
 }
 
-pub fn <test_crate::Foo as std::cmp::PartialOrd>::partial_cmp(self_1: &'_ Foo, other_2: &'_ Foo) -> Option::<Ordering>
+// Full name: test_crate::{impl PartialOrd<Foo> for Foo}
+impl "impl_PartialOrd_Foo_for_Foo" PartialOrd<Foo> for Foo {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl PartialOrd<Foo> for Foo}::partial_cmp
+pub fn impl_PartialOrd_Foo_for_Foo::partial_cmp(self_1: &'_ Foo, other_2: &'_ Foo) -> Option::<Ordering>
 {
     let _0: Option::<Ordering>; // return
     let self_1: &'_ Foo; // arg #1
@@ -225,7 +263,7 @@ pub fn <test_crate::Foo as std::cmp::PartialOrd>::partial_cmp(self_1: &'_ Foo, o
         storage_live(_6);
         _6 = &((*other_2)).0;
         _5 = &(*_6);
-        _0 = std::cmp::impls::<impl std::cmp::PartialOrd for u32>::partial_cmp(move _3, move _5) -> bb1 (unwind: bb2);
+        _0 = impl_PartialOrd_u32_for_u32::partial_cmp(move _3, move _5) -> bb1 (unwind: bb2);
     }
 
     bb1: {

@@ -1,7 +1,16 @@
 
 // Final ULLBC:
 
-// Full name: std::clone::impls::<impl std::clone::Clone for i32>::clone
+// Full name: core::clone::Clone
+#[lang_item("clone")]
+trait Clone
+
+// Full name: core::clone::impls::{impl Clone for i32}
+impl "impl_Clone_for_i32" Clone for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::clone::impls::{impl Clone for i32}::clone
 pub fn clone(self_1: &'_ i32) -> i32
 {
     let _0: i32; // return
@@ -13,7 +22,7 @@ pub fn clone(self_1: &'_ i32) -> i32
     }
 }
 
-// Full name: std::ptr::drop_glue::<i32>
+// Full name: core::ptr::drop_glue::<i32>
 #[lang_item("drop_glue")]
 fn drop_glue::<i32>(_1: &'_ mut i32)
 {
@@ -32,7 +41,10 @@ trait FakeTrait
 // Full name: anon_const_0
 const anon_const_0: i32 = 42i32
 
-fn <i32 as test_crate::Modifiable<T>>::modify::<i32>(self_1: &'_ mut i32, arg_2: &'_ i32) -> i32
+trait test_crate::Modifiable
+
+// Full name: test_crate::{impl test_crate::Modifiable<T> for i32}::modify::<i32>
+fn impl_Modifiable_for_i32::modify::<i32>(self_1: &'_ mut i32, arg_2: &'_ i32) -> i32
 {
     let _0: i32; // return
     let self_1: &'_ mut i32; // arg #1
@@ -59,8 +71,7 @@ fn <i32 as test_crate::Modifiable<T>>::modify::<i32>(self_1: &'_ mut i32, arg_2:
     }
 }
 
-// Full name: {vtable}::test_crate::Modifiable::<i32, i32>
-fn Modifiable::<i32, i32>() -> *const ()
+fn {vtable}::test_crate::Modifiable::<i32, i32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -80,7 +91,7 @@ fn Modifiable::<i32, i32>() -> *const ()
         drop_1 = cast<drop_glue::<i32>, *const ()>(const drop_glue::<i32>);
         size_2 = transmute<usize, *const ()>(const 4usize);
         align_3 = transmute<usize, *const ()>(const 4usize);
-        <i32 as test_crate::Modifiable<i32>>::modify_4 = cast<<i32 as test_crate::Modifiable<T>>::modify::<i32>, *const ()>(const <i32 as test_crate::Modifiable<T>>::modify::<i32>);
+        <i32 as test_crate::Modifiable<i32>>::modify_4 = cast<impl_Modifiable_for_i32::modify::<i32>, *const ()>(const impl_Modifiable_for_i32::modify::<i32>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <i32 as test_crate::Modifiable<i32>>::modify_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -88,11 +99,15 @@ fn Modifiable::<i32, i32>() -> *const ()
     }
 }
 
-// Full name: {vtable}::test_crate::Modifiable::<i32, i32>
-static Modifiable::<i32, i32>: *const () = Modifiable::<i32, i32>()
+static {vtable}::test_crate::Modifiable::<i32, i32>: *const () = {vtable}::test_crate::Modifiable::<i32, i32>()
 
 fn test_crate::Modifiable::modify::<(dyn FakeTrait), i32>(_1: &'_ mut (dyn FakeTrait), _2: &'_ i32) -> i32
 = <opaque>
+
+// Full name: test_crate::{impl test_crate::Modifiable<T> for i32}
+impl<T> "impl_Modifiable_for_i32" test_crate::Modifiable<T> for i32 {
+    non-dyn-compatible
+}
 
 // Full name: test_crate::modify_trait_object::<i32>
 fn modify_trait_object::<i32>(arg_1: &'_ i32) -> i32
@@ -116,7 +131,7 @@ fn modify_trait_object::<i32>(arg_1: &'_ i32) -> i32
         _5 = const 199i32;
         _4 = &mut _5;
         _3 = &mut (*_4);
-        x_2 = unsize_cast<&'_ mut i32, &'_ mut (dyn FakeTrait), Modifiable::<i32, i32>>(move _3);
+        x_2 = unsize_cast<&'_ mut i32, &'_ mut (dyn FakeTrait), {vtable}::test_crate::Modifiable::<i32, i32>>(move _3);
         storage_dead(_3);
         storage_dead(_4);
         storage_live(_6);

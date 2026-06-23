@@ -1,10 +1,10 @@
 
 // Final ULLBC:
 
-pub fn std::intrinsics::saturating_add::<u8>(a_1: u8, b_2: u8) -> u8
+pub fn core::intrinsics::saturating_add::<u8>(a_1: u8, b_2: u8) -> u8
 = <intrinsic:saturating_add>
 
-// Full name: core::num::<impl u8>::wrapping_add
+// Full name: core::num::{u8}::wrapping_add
 pub fn wrapping_add(self_1: u8, rhs_2: u8) -> u8
 {
     let _0: u8; // return
@@ -17,7 +17,7 @@ pub fn wrapping_add(self_1: u8, rhs_2: u8) -> u8
     }
 }
 
-// Full name: core::num::<impl u8>::overflowing_add
+// Full name: core::num::{u8}::overflowing_add
 pub fn overflowing_add(self_1: u8, rhs_2: u8) -> (u8, bool)
 {
     let _0: (u8, bool); // return
@@ -30,14 +30,14 @@ pub fn overflowing_add(self_1: u8, rhs_2: u8) -> (u8, bool)
     }
 }
 
-pub fn core::num::<impl u8>::saturating_add(self_1: u8, rhs_2: u8) -> u8
+pub fn core::num::{u8}::saturating_add(self_1: u8, rhs_2: u8) -> u8
 {
     let _0: u8; // return
     let self_1: u8; // arg #1
     let rhs_2: u8; // arg #2
 
     bb0: {
-        _0 = std::intrinsics::saturating_add::<u8>(move self_1, move rhs_2) -> bb1 (unwind: bb2);
+        _0 = core::intrinsics::saturating_add::<u8>(move self_1, move rhs_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -79,7 +79,7 @@ fn main()
     bb3: {
         storage_dead(_2);
         storage_live(_3);
-        _3 = core::num::<impl u8>::saturating_add(const 255u8, const 1u8) -> bb5 (unwind: bb6);
+        _3 = core::num::{u8}::saturating_add(const 255u8, const 1u8) -> bb5 (unwind: bb6);
     }
 
     bb4: {

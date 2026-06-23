@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::mem::alignment::AlignmentEnum
+// Full name: core::mem::alignment::AlignmentEnum
 enum AlignmentEnum {
   _Align1Shl0,
   _Align1Shl1,
@@ -69,22 +69,24 @@ enum AlignmentEnum {
   _Align1Shl63,
 }
 
-// Full name: std::mem::Alignment
+// Full name: core::mem::alignment::Alignment
 pub struct Alignment {
   _inner_repr_trick: AlignmentEnum,
 }
 
-// Full name: std::alloc::Layout
+// Full name: core::alloc::layout::Layout
 #[lang_item("alloc_layout")]
 pub struct Layout {
   size: usize,
   align: Alignment,
 }
 
-// Full name: std::alloc::AllocError
+// Full name: core::alloc::AllocError
 pub struct AllocError {}
 
-// Full name: std::ptr::drop_glue::<&'_ str>
+trait core::any::Any
+
+// Full name: core::ptr::drop_glue::<&'_ str>
 #[lang_item("drop_glue")]
 fn drop_glue::<&'_ str>(_1: &'_ mut &'_ str)
 {
@@ -97,13 +99,13 @@ fn drop_glue::<&'_ str>(_1: &'_ mut &'_ str)
     }
 }
 
-// Full name: std::any::TypeId
+// Full name: core::any::TypeId
 #[lang_item("type_id")]
 pub struct TypeId {
   data: [*const (); 2usize],
 }
 
-// Full name: <T as std::any::Any>::type_id::<&'_ str>
+// Full name: core::any::{impl core::any::Any for T}::type_id::<&'_ str>
 pub fn type_id::<&'_ str>(self_1: &'_ &'_ str) -> TypeId
 {
     let _0: TypeId; // return
@@ -115,8 +117,7 @@ pub fn type_id::<&'_ str>(self_1: &'_ &'_ str) -> TypeId
     }
 }
 
-// Full name: {vtable}::std::any::Any::<&'_ str>
-fn Any::<&'_ str>() -> *const ()
+fn {vtable}::core::any::Any::<&'_ str>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -144,17 +145,21 @@ fn Any::<&'_ str>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::any::Any::<&'_ str>
-static Any::<&'_ str>: *const () = Any::<&'_ str>()
+static {vtable}::core::any::Any::<&'_ str>: *const () = {vtable}::core::any::Any::<&'_ str>()
 
-// Full name: std::convert::Infallible
+// Full name: core::any::{impl core::any::Any for T}
+impl<T> "impl_Any_for_T" core::any::Any for T {
+    non-dyn-compatible
+}
+
+// Full name: core::convert::Infallible
 pub enum Infallible {
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -164,30 +169,36 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn FakeTrait),
+}
+
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
@@ -203,24 +214,31 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::fmt::{Arguments::<'_>}::from_str::<'_>
 pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -264,7 +282,7 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
     }
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str_nonconst::<'_>
+// Full name: core::fmt::{Arguments::<'_>}::from_str_nonconst::<'_>
 pub fn from_str_nonconst::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -283,23 +301,26 @@ pub fn from_str_nonconst::<'_>(s_1: &'_ str) -> Arguments::<'_>
     }
 }
 
-// Full name: std::fmt::Formatter::<'a>::write_str::<'_>
+// Full name: core::fmt::Display
+trait Display
+
+// Full name: core::fmt::{Formatter::<'_>}::write_str::<'_>
 pub fn write_str::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ str) -> Result::<(), Error>
 = <missing>
 
-pub fn std::intrinsics::abort() -> !
+pub fn core::intrinsics::abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -308,48 +329,57 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::intrinsics::black_box::<()>
+// Full name: core::intrinsics::black_box::<()>
 pub fn black_box::<()>(dummy_1: ())
 = <intrinsic:black_box>
 
-// Full name: std::marker::PhantomData::<(dyn FakeTrait)>
+// Full name: core::marker::PhantomData::<(dyn FakeTrait)>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<(dyn FakeTrait)> {}
 
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<&'_ str>
+// Full name: core::mem::SizedTypeProperties::LAYOUT::<&'_ str>
 pub const LAYOUT::<&'_ str>: Layout = Layout { size: 16usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl3 {  } } }
 
-// Full name: std::result::Result::<Infallible, AllocError>
+// Full name: core::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {
   Ok(0: Infallible),
   Err(0: AllocError),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>
 pub enum ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>> {
   Continue(0: NonNull::<u8>),
   Break(0: Result::<Infallible, AllocError>),
 }
 
-// Full name: std::option::Option::<&'_ str>
+// Full name: core::option::Option::<&'_ str>
 #[lang_item("Option")]
 pub enum Option::<&'_ str> {
   None,
   Some(0: &'_ str),
 }
 
-// Full name: std::option::Option::<NonNull::<u8>>
+// Full name: core::option::Option::<NonNull::<u8>>
 #[lang_item("Option")]
 pub enum Option::<NonNull::<u8>> {
   None,
   Some(0: NonNull::<u8>),
 }
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -376,7 +406,16 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+fn core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
     let message_1: &'_ Arguments::<'_>; // arg #1
@@ -390,6 +429,8 @@ fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments:
     }
 }
 
+trait core::panic::PanicPayload
+
 pub fn std::process::abort() -> !
 = <missing>
 
@@ -397,12 +438,12 @@ pub fn std::process::abort() -> !
 fn payload_as_str(_1: &'_ (dyn FakeTrait)) -> &'_ str
 = <missing>
 
-// Full name: std::rt::begin_panic::Payload::<&'_ str>
+// Full name: std::panicking::begin_panic::Payload::<&'_ str>
 struct Payload::<&'_ str> {
   inner: Option::<&'_ str>,
 }
 
-// Full name: <std::rt::begin_panic::Payload<A> as std::fmt::Display>::fmt::<&'_ str>
+// Full name: std::panicking::begin_panic::{impl Display for Payload::<_>}::fmt::<&'_ str>
 pub fn fmt::<&'_ str>(self_1: &'_ Payload::<&'_ str>, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
@@ -430,7 +471,7 @@ pub fn fmt::<&'_ str>(self_1: &'_ Payload::<&'_ str>, f_2: &'_ mut Formatter::<'
         a_4 = &(((*self_1)).inner as variant Option::<&'_ str>::Some).0;
         storage_live(_5);
         storage_live(_6);
-        _6 = unsize_cast<&'_ &'_ str, &'_ (dyn FakeTrait), Any::<&'_ str>>(copy a_4);
+        _6 = unsize_cast<&'_ &'_ str, &'_ (dyn FakeTrait), {vtable}::core::any::Any::<&'_ str>>(copy a_4);
         _5 = payload_as_str(move _6) -> bb6 (unwind: bb7);
     }
 
@@ -466,7 +507,7 @@ pub fn fmt::<&'_ str>(self_1: &'_ Payload::<&'_ str>, f_2: &'_ mut Formatter::<'
     }
 }
 
-// Full name: <std::rt::begin_panic::Payload<A> as core::panic::PanicPayload>::get::<&'_ str>
+// Full name: std::panicking::begin_panic::{impl core::panic::PanicPayload for Payload::<_>}::get::<&'_ str>
 pub fn get::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> &'_ (dyn FakeTrait)
 {
     let _0: &'_ (dyn FakeTrait); // return
@@ -489,7 +530,7 @@ pub fn get::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> &'_ (dyn FakeTrait)
     bb2: {
         storage_live(a_3);
         a_3 = &(((*self_1)).inner as variant Option::<&'_ str>::Some).0;
-        _0 = unsize_cast<&'_ &'_ str, &'_ (dyn FakeTrait), Any::<&'_ str>>(copy a_3);
+        _0 = unsize_cast<&'_ &'_ str, &'_ (dyn FakeTrait), {vtable}::core::any::Any::<&'_ str>>(copy a_3);
         storage_dead(a_3);
         return;
     }
@@ -507,11 +548,11 @@ pub fn get::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> &'_ (dyn FakeTrait)
     }
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -535,7 +576,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 
     bb1: {
         storage_live(_3);
-        _3 = std::intrinsics::abort() -> bb3 (unwind: bb4);
+        _3 = core::intrinsics::abort() -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -560,7 +601,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 
     bb5: {
         _7 = &(*_8);
-        pi_4 = core::panic::panic_info::PanicInfo::<'a>::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+        pi_4 = core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -592,7 +633,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
     }
 }
 
-// Full name: std::alloc::handle_alloc_error::ct_error
+// Full name: alloc::alloc::handle_alloc_error::ct_error
 fn ct_error(_1: Layout) -> !
 {
     let _0: !; // return
@@ -623,7 +664,7 @@ fn ct_error(_1: Layout) -> !
     }
 }
 
-// Full name: std::alloc::handle_alloc_error
+// Full name: alloc::alloc::handle_alloc_error
 pub fn handle_alloc_error(layout_1: Layout) -> !
 {
     let _0: !; // return
@@ -661,18 +702,18 @@ fn __rust_alloc_zeroed(_1: usize, _2: Alignment) -> *mut u8
 fn __rust_alloc(_1: usize, _2: Alignment) -> *mut u8
 = <extern:__rust_alloc>
 
-// Full name: std::result::Result::<NonNull::<u8>, AllocError>
+// Full name: core::result::Result::<NonNull::<u8>, AllocError>
 pub enum Result::<NonNull::<u8>, AllocError> {
   Ok(0: NonNull::<u8>),
   Err(0: AllocError),
 }
 
-// Full name: std::ptr::NonNull::<[u8]>
+// Full name: core::ptr::non_null::NonNull::<[u8]>
 pub struct NonNull::<[u8]> {
   pointer: *const [u8] is !null,
 }
 
-// Full name: std::result::Result::<NonNull::<[u8]>, AllocError>
+// Full name: core::result::Result::<NonNull::<[u8]>, AllocError>
 pub enum Result::<NonNull::<[u8]>, AllocError> {
   Ok(0: NonNull::<[u8]>),
   Err(0: AllocError),
@@ -729,7 +770,7 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-// Full name: std::ptr::NonNull::<T>::new_unchecked::precondition_check
+// Full name: core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check
 fn precondition_check(ptr_1: *mut ())
 {
     let _0: (); // return
@@ -809,7 +850,7 @@ fn precondition_check(ptr_1: *mut ())
     }
 }
 
-// Full name: std::alloc::Global::alloc_impl_runtime
+// Full name: alloc::alloc::{Global}::alloc_impl_runtime
 fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u8]>, AllocError>
 {
     let _0: Result::<NonNull::<[u8]>, AllocError>; // return
@@ -1087,7 +1128,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     }
 }
 
-// Full name: std::boxed::box_new_uninit
+// Full name: alloc::boxed::box_new_uninit
 fn box_new_uninit(layout_1: Layout) -> *mut u8
 {
     let _0: *mut u8; // return
@@ -1151,29 +1192,29 @@ fn box_new_uninit(layout_1: Layout) -> *mut u8
     }
 }
 
-// Full name: std::alloc::Global
+// Full name: alloc::alloc::Global
 #[lang_item("global_alloc_ty")]
 pub struct Global {}
 
-// Full name: std::ptr::NonNull::<&'_ str>
+// Full name: core::ptr::non_null::NonNull::<&'_ str>
 pub struct NonNull::<&'_ str> {
   pointer: *const &'_ str is !null,
 }
 
-// Full name: std::ptr::Unique::<&'_ str>
+// Full name: core::ptr::unique::Unique::<&'_ str>
 pub struct Unique::<&'_ str> {
   pointer: NonNull::<&'_ str>,
   _marker: PhantomData::<&'_ str>,
 }
 
-// Full name: std::boxed::Box::<&'_ str, Global>
+// Full name: alloc::boxed::Box::<&'_ str, Global>
 #[lang_item("owned_box")]
 pub struct Box::<&'_ str, Global> {
   0: Unique::<&'_ str>,
   1: Global,
 }
 
-pub fn std::boxed::Box::<T>::new::<&'_ str>(x_1: &'_ str) -> Box::<&'_ str, Global>
+pub fn alloc::boxed::{Box::<_, Global>}::new::<&'_ str>(x_1: &'_ str) -> Box::<&'_ str, Global>
 {
     let _0: Box::<&'_ str, Global>; // return
     let x_1: &'_ str; // arg #1
@@ -1198,25 +1239,25 @@ pub fn std::boxed::Box::<T>::new::<&'_ str>(x_1: &'_ str) -> Box::<&'_ str, Glob
     }
 }
 
-// Full name: std::ptr::NonNull::<(dyn FakeTrait)>
+// Full name: core::ptr::non_null::NonNull::<(dyn FakeTrait)>
 pub struct NonNull::<(dyn FakeTrait)> {
   pointer: *const (dyn FakeTrait) is !null,
 }
 
-// Full name: std::ptr::Unique::<(dyn FakeTrait)>
+// Full name: core::ptr::unique::Unique::<(dyn FakeTrait)>
 pub struct Unique::<(dyn FakeTrait)> {
   pointer: NonNull::<(dyn FakeTrait)>,
   _marker: PhantomData::<(dyn FakeTrait)>,
 }
 
-// Full name: std::boxed::Box::<(dyn FakeTrait), Global>
+// Full name: alloc::boxed::Box::<(dyn FakeTrait), Global>
 #[lang_item("owned_box")]
 pub struct Box::<(dyn FakeTrait), Global> {
   0: Unique::<(dyn FakeTrait)>,
   1: Global,
 }
 
-// Full name: <std::rt::begin_panic::Payload<A> as core::panic::PanicPayload>::take_box::<&'_ str>
+// Full name: std::panicking::begin_panic::{impl core::panic::PanicPayload for Payload::<_>}::take_box::<&'_ str>
 pub fn take_box::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> *mut (dyn FakeTrait)
 {
     let _0: *mut (dyn FakeTrait); // return
@@ -1254,7 +1295,7 @@ pub fn take_box::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> *mut (dyn Fake
         a_4 = move (_2 as variant Option::<&'_ str>::Some).0;
         storage_live(_5);
         storage_live(_6);
-        _6 = std::boxed::Box::<T>::new::<&'_ str>(move a_4) -> bb6 (unwind: bb7);
+        _6 = alloc::boxed::{Box::<_, Global>}::new::<&'_ str>(move a_4) -> bb6 (unwind: bb7);
     }
 
     bb3: {
@@ -1270,7 +1311,7 @@ pub fn take_box::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> *mut (dyn Fake
     }
 
     bb6: {
-        _5 = unsize_cast<Box::<&'_ str, Global>, Box::<(dyn FakeTrait), Global>, Any::<&'_ str>>(move _6);
+        _5 = unsize_cast<Box::<&'_ str, Global>, Box::<(dyn FakeTrait), Global>, {vtable}::core::any::Any::<&'_ str>>(move _6);
         storage_dead(_6);
         data_10 = move ((_5).0).pointer;
         storage_dead(_5);
@@ -1289,7 +1330,7 @@ pub fn take_box::<&'_ str>(self_1: &'_ mut Payload::<&'_ str>) -> *mut (dyn Fake
     }
 }
 
-// Full name: std::ptr::drop_glue::<Payload::<&'_ str>>
+// Full name: core::ptr::drop_glue::<Payload::<&'_ str>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Payload::<&'_ str>>(_1: &'_ mut Payload::<&'_ str>)
 {
@@ -1317,8 +1358,7 @@ pub fn as_str::<Payload::<&'_ str>>(self_1: &'_ mut Payload::<&'_ str>) -> Optio
     }
 }
 
-// Full name: {vtable}::core::panic::PanicPayload::<Payload::<&'_ str>>
-fn PanicPayload::<Payload::<&'_ str>>() -> *const ()
+fn {vtable}::core::panic::PanicPayload::<Payload::<&'_ str>>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -1355,8 +1395,7 @@ fn PanicPayload::<Payload::<&'_ str>>() -> *const ()
     }
 }
 
-// Full name: {vtable}::core::panic::PanicPayload::<Payload::<&'_ str>>
-static PanicPayload::<Payload::<&'_ str>>: *const () = PanicPayload::<Payload::<&'_ str>>()
+static {vtable}::core::panic::PanicPayload::<Payload::<&'_ str>>: *const () = {vtable}::core::panic::PanicPayload::<Payload::<&'_ str>>()
 
 // Full name: core::panicking::panic
 #[lang_item("panic")]
@@ -1398,17 +1437,15 @@ pub fn panic(expr_1: &'_ str) -> !
 fn panic_with_hook(_1: &'_ mut (dyn FakeTrait), _2: &'_ Location::<'_>, _3: bool, _4: bool) -> !
 = <missing>
 
-// Full name: std::rt::begin_panic::{closure#0}::closure
-struct closure {
+struct std::panicking::begin_panic::closure::closure {
   upvar_0: &'_ str,
   upvar_1: &'_ Location::<'_>,
 }
 
-// Full name: std::rt::begin_panic::{closure#0}::<&'_ str, i32, extern "rust-call" fn(()) -> !, (&'_ str, &'_ Location::<'_>)>
-fn {closure#0}::<&'_ str, i32, extern "rust-call" fn(()) -> !, (&'_ str, &'_ Location::<'_>)>(_1: closure, spread_args_2: ()) -> !
+fn std::panicking::begin_panic::closure::<&'_ str, i32, extern "rust-call" fn(()) -> !, (&'_ str, &'_ Location::<'_>)>(_1: std::panicking::begin_panic::closure::closure, spread_args_2: ()) -> !
 {
     let _0: !; // return
-    let _1: closure; // arg #1
+    let _1: std::panicking::begin_panic::closure::closure; // arg #1
     let spread_args_2: (); // arg #2
     let _3: &'_ mut (dyn FakeTrait); // anonymous local
     let _4: &'_ mut Payload::<&'_ str>; // anonymous local
@@ -1430,7 +1467,7 @@ fn {closure#0}::<&'_ str, i32, extern "rust-call" fn(()) -> !, (&'_ str, &'_ Loc
         _5 = Payload::<&'_ str> { inner: move _6 };
         storage_dead(_6);
         _4 = &mut _5;
-        _3 = unsize_cast<&'_ mut Payload::<&'_ str>, &'_ mut (dyn FakeTrait), PanicPayload::<Payload::<&'_ str>>>(copy _4);
+        _3 = unsize_cast<&'_ mut Payload::<&'_ str>, &'_ mut (dyn FakeTrait), {vtable}::core::panic::PanicPayload::<Payload::<&'_ str>>>(copy _4);
         _8 = copy (_1).upvar_1;
         _0 = panic_with_hook(move _3, move _8, const true, const false) -> bb1 (unwind: bb2);
     }
@@ -1444,16 +1481,16 @@ fn {closure#0}::<&'_ str, i32, extern "rust-call" fn(()) -> !, (&'_ str, &'_ Loc
     }
 }
 
-// Full name: std::sys::backtrace::__rust_end_short_backtrace::<closure, !>
-pub fn __rust_end_short_backtrace::<closure, !>(f_1: closure) -> !
+// Full name: std::sys::backtrace::__rust_end_short_backtrace::<std::panicking::begin_panic::closure::closure, !>
+pub fn __rust_end_short_backtrace::<std::panicking::begin_panic::closure::closure, !>(f_1: std::panicking::begin_panic::closure::closure) -> !
 {
     let result_0: !; // return
-    let f_1: closure; // arg #1
+    let f_1: std::panicking::begin_panic::closure::closure; // arg #1
     let _2: (); // anonymous local
 
     bb0: {
         storage_live(_2);
-        result_0 = {closure#0}::<&'_ str, i32, extern "rust-call" fn(()) -> !, (&'_ str, &'_ Location::<'_>)>(move f_1, const ()) -> bb1 (unwind: bb2);
+        result_0 = std::panicking::begin_panic::closure::<&'_ str, i32, extern "rust-call" fn(()) -> !, (&'_ str, &'_ Location::<'_>)>(move f_1, const ()) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1473,14 +1510,14 @@ pub fn __rust_end_short_backtrace::<closure, !>(f_1: closure) -> !
     }
 }
 
-// Full name: std::rt::begin_panic::<&'_ str>
+// Full name: std::panicking::begin_panic::<&'_ str>
 #[lang_item("begin_panic")]
 pub fn begin_panic::<&'_ str>(msg_1: &'_ str) -> !
 {
     let _0: !; // return
     let msg_1: &'_ str; // arg #1
     let loc_2: &'_ Location::<'_>; // local
-    let _3: closure; // anonymous local
+    let _3: std::panicking::begin_panic::closure::closure; // anonymous local
 
     bb0: {
         storage_live(loc_2);
@@ -1489,8 +1526,8 @@ pub fn begin_panic::<&'_ str>(msg_1: &'_ str) -> !
 
     bb1: {
         storage_live(_3);
-        _3 = closure { upvar_0: move msg_1, upvar_1: copy loc_2 };
-        _0 = __rust_end_short_backtrace::<closure, !>(move _3) -> bb3 (unwind: bb4);
+        _3 = std::panicking::begin_panic::closure::closure { upvar_0: move msg_1, upvar_1: copy loc_2 };
+        _0 = __rust_end_short_backtrace::<std::panicking::begin_panic::closure::closure, !>(move _3) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -1504,6 +1541,16 @@ pub fn begin_panic::<&'_ str>(msg_1: &'_ str) -> !
     bb4: {
         unwind_continue;
     }
+}
+
+// Full name: std::panicking::begin_panic::{impl core::panic::PanicPayload for Payload::<_>}
+impl<A> core::panic::PanicPayload for Payload::<_> {
+    non-dyn-compatible
+}
+
+// Full name: std::panicking::begin_panic::{impl Display for Payload::<_>}
+impl<A> Display for Payload::<_> {
+    non-dyn-compatible
 }
 
 // Full name: test_crate::panic1

@@ -1,13 +1,12 @@
 
 // Final ULLBC:
 
-struct test_crate::main::{closure#1}::closure {}
+struct test_crate::main::closure#1::closure {}
 
-// Full name: test_crate::main::{closure#1}::<i8, extern "rust-call" fn((&'_ u16,)), ()>
-fn {closure#1}::<i8, extern "rust-call" fn((&'_ u16,)), ()>(_1: &'_ test_crate::main::{closure#1}::closure, spread_args_2: (&'_ u16,))
+fn test_crate::main::closure#1::<i8, extern "rust-call" fn((&'_ u16,)), ()>(_1: &'_ test_crate::main::closure#1::closure, spread_args_2: (&'_ u16,))
 {
     let _0: (); // return
-    let _1: &'_ test_crate::main::{closure#1}::closure; // arg #1
+    let _1: &'_ test_crate::main::closure#1::closure; // arg #1
     let spread_args_2: (&'_ u16,); // arg #2
     let _3: &'_ u16; // anonymous local
 
@@ -20,19 +19,19 @@ fn {closure#1}::<i8, extern "rust-call" fn((&'_ u16,)), ()>(_1: &'_ test_crate::
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<test_crate::main::{closure#1}::closure, (&'_ u16,)>
-pub fn call_once::<test_crate::main::{closure#1}::closure, (&'_ u16,)>(_1: test_crate::main::{closure#1}::closure, _2: (&'_ u16,))
+// Full name: core::ops::function::FnOnce::call_once::<test_crate::main::closure#1::closure, (&'_ u16,)>
+pub fn call_once::<test_crate::main::closure#1::closure, (&'_ u16,)>(_1: test_crate::main::closure#1::closure, _2: (&'_ u16,))
 {
     let _0: (); // return
-    let _1: test_crate::main::{closure#1}::closure; // arg #1
+    let _1: test_crate::main::closure#1::closure; // arg #1
     let _2: (&'_ u16,); // arg #2
-    let _3: &'_ mut test_crate::main::{closure#1}::closure; // anonymous local
+    let _3: &'_ mut test_crate::main::closure#1::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _0 = ();
         _3 = &mut _1;
-        _0 = {closure#1}::<i8, extern "rust-call" fn((&'_ u16,)), ()>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = test_crate::main::closure#1::<i8, extern "rust-call" fn((&'_ u16,)), ()>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -60,21 +59,21 @@ fn make_early::<u16>(_1: fn(&'_ u16))
     }
 }
 
-// Full name: test_crate::main::{closure#1}::closure_as_fn
+// Full name: test_crate::main::closure#1::closure_as_fn
 fn closure_as_fn(arg1_1: &'_ u16)
 {
     let _0: (); // return
     let arg1_1: &'_ u16; // arg #1
     let args_2: (&'_ u16,); // local
-    let state_3: test_crate::main::{closure#1}::closure; // local
+    let state_3: test_crate::main::closure#1::closure; // local
 
     bb0: {
         storage_live(args_2);
         storage_live(state_3);
         _0 = ();
         args_2 = (move arg1_1,);
-        state_3 = test_crate::main::{closure#1}::closure {  };
-        _0 = call_once::<test_crate::main::{closure#1}::closure, (&'_ u16,)>(move state_3, move args_2) -> bb1 (unwind: bb2);
+        state_3 = test_crate::main::closure#1::closure {  };
+        _0 = call_once::<test_crate::main::closure#1::closure, (&'_ u16,)>(move state_3, move args_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -86,26 +85,26 @@ fn closure_as_fn(arg1_1: &'_ u16)
     }
 }
 
-struct test_crate::main::{closure#0}::closure {}
+struct test_crate::main::closure::closure {}
 
 // Full name: test_crate::main
 fn main()
 {
     let _0: (); // return
-    let _1: test_crate::main::{closure#0}::closure; // anonymous local
+    let _1: test_crate::main::closure::closure; // anonymous local
     let _2: (); // anonymous local
     let _3: fn(&'_ u16); // anonymous local
-    let _4: test_crate::main::{closure#1}::closure; // anonymous local
+    let _4: test_crate::main::closure#1::closure; // anonymous local
 
     bb0: {
         _0 = ();
         storage_live(_1);
-        _1 = test_crate::main::{closure#0}::closure {  };
+        _1 = test_crate::main::closure::closure {  };
         storage_dead(_1);
         storage_live(_2);
         storage_live(_3);
         storage_live(_4);
-        _4 = test_crate::main::{closure#1}::closure {  };
+        _4 = test_crate::main::closure#1::closure {  };
         _3 = cast<closure_as_fn, fn(&'_ u16)>(const closure_as_fn);
         storage_dead(_4);
         _2 = make_early::<u16>(move _3) -> bb1 (unwind: bb2);

@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::ptr::null::<u8>
+// Full name: core::ptr::null::<u8>
 pub fn null::<u8>() -> *const u8
 {
     let _0: *const u8; // return

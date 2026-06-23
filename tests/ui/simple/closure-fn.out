@@ -1,17 +1,15 @@
 
 // Final ULLBC:
 
-// Full name: test_crate::main::{closure#0}::closure
-struct closure {
+struct test_crate::main::closure::closure {
   upvar_0: &'_ u8,
   upvar_1: &'_ u8,
 }
 
-// Full name: test_crate::main::{closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>
-fn {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(_1: &'_ closure, spread_args_2: (u8, u8)) -> u8
+fn test_crate::main::closure::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(_1: &'_ test_crate::main::closure::closure, spread_args_2: (u8, u8)) -> u8
 {
     let _0: u8; // return
-    let _1: &'_ closure; // arg #1
+    let _1: &'_ test_crate::main::closure::closure; // arg #1
     let spread_args_2: (u8, u8); // arg #2
     let x_3: u8; // local
     let y_4: u8; // local
@@ -65,18 +63,18 @@ fn {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(_1
     }
 }
 
-// Full name: std::ops::FnOnce::call_once::<closure, (u8, u8)>
-pub fn call_once::<closure, (u8, u8)>(_1: closure, _2: (u8, u8)) -> u8
+// Full name: core::ops::function::FnOnce::call_once::<test_crate::main::closure::closure, (u8, u8)>
+pub fn call_once::<test_crate::main::closure::closure, (u8, u8)>(_1: test_crate::main::closure::closure, _2: (u8, u8)) -> u8
 {
     let _0: u8; // return
-    let _1: closure; // arg #1
+    let _1: test_crate::main::closure::closure; // arg #1
     let _2: (u8, u8); // arg #2
-    let _3: &'_ mut closure; // anonymous local
+    let _3: &'_ mut test_crate::main::closure::closure; // anonymous local
 
     bb0: {
         storage_live(_3);
         _3 = &mut _1;
-        _0 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _3, move _2) -> bb1 (unwind: bb2);
+        _0 = test_crate::main::closure::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _3, move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -91,12 +89,12 @@ pub fn call_once::<closure, (u8, u8)>(_1: closure, _2: (u8, u8)) -> u8
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::apply_to::<closure>
-fn apply_to::<closure>(f_1: &'_ closure) -> u8
+// Full name: test_crate::apply_to::<test_crate::main::closure::closure>
+fn apply_to::<test_crate::main::closure::closure>(f_1: &'_ test_crate::main::closure::closure) -> u8
 {
     let _0: u8; // return
-    let f_1: &'_ closure; // arg #1
-    let _2: &'_ closure; // anonymous local
+    let f_1: &'_ test_crate::main::closure::closure; // arg #1
+    let _2: &'_ test_crate::main::closure::closure; // anonymous local
     let _3: (u8, u8); // anonymous local
 
     bb0: {
@@ -104,7 +102,7 @@ fn apply_to::<closure>(f_1: &'_ closure) -> u8
         _2 = &(*f_1);
         storage_live(_3);
         _3 = (const 10u8, const 20u8);
-        _0 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
+        _0 = test_crate::main::closure::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -118,12 +116,12 @@ fn apply_to::<closure>(f_1: &'_ closure) -> u8
     }
 }
 
-// Full name: test_crate::apply_to_mut::<closure>
-fn apply_to_mut::<closure>(f_1: &'_ mut closure) -> u8
+// Full name: test_crate::apply_to_mut::<test_crate::main::closure::closure>
+fn apply_to_mut::<test_crate::main::closure::closure>(f_1: &'_ mut test_crate::main::closure::closure) -> u8
 {
     let _0: u8; // return
-    let f_1: &'_ mut closure; // arg #1
-    let _2: &'_ mut closure; // anonymous local
+    let f_1: &'_ mut test_crate::main::closure::closure; // arg #1
+    let _2: &'_ mut test_crate::main::closure::closure; // anonymous local
     let _3: (u8, u8); // anonymous local
 
     bb0: {
@@ -131,7 +129,7 @@ fn apply_to_mut::<closure>(f_1: &'_ mut closure) -> u8
         _2 = &mut (*f_1);
         storage_live(_3);
         _3 = (const 10u8, const 20u8);
-        _0 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
+        _0 = test_crate::main::closure::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -145,12 +143,12 @@ fn apply_to_mut::<closure>(f_1: &'_ mut closure) -> u8
     }
 }
 
-// Full name: test_crate::apply_to_once::<closure>
-fn apply_to_once::<closure>(f_1: closure) -> u8
+// Full name: test_crate::apply_to_once::<test_crate::main::closure::closure>
+fn apply_to_once::<test_crate::main::closure::closure>(f_1: test_crate::main::closure::closure) -> u8
 {
     let _0: u8; // return
-    let f_1: closure; // arg #1
-    let _2: closure; // anonymous local
+    let f_1: test_crate::main::closure::closure; // arg #1
+    let _2: test_crate::main::closure::closure; // anonymous local
     let _3: (u8, u8); // anonymous local
 
     bb0: {
@@ -158,7 +156,7 @@ fn apply_to_once::<closure>(f_1: closure) -> u8
         _2 = move f_1;
         storage_live(_3);
         _3 = (const 10u8, const 20u8);
-        _0 = call_once::<closure, (u8, u8)>(move _2, move _3) -> bb1 (unwind: bb2);
+        _0 = call_once::<test_crate::main::closure::closure, (u8, u8)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -178,20 +176,20 @@ fn main()
     let _0: (); // return
     let v_1: u8; // local
     let z_2: u8; // local
-    let f_3: closure; // local
+    let f_3: test_crate::main::closure::closure; // local
     let _4: &'_ u8; // anonymous local
     let _5: &'_ u8; // anonymous local
     let _6: u8; // anonymous local
-    let _7: &'_ closure; // anonymous local
+    let _7: &'_ test_crate::main::closure::closure; // anonymous local
     let _8: (u8, u8); // anonymous local
     let _9: u8; // anonymous local
-    let _10: &'_ closure; // anonymous local
-    let _11: &'_ closure; // anonymous local
+    let _10: &'_ test_crate::main::closure::closure; // anonymous local
+    let _11: &'_ test_crate::main::closure::closure; // anonymous local
     let _12: u8; // anonymous local
-    let _13: &'_ mut closure; // anonymous local
-    let _14: &'_ mut closure; // anonymous local
+    let _13: &'_ mut test_crate::main::closure::closure; // anonymous local
+    let _14: &'_ mut test_crate::main::closure::closure; // anonymous local
     let _15: u8; // anonymous local
-    let _16: closure; // anonymous local
+    let _16: test_crate::main::closure::closure; // anonymous local
 
     bb0: {
         _0 = ();
@@ -204,7 +202,7 @@ fn main()
         _4 = &v_1;
         storage_live(_5);
         _5 = &z_2;
-        f_3 = closure { upvar_0: move _4, upvar_1: move _5 };
+        f_3 = test_crate::main::closure::closure { upvar_0: move _4, upvar_1: move _5 };
         storage_dead(_5);
         storage_dead(_4);
         storage_live(_6);
@@ -212,7 +210,7 @@ fn main()
         _7 = &f_3;
         storage_live(_8);
         _8 = (const 10u8, const 20u8);
-        _6 = {closure#0}::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _7, move _8) -> bb1 (unwind: bb2);
+        _6 = test_crate::main::closure::<i8, extern "rust-call" fn((u8, u8)) -> u8, (&'_ u8, &'_ u8)>(move _7, move _8) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -224,7 +222,7 @@ fn main()
         storage_live(_11);
         _11 = &f_3;
         _10 = &(*_11);
-        _9 = apply_to::<closure>(move _10) -> bb3 (unwind: bb4);
+        _9 = apply_to::<test_crate::main::closure::closure>(move _10) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -240,7 +238,7 @@ fn main()
         storage_live(_14);
         _14 = &mut f_3;
         _13 = &two-phase-mut (*_14);
-        _12 = apply_to_mut::<closure>(move _13) -> bb5 (unwind: bb6);
+        _12 = apply_to_mut::<test_crate::main::closure::closure>(move _13) -> bb5 (unwind: bb6);
     }
 
     bb4: {
@@ -254,7 +252,7 @@ fn main()
         storage_live(_15);
         storage_live(_16);
         _16 = copy f_3;
-        _15 = apply_to_once::<closure>(move _16) -> bb7 (unwind: bb8);
+        _15 = apply_to_once::<test_crate::main::closure::closure>(move _16) -> bb7 (unwind: bb8);
     }
 
     bb6: {

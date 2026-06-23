@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::ffi::CStr
+// Full name: core::ffi::c_str::CStr
 #[lang_item("CStr")]
 pub struct CStr {
   inner: [i8],

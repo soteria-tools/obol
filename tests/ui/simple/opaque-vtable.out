@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::ptr::drop_glue::<()>
+// Full name: core::ptr::drop_glue::<()>
 #[lang_item("drop_glue")]
 fn drop_glue::<()>(_1: &'_ mut ())
 {
@@ -20,21 +20,13 @@ trait FakeTrait
 // Full name: anon_const_0
 const anon_const_0: () = ()
 
-// Full name: <() as test_crate::x::Trait>::method
-pub fn method(self_1: &'_ ())
-{
-    let _0: (); // return
-    let self_1: &'_ (); // arg #1
+trait test_crate::x::Trait
 
-    bb0: {
-        _0 = ();
-        _0 = ();
-        return;
-    }
-}
+// Full name: test_crate::x::{impl test_crate::x::Trait for ()}::method
+pub fn method(_1: &'_ ())
+= <opaque>
 
-// Full name: {vtable}::test_crate::x::Trait::<()>
-fn Trait::<()>() -> *const ()
+fn {vtable}::test_crate::x::Trait::<()>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -62,8 +54,12 @@ fn Trait::<()>() -> *const ()
     }
 }
 
-// Full name: {vtable}::test_crate::x::Trait::<()>
-static Trait::<()>: *const () = Trait::<()>()
+static {vtable}::test_crate::x::Trait::<()>: *const () = {vtable}::test_crate::x::Trait::<()>()
+
+// Full name: test_crate::x::{impl test_crate::x::Trait for ()}
+impl "impl_Trait_for_unit" test_crate::x::Trait for () {
+    non-dyn-compatible
+}
 
 // Full name: test_crate::use_debug
 fn use_debug(_d_1: &'_ (dyn FakeTrait))
@@ -101,7 +97,7 @@ fn main()
         _5 = move _6;
         _4 = &(*_5);
         _3 = &(*_4);
-        _2 = unsize_cast<&'_ (), &'_ (dyn FakeTrait), Trait::<()>>(move _3);
+        _2 = unsize_cast<&'_ (), &'_ (dyn FakeTrait), {vtable}::test_crate::x::Trait::<()>>(move _3);
         storage_dead(_3);
         _1 = use_debug(move _2) -> bb1 (unwind: bb2);
     }

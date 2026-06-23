@@ -14,7 +14,7 @@ fn foo::<u32>(x_1: &'_ u32)
     }
 }
 
-// Full name: std::ops::Fn::call::<foo::<u32>, (&'_ u32,)>
+// Full name: core::ops::function::Fn::call::<foo::<u32>, (&'_ u32,)>
 pub fn call::<foo::<u32>, (&'_ u32,)>(_1: &'_ foo::<u32>, _2: (&'_ u32,))
 {
     let _0: (); // return

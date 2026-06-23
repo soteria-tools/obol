@@ -4,6 +4,9 @@
 // Full name: FakeTrait
 trait FakeTrait
 
+// Full name: test_crate::Trait
+trait Trait
+
 // Full name: test_crate::Foo
 struct Foo {}
 
@@ -21,7 +24,7 @@ fn test_crate::Trait::provided1::<Foo>(self_1: &'_ Foo)
         storage_live(_2);
         storage_live(_3);
         _3 = &(*self_1);
-        _2 = <test_crate::Foo as test_crate::Trait>::required(move _3) -> bb1 (unwind: bb2);
+        _2 = impl_Trait_for_Foo::required(move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -64,7 +67,7 @@ fn provided2::<Foo>(self_1: &'_ Foo)
         storage_live(_2);
         storage_live(_3);
         _3 = &(*self_1);
-        _2 = <test_crate::Foo as test_crate::Trait>::required(move _3) -> bb1 (unwind: bb2);
+        _2 = impl_Trait_for_Foo::required(move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -92,7 +95,8 @@ fn provided2::<Foo>(self_1: &'_ Foo)
     }
 }
 
-fn <test_crate::Foo as test_crate::Trait>::required(self_1: &'_ Foo)
+// Full name: test_crate::{impl Trait for Foo}::required
+fn impl_Trait_for_Foo::required(self_1: &'_ Foo)
 {
     let _0: (); // return
     let self_1: &'_ Foo; // arg #1
@@ -137,7 +141,7 @@ fn provided2::<Bar>(self_1: &'_ Bar)
         storage_live(_2);
         storage_live(_3);
         _3 = &(*self_1);
-        _2 = <test_crate::Bar as test_crate::Trait>::required(move _3) -> bb1 (unwind: bb2);
+        _2 = impl_Trait_for_Bar::required(move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -146,7 +150,7 @@ fn provided2::<Bar>(self_1: &'_ Bar)
         storage_live(_4);
         storage_live(_5);
         _5 = &(*self_1);
-        _4 = <test_crate::Bar as test_crate::Trait>::provided1(move _5) -> bb3 (unwind: bb4);
+        _4 = impl_Trait_for_Bar::provided1(move _5) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -165,7 +169,8 @@ fn provided2::<Bar>(self_1: &'_ Bar)
     }
 }
 
-fn <test_crate::Bar as test_crate::Trait>::required(self_1: &'_ Bar)
+// Full name: test_crate::{impl Trait for Bar}::required
+fn impl_Trait_for_Bar::required(self_1: &'_ Bar)
 {
     let _0: (); // return
     let self_1: &'_ Bar; // arg #1
@@ -192,7 +197,8 @@ fn <test_crate::Bar as test_crate::Trait>::required(self_1: &'_ Bar)
     }
 }
 
-fn <test_crate::Bar as test_crate::Trait>::provided1(self_1: &'_ Bar)
+// Full name: test_crate::{impl Trait for Bar}::provided1
+fn impl_Trait_for_Bar::provided1(self_1: &'_ Bar)
 {
     let _0: (); // return
     let self_1: &'_ Bar; // arg #1
@@ -217,6 +223,16 @@ fn <test_crate::Bar as test_crate::Trait>::provided1(self_1: &'_ Bar)
     bb2: {
         unwind_continue;
     }
+}
+
+// Full name: test_crate::{impl Trait for Foo}
+impl "impl_Trait_for_Foo" Trait for Foo {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Trait for Bar}
+impl "impl_Trait_for_Bar" Trait for Bar {
+    non-dyn-compatible
 }
 
 

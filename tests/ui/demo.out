@@ -217,7 +217,16 @@ pub fn i32_id(i_1: i32) -> i32
     }
 }
 
-pub fn <usize as test_crate::Counter>::incr(self_1: &'_ mut usize) -> usize
+// Full name: test_crate::Counter
+trait Counter
+
+// Full name: test_crate::{impl Counter for usize}
+impl "impl_Counter_for_usize" Counter for usize {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl Counter for usize}::incr
+pub fn impl_Counter_for_usize::incr(self_1: &'_ mut usize) -> usize
 {
     let _0: usize; // return
     let self_1: &'_ mut usize; // arg #1

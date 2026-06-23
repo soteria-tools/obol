@@ -201,7 +201,7 @@ fn FOO() -> Foo
 // Full name: test_crate::non_copy_static::FOO
 static FOO: Foo = FOO()
 
-// Full name: test_crate::non_copy_static::Foo::method
+// Full name: test_crate::non_copy_static::{Foo}::method
 fn method(self_1: &'_ Foo)
 {
     let _0: (); // return

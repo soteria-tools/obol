@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::mem::alignment::AlignmentEnum
+// Full name: core::mem::alignment::AlignmentEnum
 enum AlignmentEnum {
   _Align1Shl0,
   _Align1Shl1,
@@ -69,47 +69,47 @@ enum AlignmentEnum {
   _Align1Shl63,
 }
 
-// Full name: std::mem::Alignment
+// Full name: core::mem::alignment::Alignment
 pub struct Alignment {
   _inner_repr_trick: AlignmentEnum,
 }
 
-// Full name: std::alloc::Layout
+// Full name: core::alloc::layout::Layout
 #[lang_item("alloc_layout")]
 pub struct Layout {
   size: usize,
   align: Alignment,
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
   precision: u16,
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
@@ -127,26 +127,26 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -155,7 +155,7 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
@@ -171,11 +171,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-// Full name: core::panic::panic_info::PanicInfo::<'a>::new::<'_>
+// Full name: core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>
 fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
@@ -190,11 +190,11 @@ fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can
     }
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -212,11 +212,11 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -348,7 +348,7 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1: usize, alignment_2: Alignment)
+fn core::alloc::layout::{Layout}::from_size_alignment_unchecked::precondition_check(size_1: usize, alignment_2: Alignment)
 {
     let _0: (); // return
     let size_1: usize; // arg #1
@@ -428,94 +428,96 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
     }
 }
 
-// Full name: std::intrinsics::ctpop::<usize>
+// Full name: core::alloc::Allocator
+trait Allocator
+
+// Full name: core::intrinsics::ctpop::<usize>
 pub fn ctpop::<usize>(x_1: usize) -> u32
 = <intrinsic:ctpop>
 
-// Full name: std::mem::MaybeDangling::<()>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<()>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<()> {
   0: (),
 }
 
-// Full name: std::mem::ManuallyDrop::<()>
+// Full name: core::mem::manually_drop::ManuallyDrop::<()>
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<()> {
   value: MaybeDangling::<()>,
 }
 
-// Full name: std::alloc::Global
+// Full name: alloc::alloc::Global
 #[lang_item("global_alloc_ty")]
 pub struct Global {}
 
-// Full name: std::ptr::NonNull::<(dyn FakeTrait)>
+// Full name: core::ptr::non_null::NonNull::<(dyn FakeTrait)>
 pub struct NonNull::<(dyn FakeTrait)> {
   pointer: *const (dyn FakeTrait) is !null,
 }
 
-// Full name: std::marker::PhantomData::<(dyn FakeTrait)>
+// Full name: core::marker::PhantomData::<(dyn FakeTrait)>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<(dyn FakeTrait)> {}
 
-// Full name: std::ptr::Unique::<(dyn FakeTrait)>
+// Full name: core::ptr::unique::Unique::<(dyn FakeTrait)>
 pub struct Unique::<(dyn FakeTrait)> {
   pointer: NonNull::<(dyn FakeTrait)>,
   _marker: PhantomData::<(dyn FakeTrait)>,
 }
 
-// Full name: std::boxed::Box::<(dyn FakeTrait), Global>
+// Full name: alloc::boxed::Box::<(dyn FakeTrait), Global>
 #[lang_item("owned_box")]
 pub struct Box::<(dyn FakeTrait), Global> {
   0: Unique::<(dyn FakeTrait)>,
   1: Global,
 }
 
-// Full name: std::mem::MaybeDangling::<Box::<(dyn FakeTrait), Global>>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<Box::<(dyn FakeTrait), Global>>
 #[lang_item("maybe_dangling")]
 pub struct MaybeDangling::<Box::<(dyn FakeTrait), Global>> {
   0: Box::<(dyn FakeTrait), Global>,
 }
 
-// Full name: std::mem::ManuallyDrop::<Box::<(dyn FakeTrait), Global>>
+// Full name: core::mem::manually_drop::ManuallyDrop::<Box::<(dyn FakeTrait), Global>>
 #[lang_item("manually_drop")]
 pub struct ManuallyDrop::<Box::<(dyn FakeTrait), Global>> {
   value: MaybeDangling::<Box::<(dyn FakeTrait), Global>>,
 }
 
-// Full name: test_crate::main::{closure#0}::closure
-struct closure {}
+struct test_crate::main::closure::closure {}
 
-// Full name: std::mem::MaybeDangling::<closure>
+// Full name: core::mem::maybe_dangling::MaybeDangling::<test_crate::main::closure::closure>
 #[lang_item("maybe_dangling")]
-pub struct MaybeDangling::<closure> {
-  0: closure,
+pub struct MaybeDangling::<test_crate::main::closure::closure> {
+  0: test_crate::main::closure::closure,
 }
 
-// Full name: std::mem::ManuallyDrop::<closure>
+// Full name: core::mem::manually_drop::ManuallyDrop::<test_crate::main::closure::closure>
 #[lang_item("manually_drop")]
-pub struct ManuallyDrop::<closure> {
-  value: MaybeDangling::<closure>,
+pub struct ManuallyDrop::<test_crate::main::closure::closure> {
+  value: MaybeDangling::<test_crate::main::closure::closure>,
 }
 
-// Full name: std::panicking::catch_unwind::Data::<closure, ()>
-union Data::<closure, ()> {
-  f: ManuallyDrop::<closure>,
+// Full name: std::panicking::catch_unwind::Data::<test_crate::main::closure::closure, ()>
+union Data::<test_crate::main::closure::closure, ()> {
+  f: ManuallyDrop::<test_crate::main::closure::closure>,
   r: ManuallyDrop::<()>,
   p: ManuallyDrop::<Box::<(dyn FakeTrait), Global>>,
 }
 
-pub fn std::intrinsics::catch_unwind::<Data::<closure, ()>>(_try_fn_1: unsafe fn(*mut Data::<closure, ()>), _data_2: *mut Data::<closure, ()>, _catch_fn_3: unsafe fn(*mut Data::<closure, ()>, *mut u8)) -> bool
+pub fn core::intrinsics::catch_unwind::<Data::<test_crate::main::closure::closure, ()>>(_try_fn_1: unsafe fn(*mut Data::<test_crate::main::closure::closure, ()>), _data_2: *mut Data::<test_crate::main::closure::closure, ()>, _catch_fn_3: unsafe fn(*mut Data::<test_crate::main::closure::closure, ()>, *mut u8)) -> bool
 = <intrinsic:catch_unwind>
 
-// Full name: std::intrinsics::size_of_val::<(dyn FakeTrait)>
+// Full name: core::intrinsics::size_of_val::<(dyn FakeTrait)>
 pub fn size_of_val::<(dyn FakeTrait)>(ptr_1: *const (dyn FakeTrait)) -> usize
 = <intrinsic:size_of_val>
 
-// Full name: std::intrinsics::align_of_val::<(dyn FakeTrait)>
+// Full name: core::intrinsics::align_of_val::<(dyn FakeTrait)>
 pub fn align_of_val::<(dyn FakeTrait)>(ptr_1: *const (dyn FakeTrait)) -> usize
 = <intrinsic:align_of_val>
 
-fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
+fn core::mem::alignment::{Alignment}::new_unchecked::precondition_check(align_1: usize)
 {
     let _0: (); // return
     let align_1: usize; // arg #1
@@ -594,7 +596,29 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 }
 
-// Full name: std::result::Result::<(), Box::<(dyn FakeTrait), Global>>
+// Full name: core::ops::drop::Drop
+#[lang_item("drop")]
+trait Drop
+
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::result::Result::<(), Box::<(dyn FakeTrait), Global>>
 pub enum Result::<(), Box::<(dyn FakeTrait), Global>> {
   Ok(0: ()),
   Err(0: Box::<(dyn FakeTrait), Global>),
@@ -604,7 +628,7 @@ pub enum Result::<(), Box::<(dyn FakeTrait), Global>> {
 fn __rust_dealloc(_1: NonNull::<u8>, _2: usize, _3: Alignment)
 = <extern:__rust_dealloc>
 
-// Full name: <std::alloc::Global as std::alloc::Allocator>::deallocate
+// Full name: alloc::alloc::{impl Allocator for Global}::deallocate
 pub fn deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
 {
     let _0: (); // return
@@ -642,7 +666,7 @@ pub fn deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
     }
 }
 
-// Full name: <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global>
+// Full name: alloc::boxed::{impl Drop for Box::<_, _>}::drop::<(dyn FakeTrait), Global>
 pub fn drop::<(dyn FakeTrait), Global>(self_1: &'_ mut Box::<(dyn FakeTrait), Global>)
 {
     let _0: (); // return
@@ -704,7 +728,7 @@ pub fn drop::<(dyn FakeTrait), Global>(self_1: &'_ mut Box::<(dyn FakeTrait), Gl
     }
 
     bb5: {
-        _10 = std::mem::Alignment::new_unchecked::precondition_check(copy align_9) -> bb6 (unwind: bb7);
+        _10 = core::mem::alignment::{Alignment}::new_unchecked::precondition_check(copy align_9) -> bb6 (unwind: bb7);
     }
 
     bb6: {
@@ -720,7 +744,7 @@ pub fn drop::<(dyn FakeTrait), Global>(self_1: &'_ mut Box::<(dyn FakeTrait), Gl
     }
 
     bb8: {
-        _11 = std::alloc::Layout::from_size_alignment_unchecked::precondition_check(copy size_7, copy alignment_8) -> bb9 (unwind: bb10);
+        _11 = core::alloc::layout::{Layout}::from_size_alignment_unchecked::precondition_check(copy size_7, copy alignment_8) -> bb9 (unwind: bb10);
     }
 
     bb9: {
@@ -761,7 +785,7 @@ pub fn drop::<(dyn FakeTrait), Global>(self_1: &'_ mut Box::<(dyn FakeTrait), Gl
     }
 }
 
-// Full name: std::ptr::drop_glue::<Box::<(dyn FakeTrait), Global>>
+// Full name: core::ptr::drop_glue::<Box::<(dyn FakeTrait), Global>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Box::<(dyn FakeTrait), Global>>(_1: &'_ mut Box::<(dyn FakeTrait), Global>)
 {
@@ -816,7 +840,7 @@ fn drop_glue::<Box::<(dyn FakeTrait), Global>>(_1: &'_ mut Box::<(dyn FakeTrait)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Result::<(), Box::<(dyn FakeTrait), Global>>>
+// Full name: core::ptr::drop_glue::<Result::<(), Box::<(dyn FakeTrait), Global>>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Result::<(), Box::<(dyn FakeTrait), Global>>>(_1: &'_ mut Result::<(), Box::<(dyn FakeTrait), Global>>)
 {
@@ -849,7 +873,7 @@ fn drop_glue::<Result::<(), Box::<(dyn FakeTrait), Global>>>(_1: &'_ mut Result:
     }
 }
 
-// Full name: std::ptr::drop_glue::<(dyn FakeTrait)>
+// Full name: core::ptr::drop_glue::<(dyn FakeTrait)>
 #[lang_item("drop_glue")]
 fn drop_glue::<(dyn FakeTrait)>(_1: &'_ mut (dyn FakeTrait))
 {
@@ -879,11 +903,11 @@ fn drop_glue::<(dyn FakeTrait)>(_1: &'_ mut (dyn FakeTrait))
 fn cleanup(_1: *mut u8) -> Box::<(dyn FakeTrait), Global>
 = <missing>
 
-// Full name: std::panicking::catch_unwind::do_catch::<closure, ()>
-fn do_catch::<closure, ()>(data_1: *mut Data::<closure, ()>, payload_2: *mut u8)
+// Full name: std::panicking::catch_unwind::do_catch::<test_crate::main::closure::closure, ()>
+fn do_catch::<test_crate::main::closure::closure, ()>(data_1: *mut Data::<test_crate::main::closure::closure, ()>, payload_2: *mut u8)
 {
     let _0: (); // return
-    let data_1: *mut Data::<closure, ()>; // arg #1
+    let data_1: *mut Data::<test_crate::main::closure::closure, ()>; // arg #1
     let payload_2: *mut u8; // arg #2
     let obj_3: Box::<(dyn FakeTrait), Global>; // local
     let _4: ManuallyDrop::<Box::<(dyn FakeTrait), Global>>; // anonymous local
@@ -912,11 +936,10 @@ fn do_catch::<closure, ()>(data_1: *mut Data::<closure, ()>, payload_2: *mut u8)
     }
 }
 
-// Full name: test_crate::main::{closure#0}::<i32, extern "rust-call" fn(()), ()>
-fn {closure#0}::<i32, extern "rust-call" fn(()), ()>(_1: closure, spread_args_2: ())
+fn test_crate::main::closure::<i32, extern "rust-call" fn(()), ()>(_1: test_crate::main::closure::closure, spread_args_2: ())
 {
     let _0: (); // return
-    let _1: closure; // arg #1
+    let _1: test_crate::main::closure::closure; // arg #1
     let spread_args_2: (); // arg #2
 
     bb0: {
@@ -926,12 +949,12 @@ fn {closure#0}::<i32, extern "rust-call" fn(()), ()>(_1: closure, spread_args_2:
     }
 }
 
-// Full name: std::panicking::catch_unwind::do_call::<closure, ()>
-fn do_call::<closure, ()>(data_1: *mut Data::<closure, ()>)
+// Full name: std::panicking::catch_unwind::do_call::<test_crate::main::closure::closure, ()>
+fn do_call::<test_crate::main::closure::closure, ()>(data_1: *mut Data::<test_crate::main::closure::closure, ()>)
 {
     let _0: (); // return
-    let data_1: *mut Data::<closure, ()>; // arg #1
-    let f_2: closure; // local
+    let data_1: *mut Data::<test_crate::main::closure::closure, ()>; // arg #1
+    let f_2: test_crate::main::closure::closure; // local
     let _3: ManuallyDrop::<()>; // anonymous local
     let value_4: (); // local
     let _5: MaybeDangling::<()>; // anonymous local
@@ -942,7 +965,7 @@ fn do_call::<closure, ()>(data_1: *mut Data::<closure, ()>)
         f_2 = copy ((((*data_1)).f).value).0;
         storage_live(_3);
         storage_live(value_4);
-        value_4 = {closure#0}::<i32, extern "rust-call" fn(()), ()>(move f_2, const ()) -> bb1 (unwind: bb2);
+        value_4 = test_crate::main::closure::<i32, extern "rust-call" fn(()), ()>(move f_2, const ()) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -962,21 +985,21 @@ fn do_call::<closure, ()>(data_1: *mut Data::<closure, ()>)
     }
 }
 
-pub fn std::panic::catch_unwind::<closure, ()>(f_1: closure) -> Result::<(), Box::<(dyn FakeTrait), Global>>
+pub fn std::panic::catch_unwind::<test_crate::main::closure::closure, ()>(f_1: test_crate::main::closure::closure) -> Result::<(), Box::<(dyn FakeTrait), Global>>
 {
     let _0: Result::<(), Box::<(dyn FakeTrait), Global>>; // return
-    let f_1: closure; // arg #1
-    let data_2: Data::<closure, ()>; // local
-    let _3: ManuallyDrop::<closure>; // anonymous local
+    let f_1: test_crate::main::closure::closure; // arg #1
+    let data_2: Data::<test_crate::main::closure::closure, ()>; // local
+    let _3: ManuallyDrop::<test_crate::main::closure::closure>; // anonymous local
     let _4: bool; // anonymous local
-    let _5: unsafe fn(*mut Data::<closure, ()>); // anonymous local
-    let _6: *mut Data::<closure, ()>; // anonymous local
-    let _7: unsafe fn(*mut Data::<closure, ()>, *mut u8); // anonymous local
+    let _5: unsafe fn(*mut Data::<test_crate::main::closure::closure, ()>); // anonymous local
+    let _6: *mut Data::<test_crate::main::closure::closure, ()>; // anonymous local
+    let _7: unsafe fn(*mut Data::<test_crate::main::closure::closure, ()>, *mut u8); // anonymous local
     let _8: Box::<(dyn FakeTrait), Global>; // anonymous local
     let slot_9: ManuallyDrop::<Box::<(dyn FakeTrait), Global>>; // local
     let _10: (); // anonymous local
     let slot_11: ManuallyDrop::<()>; // local
-    let _12: MaybeDangling::<closure>; // anonymous local
+    let _12: MaybeDangling::<test_crate::main::closure::closure>; // anonymous local
     let _13: *const Box::<(dyn FakeTrait), Global>; // anonymous local
     let _14: *const ManuallyDrop::<Box::<(dyn FakeTrait), Global>>; // anonymous local
     let _15: *const (); // anonymous local
@@ -987,19 +1010,19 @@ pub fn std::panic::catch_unwind::<closure, ()>(f_1: closure) -> Result::<(), Box
         storage_live(data_2);
         storage_live(_3);
         storage_live(_12);
-        _12 = MaybeDangling::<closure> { 0: copy f_1 };
-        _3 = ManuallyDrop::<closure> { value: move _12 };
+        _12 = MaybeDangling::<test_crate::main::closure::closure> { 0: copy f_1 };
+        _3 = ManuallyDrop::<test_crate::main::closure::closure> { value: move _12 };
         storage_dead(_12);
-        data_2 = Data::<closure, ()> { f: move _3 };
+        data_2 = Data::<test_crate::main::closure::closure, ()> { f: move _3 };
         storage_dead(_3);
         storage_live(_4);
         storage_live(_5);
-        _5 = cast<do_call::<closure, ()>, unsafe fn(*mut Data::<closure, ()>)>(const do_call::<closure, ()>);
+        _5 = cast<do_call::<test_crate::main::closure::closure, ()>, unsafe fn(*mut Data::<test_crate::main::closure::closure, ()>)>(const do_call::<test_crate::main::closure::closure, ()>);
         storage_live(_6);
         _6 = &raw mut data_2;
         storage_live(_7);
-        _7 = cast<do_catch::<closure, ()>, unsafe fn(*mut Data::<closure, ()>, *mut u8)>(const do_catch::<closure, ()>);
-        _4 = std::intrinsics::catch_unwind::<Data::<closure, ()>>(move _5, move _6, move _7) -> bb1 (unwind: bb2);
+        _7 = cast<do_catch::<test_crate::main::closure::closure, ()>, unsafe fn(*mut Data::<test_crate::main::closure::closure, ()>, *mut u8)>(const do_catch::<test_crate::main::closure::closure, ()>);
+        _4 = core::intrinsics::catch_unwind::<Data::<test_crate::main::closure::closure, ()>>(move _5, move _6, move _7) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -1056,12 +1079,22 @@ pub fn std::panic::catch_unwind::<closure, ()>(f_1: closure) -> Result::<(), Box
     }
 }
 
+// Full name: alloc::alloc::{impl Allocator for Global}
+impl "impl_Allocator_for_Global" Allocator for Global {
+    non-dyn-compatible
+}
+
+// Full name: alloc::boxed::{impl Drop for Box::<_, _>}
+impl<T, A> Drop for Box::<_, _> {
+    non-dyn-compatible
+}
+
 // Full name: test_crate::main
 fn main()
 {
     let _0: (); // return
     let _1: Result::<(), Box::<(dyn FakeTrait), Global>>; // anonymous local
-    let _2: closure; // anonymous local
+    let _2: test_crate::main::closure::closure; // anonymous local
     let _3: *mut Result::<(), Box::<(dyn FakeTrait), Global>>; // anonymous local
     let _4: (); // anonymous local
 
@@ -1071,8 +1104,8 @@ fn main()
         _0 = ();
         storage_live(_1);
         storage_live(_2);
-        _2 = closure {  };
-        _1 = std::panic::catch_unwind::<closure, ()>(move _2) -> bb1 (unwind: bb2);
+        _2 = test_crate::main::closure::closure {  };
+        _1 = std::panic::catch_unwind::<test_crate::main::closure::closure, ()>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {

@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::option::Option::<u8>
+// Full name: core::option::Option::<u8>
 #[lang_item("Option")]
 pub enum Option::<u8> {
   None,

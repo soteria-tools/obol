@@ -1,7 +1,17 @@
 
 // Final ULLBC:
 
-pub fn std::cmp::impls::<impl std::cmp::PartialEq for i32>::eq(self_1: &'_ i32, other_2: &'_ i32) -> bool
+// Full name: core::cmp::PartialEq
+#[lang_item("eq")]
+trait PartialEq
+
+// Full name: core::cmp::impls::{impl PartialEq<i32> for i32}
+impl "impl_PartialEq_i32_for_i32" PartialEq<i32> for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::cmp::impls::{impl PartialEq<i32> for i32}::eq
+pub fn impl_PartialEq_i32_for_i32::eq(self_1: &'_ i32, other_2: &'_ i32) -> bool
 {
     let _0: bool; // return
     let self_1: &'_ i32; // arg #1
@@ -21,7 +31,13 @@ pub fn std::cmp::impls::<impl std::cmp::PartialEq for i32>::eq(self_1: &'_ i32, 
     }
 }
 
-pub fn std::cmp::impls::<impl std::cmp::PartialEq<&B> for &A>::eq::<'_, '_, i32, i32>(self_1: &'_ &'_ i32, other_2: &'_ &'_ i32) -> bool
+// Full name: core::cmp::impls::{impl PartialEq<&'_ B> for &'_ A}
+impl<'_, '_, _, _, A, B> PartialEq<&'_ B> for &'_ A {
+    non-dyn-compatible
+}
+
+// Full name: core::cmp::impls::{impl PartialEq<&'_ B> for &'_ A}::eq::<'_, '_, i32, i32>
+pub fn {impl PartialEq<&'_ B> for &'_ A}::eq::<'_, '_, i32, i32>(self_1: &'_ &'_ i32, other_2: &'_ &'_ i32) -> bool
 {
     let _0: bool; // return
     let self_1: &'_ &'_ i32; // arg #1
@@ -34,7 +50,7 @@ pub fn std::cmp::impls::<impl std::cmp::PartialEq<&B> for &A>::eq::<'_, '_, i32,
         storage_live(_4);
         _3 = copy (*self_1);
         _4 = copy (*other_2);
-        _0 = std::cmp::impls::<impl std::cmp::PartialEq for i32>::eq(move _3, move _4) -> bb1 (unwind: bb2);
+        _0 = impl_PartialEq_i32_for_i32::eq(move _3, move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -46,10 +62,10 @@ pub fn std::cmp::impls::<impl std::cmp::PartialEq<&B> for &A>::eq::<'_, '_, i32,
     }
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -59,30 +75,30 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
@@ -98,24 +114,26 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::ptr::drop_glue::<&'_ &'_ i32>
+trait core::fmt::Debug
+
+// Full name: core::ptr::drop_glue::<&'_ &'_ i32>
 #[lang_item("drop_glue")]
 fn drop_glue::<&'_ &'_ i32>(_1: &'_ mut &'_ &'_ i32)
 {
@@ -128,16 +146,20 @@ fn drop_glue::<&'_ &'_ i32>(_1: &'_ mut &'_ &'_ i32)
     }
 }
 
-pub fn core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::imp::{impl Display for i32}::fmt
+pub fn impl_Display_for_i32::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl UpperHex for i32}::fmt
+pub fn impl_UpperHex_for_i32::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl LowerHex for i32}::fmt
+pub fn impl_LowerHex_for_i32::fmt(_1: &'_ i32, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::num::{impl core::fmt::Debug for i32}::fmt
+pub fn impl_Debug_for_i32::fmt(self_1: &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ i32; // arg #1
@@ -168,17 +190,17 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
 
     bb2: {
         storage_dead(_3);
-        _0 = core::fmt::num::<impl std::fmt::LowerHex for i32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
+        _0 = impl_LowerHex_for_i32::fmt(move self_1, move f_2) -> bb5 (unwind: bb6);
     }
 
     bb3: {
         storage_dead(_5);
-        _0 = core::fmt::num::imp::<impl std::fmt::Display for i32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
+        _0 = impl_Display_for_i32::fmt(move self_1, move f_2) -> bb5 (unwind: bb7);
     }
 
     bb4: {
         storage_dead(_5);
-        _0 = core::fmt::num::<impl std::fmt::UpperHex for i32>::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
+        _0 = impl_UpperHex_for_i32::fmt(move self_1, move f_2) -> bb5 (unwind: bb8);
     }
 
     bb5: {
@@ -198,7 +220,8 @@ pub fn core::fmt::num::<impl std::fmt::Debug for i32>::fmt(self_1: &'_ i32, f_2:
     }
 }
 
-pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}::fmt::<'_, i32>
+pub fn {impl core::fmt::Debug for &'_ T}::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ &'_ i32; // arg #1
@@ -208,7 +231,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut
     bb0: {
         storage_live(_3);
         _3 = copy (*self_1);
-        _0 = core::fmt::num::<impl std::fmt::Debug for i32>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+        _0 = impl_Debug_for_i32::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -220,7 +243,8 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, i32>(self_1: &'_ &'_ i32, f_2: &'_ mut
     }
 }
 
-pub fn <&T as std::fmt::Debug>::fmt::<'_, &'_ i32>(self_1: &'_ &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}::fmt::<'_, &'_ i32>
+pub fn {impl core::fmt::Debug for &'_ T}::fmt::<'_, &'_ i32>(self_1: &'_ &'_ &'_ i32, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ &'_ &'_ i32; // arg #1
@@ -230,7 +254,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, &'_ i32>(self_1: &'_ &'_ &'_ i32, f_2:
     bb0: {
         storage_live(_3);
         _3 = copy (*self_1);
-        _0 = <&T as std::fmt::Debug>::fmt::<'_, i32>(move _3, move f_2) -> bb1 (unwind: bb2);
+        _0 = {impl core::fmt::Debug for &'_ T}::fmt::<'_, i32>(move _3, move f_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -242,8 +266,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, &'_ i32>(self_1: &'_ &'_ &'_ i32, f_2:
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<&'_ &'_ i32>
-fn Debug::<&'_ &'_ i32>() -> *const ()
+fn {vtable}::core::fmt::Debug::<&'_ &'_ i32>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -263,7 +286,7 @@ fn Debug::<&'_ &'_ i32>() -> *const ()
         drop_1 = cast<drop_glue::<&'_ &'_ i32>, *const ()>(const drop_glue::<&'_ &'_ i32>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&&i32 as std::fmt::Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, &'_ i32>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, &'_ i32>);
+        <&&i32 as std::fmt::Debug>::fmt_4 = cast<{impl core::fmt::Debug for &'_ T}::fmt::<'_, &'_ i32>, *const ()>(const {impl core::fmt::Debug for &'_ T}::fmt::<'_, &'_ i32>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&&i32 as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -271,10 +294,43 @@ fn Debug::<&'_ &'_ i32>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<&'_ &'_ i32>
-static Debug::<&'_ &'_ i32>: *const () = Debug::<&'_ &'_ i32>()
+static {vtable}::core::fmt::Debug::<&'_ &'_ i32>: *const () = {vtable}::core::fmt::Debug::<&'_ &'_ i32>()
 
-// Full name: std::option::Option::<Arguments::<'_>>
+// Full name: core::fmt::Display
+trait Display
+
+// Full name: core::fmt::LowerHex
+trait LowerHex
+
+// Full name: core::fmt::UpperHex
+trait UpperHex
+
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}
+impl<'_, _, T> core::fmt::Debug for &'_ T {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl LowerHex for i32}
+impl "impl_LowerHex_for_i32" LowerHex for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl UpperHex for i32}
+impl "impl_UpperHex_for_i32" UpperHex for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::{impl core::fmt::Debug for i32}
+impl "impl_Debug_for_i32" core::fmt::Debug for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::num::imp::{impl Display for i32}
+impl "impl_Display_for_i32" Display for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::option::Option::<Arguments::<'_>>
 #[lang_item("Option")]
 pub enum Option::<Arguments::<'_>> {
   None,
@@ -309,11 +365,11 @@ pub fn assert_failed::<&'_ i32, &'_ i32>(kind_1: AssertKind, left_2: &'_ &'_ i32
         storage_live(_5);
         storage_live(_6);
         _6 = &left_2;
-        _5 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ &'_ i32>>(copy _6);
+        _5 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<&'_ &'_ i32>>(copy _6);
         storage_live(_7);
         storage_live(_8);
         _8 = &right_3;
-        _7 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn FakeTrait), Debug::<&'_ &'_ i32>>(copy _8);
+        _7 = unsize_cast<&'_ &'_ &'_ i32, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<&'_ &'_ i32>>(copy _8);
         _0 = assert_failed_inner(move kind_1, move _5, move _7, move args_4) -> bb1 (unwind: bb2);
     }
 
@@ -332,43 +388,43 @@ const anon_const_1: i32 = 42i32
 // Full name: anon_const_0
 const anon_const_0: &'_ i32 = &anon_const_1
 
-struct test_crate::foo::{closure#0}::{closure#0}::closure {
+struct test_crate::foo::closure::closure::closure {
   upvar_0: &'_ i32,
 }
 
-struct test_crate::foo::{closure#0}::closure {
+struct test_crate::foo::closure::closure {
   upvar_0: &'_ i32,
 }
 
-fn test_crate::foo::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> test_crate::foo::{closure#0}::{closure#0}::closure, (&'_ i32,)>(_1: &'_ test_crate::foo::{closure#0}::closure, spread_args_2: ()) -> test_crate::foo::{closure#0}::{closure#0}::closure
+fn test_crate::foo::closure::<i32, i8, extern "rust-call" fn(()) -> test_crate::foo::closure::closure::closure, (&'_ i32,)>(_1: &'_ test_crate::foo::closure::closure, spread_args_2: ()) -> test_crate::foo::closure::closure::closure
 {
-    let _0: test_crate::foo::{closure#0}::{closure#0}::closure; // return
-    let _1: &'_ test_crate::foo::{closure#0}::closure; // arg #1
+    let _0: test_crate::foo::closure::closure::closure; // return
+    let _1: &'_ test_crate::foo::closure::closure; // arg #1
     let spread_args_2: (); // arg #2
 
     bb0: {
-        _0 = test_crate::foo::{closure#0}::{closure#0}::closure { upvar_0: copy ((*_1)).upvar_0 };
+        _0 = test_crate::foo::closure::closure::closure { upvar_0: copy ((*_1)).upvar_0 };
         return;
     }
 }
 
 // Full name: test_crate::foo::<i32>
-fn foo::<i32>(x_1: &'_ i32) -> test_crate::foo::{closure#0}::{closure#0}::closure
+fn foo::<i32>(x_1: &'_ i32) -> test_crate::foo::closure::closure::closure
 {
-    let _0: test_crate::foo::{closure#0}::{closure#0}::closure; // return
+    let _0: test_crate::foo::closure::closure::closure; // return
     let x_1: &'_ i32; // arg #1
-    let f_2: test_crate::foo::{closure#0}::closure; // local
-    let _3: &'_ test_crate::foo::{closure#0}::closure; // anonymous local
+    let f_2: test_crate::foo::closure::closure; // local
+    let _3: &'_ test_crate::foo::closure::closure; // anonymous local
     let _4: (); // anonymous local
 
     bb0: {
         storage_live(f_2);
-        f_2 = test_crate::foo::{closure#0}::closure { upvar_0: copy x_1 };
+        f_2 = test_crate::foo::closure::closure { upvar_0: copy x_1 };
         storage_live(_3);
         _3 = &f_2;
         storage_live(_4);
         _4 = ();
-        _0 = test_crate::foo::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> test_crate::foo::{closure#0}::{closure#0}::closure, (&'_ i32,)>(move _3, move _4) -> bb1 (unwind: bb2);
+        _0 = test_crate::foo::closure::<i32, i8, extern "rust-call" fn(()) -> test_crate::foo::closure::closure::closure, (&'_ i32,)>(move _3, move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -383,10 +439,10 @@ fn foo::<i32>(x_1: &'_ i32) -> test_crate::foo::{closure#0}::{closure#0}::closur
     }
 }
 
-fn test_crate::foo::{closure#0}::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> &'_ i32, (&'_ i32,)>(_1: &'_ test_crate::foo::{closure#0}::{closure#0}::closure, spread_args_2: ()) -> &'_ i32
+fn test_crate::foo::closure::closure::<i32, i8, extern "rust-call" fn(()) -> &'_ i32, (&'_ i32,)>(_1: &'_ test_crate::foo::closure::closure::closure, spread_args_2: ()) -> &'_ i32
 {
     let _0: &'_ i32; // return
-    let _1: &'_ test_crate::foo::{closure#0}::{closure#0}::closure; // arg #1
+    let _1: &'_ test_crate::foo::closure::closure::closure; // arg #1
     let spread_args_2: (); // arg #2
 
     bb0: {
@@ -400,13 +456,13 @@ fn main()
 {
     let _0: (); // return
     let x_1: i32; // local
-    let f_2: test_crate::foo::{closure#0}::{closure#0}::closure; // local
+    let f_2: test_crate::foo::closure::closure::closure; // local
     let _3: &'_ i32; // anonymous local
     let _4: &'_ i32; // anonymous local
     let _5: (&'_ &'_ i32, &'_ &'_ i32); // anonymous local
     let _6: &'_ &'_ i32; // anonymous local
     let _7: &'_ i32; // anonymous local
-    let _8: &'_ test_crate::foo::{closure#0}::{closure#0}::closure; // anonymous local
+    let _8: &'_ test_crate::foo::closure::closure::closure; // anonymous local
     let _9: (); // anonymous local
     let _10: &'_ &'_ i32; // anonymous local
     let left_val_11: &'_ &'_ i32; // local
@@ -448,7 +504,7 @@ fn main()
         _8 = &f_2;
         storage_live(_9);
         _9 = ();
-        _7 = test_crate::foo::{closure#0}::{closure#0}::<i32, i8, extern "rust-call" fn(()) -> &'_ i32, (&'_ i32,)>(move _8, move _9) -> bb3 (unwind: bb4);
+        _7 = test_crate::foo::closure::closure::<i32, i8, extern "rust-call" fn(()) -> &'_ i32, (&'_ i32,)>(move _8, move _9) -> bb3 (unwind: bb4);
     }
 
     bb2: {
@@ -476,7 +532,7 @@ fn main()
         _14 = &(*left_val_11);
         storage_live(_15);
         _15 = &(*right_val_12);
-        _13 = std::cmp::impls::<impl std::cmp::PartialEq<&B> for &A>::eq::<'_, '_, i32, i32>(move _14, move _15) -> bb5 (unwind: bb4);
+        _13 = {impl PartialEq<&'_ B> for &'_ A}::eq::<'_, '_, i32, i32>(move _14, move _15) -> bb5 (unwind: bb4);
     }
 
     bb4: {

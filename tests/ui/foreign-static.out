@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::option::Option::<*const i32>
+// Full name: core::option::Option::<*const i32>
 #[lang_item("Option")]
 pub enum Option::<*const i32> {
   None,

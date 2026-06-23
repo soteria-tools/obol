@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::mem::alignment::AlignmentEnum
+// Full name: core::mem::alignment::AlignmentEnum
 enum AlignmentEnum {
   _Align1Shl0,
   _Align1Shl1,
@@ -69,47 +69,47 @@ enum AlignmentEnum {
   _Align1Shl63,
 }
 
-// Full name: std::mem::Alignment
+// Full name: core::mem::alignment::Alignment
 pub struct Alignment {
   _inner_repr_trick: AlignmentEnum,
 }
 
-// Full name: std::alloc::Layout
+// Full name: core::alloc::layout::Layout
 #[lang_item("alloc_layout")]
 pub struct Layout {
   size: usize,
   align: Alignment,
 }
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
   precision: u16,
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
@@ -127,26 +127,26 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -155,7 +155,7 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
@@ -171,11 +171,11 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+fn core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
     let message_1: &'_ Arguments::<'_>; // arg #1
@@ -189,11 +189,11 @@ fn core::panic::panic_info::PanicInfo::<'a>::new::<'_>(message_1: &'_ Arguments:
     }
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -211,11 +211,11 @@ pub fn caller::<'_>() -> &'_ Location::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -264,7 +264,7 @@ pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 
     bb5: {
         _7 = &(*_8);
-        pi_4 = core::panic::panic_info::PanicInfo::<'a>::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+        pi_4 = core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -347,11 +347,11 @@ pub fn panic_nounwind_fmt(fmt_1: Arguments::<'_>, force_no_backtrace_2: bool) ->
     }
 }
 
-// Full name: std::intrinsics::ctpop::<usize>
+// Full name: core::intrinsics::ctpop::<usize>
 pub fn ctpop::<usize>(x_1: usize) -> u32
 = <intrinsic:ctpop>
 
-fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
+fn core::mem::alignment::{Alignment}::new_unchecked::precondition_check(align_1: usize)
 {
     let _0: (); // return
     let align_1: usize; // arg #1
@@ -430,7 +430,7 @@ fn std::mem::Alignment::new_unchecked::precondition_check(align_1: usize)
     }
 }
 
-fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usize, align_2: usize)
+fn core::alloc::layout::{Layout}::from_size_align_unchecked::precondition_check(size_1: usize, align_2: usize)
 {
     let _0: (); // return
     let size_1: usize; // arg #1
@@ -486,7 +486,7 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
     }
 
     bb5: {
-        _9 = std::mem::Alignment::new_unchecked::precondition_check(copy align_2) -> bb6 (unwind: bb8);
+        _9 = core::mem::alignment::{Alignment}::new_unchecked::precondition_check(copy align_2) -> bb6 (unwind: bb8);
     }
 
     bb6: {
@@ -550,7 +550,7 @@ fn std::alloc::Layout::from_size_align_unchecked::precondition_check(size_1: usi
     }
 }
 
-fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1: usize, alignment_2: Alignment)
+fn core::alloc::layout::{Layout}::from_size_alignment_unchecked::precondition_check(size_1: usize, alignment_2: Alignment)
 {
     let _0: (); // return
     let size_1: usize; // arg #1
@@ -630,13 +630,16 @@ fn std::alloc::Layout::from_size_alignment_unchecked::precondition_check(size_1:
     }
 }
 
-// Full name: std::alloc::LayoutError
+// Full name: core::alloc::layout::LayoutError
 pub struct LayoutError {}
 
-// Full name: std::alloc::AllocError
+// Full name: core::alloc::AllocError
 pub struct AllocError {}
 
-// Full name: std::char::encode_utf8_raw_unchecked
+// Full name: core::alloc::Allocator
+trait Allocator
+
+// Full name: core::char::methods::encode_utf8_raw_unchecked
 pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
 {
     let _0: (); // return
@@ -825,7 +828,7 @@ pub fn encode_utf8_raw_unchecked(code_1: u32, dst_2: *mut u8)
     }
 }
 
-// Full name: std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt
+// Full name: core::cmp::impls::{impl PartialOrd<usize> for usize}::lt
 pub fn lt(self_1: &'_ usize, other_2: &'_ usize) -> bool
 {
     let _0: bool; // return
@@ -846,7 +849,7 @@ pub fn lt(self_1: &'_ usize, other_2: &'_ usize) -> bool
     }
 }
 
-// Full name: std::cmp::Ord::max::<usize>
+// Full name: core::cmp::Ord::max::<usize>
 pub fn max::<usize>(self_1: usize, other_2: usize) -> usize
 {
     let _0: usize; // return
@@ -902,27 +905,44 @@ pub fn max::<usize>(self_1: usize, other_2: usize) -> usize
     }
 }
 
-// Full name: std::convert::Infallible
+// Full name: core::cmp::PartialOrd
+#[lang_item("partial_ord")]
+trait PartialOrd
+
+// Full name: core::cmp::impls::{impl PartialOrd<usize> for usize}
+impl "impl_PartialOrd_usize_for_usize" PartialOrd<usize> for usize {
+    non-dyn-compatible
+}
+
+// Full name: core::convert::Infallible
 pub enum Infallible {
 }
 
-// Full name: std::fmt::Formatter::<'_>
+trait core::fmt::Debug
+
+// Full name: core::fmt::{impl core::fmt::Debug for Error}
+impl "impl_Debug_for_Error" core::fmt::Debug for Error {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-pub fn std::fmt::Formatter::<'a>::write_str::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ str) -> Result::<(), Error>
+pub fn core::fmt::{Formatter::<'_>}::write_str::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ str) -> Result::<(), Error>
 = <missing>
 
-pub fn <std::fmt::Error as std::fmt::Debug>::fmt(self_1: &'_ Error, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl core::fmt::Debug for Error}::fmt
+pub fn impl_Debug_for_Error::fmt(self_1: &'_ Error, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ Error; // arg #1
     let f_2: &'_ mut Formatter::<'_>; // arg #2
 
     bb0: {
-        _0 = std::fmt::Formatter::<'a>::write_str::<'_>(move f_2, const "Error") -> bb1 (unwind: bb2);
+        _0 = core::fmt::{Formatter::<'_>}::write_str::<'_>(move f_2, const "Error") -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -934,7 +954,9 @@ pub fn <std::fmt::Error as std::fmt::Debug>::fmt(self_1: &'_ Error, f_2: &'_ mut
     }
 }
 
-fn std::vec::Vec::<T, A>::set_len::precondition_check(new_len_1: usize, capacity_2: usize)
+trait core::fmt::Write
+
+fn alloc::vec::{Vec::<_, _>}::set_len::precondition_check(new_len_1: usize, capacity_2: usize)
 {
     let _0: (); // return
     let new_len_1: usize; // arg #1
@@ -1006,15 +1028,15 @@ fn std::vec::Vec::<T, A>::set_len::precondition_check(new_len_1: usize, capacity
     }
 }
 
-// Full name: std::alloc::Global
+// Full name: alloc::alloc::Global
 #[lang_item("global_alloc_ty")]
 pub struct Global {}
 
-// Full name: std::marker::PhantomData::<u8>
+// Full name: core::marker::PhantomData::<u8>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<u8> {}
 
-// Full name: std::ptr::Unique::<u8>
+// Full name: core::ptr::unique::Unique::<u8>
 pub struct Unique::<u8> {
   pointer: NonNull::<u8>,
   _marker: PhantomData::<u8>,
@@ -1038,13 +1060,13 @@ struct RawVec::<u8, Global> {
   _marker: PhantomData::<u8>,
 }
 
-// Full name: std::vec::Vec::<u8, Global>
+// Full name: alloc::vec::Vec::<u8, Global>
 pub struct Vec::<u8, Global> {
   buf: RawVec::<u8, Global>,
   len: usize,
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+// Full name: core::fmt::{Arguments::<'_>}::from_str::<'_>
 pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -1118,18 +1140,18 @@ fn capacity_overflow() -> !
     }
 }
 
-// Full name: std::collections::TryReserveErrorKind
+// Full name: alloc::collections::TryReserveErrorKind
 pub enum TryReserveErrorKind {
   CapacityOverflow,
   AllocError(layout: Layout, non_exhaustive: ()),
 }
 
-// Full name: std::collections::TryReserveError
+// Full name: alloc::collections::TryReserveError
 pub struct TryReserveError {
   kind: TryReserveErrorKind,
 }
 
-// Full name: std::collections::TryReserveError::kind
+// Full name: alloc::collections::{TryReserveError}::kind
 pub fn kind(self_1: &'_ TryReserveError) -> TryReserveErrorKind
 {
     let _0: TryReserveErrorKind; // return
@@ -1169,7 +1191,7 @@ pub fn kind(self_1: &'_ TryReserveError) -> TryReserveErrorKind
     }
 }
 
-// Full name: std::alloc::handle_alloc_error::ct_error
+// Full name: alloc::alloc::handle_alloc_error::ct_error
 fn ct_error(_1: Layout) -> !
 {
     let _0: !; // return
@@ -1200,7 +1222,7 @@ fn ct_error(_1: Layout) -> !
     }
 }
 
-// Full name: std::alloc::handle_alloc_error
+// Full name: alloc::alloc::handle_alloc_error
 pub fn handle_alloc_error(layout_1: Layout) -> !
 {
     let _0: !; // return
@@ -1288,14 +1310,14 @@ fn handle_error(e_1: TryReserveError) -> !
     }
 }
 
-// Full name: std::option::Option::<(NonNull::<u8>, Layout)>
+// Full name: core::option::Option::<(NonNull::<u8>, Layout)>
 #[lang_item("Option")]
 pub enum Option::<(NonNull::<u8>, Layout)> {
   None,
   Some(0: (NonNull::<u8>, Layout)),
 }
 
-fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
+fn core::num::{usize}::unchecked_mul::precondition_check(lhs_1: usize, rhs_2: usize)
 {
     let _0: (); // return
     let lhs_1: usize; // arg #1
@@ -1378,7 +1400,7 @@ fn core::num::<impl usize>::unchecked_mul::precondition_check(lhs_1: usize, rhs_
     }
 }
 
-// Full name: alloc::raw_vec::RawVecInner::<A>::current_memory::<Global>
+// Full name: alloc::raw_vec::{RawVecInner::<_>}::current_memory::<Global>
 fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: Layout) -> Option::<(NonNull::<u8>, Layout)>
 {
     let _0: Option::<(NonNull::<u8>, Layout)>; // return
@@ -1448,7 +1470,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
     }
 
     bb6: {
-        _12 = core::num::<impl usize>::unchecked_mul::precondition_check(copy self_3, copy rhs_7) -> bb7 (unwind: bb8);
+        _12 = core::num::{usize}::unchecked_mul::precondition_check(copy self_3, copy rhs_7) -> bb7 (unwind: bb8);
     }
 
     bb7: {
@@ -1468,7 +1490,7 @@ fn current_memory::<Global>(self_1: &'_ RawVecInner::<Global>, elem_layout_2: La
     }
 
     bb9: {
-        _14 = std::alloc::Layout::from_size_align_unchecked::precondition_check(copy alloc_size_6, move align_10) -> bb10 (unwind: bb11);
+        _14 = core::alloc::layout::{Layout}::from_size_align_unchecked::precondition_check(copy alloc_size_6, move align_10) -> bb10 (unwind: bb11);
     }
 
     bb10: {
@@ -1504,30 +1526,30 @@ fn __rust_alloc_zeroed(_1: usize, _2: Alignment) -> *mut u8
 fn __rust_alloc(_1: usize, _2: Alignment) -> *mut u8
 = <extern:__rust_alloc>
 
-// Full name: std::result::Result::<Infallible, AllocError>
+// Full name: core::result::Result::<Infallible, AllocError>
 pub enum Result::<Infallible, AllocError> {
   Ok(0: Infallible),
   Err(0: AllocError),
 }
 
-// Full name: std::result::Result::<NonNull::<u8>, AllocError>
+// Full name: core::result::Result::<NonNull::<u8>, AllocError>
 pub enum Result::<NonNull::<u8>, AllocError> {
   Ok(0: NonNull::<u8>),
   Err(0: AllocError),
 }
 
-// Full name: std::ptr::NonNull::<[u8]>
+// Full name: core::ptr::non_null::NonNull::<[u8]>
 pub struct NonNull::<[u8]> {
   pointer: *const [u8] is !null,
 }
 
-// Full name: std::result::Result::<NonNull::<[u8]>, AllocError>
+// Full name: core::result::Result::<NonNull::<[u8]>, AllocError>
 pub enum Result::<NonNull::<[u8]>, AllocError> {
   Ok(0: NonNull::<[u8]>),
   Err(0: AllocError),
 }
 
-fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
+fn core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(ptr_1: *mut ())
 {
     let _0: (); // return
     let ptr_1: *mut (); // arg #1
@@ -1606,20 +1628,20 @@ fn std::ptr::NonNull::<T>::new_unchecked::precondition_check(ptr_1: *mut ())
     }
 }
 
-// Full name: std::option::Option::<NonNull::<u8>>
+// Full name: core::option::Option::<NonNull::<u8>>
 #[lang_item("Option")]
 pub enum Option::<NonNull::<u8>> {
   None,
   Some(0: NonNull::<u8>),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>>
 pub enum ControlFlow::<Result::<Infallible, AllocError>, NonNull::<u8>> {
   Continue(0: NonNull::<u8>),
   Break(0: Result::<Infallible, AllocError>),
 }
 
-// Full name: std::alloc::Global::alloc_impl_runtime
+// Full name: alloc::alloc::{Global}::alloc_impl_runtime
 fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u8]>, AllocError>
 {
     let _0: Result::<NonNull::<[u8]>, AllocError>; // return
@@ -1704,7 +1726,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb3: {
         storage_live(_17);
         _17 = transmute<Alignment, *mut ()>(copy _13);
-        _16 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _17) -> bb7 (unwind: bb8);
+        _16 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _17) -> bb7 (unwind: bb8);
     }
 
     bb4: {
@@ -1834,7 +1856,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb22: {
         storage_live(_25);
         _25 = cast<*mut u8, *mut ()>(copy raw_ptr_6);
-        _24 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _25) -> bb24 (unwind: bb25);
+        _24 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _25) -> bb24 (unwind: bb25);
     }
 
     bb23: {
@@ -1876,7 +1898,7 @@ fn alloc_impl_runtime(layout_1: Layout, zeroed_2: bool) -> Result::<NonNull::<[u
     bb26: {
         storage_live(_31);
         _31 = transmute<NonNull::<u8>, *mut ()>(copy ptr_11);
-        _30 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _31) -> bb28 (unwind: bb29);
+        _30 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _31) -> bb28 (unwind: bb29);
     }
 
     bb27: {
@@ -1905,7 +1927,7 @@ fn __rust_realloc(_1: NonNull::<u8>, _2: usize, _3: Alignment, _4: usize) -> *mu
 fn __rust_dealloc(_1: NonNull::<u8>, _2: usize, _3: Alignment)
 = <extern:__rust_dealloc>
 
-// Full name: std::ptr::const_ptr::<impl *const T>::is_aligned_to::<()>
+// Full name: core::ptr::const_ptr::{*const T}::is_aligned_to::<()>
 pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
 {
     let _0: bool; // return
@@ -2003,7 +2025,7 @@ pub fn is_aligned_to::<()>(self_1: *const (), align_2: usize) -> bool
     }
 }
 
-fn std::ptr::write_bytes::precondition_check(addr_1: *const (), align_2: usize, zero_size_3: bool)
+fn core::ptr::write_bytes::precondition_check(addr_1: *const (), align_2: usize, zero_size_3: bool)
 {
     let _0: (); // return
     let addr_1: *const (); // arg #1
@@ -2156,14 +2178,14 @@ pub fn panic_nounwind(expr_1: &'_ str) -> !
     }
 }
 
-// Full name: std::option::Option::<usize>
+// Full name: core::option::Option::<usize>
 #[lang_item("Option")]
 pub enum Option::<usize> {
   None,
   Some(0: usize),
 }
 
-// Full name: std::intrinsics::cold_path
+// Full name: core::intrinsics::cold_path
 pub fn cold_path()
 = <intrinsic:cold_path>
 
@@ -2273,7 +2295,7 @@ fn runtime(src_1: *const (), dst_2: *const (), size_3: usize, count_4: usize) ->
     }
 }
 
-fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: usize, count_5: usize)
+fn core::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *mut (), size_3: usize, align_4: usize, count_5: usize)
 {
     let _0: (); // return
     let src_1: *const (); // arg #1
@@ -2493,17 +2515,17 @@ fn std::ptr::copy_nonoverlapping::precondition_check(src_1: *const (), dst_2: *m
     }
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<[u8]>>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, AllocError>, NonNull::<[u8]>>
 pub enum ControlFlow::<Result::<Infallible, AllocError>, NonNull::<[u8]>> {
   Continue(0: NonNull::<[u8]>),
   Break(0: Result::<Infallible, AllocError>),
 }
 
-// Full name: std::intrinsics::write_bytes::<u8>
+// Full name: core::intrinsics::write_bytes::<u8>
 pub fn write_bytes::<u8>(dst_1: *mut u8, val_2: u8, count_3: usize)
 = <intrinsic:write_bytes>
 
-fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
+fn core::hint::assert_unchecked::precondition_check(cond_1: bool)
 {
     let _0: (); // return
     let cond_1: bool; // arg #1
@@ -2570,7 +2592,7 @@ fn std::hint::assert_unchecked::precondition_check(cond_1: bool)
     }
 }
 
-// Full name: std::alloc::Global::grow_impl_runtime
+// Full name: alloc::alloc::{Global}::grow_impl_runtime
 fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Layout, new_layout_4: Layout, zeroed_5: bool) -> Result::<NonNull::<[u8]>, AllocError>
 {
     let _0: Result::<NonNull::<[u8]>, AllocError>; // return
@@ -2714,7 +2736,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     }
 
     bb7: {
-        _31 = std::hint::assert_unchecked::precondition_check(copy cond_11) -> bb8 (unwind: bb12);
+        _31 = core::hint::assert_unchecked::precondition_check(copy cond_11) -> bb8 (unwind: bb12);
     }
 
     bb8: {
@@ -2851,7 +2873,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         _55 = transmute<NonNull::<u8>, *const ()>(copy ptr_2);
         storage_live(_56);
         _56 = transmute<NonNull::<u8>, *mut ()>(copy _51);
-        _54 = std::ptr::copy_nonoverlapping::precondition_check(move _55, move _56, const 1usize, const 1usize, copy old_size_6) -> bb25 (unwind: bb26);
+        _54 = core::ptr::copy_nonoverlapping::precondition_check(move _55, move _56, const 1usize, const 1usize, copy old_size_6) -> bb25 (unwind: bb26);
     }
 
     bb21: {
@@ -2869,7 +2891,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     bb23: {
         storage_live(_35);
         _35 = cast<*mut u8, *mut ()>(copy raw_ptr_12);
-        _34 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _35) -> bb29 (unwind: bb30);
+        _34 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _35) -> bb29 (unwind: bb30);
     }
 
     bb24: {
@@ -2946,7 +2968,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
         _41 = cast<*mut u8, *const ()>(copy self_19);
         storage_live(_42);
         _42 = copy count_20 == const 0usize;
-        _40 = std::ptr::write_bytes::precondition_check(move _41, const 1usize, move _42) -> bb37 (unwind: bb38);
+        _40 = core::ptr::write_bytes::precondition_check(move _41, const 1usize, move _42) -> bb37 (unwind: bb38);
     }
 
     bb34: {
@@ -2956,7 +2978,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     bb35: {
         storage_live(_46);
         _46 = transmute<NonNull::<u8>, *mut ()>(copy ptr_17);
-        _45 = std::ptr::NonNull::<T>::new_unchecked::precondition_check(move _46) -> bb41 (unwind: bb42);
+        _45 = core::ptr::non_null::{NonNull::<_>}::new_unchecked::precondition_check(move _46) -> bb41 (unwind: bb42);
     }
 
     bb36: {
@@ -2999,7 +3021,7 @@ fn grow_impl_runtime(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Lay
     }
 }
 
-// Full name: <std::alloc::Global as std::alloc::Allocator>::grow
+// Full name: alloc::alloc::{impl Allocator for Global}::grow
 pub fn grow(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Layout, new_layout_4: Layout) -> Result::<NonNull::<[u8]>, AllocError>
 {
     let _0: Result::<NonNull::<[u8]>, AllocError>; // return
@@ -3021,7 +3043,7 @@ pub fn grow(self_1: &'_ Global, ptr_2: NonNull::<u8>, old_layout_3: Layout, new_
     }
 }
 
-// Full name: <std::alloc::Global as std::alloc::Allocator>::allocate
+// Full name: alloc::alloc::{impl Allocator for Global}::allocate
 pub fn allocate(self_1: &'_ Global, layout_2: Layout) -> Result::<NonNull::<[u8]>, AllocError>
 {
     let _0: Result::<NonNull::<[u8]>, AllocError>; // return
@@ -3041,37 +3063,37 @@ pub fn allocate(self_1: &'_ Global, layout_2: Layout) -> Result::<NonNull::<[u8]
     }
 }
 
-// Full name: std::result::Result::<Layout, LayoutError>
+// Full name: core::result::Result::<Layout, LayoutError>
 pub enum Result::<Layout, LayoutError> {
   Ok(0: Layout),
   Err(0: LayoutError),
 }
 
-// Full name: std::result::Result::<Layout, TryReserveError>
+// Full name: core::result::Result::<Layout, TryReserveError>
 pub enum Result::<Layout, TryReserveError> {
   Ok(0: Layout),
   Err(0: TryReserveError),
 }
 
-// Full name: std::result::Result::<Infallible, TryReserveError>
+// Full name: core::result::Result::<Infallible, TryReserveError>
 pub enum Result::<Infallible, TryReserveError> {
   Ok(0: Infallible),
   Err(0: TryReserveError),
 }
 
-// Full name: std::result::Result::<NonNull::<[u8]>, TryReserveError>
+// Full name: core::result::Result::<NonNull::<[u8]>, TryReserveError>
 pub enum Result::<NonNull::<[u8]>, TryReserveError> {
   Ok(0: NonNull::<[u8]>),
   Err(0: TryReserveError),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, TryReserveError>, Layout>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, TryReserveError>, Layout>
 pub enum ControlFlow::<Result::<Infallible, TryReserveError>, Layout> {
   Continue(0: Layout),
   Break(0: Result::<Infallible, TryReserveError>),
 }
 
-// Full name: alloc::raw_vec::RawVecInner::<A>::finish_grow::<Global>
+// Full name: alloc::raw_vec::{RawVecInner::<_>}::finish_grow::<Global>
 fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_layout_3: Layout) -> Result::<NonNull::<[u8]>, TryReserveError>
 {
     let _0: Result::<NonNull::<[u8]>, TryReserveError>; // return
@@ -3312,7 +3334,7 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
     }
 
     bb14: {
-        _43 = std::hint::assert_unchecked::precondition_check(copy cond_13) -> bb15 (unwind: bb18);
+        _43 = core::hint::assert_unchecked::precondition_check(copy cond_13) -> bb15 (unwind: bb18);
     }
 
     bb15: {
@@ -3378,37 +3400,37 @@ fn finish_grow::<Global>(self_1: &'_ RawVecInner::<Global>, cap_2: usize, elem_l
     }
 }
 
-// Full name: std::result::Result::<Infallible, TryReserveErrorKind>
+// Full name: core::result::Result::<Infallible, TryReserveErrorKind>
 pub enum Result::<Infallible, TryReserveErrorKind> {
   Ok(0: Infallible),
   Err(0: TryReserveErrorKind),
 }
 
-// Full name: std::result::Result::<usize, TryReserveErrorKind>
+// Full name: core::result::Result::<usize, TryReserveErrorKind>
 pub enum Result::<usize, TryReserveErrorKind> {
   Ok(0: usize),
   Err(0: TryReserveErrorKind),
 }
 
-// Full name: std::result::Result::<(), TryReserveError>
+// Full name: core::result::Result::<(), TryReserveError>
 pub enum Result::<(), TryReserveError> {
   Ok(0: ()),
   Err(0: TryReserveError),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, TryReserveError>, NonNull::<[u8]>>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, TryReserveError>, NonNull::<[u8]>>
 pub enum ControlFlow::<Result::<Infallible, TryReserveError>, NonNull::<[u8]>> {
   Continue(0: NonNull::<[u8]>),
   Break(0: Result::<Infallible, TryReserveError>),
 }
 
-// Full name: std::ops::ControlFlow::<Result::<Infallible, TryReserveErrorKind>, usize>
+// Full name: core::ops::control_flow::ControlFlow::<Result::<Infallible, TryReserveErrorKind>, usize>
 pub enum ControlFlow::<Result::<Infallible, TryReserveErrorKind>, usize> {
   Continue(0: usize),
   Break(0: Result::<Infallible, TryReserveErrorKind>),
 }
 
-// Full name: alloc::raw_vec::RawVecInner::<A>::grow_amortized::<Global>
+// Full name: alloc::raw_vec::{RawVecInner::<_>}::grow_amortized::<Global>
 fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize, additional_3: usize, elem_layout_4: Layout) -> Result::<(), TryReserveError>
 {
     let _0: Result::<(), TryReserveError>; // return
@@ -3715,7 +3737,7 @@ fn grow_amortized::<Global>(self_1: &'_ mut RawVecInner::<Global>, len_2: usize,
     }
 }
 
-// Full name: alloc::raw_vec::RawVecInner::<A>::reserve::do_reserve_and_handle::<Global>
+// Full name: alloc::raw_vec::{RawVecInner::<_>}::reserve::do_reserve_and_handle::<Global>
 fn do_reserve_and_handle::<Global>(slf_1: &'_ mut RawVecInner::<Global>, len_2: usize, additional_3: usize, elem_layout_4: Layout)
 {
     let _0: (); // return
@@ -3769,10 +3791,10 @@ fn do_reserve_and_handle::<Global>(slf_1: &'_ mut RawVecInner::<Global>, len_2: 
     }
 }
 
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<u8>
+// Full name: core::mem::SizedTypeProperties::LAYOUT::<u8>
 pub const LAYOUT::<u8>: Layout = Layout { size: 1usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl0 {  } } }
 
-// Full name: std::vec::Vec::<T, A>::reserve::<u8, Global>
+// Full name: alloc::vec::{Vec::<_, _>}::reserve::<u8, Global>
 pub fn reserve::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, additional_2: usize)
 {
     let _0: (); // return
@@ -3844,13 +3866,13 @@ pub fn reserve::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, additional_2: us
     }
 }
 
-// Full name: std::string::String
+// Full name: alloc::string::String
 #[lang_item("String")]
 pub struct String {
   vec: Vec::<u8, Global>,
 }
 
-// Full name: std::string::String::push
+// Full name: alloc::string::{String}::push
 pub fn push(self_1: &'_ mut String, ch_2: char)
 {
     let _0: (); // return
@@ -3975,7 +3997,7 @@ pub fn push(self_1: &'_ mut String, ch_2: char)
         self_20 = copy (((((*self_1)).vec).buf).inner).cap;
         _19 = transmute<UsizeNoHighBit, usize>(copy self_20);
         storage_dead(self_20);
-        _18 = std::vec::Vec::<T, A>::set_len::precondition_check(copy new_len_10, move _19) -> bb14 (unwind: bb15);
+        _18 = alloc::vec::{Vec::<_, _>}::set_len::precondition_check(copy new_len_10, move _19) -> bb14 (unwind: bb15);
     }
 
     bb13: {
@@ -3995,7 +4017,7 @@ pub fn push(self_1: &'_ mut String, ch_2: char)
     }
 }
 
-// Full name: <std::string::String as std::fmt::Write>::write_char
+// Full name: alloc::string::{impl core::fmt::Write for String}::write_char
 pub fn write_char(self_1: &'_ mut String, c_2: char) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
@@ -4021,18 +4043,18 @@ pub fn write_char(self_1: &'_ mut String, c_2: char) -> Result::<(), Error>
     }
 }
 
-// Full name: std::mem::SizedTypeProperties::MAX_SLICE_LEN::<u8>
+// Full name: core::mem::SizedTypeProperties::MAX_SLICE_LEN::<u8>
 pub const MAX_SLICE_LEN::<u8>: usize = 9223372036854775807usize
 
-// Full name: std::mem::SizedTypeProperties::ALIGN::<u8>
+// Full name: core::mem::SizedTypeProperties::ALIGN::<u8>
 #[lang_item("mem_align_const")]
 pub const ALIGN::<u8>: usize = 1usize
 
-// Full name: std::mem::SizedTypeProperties::SIZE::<u8>
+// Full name: core::mem::SizedTypeProperties::SIZE::<u8>
 #[lang_item("mem_size_const")]
 pub const SIZE::<u8>: usize = 1usize
 
-// Full name: std::vec::Vec::<T, A>::append_elements::<u8, Global>
+// Full name: alloc::vec::{Vec::<_, _>}::append_elements::<u8, Global>
 fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *const [u8])
 {
     let _0: (); // return
@@ -4106,7 +4128,7 @@ fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *co
         _13 = cast<*const [u8], *const ()>(copy other_2);
         storage_live(_14);
         _14 = cast<*mut u8, *mut ()>(copy dst_8);
-        _12 = std::ptr::copy_nonoverlapping::precondition_check(move _13, move _14, copy SIZE::<u8>, copy ALIGN::<u8>, copy count_3) -> bb7 (unwind: bb8);
+        _12 = core::ptr::copy_nonoverlapping::precondition_check(move _13, move _14, copy SIZE::<u8>, copy ALIGN::<u8>, copy count_3) -> bb7 (unwind: bb8);
     }
 
     bb6: {
@@ -4127,7 +4149,7 @@ fn append_elements::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>, other_2: *co
     }
 }
 
-fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize, align_3: usize, len_4: usize)
+fn core::slice::raw::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize, align_3: usize, len_4: usize)
 {
     let _0: (); // return
     let data_1: *mut (); // arg #1
@@ -4270,18 +4292,18 @@ fn std::slice::from_raw_parts::precondition_check(data_1: *mut (), size_2: usize
     }
 }
 
-// Full name: std::marker::PhantomData::<&'_ u8>
+// Full name: core::marker::PhantomData::<&'_ u8>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ u8> {}
 
-// Full name: std::slice::Iter::<'_, u8>
+// Full name: core::slice::iter::Iter::<'_, u8>
 pub struct Iter::<'_, u8> {
   ptr: NonNull::<u8>,
   end_or_len: *const u8,
   _marker: PhantomData::<&'_ u8>,
 }
 
-fn std::ptr::const_ptr::<impl *const T>::offset_from_unsigned::precondition_check(this_1: *const (), origin_2: *const ())
+fn core::ptr::const_ptr::{*const T}::offset_from_unsigned::precondition_check(this_1: *const (), origin_2: *const ())
 {
     let _0: (); // return
     let this_1: *const (); // arg #1
@@ -4389,14 +4411,14 @@ pub fn panic(expr_1: &'_ str) -> !
     }
 }
 
-// Full name: std::mem::SizedTypeProperties::IS_ZST::<u8>
+// Full name: core::mem::SizedTypeProperties::IS_ZST::<u8>
 pub const IS_ZST::<u8>: bool = false
 
-// Full name: std::intrinsics::ptr_offset_from_unsigned::<u8>
+// Full name: core::intrinsics::ptr_offset_from_unsigned::<u8>
 pub fn ptr_offset_from_unsigned::<u8>(ptr_1: *const u8, base_2: *const u8) -> usize
 = <intrinsic:ptr_offset_from_unsigned>
 
-// Full name: std::slice::Iter::<'a, T>::make_slice::<'_, u8>
+// Full name: core::slice::iter::{Iter::<'_, _>}::make_slice::<'_, u8>
 fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
 {
     let _0: &'_ [u8]; // return
@@ -4467,7 +4489,7 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
         _11 = transmute<NonNull::<u8>, *const ()>(copy end_6);
         storage_live(_12);
         _12 = transmute<NonNull::<u8>, *const ()>(copy self_3);
-        _10 = std::ptr::const_ptr::<impl *const T>::offset_from_unsigned::precondition_check(move _11, move _12) -> bb8 (unwind: bb9);
+        _10 = core::ptr::const_ptr::{*const T}::offset_from_unsigned::precondition_check(move _11, move _12) -> bb8 (unwind: bb9);
     }
 
     bb5: {
@@ -4479,7 +4501,7 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
     bb6: {
         storage_live(_17);
         _17 = transmute<NonNull::<u8>, *mut ()>(copy self_3);
-        _16 = std::slice::from_raw_parts::precondition_check(move _17, copy SIZE::<u8>, copy ALIGN::<u8>, copy len_4) -> bb12 (unwind: bb13);
+        _16 = core::slice::raw::from_raw_parts::precondition_check(move _17, copy SIZE::<u8>, copy ALIGN::<u8>, copy len_4) -> bb12 (unwind: bb13);
     }
 
     bb7: {
@@ -4546,7 +4568,7 @@ fn make_slice::<'_, u8>(self_1: &'_ Iter::<'_, u8>) -> &'_ [u8]
     }
 }
 
-// Full name: std::string::String::push_str
+// Full name: alloc::string::{String}::push_str
 pub fn push_str(self_1: &'_ mut String, string_2: &'_ str)
 {
     let _0: (); // return
@@ -4638,7 +4660,8 @@ pub fn push_str(self_1: &'_ mut String, string_2: &'_ str)
     }
 }
 
-pub fn <std::string::String as std::fmt::Write>::write_str(self_1: &'_ mut String, s_2: &'_ str) -> Result::<(), Error>
+// Full name: alloc::string::{impl core::fmt::Write for String}::write_str
+pub fn impl_Write_for_String::write_str(self_1: &'_ mut String, s_2: &'_ str) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ mut String; // arg #1
@@ -4663,7 +4686,7 @@ pub fn <std::string::String as std::fmt::Write>::write_str(self_1: &'_ mut Strin
     }
 }
 
-// Full name: std::ptr::drop_glue::<[u8]>
+// Full name: core::ptr::drop_glue::<[u8]>
 #[lang_item("drop_glue")]
 fn drop_glue::<[u8]>(_1: &'_ mut [u8])
 {
@@ -4676,7 +4699,8 @@ fn drop_glue::<[u8]>(_1: &'_ mut [u8])
     }
 }
 
-pub fn <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>)
+// Full name: alloc::vec::{impl Drop for Vec::<_, _>}::drop::<u8, Global>
+pub fn {impl Drop for Vec::<_, _>}::drop::<u8, Global>(self_1: &'_ mut Vec::<u8, Global>)
 {
     let _0: (); // return
     let self_1: &'_ mut Vec::<u8, Global>; // arg #1
@@ -4715,7 +4739,8 @@ pub fn <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ m
     }
 }
 
-pub fn <std::alloc::Global as std::alloc::Allocator>::deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
+// Full name: alloc::alloc::{impl Allocator for Global}::deallocate
+pub fn impl_Allocator_for_Global::deallocate(self_1: &'_ Global, ptr_2: NonNull::<u8>, layout_3: Layout)
 {
     let _0: (); // return
     let self_1: &'_ Global; // arg #1
@@ -4752,7 +4777,7 @@ pub fn <std::alloc::Global as std::alloc::Allocator>::deallocate(self_1: &'_ Glo
     }
 }
 
-fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVecInner::<Global>, elem_layout_2: Layout)
+fn alloc::raw_vec::{RawVecInner::<_>}::deallocate::<Global>(self_1: &'_ mut RawVecInner::<Global>, elem_layout_2: Layout)
 {
     let _0: (); // return
     let self_1: &'_ mut RawVecInner::<Global>; // arg #1
@@ -4792,7 +4817,7 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
         layout_7 = copy (_3 as variant Option::<(NonNull::<u8>, Layout)>::Some).0.1;
         storage_live(_9);
         _9 = &((*self_1)).alloc;
-        _8 = <std::alloc::Global as std::alloc::Allocator>::deallocate(move _9, move ptr_6, move layout_7) -> bb6 (unwind: bb7);
+        _8 = impl_Allocator_for_Global::deallocate(move _9, move ptr_6, move layout_7) -> bb6 (unwind: bb7);
     }
 
     bb4: {
@@ -4821,7 +4846,8 @@ fn alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(self_1: &'_ mut RawVec
     }
 }
 
-pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self_1: &'_ mut RawVec::<u8, Global>)
+// Full name: alloc::raw_vec::{impl Drop for RawVec::<_, _>}::drop::<u8, Global>
+pub fn {impl Drop for RawVec::<_, _>}::drop::<u8, Global>(self_1: &'_ mut RawVec::<u8, Global>)
 {
     let _0: (); // return
     let self_1: &'_ mut RawVec::<u8, Global>; // arg #1
@@ -4831,7 +4857,7 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
         _0 = ();
         storage_live(_2);
         _2 = &two-phase-mut ((*self_1)).inner;
-        _0 = alloc::raw_vec::RawVecInner::<A>::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
+        _0 = alloc::raw_vec::{RawVecInner::<_>}::deallocate::<Global>(move _2, copy LAYOUT::<u8>) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4844,7 +4870,7 @@ pub fn <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(self
     }
 }
 
-// Full name: std::ptr::drop_glue::<RawVec::<u8, Global>>
+// Full name: core::ptr::drop_glue::<RawVec::<u8, Global>>
 #[lang_item("drop_glue")]
 fn drop_glue::<RawVec::<u8, Global>>(_1: &'_ mut RawVec::<u8, Global>)
 {
@@ -4858,7 +4884,7 @@ fn drop_glue::<RawVec::<u8, Global>>(_1: &'_ mut RawVec::<u8, Global>)
         storage_live(_3);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = <alloc::raw_vec::RawVec<T, A> as std::ops::Drop>::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
+        _3 = {impl Drop for RawVec::<_, _>}::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4870,7 +4896,7 @@ fn drop_glue::<RawVec::<u8, Global>>(_1: &'_ mut RawVec::<u8, Global>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Vec::<u8, Global>>
+// Full name: core::ptr::drop_glue::<Vec::<u8, Global>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Vec::<u8, Global>>(_1: &'_ mut Vec::<u8, Global>)
 {
@@ -4892,7 +4918,7 @@ fn drop_glue::<Vec::<u8, Global>>(_1: &'_ mut Vec::<u8, Global>)
         storage_live(_7);
         _0 = ();
         _2 = &mut (*_1);
-        _3 = <std::vec::Vec<T, A> as std::ops::Drop>::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
+        _3 = {impl Drop for Vec::<_, _>}::drop::<u8, Global>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -4922,7 +4948,7 @@ fn drop_glue::<Vec::<u8, Global>>(_1: &'_ mut Vec::<u8, Global>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<String>
+// Full name: core::ptr::drop_glue::<String>
 #[lang_item("drop_glue")]
 fn drop_glue::<String>(_1: &'_ mut String)
 {
@@ -4948,22 +4974,22 @@ fn drop_glue::<String>(_1: &'_ mut String)
     }
 }
 
-// Full name: std::option::Option::<&'_ str>
+// Full name: core::option::Option::<&'_ str>
 #[lang_item("Option")]
 pub enum Option::<&'_ str> {
   None,
   Some(0: &'_ str),
 }
 
-// Full name: std::fmt::write
+// Full name: core::fmt::write
 pub fn write(_1: &'_ mut (dyn FakeTrait), _2: Arguments::<'_>) -> Result::<(), Error>
 = <missing>
 
-// Full name: std::intrinsics::is_val_statically_known::<bool>
+// Full name: core::intrinsics::is_val_statically_known::<bool>
 pub fn is_val_statically_known::<bool>(_arg_1: bool) -> bool
 = <intrinsic:is_val_statically_known>
 
-// Full name: std::fmt::Arguments::<'a>::as_statically_known_str::<'_>
+// Full name: core::fmt::{Arguments::<'_>}::as_statically_known_str::<'_>
 pub fn as_statically_known_str::<'_>(self_1: &'_ Arguments::<'_>) -> Option::<&'_ str>
 {
     let s_0: Option::<&'_ str>; // return
@@ -5024,7 +5050,7 @@ pub fn as_statically_known_str::<'_>(self_1: &'_ Arguments::<'_>) -> Option::<&'
     bb3: {
         storage_live(_13);
         _13 = transmute<NonNull::<u8>, *mut ()>(copy self_10);
-        _12 = std::slice::from_raw_parts::precondition_check(move _13, const 1usize, const 1usize, copy len_11) -> bb6 (unwind: bb7);
+        _12 = core::slice::raw::from_raw_parts::precondition_check(move _13, const 1usize, const 1usize, copy len_11) -> bb6 (unwind: bb7);
     }
 
     bb4: {
@@ -5089,8 +5115,7 @@ pub fn as_statically_known_str::<'_>(self_1: &'_ Arguments::<'_>) -> Option::<&'
     }
 }
 
-// Full name: {vtable}::std::fmt::Write::<String>
-fn Write::<String>() -> *const ()
+fn {vtable}::core::fmt::Write::<String>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -5114,7 +5139,7 @@ fn Write::<String>() -> *const ()
         drop_1 = cast<drop_glue::<String>, *const ()>(const drop_glue::<String>);
         size_2 = transmute<usize, *const ()>(const 24usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <std::string::String as std::fmt::Write>::write_str_4 = cast<<std::string::String as std::fmt::Write>::write_str, *const ()>(const <std::string::String as std::fmt::Write>::write_str);
+        <std::string::String as std::fmt::Write>::write_str_4 = cast<impl_Write_for_String::write_str, *const ()>(const impl_Write_for_String::write_str);
         <std::string::String as std::fmt::Write>::write_char_5 = cast<write_char, *const ()>(const write_char);
         <std::string::String as std::fmt::Write>::write_fmt_6 = cast<write_fmt::<String>, *const ()>(const write_fmt::<String>);
         entry_array_7 = [move drop_1, move size_2, move align_3, move <std::string::String as std::fmt::Write>::write_str_4, move <std::string::String as std::fmt::Write>::write_char_5, move <std::string::String as std::fmt::Write>::write_fmt_6];
@@ -5124,10 +5149,9 @@ fn Write::<String>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Write::<String>
-static Write::<String>: *const () = Write::<String>()
+static {vtable}::core::fmt::Write::<String>: *const () = {vtable}::core::fmt::Write::<String>()
 
-// Full name: std::fmt::Write::write_fmt::<String>
+// Full name: core::fmt::Write::write_fmt::<String>
 pub fn write_fmt::<String>(self_1: &'_ mut String, args_2: Arguments::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
@@ -5147,7 +5171,7 @@ pub fn write_fmt::<String>(self_1: &'_ mut String, args_2: Arguments::<'_>) -> R
     }
 }
 
-// Full name: <&mut W as std::fmt::Write::write_fmt::SpecWriteFmt>::spec_write_fmt::<'_, String>
+// Full name: core::fmt::Write::write_fmt::{impl SpecWriteFmt for &'_ mut W}::spec_write_fmt::<'_, String>
 fn spec_write_fmt::<'_, String>(self_1: &'_ mut String, args_2: Arguments::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
@@ -5180,13 +5204,13 @@ fn spec_write_fmt::<'_, String>(self_1: &'_ mut String, args_2: Arguments::<'_>)
     bb3: {
         storage_live(s_6);
         s_6 = copy (_3 as variant Option::<&'_ str>::Some).0;
-        _0 = <std::string::String as std::fmt::Write>::write_str(move self_1, move s_6) -> bb6 (unwind: bb7);
+        _0 = impl_Write_for_String::write_str(move self_1, move s_6) -> bb6 (unwind: bb7);
     }
 
     bb4: {
         storage_dead(_3);
         storage_live(_7);
-        _7 = unsize_cast<&'_ mut String, &'_ mut (dyn FakeTrait), Write::<String>>(copy self_1);
+        _7 = unsize_cast<&'_ mut String, &'_ mut (dyn FakeTrait), {vtable}::core::fmt::Write::<String>>(copy self_1);
         _0 = write(move _7, copy args_2) -> bb8 (unwind: bb9);
     }
 
@@ -5218,7 +5242,28 @@ fn spec_write_fmt::<'_, String>(self_1: &'_ mut String, args_2: Arguments::<'_>)
     }
 }
 
-// Full name: std::ptr::drop_glue::<Error>
+// Full name: core::fmt::Write::write_fmt::SpecWriteFmt
+trait SpecWriteFmt
+
+// Full name: core::fmt::Write::write_fmt::{impl SpecWriteFmt for &'_ mut W}
+impl<'_, _, W> SpecWriteFmt for &'_ mut W {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn FakeTrait),
+}
+
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::ptr::drop_glue::<Error>
 #[lang_item("drop_glue")]
 fn drop_glue::<Error>(_1: &'_ mut Error)
 {
@@ -5231,8 +5276,7 @@ fn drop_glue::<Error>(_1: &'_ mut Error)
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<Error>
-fn Debug::<Error>() -> *const ()
+fn {vtable}::core::fmt::Debug::<Error>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -5252,7 +5296,7 @@ fn Debug::<Error>() -> *const ()
         drop_1 = cast<drop_glue::<Error>, *const ()>(const drop_glue::<Error>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <std::fmt::Error as std::fmt::Debug>::fmt_4 = cast<<std::fmt::Error as std::fmt::Debug>::fmt, *const ()>(const <std::fmt::Error as std::fmt::Debug>::fmt);
+        <std::fmt::Error as std::fmt::Debug>::fmt_4 = cast<impl_Debug_for_Error::fmt, *const ()>(const impl_Debug_for_Error::fmt);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <std::fmt::Error as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -5260,13 +5304,16 @@ fn Debug::<Error>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<Error>
-static Debug::<Error>: *const () = Debug::<Error>()
+static {vtable}::core::fmt::Debug::<Error>: *const () = {vtable}::core::fmt::Debug::<Error>()
 
-pub fn <str as std::fmt::Display>::fmt(_1: &'_ str, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+trait core::fmt::Display
+
+// Full name: core::fmt::{impl core::fmt::Display for str}::fmt
+pub fn impl_Display_for_str::fmt(_1: &'_ str, _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <missing>
 
-pub fn <std::string::String as std::fmt::Display>::fmt(self_1: &'_ String, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: alloc::string::{impl core::fmt::Display for String}::fmt
+pub fn impl_Display_for_String::fmt(self_1: &'_ String, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ String; // arg #1
@@ -5296,7 +5343,7 @@ pub fn <std::string::String as std::fmt::Display>::fmt(self_1: &'_ String, f_2: 
         storage_dead(_5);
         _3 = transmute<&'_ [u8], &'_ str>(copy _4);
         storage_dead(_4);
-        _0 = <str as std::fmt::Display>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+        _0 = impl_Display_for_str::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -5309,8 +5356,7 @@ pub fn <std::string::String as std::fmt::Display>::fmt(self_1: &'_ String, f_2: 
     }
 }
 
-// Full name: {vtable}::std::fmt::Display::<String>
-fn Display::<String>() -> *const ()
+fn {vtable}::core::fmt::Display::<String>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -5330,7 +5376,7 @@ fn Display::<String>() -> *const ()
         drop_1 = cast<drop_glue::<String>, *const ()>(const drop_glue::<String>);
         size_2 = transmute<usize, *const ()>(const 24usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <std::string::String as std::fmt::Display>::fmt_4 = cast<<std::string::String as std::fmt::Display>::fmt, *const ()>(const <std::string::String as std::fmt::Display>::fmt);
+        <std::string::String as std::fmt::Display>::fmt_4 = cast<impl_Display_for_String::fmt, *const ()>(const impl_Display_for_String::fmt);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <std::string::String as std::fmt::Display>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -5338,50 +5384,77 @@ fn Display::<String>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Display::<String>
-static Display::<String>: *const () = Display::<String>()
+static {vtable}::core::fmt::Display::<String>: *const () = {vtable}::core::fmt::Display::<String>()
 
-pub fn std::fmt::Display::fmt::<(dyn FakeTrait)>(_1: &'_ (dyn FakeTrait), _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+pub fn core::fmt::Display::fmt::<(dyn FakeTrait)>(_1: &'_ (dyn FakeTrait), _2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 = <opaque>
 
-// Full name: std::intrinsics::size_of_val::<(dyn FakeTrait)>
+// Full name: core::fmt::{impl core::fmt::Display for str}
+impl "impl_Display_for_str" core::fmt::Display for str {
+    non-dyn-compatible
+}
+
+// Full name: core::intrinsics::size_of_val::<(dyn FakeTrait)>
 pub fn size_of_val::<(dyn FakeTrait)>(ptr_1: *const (dyn FakeTrait)) -> usize
 = <intrinsic:size_of_val>
 
-// Full name: std::intrinsics::align_of_val::<(dyn FakeTrait)>
+// Full name: core::intrinsics::align_of_val::<(dyn FakeTrait)>
 pub fn align_of_val::<(dyn FakeTrait)>(ptr_1: *const (dyn FakeTrait)) -> usize
 = <intrinsic:align_of_val>
 
-// Full name: std::marker::PhantomData::<(dyn FakeTrait)>
+// Full name: core::marker::PhantomData::<(dyn FakeTrait)>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<(dyn FakeTrait)> {}
 
-// Full name: std::marker::PhantomData::<String>
+// Full name: core::marker::PhantomData::<String>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<String> {}
 
-// Full name: std::mem::SizedTypeProperties::LAYOUT::<String>
+// Full name: core::mem::SizedTypeProperties::LAYOUT::<String>
 pub const LAYOUT::<String>: Layout = Layout { size: 24usize, align: Alignment { _inner_repr_trick: AlignmentEnum::_Align1Shl3 {  } } }
 
-// Full name: std::ptr::NonNull::<(dyn FakeTrait)>
+// Full name: core::ops::drop::Drop
+#[lang_item("drop")]
+trait Drop
+
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::ptr::non_null::NonNull::<(dyn FakeTrait)>
 pub struct NonNull::<(dyn FakeTrait)> {
   pointer: *const (dyn FakeTrait) is !null,
 }
 
-// Full name: std::ptr::Unique::<(dyn FakeTrait)>
+// Full name: core::ptr::unique::Unique::<(dyn FakeTrait)>
 pub struct Unique::<(dyn FakeTrait)> {
   pointer: NonNull::<(dyn FakeTrait)>,
   _marker: PhantomData::<(dyn FakeTrait)>,
 }
 
-// Full name: std::boxed::Box::<(dyn FakeTrait), Global>
+// Full name: alloc::boxed::Box::<(dyn FakeTrait), Global>
 #[lang_item("owned_box")]
 pub struct Box::<(dyn FakeTrait), Global> {
   0: Unique::<(dyn FakeTrait)>,
   1: Global,
 }
 
-pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global>(self_1: &'_ mut Box::<(dyn FakeTrait), Global>)
+// Full name: alloc::boxed::{impl Drop for Box::<_, _>}::drop::<(dyn FakeTrait), Global>
+pub fn {impl Drop for Box::<_, _>}::drop::<(dyn FakeTrait), Global>(self_1: &'_ mut Box::<(dyn FakeTrait), Global>)
 {
     let _0: (); // return
     let self_1: &'_ mut Box::<(dyn FakeTrait), Global>; // arg #1
@@ -5442,7 +5515,7 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global
     }
 
     bb5: {
-        _10 = std::mem::Alignment::new_unchecked::precondition_check(copy align_9) -> bb6 (unwind: bb7);
+        _10 = core::mem::alignment::{Alignment}::new_unchecked::precondition_check(copy align_9) -> bb6 (unwind: bb7);
     }
 
     bb6: {
@@ -5458,7 +5531,7 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global
     }
 
     bb8: {
-        _11 = std::alloc::Layout::from_size_alignment_unchecked::precondition_check(copy size_7, copy alignment_8) -> bb9 (unwind: bb10);
+        _11 = core::alloc::layout::{Layout}::from_size_alignment_unchecked::precondition_check(copy size_7, copy alignment_8) -> bb9 (unwind: bb10);
     }
 
     bb9: {
@@ -5486,7 +5559,7 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global
         _13 = cast<*mut (dyn FakeTrait), *mut u8>(copy _4);
         unique_12 = transmute<*mut u8, NonNull::<u8>>(copy _13);
         storage_dead(_13);
-        _5 = <std::alloc::Global as std::alloc::Allocator>::deallocate(move _6, move unique_12, move layout_2) -> bb13 (unwind: bb14);
+        _5 = impl_Allocator_for_Global::deallocate(move _6, move unique_12, move layout_2) -> bb13 (unwind: bb14);
     }
 
     bb13: {
@@ -5499,7 +5572,7 @@ pub fn <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global
     }
 }
 
-// Full name: std::ptr::drop_glue::<Box::<(dyn FakeTrait), Global>>
+// Full name: core::ptr::drop_glue::<Box::<(dyn FakeTrait), Global>>
 #[lang_item("drop_glue")]
 fn drop_glue::<Box::<(dyn FakeTrait), Global>>(_1: &'_ mut Box::<(dyn FakeTrait), Global>)
 {
@@ -5529,12 +5602,12 @@ fn drop_glue::<Box::<(dyn FakeTrait), Global>>(_1: &'_ mut Box::<(dyn FakeTrait)
 
     bb1: {
         _2 = &mut (*_1);
-        _3 = <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global>(move _2) -> bb3 (unwind: bb4);
+        _3 = {impl Drop for Box::<_, _>}::drop::<(dyn FakeTrait), Global>(move _2) -> bb3 (unwind: bb4);
     }
 
     bb2: {
         _4 = &mut (*_1);
-        _5 = <std::boxed::Box<T, A> as std::ops::Drop>::drop::<(dyn FakeTrait), Global>(move _4) -> bb5 (unwind: bb6);
+        _5 = {impl Drop for Box::<_, _>}::drop::<(dyn FakeTrait), Global>(move _4) -> bb5 (unwind: bb6);
     }
 
     bb3: {
@@ -5554,7 +5627,7 @@ fn drop_glue::<Box::<(dyn FakeTrait), Global>>(_1: &'_ mut Box::<(dyn FakeTrait)
     }
 }
 
-// Full name: std::ptr::drop_glue::<(dyn FakeTrait)>
+// Full name: core::ptr::drop_glue::<(dyn FakeTrait)>
 #[lang_item("drop_glue")]
 fn drop_glue::<(dyn FakeTrait)>(_1: &'_ mut (dyn FakeTrait))
 {
@@ -5580,22 +5653,22 @@ fn drop_glue::<(dyn FakeTrait)>(_1: &'_ mut (dyn FakeTrait))
     }
 }
 
-// Full name: std::ptr::NonNull::<String>
+// Full name: core::ptr::non_null::NonNull::<String>
 pub struct NonNull::<String> {
   pointer: *const String is !null,
 }
 
-// Full name: std::ptr::Unique::<String>
+// Full name: core::ptr::unique::Unique::<String>
 pub struct Unique::<String> {
   pointer: NonNull::<String>,
   _marker: PhantomData::<String>,
 }
 
-// Full name: std::result::unwrap_failed
+// Full name: core::result::unwrap_failed
 fn unwrap_failed(_1: &'_ str, _2: &'_ (dyn FakeTrait)) -> !
 = <missing>
 
-// Full name: std::result::Result::<T, E>::expect::<(), Error>
+// Full name: core::result::{Result::<_, _>}::expect::<(), Error>
 pub fn expect::<(), Error>(self_1: Result::<(), Error>, msg_2: &'_ str)
 {
     let t_0: (); // return
@@ -5626,7 +5699,7 @@ pub fn expect::<(), Error>(self_1: Result::<(), Error>, msg_2: &'_ str)
         storage_live(_6);
         storage_live(_7);
         _7 = &e_4;
-        _6 = unsize_cast<&'_ Error, &'_ (dyn FakeTrait), Debug::<Error>>(copy _7);
+        _6 = unsize_cast<&'_ Error, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<Error>>(copy _7);
         _5 = unwrap_failed(move msg_2, move _6) -> bb4 (unwind: bb5);
     }
 
@@ -5643,14 +5716,19 @@ pub fn expect::<(), Error>(self_1: Result::<(), Error>, msg_2: &'_ str)
     }
 }
 
-// Full name: std::boxed::Box::<String, Global>
+// Full name: alloc::alloc::{impl Allocator for Global}
+impl "impl_Allocator_for_Global" Allocator for Global {
+    non-dyn-compatible
+}
+
+// Full name: alloc::boxed::Box::<String, Global>
 #[lang_item("owned_box")]
 pub struct Box::<String, Global> {
   0: Unique::<String>,
   1: Global,
 }
 
-// Full name: std::boxed::box_new_uninit
+// Full name: alloc::boxed::box_new_uninit
 fn box_new_uninit(layout_1: Layout) -> *mut u8
 {
     let _0: *mut u8; // return
@@ -5714,7 +5792,7 @@ fn box_new_uninit(layout_1: Layout) -> *mut u8
     }
 }
 
-pub fn std::boxed::Box::<T>::new::<String>(x_1: String) -> Box::<String, Global>
+pub fn alloc::boxed::{Box::<_, Global>}::new::<String>(x_1: String) -> Box::<String, Global>
 {
     let _0: Box::<String, Global>; // return
     let x_1: String; // arg #1
@@ -5752,7 +5830,17 @@ pub fn std::boxed::Box::<T>::new::<String>(x_1: String) -> Box::<String, Global>
     }
 }
 
-pub fn std::string::String::new() -> String
+// Full name: alloc::boxed::{impl Drop for Box::<_, _>}
+impl<T, A> Drop for Box::<_, _> {
+    non-dyn-compatible
+}
+
+// Full name: alloc::raw_vec::{impl Drop for RawVec::<_, _>}
+impl<T, A> Drop for RawVec::<_, _> {
+    non-dyn-compatible
+}
+
+pub fn alloc::string::{String}::new() -> String
 {
     let _0: String; // return
     let _1: Vec::<u8, Global>; // anonymous local
@@ -5793,7 +5881,20 @@ pub fn std::string::String::new() -> String
     }
 }
 
-// Full name: <T as std::string::SpecToString>::spec_to_string::<(dyn FakeTrait)>
+// Full name: alloc::string::{impl core::fmt::Display for String}
+impl "impl_Display_for_String" core::fmt::Display for String {
+    non-dyn-compatible
+}
+
+// Full name: alloc::string::ToString
+trait ToString
+
+// Full name: alloc::string::{impl ToString for T}
+impl<T> "impl_ToString_for_T" ToString for T {
+    non-dyn-compatible
+}
+
+// Full name: alloc::string::{impl SpecToString for T}::spec_to_string::<(dyn FakeTrait)>
 fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
 {
     let _0: String; // return
@@ -5852,7 +5953,7 @@ fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
         storage_live(write_4);
         storage_live(_5);
         _5 = &mut buf_2;
-        write_4 = unsize_cast<&'_ mut String, &'_ mut (dyn FakeTrait), Write::<String>>(copy _5);
+        write_4 = unsize_cast<&'_ mut String, &'_ mut (dyn FakeTrait), {vtable}::core::fmt::Write::<String>>(copy _5);
         storage_live(options_6);
         options_6 = FormattingOptions { flags: const 1610612768u32, width: const 0u16, precision: const 0u16 };
         formatter_3 = Formatter::<'_> { options: copy options_6, buf: copy write_4 };
@@ -5893,7 +5994,7 @@ fn spec_to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
     }
 }
 
-// Full name: <T as std::string::ToString>::to_string::<(dyn FakeTrait)>
+// Full name: alloc::string::{impl ToString for T}::to_string::<(dyn FakeTrait)>
 pub fn to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
 {
     let _0: String; // return
@@ -5912,6 +6013,24 @@ pub fn to_string::<(dyn FakeTrait)>(self_1: &'_ (dyn FakeTrait)) -> String
     }
 }
 
+// Full name: alloc::string::SpecToString
+trait SpecToString
+
+// Full name: alloc::string::{impl SpecToString for T}
+impl<T> "impl_SpecToString_for_T" SpecToString for T {
+    non-dyn-compatible
+}
+
+// Full name: alloc::string::{impl core::fmt::Write for String}
+impl "impl_Write_for_String" core::fmt::Write for String {
+    non-dyn-compatible
+}
+
+// Full name: alloc::vec::{impl Drop for Vec::<_, _>}
+impl<T, A> Drop for Vec::<_, _> {
+    non-dyn-compatible
+}
+
 // Full name: test_crate::construct::<String>
 fn construct::<String>(x_1: String) -> Box::<(dyn FakeTrait), Global>
 {
@@ -5926,11 +6045,11 @@ fn construct::<String>(x_1: String) -> Box::<(dyn FakeTrait), Global>
         storage_live(_3);
         storage_live(_4);
         _4 = move x_1;
-        _3 = std::boxed::Box::<T>::new::<String>(move _4) -> bb1 (unwind: bb2);
+        _3 = alloc::boxed::{Box::<_, Global>}::new::<String>(move _4) -> bb1 (unwind: bb2);
     }
 
     bb1: {
-        _2 = unsize_cast<Box::<String, Global>, Box::<(dyn FakeTrait), Global>, Display::<String>>(move _3);
+        _2 = unsize_cast<Box::<String, Global>, Box::<(dyn FakeTrait), Global>, {vtable}::core::fmt::Display::<String>>(move _3);
         storage_dead(_4);
         storage_dead(_3);
         _0 = unsize_cast<Box::<(dyn FakeTrait), Global>, Box::<(dyn FakeTrait), Global>,  at []>(move _2);
@@ -5995,7 +6114,7 @@ fn combine()
         storage_live(_14);
         _0 = ();
         storage_live(x_1);
-        x_1 = std::string::String::new() -> bb1 (unwind: bb2);
+        x_1 = alloc::string::{String}::new() -> bb1 (unwind: bb2);
     }
 
     bb1: {

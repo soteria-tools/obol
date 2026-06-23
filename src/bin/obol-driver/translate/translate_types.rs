@@ -173,6 +173,17 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             return Ok(ty.clone());
         }
 
+        // `rustc_public`'s `Ty::kind` `todo!()`-panics on alias (associated-type projection) types.
+        // They only appear in polymorphic name contexts we don't translate precisely, so detect them
+        // via the internal representation (which doesn't panic) and emit an error placeholder.
+        let internal_ty = rustc_public::rustc_internal::internal(self.t_ctx.tcx, mir_ty);
+        if matches!(internal_ty.kind(), rustc_ty::TyKind::Alias(..)) {
+            register_error!(self, span, "translate_ty: unsupported alias type {:?}", internal_ty);
+            let ty = TyKind::Error("unsupported alias type".to_string()).into_ty();
+            self.t_ctx.type_trans_cache.insert(mir_ty, ty.clone());
+            return Ok(ty);
+        }
+
         let kind = mir_ty.kind();
         let Some(ty) = kind.rigid() else {
             match kind {
@@ -183,13 +194,13 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                     kind,
                     std::backtrace::Backtrace::force_capture()
                 ),
-                ty::TyKind::Bound(..) => raise_error!(
-                    self,
-                    span,
-                    "translate_ty got a bound variable: {:?}\nTrace: {}",
-                    kind,
-                    std::backtrace::Backtrace::force_capture()
-                ),
+                ty::TyKind::Bound(db, bound_ty) => {
+                    let id = TypeVarId::from_raw(bound_ty.var as usize);
+                    let ty = TyKind::TypeVar(TypeDbVar::Bound(DeBruijnId::new(db), id)).into_ty();
+                    self.t_ctx.type_trans_cache.insert(mir_ty, ty.clone());
+                    register_error!(self, span, "translate_ty got a bound type var: {:?}", ty);
+                    return Ok(ty);
+                }
                 ty::TyKind::Param(ty) => {
                     let id = TypeVarId::from_raw(ty.index as usize);
                     let ty = TyKind::TypeVar(TypeDbVar::Free(id)).into_ty();

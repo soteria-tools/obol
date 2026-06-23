@@ -4,7 +4,7 @@
 // Full name: test_crate::S
 struct S {}
 
-// Full name: std::ptr::drop_glue::<S>
+// Full name: core::ptr::drop_glue::<S>
 #[lang_item("drop_glue")]
 fn drop_glue::<S>(_1: &'_ mut S)
 {
@@ -23,7 +23,9 @@ trait FakeTrait
 // Full name: anon_const_0
 const anon_const_0: S = S {  }
 
-// Full name: <test_crate::S as test_crate::MyTrait>::val
+trait test_crate::MyTrait
+
+// Full name: test_crate::{impl test_crate::MyTrait for S}::val
 pub fn val(self_1: &'_ S) -> u32
 {
     let _0: u32; // return
@@ -35,8 +37,7 @@ pub fn val(self_1: &'_ S) -> u32
     }
 }
 
-// Full name: {vtable}::test_crate::MyTrait::<S>
-fn MyTrait::<S>() -> *const ()
+fn {vtable}::test_crate::MyTrait::<S>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -64,11 +65,15 @@ fn MyTrait::<S>() -> *const ()
     }
 }
 
-// Full name: {vtable}::test_crate::MyTrait::<S>
-static MyTrait::<S>: *const () = MyTrait::<S>()
+static {vtable}::test_crate::MyTrait::<S>: *const () = {vtable}::test_crate::MyTrait::<S>()
+
+// Full name: test_crate::{impl test_crate::MyTrait for S}
+impl "impl_MyTrait_for_S" test_crate::MyTrait for S {
+    non-dyn-compatible
+}
 
 // Full name: test_crate::C
-const C: &'_ (dyn FakeTrait) = &anon_const_0 with_metadata(MyTrait::<S>)
+const C: &'_ (dyn FakeTrait) = &anon_const_0 with_metadata({vtable}::test_crate::MyTrait::<S>)
 
 // Full name: test_crate::get
 pub fn get() -> &'_ (dyn FakeTrait)

@@ -4,7 +4,7 @@
 // Full name: test_crate::NotCopy
 struct NotCopy {}
 
-// Full name: std::mem::drop::<NotCopy>
+// Full name: core::mem::drop::<NotCopy>
 pub fn drop::<NotCopy>(_x_1: NotCopy)
 {
     let _0: (); // return
@@ -19,16 +19,14 @@ pub fn drop::<NotCopy>(_x_1: NotCopy)
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::main::{closure#0}::closure
-struct closure {
+struct test_crate::main::closure::closure {
   upvar_0: NotCopy,
 }
 
-// Full name: test_crate::main::{closure#0}::<i32, extern "rust-call" fn((u8,)) -> u8, (NotCopy,)>
-fn {closure#0}::<i32, extern "rust-call" fn((u8,)) -> u8, (NotCopy,)>(_1: closure, spread_args_2: (u8,)) -> u8
+fn test_crate::main::closure::<i32, extern "rust-call" fn((u8,)) -> u8, (NotCopy,)>(_1: test_crate::main::closure::closure, spread_args_2: (u8,)) -> u8
 {
     let _0: u8; // return
-    let _1: closure; // arg #1
+    let _1: test_crate::main::closure::closure; // arg #1
     let spread_args_2: (u8,); // arg #2
     let x_3: u8; // local
     let _4: (); // anonymous local
@@ -62,12 +60,12 @@ fn {closure#0}::<i32, extern "rust-call" fn((u8,)) -> u8, (NotCopy,)>(_1: closur
     }
 }
 
-// Full name: test_crate::apply_to_zero_once::<closure>
-fn apply_to_zero_once::<closure>(f_1: closure) -> u8
+// Full name: test_crate::apply_to_zero_once::<test_crate::main::closure::closure>
+fn apply_to_zero_once::<test_crate::main::closure::closure>(f_1: test_crate::main::closure::closure) -> u8
 {
     let _0: u8; // return
-    let f_1: closure; // arg #1
-    let _2: closure; // anonymous local
+    let f_1: test_crate::main::closure::closure; // arg #1
+    let _2: test_crate::main::closure::closure; // anonymous local
     let _3: (u8,); // anonymous local
 
     bb0: {
@@ -75,7 +73,7 @@ fn apply_to_zero_once::<closure>(f_1: closure) -> u8
         _2 = move f_1;
         storage_live(_3);
         _3 = (const 0u8,);
-        _0 = {closure#0}::<i32, extern "rust-call" fn((u8,)) -> u8, (NotCopy,)>(move _2, move _3) -> bb1 (unwind: bb2);
+        _0 = test_crate::main::closure::<i32, extern "rust-call" fn((u8,)) -> u8, (NotCopy,)>(move _2, move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -95,7 +93,7 @@ fn main()
     let _0: (); // return
     let z_1: NotCopy; // local
     let _2: u8; // anonymous local
-    let _3: closure; // anonymous local
+    let _3: test_crate::main::closure::closure; // anonymous local
 
     bb0: {
         _0 = ();
@@ -103,8 +101,8 @@ fn main()
         z_1 = NotCopy {  };
         storage_live(_2);
         storage_live(_3);
-        _3 = closure { upvar_0: move z_1 };
-        _2 = apply_to_zero_once::<closure>(move _3) -> bb1 (unwind: bb2);
+        _3 = test_crate::main::closure::closure { upvar_0: move z_1 };
+        _2 = apply_to_zero_once::<test_crate::main::closure::closure>(move _3) -> bb1 (unwind: bb2);
     }
 
     bb1: {

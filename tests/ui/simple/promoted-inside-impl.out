@@ -7,7 +7,7 @@ trait FakeTrait
 // Full name: anon_const_0
 const anon_const_0: i32 = 0i32
 
-// Full name: test_crate::Foo::<F>::method::<fn(), u32>
+// Full name: test_crate::{Foo::<_>}::method::<fn(), u32>
 pub fn method::<fn(), u32>()
 {
     let _0: (); // return

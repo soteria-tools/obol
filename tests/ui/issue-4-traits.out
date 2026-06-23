@@ -1,36 +1,48 @@
 
 // Final ULLBC:
 
+trait core::fmt::Debug
+
+// Full name: core::array::TryFromSliceError
+pub struct TryFromSliceError {
+  0: (),
+}
+
+// Full name: core::array::{impl core::fmt::Debug for TryFromSliceError}
+impl "impl_Debug_for_TryFromSliceError" core::fmt::Debug for TryFromSliceError {
+    non-dyn-compatible
+}
+
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
   precision: u16,
 }
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::fmt::Formatter::<'a>::debug_tuple_field1_finish::<'_>
+// Full name: core::fmt::{Formatter::<'_>}::debug_tuple_field1_finish::<'_>
 pub fn debug_tuple_field1_finish::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ str, _3: &'_ (dyn FakeTrait)) -> Result::<(), Error>
 = <missing>
 
-// Full name: std::ptr::drop_glue::<&'_ ()>
+// Full name: core::ptr::drop_glue::<&'_ ()>
 #[lang_item("drop_glue")]
 fn drop_glue::<&'_ ()>(_1: &'_ mut &'_ ())
 {
@@ -43,11 +55,12 @@ fn drop_glue::<&'_ ()>(_1: &'_ mut &'_ ())
     }
 }
 
-// Full name: std::fmt::Formatter::<'a>::pad::<'_>
+// Full name: core::fmt::{Formatter::<'_>}::pad::<'_>
 pub fn pad::<'_>(_1: &'_ mut Formatter::<'_>, _2: &'_ str) -> Result::<(), Error>
 = <missing>
 
-pub fn <() as std::fmt::Debug>::fmt(self_1: &'_ (), f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl core::fmt::Debug for ()}::fmt
+pub fn impl_Debug_for_unit::fmt(self_1: &'_ (), f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ (); // arg #1
@@ -66,7 +79,8 @@ pub fn <() as std::fmt::Debug>::fmt(self_1: &'_ (), f_2: &'_ mut Formatter::<'_>
     }
 }
 
-pub fn <&T as std::fmt::Debug>::fmt::<'_, ()>(self_1: &'_ &'_ (), f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}::fmt::<'_, ()>
+pub fn {impl core::fmt::Debug for &'_ T}::fmt::<'_, ()>(self_1: &'_ &'_ (), f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ &'_ (); // arg #1
@@ -76,7 +90,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, ()>(self_1: &'_ &'_ (), f_2: &'_ mut F
     bb0: {
         storage_live(_3);
         _3 = copy (*self_1);
-        _0 = <() as std::fmt::Debug>::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
+        _0 = impl_Debug_for_unit::fmt(move _3, move f_2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -88,8 +102,7 @@ pub fn <&T as std::fmt::Debug>::fmt::<'_, ()>(self_1: &'_ &'_ (), f_2: &'_ mut F
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<&'_ ()>
-fn Debug::<&'_ ()>() -> *const ()
+fn {vtable}::core::fmt::Debug::<&'_ ()>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -109,7 +122,7 @@ fn Debug::<&'_ ()>() -> *const ()
         drop_1 = cast<drop_glue::<&'_ ()>, *const ()>(const drop_glue::<&'_ ()>);
         size_2 = transmute<usize, *const ()>(const 8usize);
         align_3 = transmute<usize, *const ()>(const 8usize);
-        <&() as std::fmt::Debug>::fmt_4 = cast<<&T as std::fmt::Debug>::fmt::<'_, ()>, *const ()>(const <&T as std::fmt::Debug>::fmt::<'_, ()>);
+        <&() as std::fmt::Debug>::fmt_4 = cast<{impl core::fmt::Debug for &'_ T}::fmt::<'_, ()>, *const ()>(const {impl core::fmt::Debug for &'_ T}::fmt::<'_, ()>);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <&() as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -117,15 +130,10 @@ fn Debug::<&'_ ()>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<&'_ ()>
-static Debug::<&'_ ()>: *const () = Debug::<&'_ ()>()
+static {vtable}::core::fmt::Debug::<&'_ ()>: *const () = {vtable}::core::fmt::Debug::<&'_ ()>()
 
-// Full name: std::array::TryFromSliceError
-pub struct TryFromSliceError {
-  0: (),
-}
-
-pub fn <std::array::TryFromSliceError as std::fmt::Debug>::fmt(self_1: &'_ TryFromSliceError, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
+// Full name: core::array::{impl core::fmt::Debug for TryFromSliceError}::fmt
+pub fn impl_Debug_for_TryFromSliceError::fmt(self_1: &'_ TryFromSliceError, f_2: &'_ mut Formatter::<'_>) -> Result::<(), Error>
 {
     let _0: Result::<(), Error>; // return
     let self_1: &'_ TryFromSliceError; // arg #1
@@ -140,7 +148,7 @@ pub fn <std::array::TryFromSliceError as std::fmt::Debug>::fmt(self_1: &'_ TryFr
         storage_live(_5);
         _5 = &((*self_1)).0;
         _4 = &_5;
-        _3 = unsize_cast<&'_ &'_ (), &'_ (dyn FakeTrait), Debug::<&'_ ()>>(copy _4);
+        _3 = unsize_cast<&'_ &'_ (), &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<&'_ ()>>(copy _4);
         _0 = debug_tuple_field1_finish::<'_>(move f_2, const "TryFromSliceError", move _3) -> bb1 (unwind: bb2);
     }
 
@@ -156,26 +164,34 @@ pub fn <std::array::TryFromSliceError as std::fmt::Debug>::fmt(self_1: &'_ TryFr
     }
 }
 
-// Full name: std::result::Result::<&'_ [u8; 4usize], TryFromSliceError>
+// Full name: core::convert::TryFrom
+trait TryFrom
+
+// Full name: core::array::{impl TryFrom<&'_ [T]> for [T; N]}
+impl<'_, _, T, const _ : type_error("const generic param type"), const _ : type_error("const generic param type"), const N : type_error("const generic param type")> "impl_TryFrom_for_array" TryFrom<&'_ [T]> for [T; N] {
+    non-dyn-compatible
+}
+
+// Full name: core::result::Result::<&'_ [u8; 4usize], TryFromSliceError>
 pub enum Result::<&'_ [u8; 4usize], TryFromSliceError> {
   Ok(0: &'_ [u8; 4usize]),
   Err(0: TryFromSliceError),
 }
 
-// Full name: std::result::Result::<[u8; 4usize], TryFromSliceError>
+// Full name: core::result::Result::<[u8; 4usize], TryFromSliceError>
 pub enum Result::<[u8; 4usize], TryFromSliceError> {
   Ok(0: [u8; 4usize]),
   Err(0: TryFromSliceError),
 }
 
-// Full name: std::option::Option::<&'_ [u8; 4usize]>
+// Full name: core::option::Option::<&'_ [u8; 4usize]>
 #[lang_item("Option")]
 pub enum Option::<&'_ [u8; 4usize]> {
   None,
   Some(0: &'_ [u8; 4usize]),
 }
 
-// Full name: std::array::<impl std::convert::TryFrom<&[T]> for [T; N]>::try_from::<'_, u8, 4usize>
+// Full name: core::array::{impl TryFrom<&'_ [T]> for [T; N]}::try_from::<'_, u8, 4usize>
 pub fn try_from::<'_, u8, 4usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4usize], TryFromSliceError>
 {
     let _0: Result::<[u8; 4usize], TryFromSliceError>; // return
@@ -263,7 +279,15 @@ pub fn try_from::<'_, u8, 4usize>(slice_1: &'_ [u8]) -> Result::<[u8; 4usize], T
     }
 }
 
-// Full name: <T as std::convert::TryInto<U>>::try_into::<&'_ [u8], [u8; 4usize]>
+// Full name: core::convert::TryInto
+trait TryInto
+
+// Full name: core::convert::{impl TryInto<U> for T}
+impl<T, U> "impl_TryInto_for_T" TryInto<U> for T {
+    non-dyn-compatible
+}
+
+// Full name: core::convert::{impl TryInto<U> for T}::try_into::<&'_ [u8], [u8; 4usize]>
 pub fn try_into::<&'_ [u8], [u8; 4usize]>(self_1: &'_ [u8]) -> Result::<[u8; 4usize], TryFromSliceError>
 {
     let _0: Result::<[u8; 4usize], TryFromSliceError>; // return
@@ -282,7 +306,13 @@ pub fn try_into::<&'_ [u8], [u8; 4usize]>(self_1: &'_ [u8]) -> Result::<[u8; 4us
     }
 }
 
-// Full name: std::ptr::drop_glue::<TryFromSliceError>
+// Full name: core::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn FakeTrait),
+}
+
+// Full name: core::ptr::drop_glue::<TryFromSliceError>
 #[lang_item("drop_glue")]
 fn drop_glue::<TryFromSliceError>(_1: &'_ mut TryFromSliceError)
 {
@@ -295,8 +325,7 @@ fn drop_glue::<TryFromSliceError>(_1: &'_ mut TryFromSliceError)
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<TryFromSliceError>
-fn Debug::<TryFromSliceError>() -> *const ()
+fn {vtable}::core::fmt::Debug::<TryFromSliceError>() -> *const ()
 {
     let vtable_0: *const (); // return
     let drop_1: *const (); // local
@@ -316,7 +345,7 @@ fn Debug::<TryFromSliceError>() -> *const ()
         drop_1 = cast<drop_glue::<TryFromSliceError>, *const ()>(const drop_glue::<TryFromSliceError>);
         size_2 = transmute<usize, *const ()>(const 0usize);
         align_3 = transmute<usize, *const ()>(const 1usize);
-        <std::array::TryFromSliceError as std::fmt::Debug>::fmt_4 = cast<<std::array::TryFromSliceError as std::fmt::Debug>::fmt, *const ()>(const <std::array::TryFromSliceError as std::fmt::Debug>::fmt);
+        <std::array::TryFromSliceError as std::fmt::Debug>::fmt_4 = cast<impl_Debug_for_TryFromSliceError::fmt, *const ()>(const impl_Debug_for_TryFromSliceError::fmt);
         entry_array_5 = [move drop_1, move size_2, move align_3, move <std::array::TryFromSliceError as std::fmt::Debug>::fmt_4];
         entry_array_ref_6 = &raw const entry_array_5;
         vtable_0 = cast<*const [*const (); 4usize], *const ()>(move entry_array_ref_6);
@@ -324,14 +353,23 @@ fn Debug::<TryFromSliceError>() -> *const ()
     }
 }
 
-// Full name: {vtable}::std::fmt::Debug::<TryFromSliceError>
-static Debug::<TryFromSliceError>: *const () = Debug::<TryFromSliceError>()
+static {vtable}::core::fmt::Debug::<TryFromSliceError>: *const () = {vtable}::core::fmt::Debug::<TryFromSliceError>()
 
-// Full name: std::result::unwrap_failed
+// Full name: core::fmt::{impl core::fmt::Debug for &'_ T}
+impl<'_, _, T> core::fmt::Debug for &'_ T {
+    non-dyn-compatible
+}
+
+// Full name: core::fmt::{impl core::fmt::Debug for ()}
+impl "impl_Debug_for_unit" core::fmt::Debug for () {
+    non-dyn-compatible
+}
+
+// Full name: core::result::unwrap_failed
 fn unwrap_failed(_1: &'_ str, _2: &'_ (dyn FakeTrait)) -> !
 = <missing>
 
-// Full name: std::result::Result::<T, E>::unwrap::<[u8; 4usize], TryFromSliceError>
+// Full name: core::result::{Result::<_, _>}::unwrap::<[u8; 4usize], TryFromSliceError>
 pub fn unwrap::<[u8; 4usize], TryFromSliceError>(self_1: Result::<[u8; 4usize], TryFromSliceError>) -> [u8; 4usize]
 {
     let t_0: [u8; 4usize]; // return
@@ -360,7 +398,7 @@ pub fn unwrap::<[u8; 4usize], TryFromSliceError>(self_1: Result::<[u8; 4usize], 
         storage_live(_5);
         storage_live(_6);
         _6 = &e_3;
-        _5 = unsize_cast<&'_ TryFromSliceError, &'_ (dyn FakeTrait), Debug::<TryFromSliceError>>(copy _6);
+        _5 = unsize_cast<&'_ TryFromSliceError, &'_ (dyn FakeTrait), {vtable}::core::fmt::Debug::<TryFromSliceError>>(copy _6);
         _4 = unwrap_failed(const "called `Result::unwrap()` on an `Err` value", move _5) -> bb4 (unwind: bb5);
     }
 

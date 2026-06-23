@@ -4,7 +4,7 @@
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::main::{closure#0}::closure
+// Full name: test_crate::main::closure::closure
 struct closure {}
 
 // Full name: test_crate::main

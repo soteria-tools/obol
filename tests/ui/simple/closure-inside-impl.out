@@ -4,10 +4,10 @@
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: test_crate::Foo::<F>::method::{closure#0}::closure
+// Full name: test_crate::{Foo::<_>}::method::closure::closure
 struct closure {}
 
-// Full name: test_crate::Foo::<F>::method::<(), ()>
+// Full name: test_crate::{Foo::<_>}::method::<(), ()>
 pub fn method::<(), ()>()
 {
     let _0: (); // return

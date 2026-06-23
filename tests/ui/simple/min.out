@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::cmp::impls::<impl std::cmp::PartialOrd for u64>::lt
+// Full name: core::cmp::impls::{impl PartialOrd<u64> for u64}::lt
 pub fn lt(self_1: &'_ u64, other_2: &'_ u64) -> bool
 {
     let _0: bool; // return
@@ -22,7 +22,7 @@ pub fn lt(self_1: &'_ u64, other_2: &'_ u64) -> bool
     }
 }
 
-// Full name: std::cmp::Ord::min::<u64>
+// Full name: core::cmp::Ord::min::<u64>
 pub fn min::<u64>(self_1: u64, other_2: u64) -> u64
 {
     let _0: u64; // return
@@ -76,6 +76,15 @@ pub fn min::<u64>(self_1: u64, other_2: u64) -> u64
     bb6: {
         unwind_continue;
     }
+}
+
+// Full name: core::cmp::PartialOrd
+#[lang_item("partial_ord")]
+trait PartialOrd
+
+// Full name: core::cmp::impls::{impl PartialOrd<u64> for u64}
+impl "impl_PartialOrd_u64_for_u64" PartialOrd<u64> for u64 {
+    non-dyn-compatible
 }
 
 // Full name: FakeTrait

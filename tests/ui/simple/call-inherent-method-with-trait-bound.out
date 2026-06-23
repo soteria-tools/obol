@@ -9,7 +9,7 @@ pub struct HashMap::<()> {
   0: (),
 }
 
-// Full name: test_crate::HashMap::<S>::get::<(), ()>
+// Full name: test_crate::{HashMap::<_>}::get::<(), ()>
 pub fn get::<(), ()>(_x_1: HashMap::<()>, _k_2: ())
 {
     let _0: (); // return

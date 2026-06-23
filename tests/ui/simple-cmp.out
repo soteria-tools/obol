@@ -1,7 +1,7 @@
 
 // Final ULLBC:
 
-// Full name: std::cmp::Ordering
+// Full name: core::cmp::Ordering
 #[lang_item("Ordering")]
 pub enum Ordering {
   Less,
@@ -9,7 +9,15 @@ pub enum Ordering {
   Greater,
 }
 
-// Full name: std::cmp::impls::<impl std::cmp::Ord for i32>::cmp
+// Full name: core::cmp::Ord
+trait Ord
+
+// Full name: core::cmp::impls::{impl Ord for i32}
+impl "impl_Ord_for_i32" Ord for i32 {
+    non-dyn-compatible
+}
+
+// Full name: core::cmp::impls::{impl Ord for i32}::cmp
 pub fn cmp(self_1: &'_ i32, other_2: &'_ i32) -> Ordering
 {
     let _0: Ordering; // return

@@ -12,6 +12,7 @@ use super::translate_ctx::{ItemTransCtx, TranslateCtx};
 use charon_lib::{ast::*, register_error};
 use itertools::Itertools;
 use log::trace;
+use rustc_hir::definitions::{DefPathData, DisambiguatedDefPathData};
 use rustc_public::{CrateDef, mir, rustc_internal, ty};
 use rustc_public_bridge::IndexedVal;
 use rustc_span::RemapPathScopeComponents;
@@ -212,18 +213,74 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
         }
         trace!("Computing name for `{def_id:?}`");
 
-        // let parent_name = if let Some(parent) = &def_id.parent {
-        //     self.def_id_to_name(parent)?
-        // } else {
-        //     Name { name: Vec::new() }
-        // };
-        let mut name = Name { name: Vec::new() };
-        let name_str = def_id.name();
-        for elem in name_str.split("::") {
-            // We use `Ident` for all names, even if they are not identifiers.
-            // This is because we don't have a `PathElem` for these.
-            name.name
-                .push(PathElem::Ident(elem.to_string(), Disambiguator::ZERO));
+        let parent_name = if let Some(parent) = def_id.parent() {
+            self.def_id_to_name(parent)?
+        } else {
+            Name { name: Vec::new() }
+        };
+        let mut name = parent_name;
+
+        let internal = rustc_public::rustc_internal::internal(self.tcx, def_id);
+        let path = self.tcx.def_path(internal);
+
+        let last = path.data.last().unwrap_or(&DisambiguatedDefPathData {
+            data: DefPathData::CrateRoot,
+            disambiguator: 0,
+        });
+
+        let disambiguator = Disambiguator::from_raw(last.disambiguator as usize);
+        let extra = match last.data {
+            DefPathData::CrateRoot => {
+                let krate = self.tcx.crate_name(internal.krate);
+                Some(PathElem::Ident(krate.to_string(), disambiguator))
+            }
+            DefPathData::ValueNs(sym) | DefPathData::TypeNs(sym) | DefPathData::MacroNs(sym) => {
+                Some(PathElem::Ident(sym.to_string(), disambiguator))
+            }
+            DefPathData::Closure => Some(PathElem::Ident("closure".to_string(), disambiguator)),
+            DefPathData::Use => Some(PathElem::Ident("{use}".to_string(), disambiguator)),
+            DefPathData::AnonConst => Some(PathElem::Ident("{const}".to_string(), disambiguator)),
+
+            DefPathData::Impl => {
+                let kind = self.tcx.def_kind(internal);
+                let rustc_hir::def::DefKind::Impl { of_trait } = kind else {
+                    unreachable!("Non-impl for DefPathData::Impl?")
+                };
+                let impl_elem = if of_trait {
+                    // Register a (barebones) trait impl for this impl block and refer to it by id.
+                    let impl_id = self
+                        .register_and_enqueue_id(&None, TransItemSource::TraitImpl(def_id))
+                        .as_trait_impl()
+                        .copied()
+                        .unwrap();
+                    ImplElem::Trait(impl_id)
+                } else {
+                    let ty = self.tcx.type_of(internal).skip_binder();
+                    let ty = rustc_public::rustc_internal::stable(ty);
+                    let mut bt_tcx = ItemTransCtx::new(None, self);
+                    let ty = bt_tcx.translate_ty(Span::dummy(), ty)?;
+                    // Include the impl block's generic params so type vars in `ty` render by name.
+                    let params = bt_tcx.translate_def_generic_params(def_id);
+                    ImplElem::Ty(Box::new(Binder {
+                        kind: BinderKind::InherentImplBlock,
+                        params,
+                        skip_binder: ty,
+                    }))
+                };
+                Some(PathElem::Impl(impl_elem))
+            }
+            DefPathData::OpaqueTy | DefPathData::ForeignMod | DefPathData::Ctor => None,
+            DefPathData::LifetimeNs(_)
+            | DefPathData::GlobalAsm
+            | DefPathData::OpaqueLifetime(_)
+            | DefPathData::AnonAssocTy(_)
+            | DefPathData::NestedStatic
+            | DefPathData::SyntheticCoroutineBody => {
+                unreachable!("unexpected def path data")
+            }
+        };
+        if let Some(extra) = extra {
+            name.name.push(extra);
         }
 
         trace!("Computed name for `{def_id:?}`: `{name:?}`");
@@ -247,9 +304,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                         Disambiguator::ZERO,
                     )],
                 },
-                _ => Name {
-                    name: vec![PathElem::Ident("todo_name".into(), Disambiguator::ZERO)],
-                },
+                _ => unreachable!("Item source without def_id: {src:?}"),
             }
         };
 
@@ -276,13 +331,23 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                     break 'add_generics;
                 }
                 let span = self.translate_span_from_smir(&span);
+                // A real monomorphization has concrete args and an empty binder (charon's marker for
+                // "monomorphized"). A polymorphic instantiation (only used for naming) has free type
+                // vars in its args, so bind the item's params to name them instead of `missing(...)`.
+                let polymorphic = self.generic_args_have_params(&gargs);
+                let def_id = src.as_def_id().unwrap();
                 let mut item_ctx = ItemTransCtx::new(None, self);
                 let generics = item_ctx.translate_generic_args(span, &gargs)?;
-                name.name
-                    .push(PathElem::Instantiated(Box::new(Binder::empty(
-                        BinderKind::Other,
-                        generics,
-                    ))));
+                let params = if polymorphic {
+                    item_ctx.translate_def_generic_params(def_id)
+                } else {
+                    GenericParams::empty()
+                };
+                name.name.push(PathElem::Instantiated(Box::new(Binder {
+                    kind: BinderKind::Other,
+                    params,
+                    skip_binder: generics,
+                })));
             }
             TransItemSource::VTable(ty, tref) | TransItemSource::VTableInit(ty, tref) => {
                 let mut item_ctx = ItemTransCtx::new(None, self);
@@ -380,12 +445,20 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 | TransItemSource::ClosureAsFn(..)
                 | TransItemSource::VTable(..)
                 | TransItemSource::VTableInit(..)
+                // Impl blocks have no meaningful attributes and `tcx.visibility` ICEs on external ones.
+                | TransItemSource::TraitImpl(..)
         ) || (matches!(src, TransItemSource::Fun(..)) && self.tcx.is_closure_like(internal))
         {
             return AttrInfo::default();
         }
 
-        let public = self.tcx.visibility(internal).is_public();
+        // `tcx.visibility` ICEs on some external trait declarations; skip it but keep their
+        // attributes and lang items.
+        let public = if matches!(src, TransItemSource::TraitDecl(..)) {
+            false
+        } else {
+            self.tcx.visibility(internal).is_public()
+        };
         let attributes = self.attributes_for(internal);
 
         let mut attributes: Vec<Attribute> = attributes
@@ -452,9 +525,7 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             TransItemSource::ForeignType(def) => Some(def.span()),
             TransItemSource::Fun(instance) => Some(instance.def.span()),
             TransItemSource::Static(stt) => Some(stt.span()),
-            TransItemSource::NamedConst(def, _) => {
-                Some(def.span())
-            }
+            TransItemSource::NamedConst(def, _) => Some(def.span()),
             TransItemSource::Global(id, ..) => {
                 let glob_alloc: mir::alloc::GlobalAlloc = id.clone().into();
                 match glob_alloc {
@@ -466,6 +537,10 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
             TransItemSource::Type(def, _) => Some(def.span()),
             TransItemSource::VTable(_, tdef) | TransItemSource::VTableInit(_, tdef) => {
                 tdef.as_ref().map(|t| t.0.span())
+            }
+            TransItemSource::TraitDecl(did) | TransItemSource::TraitImpl(did) => {
+                let internal = rustc_public::rustc_internal::internal(self.tcx, *did);
+                Some(rustc_public::rustc_internal::stable(self.tcx.def_span(internal)))
             }
         };
         let span = match span {

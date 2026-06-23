@@ -1,10 +1,10 @@
 
 // Final ULLBC:
 
-// Full name: std::fmt::Error
+// Full name: core::fmt::Error
 pub struct Error {}
 
-// Full name: std::fmt::FormattingOptions
+// Full name: core::fmt::FormattingOptions
 pub struct FormattingOptions {
   flags: u32,
   width: u16,
@@ -14,24 +14,24 @@ pub struct FormattingOptions {
 // Full name: FakeTrait
 trait FakeTrait
 
-// Full name: std::fmt::Formatter::<'_>
+// Full name: core::fmt::Formatter::<'_>
 pub struct Formatter::<'_> {
   options: FormattingOptions,
   buf: &'_ mut (dyn FakeTrait),
 }
 
-// Full name: std::result::Result::<(), Error>
+// Full name: core::result::Result::<(), Error>
 pub enum Result::<(), Error> {
   Ok(0: ()),
   Err(0: Error),
 }
 
-// Full name: std::ptr::NonNull::<()>
+// Full name: core::ptr::non_null::NonNull::<()>
 pub struct NonNull::<()> {
   pointer: *const () is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ ()>
+// Full name: core::marker::PhantomData::<&'_ ()>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ ()> {}
 
@@ -47,24 +47,31 @@ pub struct Argument::<'_> {
   ty: ArgumentType::<'_>,
 }
 
-// Full name: std::ptr::NonNull::<Argument::<'_>>
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
 pub struct NonNull::<Argument::<'_>> {
   pointer: *const Argument::<'_> is !null,
 }
 
-// Full name: std::ptr::NonNull::<u8>
+// Full name: core::ptr::non_null::NonNull::<u8>
 pub struct NonNull::<u8> {
   pointer: *const u8 is !null,
 }
 
-// Full name: std::fmt::Arguments::<'_>
+// Full name: core::fmt::Arguments::<'_>
 #[lang_item("format_arguments")]
 pub struct Arguments::<'_> {
   template: NonNull::<u8>,
   args: NonNull::<Argument::<'_>>,
 }
 
-// Full name: std::fmt::Arguments::<'a>::from_str::<'_>
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::fmt::{Arguments::<'_>}::from_str::<'_>
 pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
 {
     let _0: Arguments::<'_>; // return
@@ -108,20 +115,20 @@ pub fn from_str::<'_>(s_1: &'_ str) -> Arguments::<'_>
     }
 }
 
-// Full name: std::intrinsics::abort
+// Full name: core::intrinsics::abort
 pub fn abort() -> !
 = <intrinsic:abort>
 
-// Full name: std::ptr::NonNull::<str>
+// Full name: core::ptr::non_null::NonNull::<str>
 pub struct NonNull::<str> {
   pointer: *const str is !null,
 }
 
-// Full name: std::marker::PhantomData::<&'_ str>
+// Full name: core::marker::PhantomData::<&'_ str>
 #[lang_item("phantom_data")]
 pub struct PhantomData::<&'_ str> {}
 
-// Full name: std::panic::Location::<'_>
+// Full name: core::panic::location::Location::<'_>
 #[lang_item("panic_location")]
 pub struct Location::<'_> {
   filename: NonNull::<str>,
@@ -130,11 +137,20 @@ pub struct Location::<'_> {
   _filename: PhantomData::<&'_ str>,
 }
 
-// Full name: std::intrinsics::caller_location
+// Full name: core::intrinsics::caller_location
 pub fn caller_location() -> &'_ Location::<'_>
 = <intrinsic:caller_location>
 
-// Full name: std::panic::Location::<'a>::caller::<'_>
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
 pub fn caller::<'_>() -> &'_ Location::<'_>
 {
     let _0: &'_ Location::<'_>; // return
@@ -161,7 +177,16 @@ pub struct PanicInfo::<'_> {
   force_no_backtrace: bool,
 }
 
-// Full name: core::panic::panic_info::PanicInfo::<'a>::new::<'_>
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>
 fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
 {
     let _0: PanicInfo::<'_>; // return
@@ -176,11 +201,11 @@ fn new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can
     }
 }
 
-// Full name: std::rt::panic_fmt::panic_impl
+// Full name: core::panicking::panic_fmt::panic_impl
 fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
 = <extern:panic_impl>
 
-// Full name: std::rt::panic_fmt
+// Full name: core::panicking::panic_fmt
 #[lang_item("panic_fmt")]
 pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
 {
@@ -297,6 +322,9 @@ pub fn panic(expr_1: &'_ str) -> !
     }
 }
 
+// Full name: test_crate::BoolTrait
+trait BoolTrait
+
 // Full name: test_crate::BoolTrait::ret_true::<bool>
 pub fn ret_true::<bool>(self_1: &'_ bool) -> bool
 {
@@ -309,7 +337,12 @@ pub fn ret_true::<bool>(self_1: &'_ bool) -> bool
     }
 }
 
-// Full name: <bool as test_crate::BoolTrait>::get_bool
+// Full name: test_crate::{impl BoolTrait for bool}
+impl "impl_BoolTrait_for_bool" BoolTrait for bool {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl BoolTrait for bool}::get_bool
 pub fn get_bool(self_1: &'_ bool) -> bool
 {
     let _0: bool; // return
@@ -373,7 +406,16 @@ pub fn test_bool_trait_bool(x_1: bool) -> bool
     }
 }
 
-pub fn <u64 as test_crate::ToU64>::to_u64(self_1: u64) -> u64
+// Full name: test_crate::ToU64
+trait ToU64
+
+// Full name: test_crate::{impl ToU64 for u64}
+impl "impl_ToU64_for_u64" ToU64 for u64 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl ToU64 for u64}::to_u64
+pub fn impl_ToU64_for_u64::to_u64(self_1: u64) -> u64
 {
     let _0: u64; // return
     let self_1: u64; // arg #1
@@ -394,7 +436,7 @@ pub fn h0(x_1: u64) -> u64
     bb0: {
         storage_live(_2);
         _2 = copy x_1;
-        _0 = <u64 as test_crate::ToU64>::to_u64(move _2) -> bb1 (unwind: bb2);
+        _0 = impl_ToU64_for_u64::to_u64(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -417,7 +459,13 @@ pub struct Wrapper::<(bool, &'_ ())> {
   x: (bool, &'_ ()),
 }
 
-pub fn <test_crate::Wrapper<T> as test_crate::ToU64>::to_u64::<u64>(self_1: Wrapper::<u64>) -> u64
+// Full name: test_crate::{impl ToU64 for Wrapper::<_>}
+impl<T> ToU64 for Wrapper::<_> {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl ToU64 for Wrapper::<_>}::to_u64::<u64>
+pub fn {impl ToU64 for Wrapper::<_>}::to_u64::<u64>(self_1: Wrapper::<u64>) -> u64
 {
     let _0: u64; // return
     let self_1: Wrapper::<u64>; // arg #1
@@ -426,7 +474,7 @@ pub fn <test_crate::Wrapper<T> as test_crate::ToU64>::to_u64::<u64>(self_1: Wrap
     bb0: {
         storage_live(_2);
         _2 = move (self_1).x;
-        _0 = <u64 as test_crate::ToU64>::to_u64(move _2) -> bb1 (unwind: bb2);
+        _0 = impl_ToU64_for_u64::to_u64(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -449,7 +497,7 @@ pub fn h1(x_1: Wrapper::<u64>) -> u64
     bb0: {
         storage_live(_2);
         _2 = move x_1;
-        _0 = <test_crate::Wrapper<T> as test_crate::ToU64>::to_u64::<u64>(move _2) -> bb1 (unwind: bb2);
+        _0 = {impl ToU64 for Wrapper::<_>}::to_u64::<u64>(move _2) -> bb1 (unwind: bb2);
     }
 
     bb1: {
@@ -462,7 +510,15 @@ pub fn h1(x_1: Wrapper::<u64>) -> u64
     }
 }
 
-// Full name: <u64 as test_crate::ToType<bool>>::to_type
+// Full name: test_crate::ToType
+trait ToType
+
+// Full name: test_crate::{impl ToType<bool> for u64}
+impl "impl_ToType_bool_for_u64" ToType<bool> for u64 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl ToType<bool> for u64}::to_type
 pub fn to_type(self_1: u64) -> bool
 {
     let _0: bool; // return
@@ -478,12 +534,20 @@ pub fn to_type(self_1: u64) -> bool
     }
 }
 
-// Full name: test_crate::TestType<T>::test::TestType1
+// Full name: test_crate::{TestType::<_>}::test::TestType1
 struct TestType1 {
   0: u64,
 }
 
-// Full name: <test_crate::TestType<T>::test::TestType1 as test_crate::TestType<T>::test::TestTrait>::test
+// Full name: test_crate::{TestType::<_>}::test::TestTrait
+trait TestTrait
+
+// Full name: test_crate::{TestType::<_>}::test::{impl TestTrait for TestType1}
+impl "impl_TestTrait_for_TestType1" TestTrait for TestType1 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{TestType::<_>}::test::{impl TestTrait for TestType1}::test
 fn test(self_1: &'_ TestType1) -> bool
 {
     let _0: bool; // return
@@ -499,7 +563,15 @@ fn test(self_1: &'_ TestType1) -> bool
     }
 }
 
-// Full name: <bool as test_crate::WithConstTy<32>>::f
+// Full name: test_crate::WithConstTy
+trait WithConstTy
+
+// Full name: test_crate::{impl WithConstTy<32usize> for bool}
+impl "impl_WithConstTy_for_bool" WithConstTy<32usize> for bool {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl WithConstTy<32usize> for bool}::f
 pub fn f(_1: &'_ mut u64, _2: &'_ [u8; 32usize])
 {
     let _0: (); // return
@@ -513,7 +585,15 @@ pub fn f(_1: &'_ mut u64, _2: &'_ [u8; 32usize])
     }
 }
 
-// Full name: <u32 as test_crate::ChildTrait2>::convert
+// Full name: test_crate::ChildTrait2
+trait ChildTrait2
+
+// Full name: test_crate::{impl ChildTrait2 for u32}
+impl "impl_ChildTrait2_for_u32" ChildTrait2 for u32 {
+    non-dyn-compatible
+}
+
+// Full name: test_crate::{impl ChildTrait2 for u32}::convert
 pub fn convert(x_1: u32) -> u32
 {
     let _0: u32; // return

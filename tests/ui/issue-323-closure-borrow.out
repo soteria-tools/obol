@@ -7,7 +7,7 @@ trait FakeTrait
 // Full name: test_crate::Rng
 struct Rng {}
 
-// Full name: test_crate::Rng::next_u64
+// Full name: test_crate::{Rng}::next_u64
 fn next_u64(self_1: &'_ mut Rng)
 {
     let _0: (); // return
@@ -20,7 +20,7 @@ fn next_u64(self_1: &'_ mut Rng)
     }
 }
 
-// Full name: test_crate::new::{closure#0}::closure
+// Full name: test_crate::new::closure::closure
 struct closure {
   upvar_0: &'_ mut Rng,
 }
