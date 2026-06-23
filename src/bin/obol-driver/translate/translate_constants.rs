@@ -6,6 +6,7 @@ extern crate rustc_public_bridge;
 
 use charon_lib::{ast::*, raise_error, register_error};
 use itertools::Itertools;
+use log::trace;
 use rustc_apfloat::{Float, ieee};
 use rustc_middle::mir::interpret::PointerArithmetic;
 use rustc_public::{abi, mir, ty};
@@ -595,7 +596,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                         ConstantExprKind::FnPtr(fn_ptr)
                     }
                     _ => {
-                        println!("Gave up for raw memory of fndef with alloc {glob_alloc:?}");
+                        trace!("Gave up for raw memory of fndef with alloc {glob_alloc:?}");
                         ConstantExprKind::RawMemory(self.as_charon_bytes(span, alloc, offset, size))
                     }
                 }
@@ -652,7 +653,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             | TyKind::TraitType(..)
             | TyKind::FnDef(..)
             | TyKind::PtrMetadata(..) => {
-                println!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
+                trace!("Gave up for raw memory of type {ty:?} with alloc {alloc:?}");
                 ConstantExprKind::RawMemory(self.as_charon_bytes(span, alloc, offset, size))
             }
         };
@@ -707,7 +708,7 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
                             ty::AdtKind::Struct => None,
                             ty::AdtKind::Enum => {
                                 let abi::VariantsShape::Single { index } = layout.variants else {
-                                    println!(
+                                    trace!(
                                         "Unexpected layout for ZST enum\n- Layout: {layout:?}\n- Ty: {rty:?}"
                                     );
                                     return Ok(ConstantExpr {

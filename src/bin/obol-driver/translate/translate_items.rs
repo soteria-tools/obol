@@ -56,13 +56,13 @@ impl<'tcx, 'ctx> TranslateCtx<'tcx> {
                 Ok(Ok(())) => return,
                 // Translation error
                 Ok(Err(msg)) => {
-                    println!("Item {name} caused errors; ignoring. {msg:?}");
+                    trace!("Item {name} caused errors; ignoring. {msg:?}");
                     sanitize_name(&mut ctx);
                     register_error!(ctx, span, "Item `{name}` caused errors; ignoring.")
                 }
                 // Panic
                 Err(msg) => {
-                    println!("Item {name} caused errors; ignoring. {msg:?}");
+                    trace!("Item {name} caused errors; ignoring. {msg:?}");
                     sanitize_name(&mut ctx);
                     register_error!(ctx, span, "Thread panicked when extracting item `{name}`.")
                 }

@@ -306,7 +306,7 @@ impl BodyTransCtx<'_, '_, '_> {
             Ok(Ok(body)) => body,
             // Translation error
             Ok(Err(e)) => {
-                println!(
+                trace!(
                     "Thread errored when extracting body of {}: {e:?}",
                     instance.name()
                 );
@@ -468,7 +468,7 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
         let tcx = self.t_ctx.tcx;
 
         let Some((src_ty, tgt_ty)) = self.deref_middle_tys(src_ty, tgt_ty) else {
-            println!("Couldn't deref middle for {src_ty:?} => {tgt_ty:?}");
+            trace!("Couldn't deref middle for {src_ty:?} => {tgt_ty:?}");
             return Ok(UnsizingMetadata::Unknown);
         };
 
@@ -525,7 +525,7 @@ impl<'tcx> BlockTransCtx<'tcx, '_, '_, '_> {
                 ))
             }
             _ => {
-                println!("Unknown unsize for ({src_ty:?}) => ({tgt_ty:?})");
+                trace!("Unknown unsize for ({src_ty:?}) => ({tgt_ty:?})");
                 Ok(UnsizingMetadata::Unknown)
             }
         }

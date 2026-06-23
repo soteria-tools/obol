@@ -177,6 +177,19 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
         // try to normalize the alias away. In monomorphic code this resolves to a concrete type,
         // and actual polymorphic aliases only occur in names so we can just error.
         let internal_ty = rustc_public::rustc_internal::internal(self.t_ctx.tcx, mir_ty);
+        // `rustc_public`'s `Ty::kind` `todo!()`-panics on coroutine-closure types (produced by
+        // `async` closures). Detect them on the internal type (whose `kind` never panics) and
+        // error gracefully, just like we already do for plain coroutine types.
+        if matches!(internal_ty.kind(), rustc_ty::TyKind::CoroutineClosure(..)) {
+            register_error!(
+                self,
+                span,
+                "Coroutine-closure types (async closures) are not supported yet"
+            );
+            let ty = TyKind::Error("unsupported coroutine-closure type".to_string()).into_ty();
+            self.t_ctx.type_trans_cache.insert(mir_ty, ty.clone());
+            return Ok(ty);
+        }
         if matches!(internal_ty.kind(), rustc_ty::TyKind::Alias(..)) {
             let typing_env = rustc_middle::ty::TypingEnv::fully_monomorphized();
             let normalized = self
