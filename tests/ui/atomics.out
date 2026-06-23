@@ -1,0 +1,1278 @@
+
+// Final ULLBC:
+
+// Full name: core::sync::atomic::private::Align8::<usize>
+pub struct Align8::<usize> {
+  0: usize,
+}
+
+// Full name: core::cell::UnsafeCell::<Align8::<usize>>
+#[lang_item("unsafe_cell")]
+pub struct UnsafeCell::<Align8::<usize>> {
+  value: Align8::<usize>,
+}
+
+// Full name: core::fmt::Error
+pub struct Error {}
+
+// Full name: core::fmt::FormattingOptions
+pub struct FormattingOptions {
+  flags: u32,
+  width: u16,
+  precision: u16,
+}
+
+// Full name: FakeTrait
+trait FakeTrait
+
+// Full name: core::fmt::Formatter::<'_>
+pub struct Formatter::<'_> {
+  options: FormattingOptions,
+  buf: &'_ mut (dyn FakeTrait),
+}
+
+// Full name: core::result::Result::<(), Error>
+pub enum Result::<(), Error> {
+  Ok(0: ()),
+  Err(0: Error),
+}
+
+// Full name: core::ptr::non_null::NonNull::<()>
+pub struct NonNull::<()> {
+  pointer: *const () is !null,
+}
+
+// Full name: core::marker::PhantomData::<&'_ ()>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<&'_ ()> {}
+
+// Full name: core::fmt::rt::ArgumentType::<'_>
+enum ArgumentType::<'_> {
+  Placeholder(value: NonNull::<()>, formatter: unsafe fn(NonNull::<()>, &'_ mut Formatter::<'_>) -> Result::<(), Error>, _lifetime: PhantomData::<&'_ ()>),
+  Count(0: u16),
+}
+
+// Full name: core::fmt::rt::Argument::<'_>
+#[lang_item("format_argument")]
+pub struct Argument::<'_> {
+  ty: ArgumentType::<'_>,
+}
+
+// Full name: core::ptr::non_null::NonNull::<Argument::<'_>>
+pub struct NonNull::<Argument::<'_>> {
+  pointer: *const Argument::<'_> is !null,
+}
+
+// Full name: core::ptr::non_null::NonNull::<u8>
+pub struct NonNull::<u8> {
+  pointer: *const u8 is !null,
+}
+
+// Full name: core::fmt::Arguments::<'_>
+#[lang_item("format_arguments")]
+pub struct Arguments::<'_> {
+  template: NonNull::<u8>,
+  args: NonNull::<Argument::<'_>>,
+}
+
+// Full name: core::intrinsics::AtomicOrdering
+pub enum AtomicOrdering {
+  Relaxed,
+  Release,
+  Acquire,
+  AcqRel,
+  SeqCst,
+}
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::Relaxed {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::Relaxed {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::Acquire {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::Acquire {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::SeqCst {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::SeqCst {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::Relaxed {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::Relaxed {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::Acquire {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::Acquire {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::SeqCst {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::SeqCst {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::Relaxed {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::Relaxed {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::Acquire {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::Acquire {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::SeqCst {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::SeqCst {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::Relaxed {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::Relaxed {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::Acquire {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::Acquire {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::SeqCst {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::SeqCst {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::Relaxed {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::Relaxed {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::Acquire {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::Acquire {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+// Full name: core::intrinsics::atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::SeqCst {  }>
+pub fn atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::SeqCst {  }>(dst_1: *mut usize, old_2: usize, src_3: usize) -> (usize, bool)
+= <intrinsic:atomic_cxchg>
+
+pub fn core::intrinsics::atomic_load::<usize, AtomicOrdering::Relaxed {  }>(src_1: *const usize) -> usize
+= <intrinsic:atomic_load>
+
+pub fn core::intrinsics::atomic_load::<usize, AtomicOrdering::Acquire {  }>(src_1: *const usize) -> usize
+= <intrinsic:atomic_load>
+
+pub fn core::intrinsics::atomic_load::<usize, AtomicOrdering::SeqCst {  }>(src_1: *const usize) -> usize
+= <intrinsic:atomic_load>
+
+pub fn core::intrinsics::atomic_store::<usize, AtomicOrdering::Relaxed {  }>(dst_1: *mut usize, val_2: usize)
+= <intrinsic:atomic_store>
+
+pub fn core::intrinsics::atomic_store::<usize, AtomicOrdering::Release {  }>(dst_1: *mut usize, val_2: usize)
+= <intrinsic:atomic_store>
+
+pub fn core::intrinsics::atomic_store::<usize, AtomicOrdering::SeqCst {  }>(dst_1: *mut usize, val_2: usize)
+= <intrinsic:atomic_store>
+
+// Full name: core::intrinsics::atomic_xadd::<usize, usize, AtomicOrdering::Relaxed {  }>
+pub fn atomic_xadd::<usize, usize, AtomicOrdering::Relaxed {  }>(dst_1: *mut usize, src_2: usize) -> usize
+= <intrinsic:atomic_xadd>
+
+// Full name: core::intrinsics::atomic_xadd::<usize, usize, AtomicOrdering::Release {  }>
+pub fn atomic_xadd::<usize, usize, AtomicOrdering::Release {  }>(dst_1: *mut usize, src_2: usize) -> usize
+= <intrinsic:atomic_xadd>
+
+// Full name: core::intrinsics::atomic_xadd::<usize, usize, AtomicOrdering::Acquire {  }>
+pub fn atomic_xadd::<usize, usize, AtomicOrdering::Acquire {  }>(dst_1: *mut usize, src_2: usize) -> usize
+= <intrinsic:atomic_xadd>
+
+// Full name: core::intrinsics::atomic_xadd::<usize, usize, AtomicOrdering::AcqRel {  }>
+pub fn atomic_xadd::<usize, usize, AtomicOrdering::AcqRel {  }>(dst_1: *mut usize, src_2: usize) -> usize
+= <intrinsic:atomic_xadd>
+
+// Full name: core::intrinsics::atomic_xadd::<usize, usize, AtomicOrdering::SeqCst {  }>
+pub fn atomic_xadd::<usize, usize, AtomicOrdering::SeqCst {  }>(dst_1: *mut usize, src_2: usize) -> usize
+= <intrinsic:atomic_xadd>
+
+// Full name: core::intrinsics::abort
+pub fn abort() -> !
+= <intrinsic:abort>
+
+// Full name: core::ptr::non_null::NonNull::<str>
+pub struct NonNull::<str> {
+  pointer: *const str is !null,
+}
+
+// Full name: core::marker::PhantomData::<&'_ str>
+#[lang_item("phantom_data")]
+pub struct PhantomData::<&'_ str> {}
+
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::intrinsics::caller_location
+pub fn caller_location() -> &'_ Location::<'_>
+= <intrinsic:caller_location>
+
+// Full name: core::panic::location::Location::<'_>
+#[lang_item("panic_location")]
+pub struct Location::<'_> {
+  filename: NonNull::<str>,
+  line: u32,
+  col: u32,
+  _filename: PhantomData::<&'_ str>,
+}
+
+// Full name: core::panic::location::{Location::<'_>}::caller::<'_>
+pub fn caller::<'_>() -> &'_ Location::<'_>
+{
+    let _0: &'_ Location::<'_>; // return
+
+    bb0: {
+        _0 = caller_location() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        return;
+    }
+
+    bb2: {
+        undefined_behavior;
+    }
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+// Full name: core::panic::panic_info::PanicInfo::<'_>
+#[lang_item("panic_info")]
+pub struct PanicInfo::<'_> {
+  message: &'_ Arguments::<'_>,
+  location: &'_ Location::<'_>,
+  can_unwind: bool,
+  force_no_backtrace: bool,
+}
+
+fn core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(message_1: &'_ Arguments::<'_>, location_2: &'_ Location::<'_>, can_unwind_3: bool, force_no_backtrace_4: bool) -> PanicInfo::<'_>
+{
+    let _0: PanicInfo::<'_>; // return
+    let message_1: &'_ Arguments::<'_>; // arg #1
+    let location_2: &'_ Location::<'_>; // arg #2
+    let can_unwind_3: bool; // arg #3
+    let force_no_backtrace_4: bool; // arg #4
+
+    bb0: {
+        _0 = PanicInfo::<'_> { message: copy message_1, location: copy location_2, can_unwind: copy can_unwind_3, force_no_backtrace: copy force_no_backtrace_4 };
+        return;
+    }
+}
+
+// Full name: core::panicking::panic_fmt::panic_impl
+fn panic_impl(_1: &'_ PanicInfo::<'_>) -> !
+= <extern:panic_impl>
+
+// Full name: core::panicking::panic_fmt
+#[lang_item("panic_fmt")]
+pub fn panic_fmt(fmt_1: Arguments::<'_>) -> !
+{
+    let _0: !; // return
+    let fmt_1: Arguments::<'_>; // arg #1
+    let _2: bool; // anonymous local
+    let _3: !; // anonymous local
+    let pi_4: PanicInfo::<'_>; // local
+    let _5: &'_ Arguments::<'_>; // anonymous local
+    let _6: &'_ Arguments::<'_>; // anonymous local
+    let _7: &'_ Location::<'_>; // anonymous local
+    let _8: &'_ Location::<'_>; // anonymous local
+    let _9: &'_ PanicInfo::<'_>; // anonymous local
+    let _10: &'_ PanicInfo::<'_>; // anonymous local
+
+    bb0: {
+        storage_live(_2);
+        _2 = const false;
+        if move _2 -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_live(_3);
+        _3 = abort() -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        storage_dead(_2);
+        storage_live(pi_4);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = &fmt_1;
+        _5 = &(*_6);
+        storage_live(_7);
+        storage_live(_8);
+        _8 = caller::<'_>() -> bb5 (unwind: bb6);
+    }
+
+    bb3: {
+        undefined_behavior;
+    }
+
+    bb4: {
+        undefined_behavior;
+    }
+
+    bb5: {
+        _7 = &(*_8);
+        pi_4 = core::panic::panic_info::{PanicInfo::<'_>}::new::<'_>(move _5, move _7, const true, const false) -> bb7 (unwind: bb8);
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        storage_dead(_7);
+        storage_dead(_5);
+        storage_dead(_8);
+        storage_dead(_6);
+        storage_live(_9);
+        storage_live(_10);
+        _10 = &pi_4;
+        _9 = &(*_10);
+        _0 = panic_impl(move _9) -> bb9 (unwind: bb10);
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+
+    bb9: {
+        undefined_behavior;
+    }
+
+    bb10: {
+        unwind_continue;
+    }
+}
+
+// Full name: core::result::Result::<usize, usize>
+pub enum Result::<usize, usize> {
+  Ok(0: usize),
+  Err(0: usize),
+}
+
+// Full name: core::sync::atomic::Atomic::<usize>
+pub struct Atomic::<usize> {
+  v: UnsafeCell::<Align8::<usize>>,
+}
+
+// Full name: core::sync::atomic::Ordering
+pub enum Ordering {
+  Relaxed,
+  Release,
+  Acquire,
+  AcqRel,
+  SeqCst,
+}
+
+pub fn core::sync::atomic::{Atomic::<usize>}::new(v_1: usize) -> Atomic::<usize>
+{
+    let _0: Atomic::<usize>; // return
+    let v_1: usize; // arg #1
+
+    bb0: {
+        _0 = transmute<usize, Atomic::<usize>>(copy v_1);
+        return;
+    }
+}
+
+fn core::sync::atomic::atomic_store::<usize>(dst_1: *mut usize, val_2: usize, order_3: Ordering)
+{
+    let _0: (); // return
+    let dst_1: *mut usize; // arg #1
+    let val_2: usize; // arg #2
+    let order_3: Ordering; // arg #3
+    let _4: isize; // anonymous local
+    let _5: !; // anonymous local
+    let _6: Arguments::<'_>; // anonymous local
+    let _7: !; // anonymous local
+    let _8: Arguments::<'_>; // anonymous local
+    let s_9: &'_ str; // local
+    let _10: NonNull::<u8>; // anonymous local
+    let _11: *const u8; // anonymous local
+    let _12: NonNull::<Argument::<'_>>; // anonymous local
+    let _13: usize; // anonymous local
+    let _14: usize; // anonymous local
+    let _15: usize; // anonymous local
+    let _16: *const str; // anonymous local
+    let _17: &'_ [u8]; // anonymous local
+    let s_18: &'_ str; // local
+    let _19: NonNull::<u8>; // anonymous local
+    let _20: *const u8; // anonymous local
+    let _21: NonNull::<Argument::<'_>>; // anonymous local
+    let _22: usize; // anonymous local
+    let _23: usize; // anonymous local
+    let _24: usize; // anonymous local
+    let _25: *const str; // anonymous local
+    let _26: &'_ [u8]; // anonymous local
+
+    bb0: {
+        storage_live(_4);
+        storage_live(_5);
+        storage_live(_7);
+        _0 = ();
+        _4 = @discriminant(order_3);
+        switch move _4 -> 0isize: bb1, 1isize: bb2, 2isize: bb3, 3isize: bb4, 4isize: bb5, otherwise: bb6;
+    }
+
+    bb1: {
+        _0 = core::intrinsics::atomic_store::<usize, AtomicOrdering::Relaxed {  }>(move dst_1, move val_2) -> bb7 (unwind: bb8);
+    }
+
+    bb2: {
+        _0 = core::intrinsics::atomic_store::<usize, AtomicOrdering::Release {  }>(move dst_1, move val_2) -> bb7 (unwind: bb9);
+    }
+
+    bb3: {
+        storage_live(_6);
+        storage_live(s_18);
+        s_18 = const "there is no such thing as an acquire store";
+        storage_live(_19);
+        storage_live(_20);
+        storage_live(_25);
+        _25 = &raw const (*s_18) with_metadata(copy s_18.metadata);
+        _20 = cast<*const str, *const u8>(copy _25);
+        storage_dead(_25);
+        _19 = transmute<*const u8, NonNull::<u8>>(copy _20);
+        storage_dead(_20);
+        storage_live(_21);
+        storage_live(_22);
+        storage_live(_23);
+        storage_live(_24);
+        storage_live(_26);
+        _26 = transmute<&'_ str, &'_ [u8]>(const "there is no such thing as an acquire store");
+        _24 = copy _26.metadata;
+        storage_dead(_26);
+        _23 = move _24 wrap.<< const 1i32;
+        storage_dead(_24);
+        _22 = move _23 | const 1usize;
+        storage_dead(_23);
+        _21 = transmute<usize, NonNull::<Argument::<'_>>>(move _22);
+        storage_dead(_22);
+        _6 = Arguments::<'_> { template: move _19, args: move _21 };
+        storage_dead(_21);
+        storage_dead(_19);
+        storage_dead(s_18);
+        _5 = panic_fmt(move _6) -> bb10 (unwind: bb11);
+    }
+
+    bb4: {
+        storage_live(_8);
+        storage_live(s_9);
+        s_9 = const "there is no such thing as an acquire-release store";
+        storage_live(_10);
+        storage_live(_11);
+        storage_live(_16);
+        _16 = &raw const (*s_9) with_metadata(copy s_9.metadata);
+        _11 = cast<*const str, *const u8>(copy _16);
+        storage_dead(_16);
+        _10 = transmute<*const u8, NonNull::<u8>>(copy _11);
+        storage_dead(_11);
+        storage_live(_12);
+        storage_live(_13);
+        storage_live(_14);
+        storage_live(_15);
+        storage_live(_17);
+        _17 = transmute<&'_ str, &'_ [u8]>(const "there is no such thing as an acquire-release store");
+        _15 = copy _17.metadata;
+        storage_dead(_17);
+        _14 = move _15 wrap.<< const 1i32;
+        storage_dead(_15);
+        _13 = move _14 | const 1usize;
+        storage_dead(_14);
+        _12 = transmute<usize, NonNull::<Argument::<'_>>>(move _13);
+        storage_dead(_13);
+        _8 = Arguments::<'_> { template: move _10, args: move _12 };
+        storage_dead(_12);
+        storage_dead(_10);
+        storage_dead(s_9);
+        _7 = panic_fmt(move _8) -> bb12 (unwind: bb13);
+    }
+
+    bb5: {
+        _0 = core::intrinsics::atomic_store::<usize, AtomicOrdering::SeqCst {  }>(move dst_1, move val_2) -> bb7 (unwind: bb14);
+    }
+
+    bb6: {
+        undefined_behavior;
+    }
+
+    bb7: {
+        return;
+    }
+
+    bb8: {
+        undefined_behavior;
+    }
+
+    bb9: {
+        undefined_behavior;
+    }
+
+    bb10: {
+        undefined_behavior;
+    }
+
+    bb11: {
+        unwind_continue;
+    }
+
+    bb12: {
+        undefined_behavior;
+    }
+
+    bb13: {
+        unwind_continue;
+    }
+
+    bb14: {
+        undefined_behavior;
+    }
+}
+
+// Full name: core::sync::atomic::{Atomic::<usize>}::store
+pub fn store(self_1: &'_ Atomic::<usize>, val_2: usize, order_3: Ordering)
+{
+    let _0: (); // return
+    let self_1: &'_ Atomic::<usize>; // arg #1
+    let val_2: usize; // arg #2
+    let order_3: Ordering; // arg #3
+    let _4: (); // anonymous local
+    let _5: *mut usize; // anonymous local
+    let _6: *const UnsafeCell::<Align8::<usize>>; // anonymous local
+
+    bb0: {
+        storage_live(_4);
+        _0 = ();
+        storage_live(_5);
+        storage_live(_6);
+        _6 = &raw const ((*self_1)).v;
+        _5 = cast<*const UnsafeCell::<Align8::<usize>>, *mut usize>(copy _6);
+        storage_dead(_6);
+        _4 = core::sync::atomic::atomic_store::<usize>(move _5, move val_2, move order_3) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_5);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+fn core::sync::atomic::atomic_load::<usize>(dst_1: *const usize, order_2: Ordering) -> usize
+{
+    let _0: usize; // return
+    let dst_1: *const usize; // arg #1
+    let order_2: Ordering; // arg #2
+    let _3: isize; // anonymous local
+    let _4: !; // anonymous local
+    let _5: Arguments::<'_>; // anonymous local
+    let _6: !; // anonymous local
+    let _7: Arguments::<'_>; // anonymous local
+    let s_8: &'_ str; // local
+    let _9: NonNull::<u8>; // anonymous local
+    let _10: *const u8; // anonymous local
+    let _11: NonNull::<Argument::<'_>>; // anonymous local
+    let _12: usize; // anonymous local
+    let _13: usize; // anonymous local
+    let _14: usize; // anonymous local
+    let _15: *const str; // anonymous local
+    let _16: &'_ [u8]; // anonymous local
+    let s_17: &'_ str; // local
+    let _18: NonNull::<u8>; // anonymous local
+    let _19: *const u8; // anonymous local
+    let _20: NonNull::<Argument::<'_>>; // anonymous local
+    let _21: usize; // anonymous local
+    let _22: usize; // anonymous local
+    let _23: usize; // anonymous local
+    let _24: *const str; // anonymous local
+    let _25: &'_ [u8]; // anonymous local
+
+    bb0: {
+        storage_live(_3);
+        storage_live(_4);
+        storage_live(_6);
+        _3 = @discriminant(order_2);
+        switch move _3 -> 0isize: bb1, 1isize: bb2, 2isize: bb3, 3isize: bb4, 4isize: bb5, otherwise: bb6;
+    }
+
+    bb1: {
+        _0 = core::intrinsics::atomic_load::<usize, AtomicOrdering::Relaxed {  }>(move dst_1) -> bb7 (unwind: bb8);
+    }
+
+    bb2: {
+        storage_live(_5);
+        storage_live(s_17);
+        s_17 = const "there is no such thing as a release load";
+        storage_live(_18);
+        storage_live(_19);
+        storage_live(_24);
+        _24 = &raw const (*s_17) with_metadata(copy s_17.metadata);
+        _19 = cast<*const str, *const u8>(copy _24);
+        storage_dead(_24);
+        _18 = transmute<*const u8, NonNull::<u8>>(copy _19);
+        storage_dead(_19);
+        storage_live(_20);
+        storage_live(_21);
+        storage_live(_22);
+        storage_live(_23);
+        storage_live(_25);
+        _25 = transmute<&'_ str, &'_ [u8]>(const "there is no such thing as a release load");
+        _23 = copy _25.metadata;
+        storage_dead(_25);
+        _22 = move _23 wrap.<< const 1i32;
+        storage_dead(_23);
+        _21 = move _22 | const 1usize;
+        storage_dead(_22);
+        _20 = transmute<usize, NonNull::<Argument::<'_>>>(move _21);
+        storage_dead(_21);
+        _5 = Arguments::<'_> { template: move _18, args: move _20 };
+        storage_dead(_20);
+        storage_dead(_18);
+        storage_dead(s_17);
+        _4 = panic_fmt(move _5) -> bb9 (unwind: bb10);
+    }
+
+    bb3: {
+        _0 = core::intrinsics::atomic_load::<usize, AtomicOrdering::Acquire {  }>(move dst_1) -> bb7 (unwind: bb11);
+    }
+
+    bb4: {
+        storage_live(_7);
+        storage_live(s_8);
+        s_8 = const "there is no such thing as an acquire-release load";
+        storage_live(_9);
+        storage_live(_10);
+        storage_live(_15);
+        _15 = &raw const (*s_8) with_metadata(copy s_8.metadata);
+        _10 = cast<*const str, *const u8>(copy _15);
+        storage_dead(_15);
+        _9 = transmute<*const u8, NonNull::<u8>>(copy _10);
+        storage_dead(_10);
+        storage_live(_11);
+        storage_live(_12);
+        storage_live(_13);
+        storage_live(_14);
+        storage_live(_16);
+        _16 = transmute<&'_ str, &'_ [u8]>(const "there is no such thing as an acquire-release load");
+        _14 = copy _16.metadata;
+        storage_dead(_16);
+        _13 = move _14 wrap.<< const 1i32;
+        storage_dead(_14);
+        _12 = move _13 | const 1usize;
+        storage_dead(_13);
+        _11 = transmute<usize, NonNull::<Argument::<'_>>>(move _12);
+        storage_dead(_12);
+        _7 = Arguments::<'_> { template: move _9, args: move _11 };
+        storage_dead(_11);
+        storage_dead(_9);
+        storage_dead(s_8);
+        _6 = panic_fmt(move _7) -> bb12 (unwind: bb13);
+    }
+
+    bb5: {
+        _0 = core::intrinsics::atomic_load::<usize, AtomicOrdering::SeqCst {  }>(move dst_1) -> bb7 (unwind: bb14);
+    }
+
+    bb6: {
+        undefined_behavior;
+    }
+
+    bb7: {
+        return;
+    }
+
+    bb8: {
+        undefined_behavior;
+    }
+
+    bb9: {
+        undefined_behavior;
+    }
+
+    bb10: {
+        unwind_continue;
+    }
+
+    bb11: {
+        undefined_behavior;
+    }
+
+    bb12: {
+        undefined_behavior;
+    }
+
+    bb13: {
+        unwind_continue;
+    }
+
+    bb14: {
+        undefined_behavior;
+    }
+}
+
+// Full name: core::sync::atomic::{Atomic::<usize>}::load
+pub fn load(self_1: &'_ Atomic::<usize>, order_2: Ordering) -> usize
+{
+    let _0: usize; // return
+    let self_1: &'_ Atomic::<usize>; // arg #1
+    let order_2: Ordering; // arg #2
+    let _3: *const usize; // anonymous local
+    let _4: *const UnsafeCell::<Align8::<usize>>; // anonymous local
+
+    bb0: {
+        storage_live(_4);
+        storage_live(_3);
+        _4 = &raw const ((*self_1)).v;
+        _3 = cast<*const UnsafeCell::<Align8::<usize>>, *const usize>(copy _4);
+        _0 = core::sync::atomic::atomic_load::<usize>(move _3, move order_2) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_3);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: core::sync::atomic::{Atomic::<usize>}::fetch_add
+pub fn fetch_add(self_1: &'_ Atomic::<usize>, val_2: usize, order_3: Ordering) -> usize
+{
+    let _0: usize; // return
+    let self_1: &'_ Atomic::<usize>; // arg #1
+    let val_2: usize; // arg #2
+    let order_3: Ordering; // arg #3
+    let dst_4: *mut usize; // local
+    let _5: *const UnsafeCell::<Align8::<usize>>; // anonymous local
+    let _6: isize; // anonymous local
+
+    bb0: {
+        storage_live(dst_4);
+        storage_live(_5);
+        _5 = &raw const ((*self_1)).v;
+        dst_4 = cast<*const UnsafeCell::<Align8::<usize>>, *mut usize>(copy _5);
+        storage_dead(_5);
+        storage_live(_6);
+        _6 = @discriminant(order_3);
+        switch move _6 -> 0isize: bb1, 1isize: bb2, 2isize: bb3, 3isize: bb4, 4isize: bb5, otherwise: bb6;
+    }
+
+    bb1: {
+        _0 = atomic_xadd::<usize, usize, AtomicOrdering::Relaxed {  }>(move dst_4, move val_2) -> bb7 (unwind: bb8);
+    }
+
+    bb2: {
+        _0 = atomic_xadd::<usize, usize, AtomicOrdering::Release {  }>(move dst_4, move val_2) -> bb7 (unwind: bb9);
+    }
+
+    bb3: {
+        _0 = atomic_xadd::<usize, usize, AtomicOrdering::Acquire {  }>(move dst_4, move val_2) -> bb7 (unwind: bb10);
+    }
+
+    bb4: {
+        _0 = atomic_xadd::<usize, usize, AtomicOrdering::AcqRel {  }>(move dst_4, move val_2) -> bb7 (unwind: bb11);
+    }
+
+    bb5: {
+        _0 = atomic_xadd::<usize, usize, AtomicOrdering::SeqCst {  }>(move dst_4, move val_2) -> bb7 (unwind: bb12);
+    }
+
+    bb6: {
+        undefined_behavior;
+    }
+
+    bb7: {
+        storage_dead(_6);
+        storage_dead(dst_4);
+        return;
+    }
+
+    bb8: {
+        undefined_behavior;
+    }
+
+    bb9: {
+        undefined_behavior;
+    }
+
+    bb10: {
+        undefined_behavior;
+    }
+
+    bb11: {
+        undefined_behavior;
+    }
+
+    bb12: {
+        undefined_behavior;
+    }
+}
+
+// Full name: core::sync::atomic::atomic_compare_exchange::<usize>
+pub fn atomic_compare_exchange::<usize>(dst_1: *mut usize, old_2: usize, new_3: usize, success_4: Ordering, failure_5: Ordering) -> Result::<usize, usize>
+{
+    let _0: Result::<usize, usize>; // return
+    let dst_1: *mut usize; // arg #1
+    let old_2: usize; // arg #2
+    let new_3: usize; // arg #3
+    let success_4: Ordering; // arg #4
+    let failure_5: Ordering; // arg #5
+    let val_6: usize; // local
+    let ok_7: bool; // local
+    let _8: (usize, bool); // anonymous local
+    let _9: isize; // anonymous local
+    let _10: isize; // anonymous local
+    let _11: isize; // anonymous local
+    let _12: isize; // anonymous local
+    let _13: isize; // anonymous local
+    let _14: isize; // anonymous local
+    let _15: isize; // anonymous local
+    let _16: !; // anonymous local
+    let _17: Arguments::<'_>; // anonymous local
+    let _18: !; // anonymous local
+    let _19: Arguments::<'_>; // anonymous local
+    let s_20: &'_ str; // local
+    let _21: NonNull::<u8>; // anonymous local
+    let _22: *const u8; // anonymous local
+    let _23: NonNull::<Argument::<'_>>; // anonymous local
+    let _24: usize; // anonymous local
+    let _25: usize; // anonymous local
+    let _26: usize; // anonymous local
+    let _27: *const str; // anonymous local
+    let _28: &'_ [u8]; // anonymous local
+    let s_29: &'_ str; // local
+    let _30: NonNull::<u8>; // anonymous local
+    let _31: *const u8; // anonymous local
+    let _32: NonNull::<Argument::<'_>>; // anonymous local
+    let _33: usize; // anonymous local
+    let _34: usize; // anonymous local
+    let _35: usize; // anonymous local
+    let _36: *const str; // anonymous local
+    let _37: &'_ [u8]; // anonymous local
+
+    bb0: {
+        storage_live(_9);
+        storage_live(_10);
+        storage_live(_11);
+        storage_live(_12);
+        storage_live(_13);
+        storage_live(_14);
+        storage_live(_15);
+        storage_live(_16);
+        storage_live(_18);
+        storage_live(_8);
+        _14 = @discriminant(success_4);
+        switch move _14 -> 0isize: bb1, 1isize: bb2, 2isize: bb3, 3isize: bb4, 4isize: bb5, otherwise: bb6;
+    }
+
+    bb1: {
+        _9 = @discriminant(failure_5);
+        switch move _9 -> 0isize: bb7, 2isize: bb8, 4isize: bb9, otherwise: bb10;
+    }
+
+    bb2: {
+        _11 = @discriminant(failure_5);
+        switch move _11 -> 0isize: bb11, 2isize: bb12, 4isize: bb13, otherwise: bb10;
+    }
+
+    bb3: {
+        _10 = @discriminant(failure_5);
+        switch move _10 -> 0isize: bb14, 2isize: bb15, 4isize: bb16, otherwise: bb10;
+    }
+
+    bb4: {
+        _12 = @discriminant(failure_5);
+        switch move _12 -> 0isize: bb17, 2isize: bb18, 4isize: bb19, otherwise: bb10;
+    }
+
+    bb5: {
+        _13 = @discriminant(failure_5);
+        switch move _13 -> 0isize: bb20, 2isize: bb21, 4isize: bb22, otherwise: bb10;
+    }
+
+    bb6: {
+        undefined_behavior;
+    }
+
+    bb7: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::Relaxed {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb24);
+    }
+
+    bb8: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::Acquire {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb25);
+    }
+
+    bb9: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Relaxed {  }, AtomicOrdering::SeqCst {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb26);
+    }
+
+    bb10: {
+        _15 = @discriminant(failure_5);
+        switch move _15 -> 1isize: bb27, 3isize: bb28, otherwise: bb6;
+    }
+
+    bb11: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::Relaxed {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb29);
+    }
+
+    bb12: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::Acquire {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb30);
+    }
+
+    bb13: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Release {  }, AtomicOrdering::SeqCst {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb31);
+    }
+
+    bb14: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::Relaxed {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb32);
+    }
+
+    bb15: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::Acquire {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb33);
+    }
+
+    bb16: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::Acquire {  }, AtomicOrdering::SeqCst {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb34);
+    }
+
+    bb17: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::Relaxed {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb35);
+    }
+
+    bb18: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::Acquire {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb36);
+    }
+
+    bb19: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::AcqRel {  }, AtomicOrdering::SeqCst {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb37);
+    }
+
+    bb20: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::Relaxed {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb38);
+    }
+
+    bb21: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::Acquire {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb39);
+    }
+
+    bb22: {
+        _8 = atomic_cxchg::<usize, AtomicOrdering::SeqCst {  }, AtomicOrdering::SeqCst {  }>(move dst_1, move old_2, move new_3) -> bb23 (unwind: bb40);
+    }
+
+    bb23: {
+        storage_live(val_6);
+        val_6 = copy _8.0;
+        storage_live(ok_7);
+        ok_7 = copy _8.1;
+        storage_dead(_8);
+        if copy ok_7 -> bb41 else -> bb42;
+    }
+
+    bb24: {
+        undefined_behavior;
+    }
+
+    bb25: {
+        undefined_behavior;
+    }
+
+    bb26: {
+        undefined_behavior;
+    }
+
+    bb27: {
+        storage_live(_19);
+        storage_live(s_20);
+        s_20 = const "there is no such thing as a release failure ordering";
+        storage_live(_21);
+        storage_live(_22);
+        storage_live(_27);
+        _27 = &raw const (*s_20) with_metadata(copy s_20.metadata);
+        _22 = cast<*const str, *const u8>(copy _27);
+        storage_dead(_27);
+        _21 = transmute<*const u8, NonNull::<u8>>(copy _22);
+        storage_dead(_22);
+        storage_live(_23);
+        storage_live(_24);
+        storage_live(_25);
+        storage_live(_26);
+        storage_live(_28);
+        _28 = transmute<&'_ str, &'_ [u8]>(const "there is no such thing as a release failure ordering");
+        _26 = copy _28.metadata;
+        storage_dead(_28);
+        _25 = move _26 wrap.<< const 1i32;
+        storage_dead(_26);
+        _24 = move _25 | const 1usize;
+        storage_dead(_25);
+        _23 = transmute<usize, NonNull::<Argument::<'_>>>(move _24);
+        storage_dead(_24);
+        _19 = Arguments::<'_> { template: move _21, args: move _23 };
+        storage_dead(_23);
+        storage_dead(_21);
+        storage_dead(s_20);
+        _18 = panic_fmt(move _19) -> bb43 (unwind: bb44);
+    }
+
+    bb28: {
+        storage_live(_17);
+        storage_live(s_29);
+        s_29 = const "there is no such thing as an acquire-release failure ordering";
+        storage_live(_30);
+        storage_live(_31);
+        storage_live(_36);
+        _36 = &raw const (*s_29) with_metadata(copy s_29.metadata);
+        _31 = cast<*const str, *const u8>(copy _36);
+        storage_dead(_36);
+        _30 = transmute<*const u8, NonNull::<u8>>(copy _31);
+        storage_dead(_31);
+        storage_live(_32);
+        storage_live(_33);
+        storage_live(_34);
+        storage_live(_35);
+        storage_live(_37);
+        _37 = transmute<&'_ str, &'_ [u8]>(const "there is no such thing as an acquire-release failure ordering");
+        _35 = copy _37.metadata;
+        storage_dead(_37);
+        _34 = move _35 wrap.<< const 1i32;
+        storage_dead(_35);
+        _33 = move _34 | const 1usize;
+        storage_dead(_34);
+        _32 = transmute<usize, NonNull::<Argument::<'_>>>(move _33);
+        storage_dead(_33);
+        _17 = Arguments::<'_> { template: move _30, args: move _32 };
+        storage_dead(_32);
+        storage_dead(_30);
+        storage_dead(s_29);
+        _16 = panic_fmt(move _17) -> bb45 (unwind: bb46);
+    }
+
+    bb29: {
+        undefined_behavior;
+    }
+
+    bb30: {
+        undefined_behavior;
+    }
+
+    bb31: {
+        undefined_behavior;
+    }
+
+    bb32: {
+        undefined_behavior;
+    }
+
+    bb33: {
+        undefined_behavior;
+    }
+
+    bb34: {
+        undefined_behavior;
+    }
+
+    bb35: {
+        undefined_behavior;
+    }
+
+    bb36: {
+        undefined_behavior;
+    }
+
+    bb37: {
+        undefined_behavior;
+    }
+
+    bb38: {
+        undefined_behavior;
+    }
+
+    bb39: {
+        undefined_behavior;
+    }
+
+    bb40: {
+        undefined_behavior;
+    }
+
+    bb41: {
+        _0 = Result::<usize, usize>::Ok { 0: copy val_6 };
+        goto bb47;
+    }
+
+    bb42: {
+        _0 = Result::<usize, usize>::Err { 0: copy val_6 };
+        goto bb47;
+    }
+
+    bb43: {
+        undefined_behavior;
+    }
+
+    bb44: {
+        unwind_continue;
+    }
+
+    bb45: {
+        undefined_behavior;
+    }
+
+    bb46: {
+        unwind_continue;
+    }
+
+    bb47: {
+        storage_dead(ok_7);
+        storage_dead(val_6);
+        return;
+    }
+}
+
+// Full name: core::sync::atomic::{Atomic::<usize>}::compare_exchange
+pub fn compare_exchange(self_1: &'_ Atomic::<usize>, current_2: usize, new_3: usize, success_4: Ordering, failure_5: Ordering) -> Result::<usize, usize>
+{
+    let _0: Result::<usize, usize>; // return
+    let self_1: &'_ Atomic::<usize>; // arg #1
+    let current_2: usize; // arg #2
+    let new_3: usize; // arg #3
+    let success_4: Ordering; // arg #4
+    let failure_5: Ordering; // arg #5
+    let _6: *mut usize; // anonymous local
+    let _7: *const UnsafeCell::<Align8::<usize>>; // anonymous local
+
+    bb0: {
+        storage_live(_6);
+        storage_live(_7);
+        _7 = &raw const ((*self_1)).v;
+        _6 = cast<*const UnsafeCell::<Align8::<usize>>, *mut usize>(copy _7);
+        storage_dead(_7);
+        _0 = atomic_compare_exchange::<usize>(move _6, move current_2, move new_3, move success_4, move failure_5) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(_6);
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+// Full name: test_crate::main
+pub fn main()
+{
+    let _0: (); // return
+    let a_1: Atomic::<usize>; // local
+    let _2: (); // anonymous local
+    let _3: &'_ Atomic::<usize>; // anonymous local
+    let _4: Ordering; // anonymous local
+    let _5: usize; // anonymous local
+    let _6: &'_ Atomic::<usize>; // anonymous local
+    let _7: Ordering; // anonymous local
+    let _8: usize; // anonymous local
+    let _9: &'_ Atomic::<usize>; // anonymous local
+    let _10: Ordering; // anonymous local
+    let _11: Result::<usize, usize>; // anonymous local
+    let _12: &'_ Atomic::<usize>; // anonymous local
+    let _13: Ordering; // anonymous local
+    let _14: Ordering; // anonymous local
+
+    bb0: {
+        _0 = ();
+        storage_live(a_1);
+        a_1 = core::sync::atomic::{Atomic::<usize>}::new(const 0usize) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_live(_2);
+        storage_live(_3);
+        _3 = &a_1;
+        storage_live(_4);
+        _4 = Ordering::SeqCst {  };
+        _2 = store(move _3, const 1usize, move _4) -> bb3 (unwind: bb4);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(_4);
+        storage_dead(_3);
+        storage_dead(_2);
+        storage_live(_5);
+        storage_live(_6);
+        _6 = &a_1;
+        storage_live(_7);
+        _7 = Ordering::Acquire {  };
+        _5 = load(move _6, move _7) -> bb5 (unwind: bb6);
+    }
+
+    bb4: {
+        unwind_continue;
+    }
+
+    bb5: {
+        storage_dead(_7);
+        storage_dead(_6);
+        storage_dead(_5);
+        storage_live(_8);
+        storage_live(_9);
+        _9 = &a_1;
+        storage_live(_10);
+        _10 = Ordering::Relaxed {  };
+        _8 = fetch_add(move _9, const 1usize, move _10) -> bb7 (unwind: bb8);
+    }
+
+    bb6: {
+        unwind_continue;
+    }
+
+    bb7: {
+        storage_dead(_10);
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_live(_11);
+        storage_live(_12);
+        _12 = &a_1;
+        storage_live(_13);
+        _13 = Ordering::AcqRel {  };
+        storage_live(_14);
+        _14 = Ordering::Relaxed {  };
+        _11 = compare_exchange(move _12, const 1usize, const 2usize, move _13, move _14) -> bb9 (unwind: bb10);
+    }
+
+    bb8: {
+        unwind_continue;
+    }
+
+    bb9: {
+        storage_dead(_14);
+        storage_dead(_13);
+        storage_dead(_12);
+        storage_dead(_11);
+        _0 = ();
+        storage_dead(a_1);
+        return;
+    }
+
+    bb10: {
+        unwind_continue;
+    }
+}
+
+
+
