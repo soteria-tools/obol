@@ -173,12 +173,32 @@ impl<'tcx, 'ctx> ItemTransCtx<'tcx, 'ctx> {
             return Ok(ty.clone());
         }
 
-        // `rustc_public`'s `Ty::kind` `todo!()`-panics on alias (associated-type projection) types.
-        // They only appear in polymorphic name contexts we don't translate precisely, so detect them
-        // via the internal representation (which doesn't panic) and emit an error placeholder.
+        // `rustc_public`'s `Ty::kind` `todo!()`-panics on alias types. Detect them and
+        // try to normalize the alias away. In monomorphic code this resolves to a concrete type,
+        // and actual polymorphic aliases only occur in names so we can just error.
         let internal_ty = rustc_public::rustc_internal::internal(self.t_ctx.tcx, mir_ty);
         if matches!(internal_ty.kind(), rustc_ty::TyKind::Alias(..)) {
-            register_error!(self, span, "translate_ty: unsupported alias type {:?}", internal_ty);
+            let typing_env = rustc_middle::ty::TypingEnv::fully_monomorphized();
+            let normalized = self
+                .t_ctx
+                .tcx
+                .try_normalize_erasing_regions(
+                    typing_env,
+                    rustc_middle::ty::Unnormalized::new_wip(internal_ty),
+                )
+                .unwrap_or(internal_ty);
+            if !matches!(normalized.kind(), rustc_ty::TyKind::Alias(..)) {
+                let ty =
+                    self.translate_ty(span, rustc_public::rustc_internal::stable(normalized))?;
+                self.t_ctx.type_trans_cache.insert(mir_ty, ty.clone());
+                return Ok(ty);
+            }
+            register_error!(
+                self,
+                span,
+                "translate_ty: unsupported alias type {:?}",
+                internal_ty
+            );
             let ty = TyKind::Error("unsupported alias type".to_string()).into_ty();
             self.t_ctx.type_trans_cache.insert(mir_ty, ty.clone());
             return Ok(ty);

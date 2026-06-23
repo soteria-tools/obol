@@ -12,13 +12,13 @@ pub struct Holder::<u32> {
 // Full name: test_crate::Sink
 trait Sink
 
-// Full name: test_crate::{impl Sink<type_error("unsupported alias type")> for Holder::<u32>}
-impl Sink<type_error("unsupported alias type")> for Holder::<u32> {
+// Full name: test_crate::{impl Sink<u8> for Holder::<u32>}
+impl Sink<u8> for Holder::<u32> {
     non-dyn-compatible
 }
 
-// Full name: test_crate::{impl Sink<type_error("unsupported alias type")> for Holder::<u32>}::sink
-pub fn {impl Sink<type_error("unsupported alias type")> for Holder::<u32>}::sink(self_1: Holder::<u32>)
+// Full name: test_crate::{impl Sink<u8> for Holder::<u32>}::sink
+pub fn {impl Sink<u8> for Holder::<u32>}::sink(self_1: Holder::<u32>)
 {
     let _0: (); // return
     let self_1: Holder::<u32>; // arg #1
@@ -90,7 +90,7 @@ pub fn main()
         storage_live(_4);
         storage_live(_5);
         _5 = Holder::<u32> { 0: const 5u32 };
-        _4 = {impl Sink<type_error("unsupported alias type")> for Holder::<u32>}::sink(move _5) -> bb1 (unwind: bb2);
+        _4 = {impl Sink<u8> for Holder::<u32>}::sink(move _5) -> bb1 (unwind: bb2);
     }
 
     bb1: {
